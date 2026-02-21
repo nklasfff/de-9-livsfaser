@@ -1,4 +1,4 @@
-const CACHE_NAME = 'livsfaser-v1';
+const CACHE_NAME = 'livsfaser-v2';
 const urlsToCache = [
   './',
   './index.html',
@@ -18,7 +18,13 @@ const urlsToCache = [
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
   './assets/images/9-cirkler.png',
-  './assets/images/rosa-lotus.png'
+  './assets/images/rosa-lotus.png',
+  './assets/images/krydsfelt-final.png',
+  './assets/images/relationer_blad_liberation_HQ.png',
+  './assets/images/din-krop.jpg',
+  './assets/images/min-rejse-ikigai.png',
+  './assets/images/vinduer-tid-lilla.png',
+  './assets/images/relationer-forside.png'
 ];
 
 // Install — cache core files

@@ -86,32 +86,45 @@ function initRejse() {}
 function initVinduer() {}
 
 // Niveau 2 stubs — will be implemented in later sprints
+
+// Cyklusser undersider
 function initCykCic() {}
-function initCykNiLivsfaser() {}
+function initCykNiFaser() {}
 function initCykFireUger() {}
+function initCykOvergange() {}
 function initCykKontrol() {}
-function initRelOversigt() {}
+
+// Relationer undersider
+function initRelLigeNu() {}
 function initRelToRytmer() {}
 function initRelTreGen() {}
-function initRelEnergi() {}
-function initPraIndsigt() {}
-function initPraRefleksion() {}
-function initPraFoelelser() {}
+function initRelJeresEnergi() {}
+function initRelEpigenetik() {}
+
+// Praksis undersider
 function initPraYinYoga() {}
+function initPraEft() {}
+function initPraFoelelser() {}
+function initPraMindfulness() {}
+function initPraRefleksion() {}
 function initPraKost() {}
 function initPraHealing() {}
-function initPraForloeb() {}
+function initPraInspiration() {}
+
+// Rejse undersider
 function initRejUdvikling() {}
-function initRejTidsrejse() {}
+function initRejJournal() {}
+function initRejFavoritter() {}
+function initRejOpdagelser() {}
 function initRejAlleFaser() {}
 function initRejBaggrund() {}
-function initRejFavoritter() {}
-function initVinLivsfase() {}
-function initVinAarstid() {}
-function initVinMaaned() {}
-function initVinUgedag() {}
-function initVinOrganur() {}
-function initVinKrydsfelt() {}
+
+// Vinduer undersider
+function initVinTidsrejse() {}
+function initVinTidslinje() {}
+function initVinOejeblikke() {}
+
+// Utility
 function initSoeg() {}
 function initIndstillinger() {}
 function initOmIsabelle() {}

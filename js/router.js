@@ -25,39 +25,40 @@ const Router = {
 
     // Niveau 2 — Cyklusser undersider
     'cyk-cic':           { file: 'screens/cyk-cic.html',           niveau: 2,  parent: 'cyklusser',   tone: 'cyklusser',   init: 'initCykCic' },
-    'cyk-ni-livsfaser':  { file: 'screens/cyk-ni-livsfaser.html',  niveau: 2,  parent: 'cyklusser',   tone: 'cyklusser',   init: 'initCykNiLivsfaser' },
+    'cyk-ni-faser':      { file: 'screens/cyk-ni-faser.html',      niveau: 2,  parent: 'cyklusser',   tone: 'cyklusser',   init: 'initCykNiFaser' },
     'cyk-fire-uger':     { file: 'screens/cyk-fire-uger.html',     niveau: 2,  parent: 'cyklusser',   tone: 'cyklusser',   init: 'initCykFireUger' },
+    'cyk-overgange':     { file: 'screens/cyk-overgange.html',     niveau: 2,  parent: 'cyklusser',   tone: 'cyklusser',   init: 'initCykOvergange' },
     'cyk-kontrol':       { file: 'screens/cyk-kontrol.html',       niveau: 2,  parent: 'cyklusser',   tone: 'cyklusser',   init: 'initCykKontrol' },
 
     // Niveau 2 — Relationer undersider
-    'rel-oversigt':      { file: 'screens/rel-oversigt.html',      niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelOversigt' },
+    'rel-lige-nu':       { file: 'screens/rel-lige-nu.html',       niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelLigeNu' },
     'rel-to-rytmer':     { file: 'screens/rel-to-rytmer.html',     niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelToRytmer' },
     'rel-tre-gen':       { file: 'screens/rel-tre-gen.html',       niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelTreGen' },
-    'rel-energi':        { file: 'screens/rel-energi.html',        niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelEnergi' },
+    'rel-jeres-energi':  { file: 'screens/rel-jeres-energi.html',  niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelJeresEnergi' },
+    'rel-epigenetik':    { file: 'screens/rel-epigenetik.html',    niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelEpigenetik' },
 
     // Niveau 2 — Praksis undersider
-    'pra-indsigt':       { file: 'screens/pra-indsigt.html',       niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraIndsigt' },
-    'pra-refleksion':    { file: 'screens/pra-refleksion.html',    niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraRefleksion' },
-    'pra-foelelser':     { file: 'screens/pra-foelelser.html',     niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraFoelelser' },
     'pra-yin-yoga':      { file: 'screens/pra-yin-yoga.html',      niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraYinYoga' },
+    'pra-eft':           { file: 'screens/pra-eft.html',           niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraEft' },
+    'pra-foelelser':     { file: 'screens/pra-foelelser.html',     niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraFoelelser' },
+    'pra-mindfulness':   { file: 'screens/pra-mindfulness.html',   niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraMindfulness' },
+    'pra-refleksion':    { file: 'screens/pra-refleksion.html',    niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraRefleksion' },
     'pra-kost':          { file: 'screens/pra-kost.html',          niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraKost' },
     'pra-healing':       { file: 'screens/pra-healing.html',       niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraHealing' },
-    'pra-forloeb':       { file: 'screens/pra-forloeb.html',       niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraForloeb' },
+    'pra-inspiration':   { file: 'screens/pra-inspiration.html',   niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraInspiration' },
 
     // Niveau 2 — Rejse undersider
     'rej-udvikling':     { file: 'screens/rej-udvikling.html',     niveau: 2,  parent: 'rejse',       tone: 'rejse',       init: 'initRejUdvikling' },
-    'rej-tidsrejse':     { file: 'screens/rej-tidsrejse.html',     niveau: 2,  parent: 'rejse',       tone: 'rejse',       init: 'initRejTidsrejse' },
+    'rej-journal':       { file: 'screens/rej-journal.html',       niveau: 2,  parent: 'rejse',       tone: 'rejse',       init: 'initRejJournal' },
+    'rej-favoritter':    { file: 'screens/rej-favoritter.html',    niveau: 2,  parent: 'rejse',       tone: 'rejse',       init: 'initRejFavoritter' },
+    'rej-opdagelser':    { file: 'screens/rej-opdagelser.html',    niveau: 2,  parent: 'rejse',       tone: 'rejse',       init: 'initRejOpdagelser' },
     'rej-alle-faser':    { file: 'screens/rej-alle-faser.html',    niveau: 2,  parent: 'rejse',       tone: 'rejse',       init: 'initRejAlleFaser' },
     'rej-baggrund':      { file: 'screens/rej-baggrund.html',      niveau: 2,  parent: 'rejse',       tone: 'rejse',       init: 'initRejBaggrund' },
-    'rej-favoritter':    { file: 'screens/rej-favoritter.html',    niveau: 2,  parent: 'rejse',       tone: 'rejse',       init: 'initRejFavoritter' },
 
-    // Niveau 2 — Vinduer (circle detail overlays)
-    'vin-livsfase':      { file: 'screens/vin-livsfase.html',      niveau: 2,  parent: 'vinduer',     tone: 'vinduer',     init: 'initVinLivsfase' },
-    'vin-aarstid':       { file: 'screens/vin-aarstid.html',       niveau: 2,  parent: 'vinduer',     tone: 'vinduer',     init: 'initVinAarstid' },
-    'vin-maaned':        { file: 'screens/vin-maaned.html',        niveau: 2,  parent: 'vinduer',     tone: 'vinduer',     init: 'initVinMaaned' },
-    'vin-ugedag':        { file: 'screens/vin-ugedag.html',        niveau: 2,  parent: 'vinduer',     tone: 'vinduer',     init: 'initVinUgedag' },
-    'vin-organur':       { file: 'screens/vin-organur.html',       niveau: 2,  parent: 'vinduer',     tone: 'vinduer',     init: 'initVinOrganur' },
-    'vin-krydsfelt':     { file: 'screens/vin-krydsfelt.html',     niveau: 2,  parent: 'vinduer',     tone: 'vinduer',     init: 'initVinKrydsfelt' },
+    // Niveau 2 — Vinduer undersider
+    'vin-tidsrejse':     { file: 'screens/vin-tidsrejse.html',     niveau: 2,  parent: 'vinduer',     tone: 'vinduer',     init: 'initVinTidsrejse' },
+    'vin-tidslinje':     { file: 'screens/vin-tidslinje.html',     niveau: 2,  parent: 'vinduer',     tone: 'vinduer',     init: 'initVinTidslinje' },
+    'vin-oejeblikke':    { file: 'screens/vin-oejeblikke.html',    niveau: 2,  parent: 'vinduer',     tone: 'vinduer',     init: 'initVinOejeblikke' },
 
     // Utility
     'soeg':              { file: 'screens/soeg.html',              niveau: 2,  parent: 'forside',     tone: null,          init: 'initSoeg' },
