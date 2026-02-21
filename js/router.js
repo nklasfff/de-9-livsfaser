@@ -177,11 +177,16 @@ const Router = {
   _updateHeader(name, screen) {
     const backBtn = document.getElementById('back-btn');
     const searchBtn = document.getElementById('search-btn');
+    const menuBtn = document.getElementById('menu-btn');
 
     // Back button: visible when not on forside or onboarding
-    if (backBtn) {
-      const showBack = screen.niveau > 0;
-      backBtn.classList.toggle('visible', showBack);
+    const showBack = screen.niveau > 0;
+    if (backBtn) backBtn.classList.toggle('visible', showBack);
+
+    // Menu button: visible when back is NOT visible, and not on onboarding
+    if (menuBtn) {
+      const showMenu = !showBack && screen.niveau >= 0;
+      menuBtn.style.display = showMenu ? '' : 'none';
     }
 
     // Search button: visible when not on onboarding

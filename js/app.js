@@ -58,6 +58,29 @@ function analyzeClimate(elements) {
 }
 
 /* ============================================================
+   DRAWER — Hamburger menu
+   ============================================================ */
+
+function toggleDrawer() {
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('drawer-overlay');
+  if (!drawer) return;
+  const isOpen = drawer.classList.contains('open');
+  drawer.classList.toggle('open', !isOpen);
+  if (overlay) overlay.classList.toggle('open', !isOpen);
+}
+
+function toggleSection(header) {
+  const section = header.closest('.drawer-section');
+  if (!section) return;
+  // Close others
+  document.querySelectorAll('.drawer-section.open').forEach(s => {
+    if (s !== section) s.classList.remove('open');
+  });
+  section.classList.toggle('open');
+}
+
+/* ============================================================
    DOMContentLoaded — App boot
    ============================================================ */
 
@@ -67,11 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
     navigator.serviceWorker.register('./sw.js').catch(err => {
       console.warn('SW registration failed:', err);
     });
-  }
-
-  // Initialize arc navigation
-  if (typeof ArcNav !== 'undefined') {
-    ArcNav.init();
   }
 
   // Initialize router (determines first screen)
