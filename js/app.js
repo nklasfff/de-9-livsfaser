@@ -58,6 +58,81 @@ function analyzeClimate(elements) {
 }
 
 /* ============================================================
+   ACTION BAR — Del / Gem / Kopiér
+   ============================================================ */
+
+function actionShare() {
+  const url = window.location.href;
+  const title = 'De 9 Livsfasers Energi';
+  if (navigator.share) {
+    navigator.share({ title, url }).catch(() => {});
+  } else {
+    actionCopyLink();
+  }
+}
+
+function actionCopyLink() {
+  const url = window.location.href;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => showActionToast('Link kopieret'));
+  }
+}
+
+function actionToggleSave() {
+  const screen = Router.currentScreen;
+  if (!screen) return;
+  const saved = JSON.parse(localStorage.getItem('saved_screens') || '[]');
+  const idx = saved.indexOf(screen);
+  if (idx >= 0) {
+    saved.splice(idx, 1);
+    showActionToast('Fjernet fra gemte');
+  } else {
+    saved.push(screen);
+    showActionToast('Gemt');
+  }
+  localStorage.setItem('saved_screens', JSON.stringify(saved));
+  updateSaveBtn();
+}
+
+function updateSaveBtn() {
+  const btn = document.getElementById('action-save-btn');
+  if (!btn) return;
+  const saved = JSON.parse(localStorage.getItem('saved_screens') || '[]');
+  const isSaved = saved.includes(Router.currentScreen);
+  btn.querySelector('.save-label').textContent = isSaved ? 'Gemt' : 'Gem';
+}
+
+function showActionToast(msg) {
+  let toast = document.getElementById('action-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'action-toast';
+    toast.className = 'action-toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+function getActionBarHTML() {
+  return `<div class="action-bar">
+    <button class="action-btn" onclick="actionShare()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+      Del
+    </button>
+    <button class="action-btn" onclick="actionCopyLink()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      Kopi\u00e9r
+    </button>
+    <button class="action-btn" id="action-save-btn" onclick="actionToggleSave()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+      <span class="save-label">Gem</span>
+    </button>
+  </div>`;
+}
+
+/* ============================================================
    DRAWER — Hamburger menu
    ============================================================ */
 

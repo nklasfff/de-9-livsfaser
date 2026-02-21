@@ -131,9 +131,18 @@ const Router = {
     // Update arc nav
     this._updateArcNav(name, screen);
 
+    // Inject action bar on niveau 2 screens (before lotus closer)
+    if (screen.niveau === 2 && typeof getActionBarHTML === 'function') {
+      const closer = container.querySelector('.section-closer');
+      if (closer && !container.querySelector('.action-bar')) {
+        closer.insertAdjacentHTML('beforebegin', getActionBarHTML());
+      }
+    }
+
     // Call init function
     if (screen.init && typeof window[screen.init] === 'function') {
       window[screen.init]();
+      if (screen.niveau === 2 && typeof updateSaveBtn === 'function') updateSaveBtn();
     }
   },
 
