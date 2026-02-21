@@ -4,6 +4,17 @@
   <div class="section-sub">Se hvordan jeres cyklusser m&oslash;des</div>
   <div class="section-intro">De mennesker du deler livet med b&aelig;rer deres egne cyklusser og faser. Her kan du m&aelig;rke hvordan jeres energier m&oslash;des, n&aelig;rer hinanden og udfordrer hinanden.</div>
 
+  <!-- STICKY UNDERMENU -->
+  <div style="position:sticky;top:52px;z-index:50;margin:0 -36px 16px;padding:10px 36px;background:rgba(253,252,251,0.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(123,122,158,0.08)">
+    <div style="display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px">
+      <span onclick="Router.navigate('rel-lige-nu')" style="flex-shrink:0;padding:6px 14px;font-family:var(--font-sans);font-size:12px;font-weight:400;color:#7b7a9e;background:rgba(123,122,158,0.06);border:1px solid rgba(123,122,158,0.12);border-radius:20px;cursor:pointer;white-space:nowrap">Lige nu</span>
+      <span onclick="Router.navigate('rel-to-rytmer')" style="flex-shrink:0;padding:6px 14px;font-family:var(--font-sans);font-size:12px;font-weight:400;color:#7b7a9e;background:rgba(123,122,158,0.06);border:1px solid rgba(123,122,158,0.12);border-radius:20px;cursor:pointer;white-space:nowrap">To rytmer</span>
+      <span onclick="Router.navigate('rel-tre-gen')" style="flex-shrink:0;padding:6px 14px;font-family:var(--font-sans);font-size:12px;font-weight:400;color:#7b7a9e;background:rgba(123,122,158,0.06);border:1px solid rgba(123,122,158,0.12);border-radius:20px;cursor:pointer;white-space:nowrap">Tre generationer</span>
+      <span onclick="Router.navigate('rel-jeres-energi')" style="flex-shrink:0;padding:6px 14px;font-family:var(--font-sans);font-size:12px;font-weight:400;color:#7b7a9e;background:rgba(123,122,158,0.06);border:1px solid rgba(123,122,158,0.12);border-radius:20px;cursor:pointer;white-space:nowrap">Jeres energi</span>
+      <span onclick="Router.navigate('rel-epigenetik')" style="flex-shrink:0;padding:6px 14px;font-family:var(--font-sans);font-size:12px;font-weight:400;color:#7b7a9e;background:rgba(123,122,158,0.06);border:1px solid rgba(123,122,158,0.12);border-radius:20px;cursor:pointer;white-space:nowrap">Epigenetik</span>
+    </div>
+  </div>
+
   <div style="text-align:center;margin:0 auto 8px">
     <img src="assets/images/relationer_blad_liberation_HQ.png" alt="Relationer" style="width:100%;max-width:200px;mix-blend-mode:multiply;filter:saturate(0.7)">
   </div>
@@ -42,33 +53,6 @@
     <div class="time-shift-item" style="background:rgba(123,122,158,0.04);border-color:rgba(123,122,158,0.08)">
       <div class="time-shift-when" style="color:#a8a3be">I m&oslash;des i samme element</div>
       <div class="time-shift-what" style="color:#7b7a9e">N&aring;r Martin n&aring;r Metal &middot; 2031</div>
-    </div>
-  </div>
-
-  <!-- UNDERMENU -->
-  <div style="margin:4px 0 28px;padding:16px 18px;background:rgba(123,122,158,0.04);border-radius:14px;border:1px solid rgba(123,122,158,0.08)">
-    <div style="font-family:var(--font-sans);font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:#a8a3be;margin-bottom:12px">Udforsk</div>
-    <div style="display:flex;flex-direction:column;gap:8px">
-      <div onclick="Router.navigate('rel-lige-nu')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:white;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,0.04);cursor:pointer">
-        <div><div style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:#7b7a9e">Relationer lige nu</div><div style="font-family:var(--font-sans);font-size:11px;color:#b5b0c5;font-weight:300;margin-top:2px">Hvem er t&aelig;t p&aring; dig?</div></div>
-        <span style="color:#ccc;font-size:13px">&rarr;</span>
-      </div>
-      <div onclick="Router.navigate('rel-to-rytmer')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:white;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,0.04);cursor:pointer">
-        <div><div style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:#7b7a9e">To rytmer</div><div style="font-family:var(--font-sans);font-size:11px;color:#b5b0c5;font-weight:300;margin-top:2px">Hendes 7 &aring;r, hans 8</div></div>
-        <span style="color:#ccc;font-size:13px">&rarr;</span>
-      </div>
-      <div onclick="Router.navigate('rel-tre-gen')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:white;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,0.04);cursor:pointer">
-        <div><div style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:#7b7a9e">Tre generationer</div><div style="font-family:var(--font-sans);font-size:11px;color:#b5b0c5;font-weight:300;margin-top:2px">Mor &middot; Dig &middot; Barn</div></div>
-        <span style="color:#ccc;font-size:13px">&rarr;</span>
-      </div>
-      <div onclick="Router.navigate('rel-jeres-energi')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:white;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,0.04);cursor:pointer">
-        <div><div style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:#7b7a9e">Jeres energi</div><div style="font-family:var(--font-sans);font-size:11px;color:#b5b0c5;font-weight:300;margin-top:2px">V&aelig;lg en dato, se et m&oslash;de</div></div>
-        <span style="color:#ccc;font-size:13px">&rarr;</span>
-      </div>
-      <div onclick="Router.navigate('rel-epigenetik')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:white;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,0.04);cursor:pointer">
-        <div><div style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:#7b7a9e">Epigenetik &amp; arv</div><div style="font-family:var(--font-sans);font-size:11px;color:#b5b0c5;font-weight:300;margin-top:2px">Det du b&aelig;rer med dig</div></div>
-        <span style="color:#ccc;font-size:13px">&rarr;</span>
-      </div>
     </div>
   </div>
 
