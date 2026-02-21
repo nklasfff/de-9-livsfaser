@@ -1,4 +1,4 @@
-const CACHE_NAME = 'livsfaser-v12';
+const CACHE_NAME = 'livsfaser-v13';
 const urlsToCache = [
   './',
   './index.html',
@@ -66,7 +66,6 @@ const urlsToCache = [
   './screens/pra-healing.html',
   './screens/pra-inspiration.html',
   // Screens — Vinduer undersider
-  './screens/vin-tidsrejse.html',
   './screens/vin-tidslinje.html',
   './screens/vin-oejeblikke.html',
   // Screens — Relationer undersider

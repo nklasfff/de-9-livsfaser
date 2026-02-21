@@ -785,44 +785,6 @@ function initPraInspiration() {
    NIVEAU 2 — Vinduer undersider
    ============================================================ */
 
-/* ---- Tidsrejsen (vin-tidsrejse) ---- */
-function initVinTidsrejse() {
-  const dateInput = document.getElementById('tidsrejse-date');
-  const btn = document.getElementById('tidsrejse-btn');
-  const resultEl = document.getElementById('tidsrejse-result');
-
-  if (btn && dateInput) {
-    btn.addEventListener('click', () => {
-      const val = dateInput.value;
-      if (!val) return;
-      const targetDate = new Date(val);
-      const user = Storage.getUser();
-      if (!user || !user.birthdate) return;
-
-      const cycles = Calculations.allCycles(user.birthdate, targetDate);
-      const dominant = Calculations.getDominant(cycles.elements);
-      const elLabel = Calculations.ELEMENT_LABELS[dominant.element];
-      const phase = cycles.lifePhase;
-
-      if (resultEl) {
-        resultEl.innerHTML = `
-          <div class="card" style="margin-top:16px">
-            <div class="card-label">${formatDanishDate(targetDate)}</div>
-            <div class="card-title">Fase ${phase.phase} · ${phase.name}</div>
-            <div class="card-desc">
-              Livsfase: ${Calculations.ELEMENT_LABELS[phase.element]} ·
-              Årstid: ${cycles.season.season} (${Calculations.ELEMENT_LABELS[cycles.season.element]}) ·
-              Ugedag: ${cycles.weekday.day} (${Calculations.ELEMENT_LABELS[cycles.weekday.element]}) ·
-              Dominant: ${elLabel} (${dominant.count}/5)
-            </div>
-          </div>
-        `;
-        resultEl.style.display = 'block';
-      }
-    });
-  }
-}
-
 /* ---- Mit Livs Tidslinje (vin-tidslinje) ---- */
 function initVinTidslinje() {
   const data = getUserCycles();

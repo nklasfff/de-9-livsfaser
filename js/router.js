@@ -56,7 +56,6 @@ const Router = {
     'rej-baggrund':      { file: 'screens/rej-baggrund.html',      niveau: 2,  parent: 'rejse',       tone: 'rejse',       init: 'initRejBaggrund' },
 
     // Niveau 2 — Vinduer undersider
-    'vin-tidsrejse':     { file: 'screens/vin-tidsrejse.html',     niveau: 2,  parent: 'vinduer',     tone: 'vinduer',     init: 'initVinTidsrejse' },
     'vin-tidslinje':     { file: 'screens/vin-tidslinje.html',     niveau: 2,  parent: 'vinduer',     tone: 'vinduer',     init: 'initVinTidslinje' },
     'vin-oejeblikke':    { file: 'screens/vin-oejeblikke.html',    niveau: 2,  parent: 'vinduer',     tone: 'vinduer',     init: 'initVinOejeblikke' },
 
