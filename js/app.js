@@ -405,34 +405,373 @@ function initVinduer() {
 }
 
 /* ============================================================
-   NIVEAU 2 STUBS — will be implemented in Sprint 11-12
+   NIVEAU 2 — Cyklusser undersider
    ============================================================ */
 
-// Cyklusser undersider
-function initCykCic() {}
-function initCykNiFaser() {}
-function initCykFireUger() {}
-function initCykOvergange() {}
-function initCykKontrol() {}
+/* ---- Cyklusser i Cyklusser (cyk-cic) ---- */
+function initCykCic() {
+  const data = getUserCycles();
+  if (!data) return;
+  const { cycles, dominant } = data;
+  const elLabel = Calculations.ELEMENT_LABELS[dominant.element];
+  const nourishing = { 'VAND': 'TRÆ', 'TRÆ': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
+  const controlling = { 'VAND': 'ILD', 'TRÆ': 'JORD', 'ILD': 'METAL', 'JORD': 'VAND', 'METAL': 'TRÆ' };
 
-// Relationer undersider
+  // Analyze all 10 pairs
+  const cycleNames = ['Livsfase', 'Årstid', 'Måned', 'Ugedag', 'Organur'];
+  const els = cycles.elements;
+  const pairs = [];
+  for (let i = 0; i < els.length; i++) {
+    for (let j = i + 1; j < els.length; j++) {
+      let type = 'spejler';
+      if (els[i] === els[j]) type = 'resonans';
+      else if (nourishing[els[i]] === els[j] || nourishing[els[j]] === els[i]) type = 'naerer';
+      else if (controlling[els[i]] === els[j] || controlling[els[j]] === els[i]) type = 'udfordrer';
+      pairs.push({ a: cycleNames[i], b: cycleNames[j], elA: els[i], elB: els[j], type });
+    }
+  }
+
+  // Update climate text
+  const climate = analyzeClimate(cycles.elements);
+  setText('cic-climate-label', climate.label);
+  setText('cic-climate-text', climate.text);
+
+  // Update pair list
+  const pairList = document.getElementById('cic-pair-list');
+  if (pairList) {
+    pairList.innerHTML = pairs.map(p => {
+      const typeLabels = { resonans: 'Resonans', naerer: 'Nærende', udfordrer: 'Udfordrende', spejler: 'Spejlende' };
+      const elA = Calculations.ELEMENT_LABELS[p.elA];
+      const elB = Calculations.ELEMENT_LABELS[p.elB];
+      return `<div class="card"><div class="card-row"><div>
+        <div class="card-label">${p.a} · ${elA} — ${p.b} · ${elB}</div>
+        <div class="card-title">${typeLabels[p.type]}</div>
+        <div class="card-desc">${getCyclePairDesc(p.type, p.elA, p.elB)}</div>
+      </div></div></div>`;
+    }).join('');
+  }
+
+  // Summary
+  const resonansCount = pairs.filter(p => p.type === 'resonans').length;
+  const naerendeCount = pairs.filter(p => p.type === 'naerer').length;
+  setText('cic-summary', `${resonansCount} par i resonans, ${naerendeCount} nærende par. ${elLabel} samler dit energifelt.`);
+}
+
+function getCyclePairDesc(type, elA, elB) {
+  const a = Calculations.ELEMENT_LABELS[elA];
+  const b = Calculations.ELEMENT_LABELS[elB];
+  if (type === 'resonans') return `${a} møder ${a}. Når to cyklusser deler element, forstærkes energien. Du mærker det som klarhed.`;
+  if (type === 'naerer') return `${a} nærer ${b}. En blød overgang hvor det ene element bærer det andet videre.`;
+  if (type === 'udfordrer') return `${a} og ${b} udfordrer hinanden. Det skaber spænding — men også mulighed for vækst.`;
+  return `${a} og ${b} spejler hinanden stille. Ingen konflikt, ingen forstærkning — bare sameksistens.`;
+}
+
+/* ---- De Ni Livsfaser (cyk-ni-faser) ---- */
+function initCykNiFaser() {
+  const data = getUserCycles();
+  if (!data) return;
+  const phase = data.cycles.lifePhase;
+
+  // Highlight current phase card
+  const cards = document.querySelectorAll('.fase-card');
+  cards.forEach(card => {
+    const faseNum = parseInt(card.dataset.fase);
+    if (faseNum === phase.phase) {
+      card.classList.add('active');
+    }
+  });
+
+  // Update header
+  setText('ni-faser-current', `Du er i Fase ${phase.phase} · ${phase.name}`);
+}
+
+/* ---- De Fire Uger (cyk-fire-uger) ---- */
+function initCykFireUger() {
+  const data = getUserCycles();
+  if (!data) return;
+  const { cycles } = data;
+
+  // Check if user tracks menstruation
+  const user = data.user;
+  const tracksMenstruation = user.menstrualStart ? true : false;
+
+  if (tracksMenstruation && typeof MENSTRUAL_WEEK_DATA !== 'undefined') {
+    const menstrualDay = Calculations.calculateMenstrualDay(user.menstrualStart, new Date());
+    const weekNum = menstrualDay ? menstrualDay.week : 1;
+    setText('fire-uger-title', 'Din månedscyklus');
+    setText('fire-uger-current', `Dag ${menstrualDay ? menstrualDay.day : '?'} · Uge ${weekNum}`);
+    const weekData = MENSTRUAL_WEEK_DATA[weekNum];
+    if (weekData) {
+      setText('fire-uger-desc', weekData.bodyText);
+    }
+  } else if (typeof MOON_CYCLE_DATA !== 'undefined') {
+    setText('fire-uger-title', 'Månens fire faser');
+    setText('fire-uger-current', 'Følg månens rytme');
+  }
+}
+
+/* ---- Kroppens Store Overgange (cyk-overgange) ---- */
+function initCykOvergange() {
+  const data = getUserCycles();
+  if (!data) return;
+  const age = data.cycles.age;
+  const phase = data.cycles.lifePhase;
+
+  // Highlight relevant transition based on age
+  setText('overgange-current', `Du er ${age} år · Fase ${phase.phase} · ${phase.name}`);
+}
+
+/* ---- Kontrolcyklussen (cyk-kontrol) ---- */
+function initCykKontrol() {
+  const data = getUserCycles();
+  if (!data) return;
+  const domEl = data.dominant.element;
+  const elLabel = Calculations.ELEMENT_LABELS[domEl];
+
+  // Update dominant element display
+  setText('kontrol-dominant', `Dit element: ${elLabel}`);
+
+  // Get KONTROL_TEKST for dominant element
+  const kontrol = typeof KONTROL_TEKST !== 'undefined' ? KONTROL_TEKST[domEl] : null;
+  if (kontrol) {
+    setText('kontrol-naerer', kontrol.naerer);
+    setText('kontrol-kontrollerer', kontrol.kontrollerer);
+    setText('kontrol-naeret-af', kontrol.naeret_af);
+    setText('kontrol-kontrolleret-af', kontrol.kontrolleret_af);
+  }
+}
+
+/* ============================================================
+   NIVEAU 2 — Praksis undersider
+   ============================================================ */
+
+/* ---- Yin Yoga (pra-yin-yoga) ---- */
+function initPraYinYoga() {
+  const data = getUserCycles();
+  if (!data) return;
+  const domEl = data.dominant.element;
+  const elLabel = Calculations.ELEMENT_LABELS[domEl];
+
+  // Update featured section
+  const yoga = typeof YIN_YOGA_FULL !== 'undefined' ? YIN_YOGA_FULL[domEl] : null;
+  if (yoga && yoga.length > 0) {
+    setText('yoga-featured-label', `Anbefalet i dag · ${elLabel}`);
+    setText('yoga-featured-text', `${yoga[0].pose} ${yoga[0].desc}`);
+  }
+
+  // Update element label
+  setText('yoga-element-label', `Dit element · ${elLabel}`);
+}
+
+/* ---- EFT Tapping (pra-eft) ---- */
+function initPraEft() {
+  const data = getUserCycles();
+  if (!data) return;
+  const domEl = data.dominant.element;
+  const elLabel = Calculations.ELEMENT_LABELS[domEl];
+
+  setText('eft-featured-label', `Anbefalet i dag · ${elLabel}`);
+}
+
+/* ---- Følelsernes Hjul (pra-foelelser) ---- */
+function initPraFoelelser() {
+  const data = getUserCycles();
+  if (!data) return;
+  const domEl = data.dominant.element;
+  const elLabel = Calculations.ELEMENT_LABELS[domEl];
+
+  const feelMap = {
+    'VAND': { feeling: 'Frygt', desc: 'den stille respekt for det ukendte' },
+    'TRÆ': { feeling: 'Vrede', desc: 'den bundne kraft der søger retning' },
+    'ILD': { feeling: 'Glæde', desc: 'den åbne flamme der søger forbindelse' },
+    'JORD': { feeling: 'Bekymring', desc: 'den tunge omsorg der søger fundament' },
+    'METAL': { feeling: 'Sorg', desc: 'det nødvendige tab der gør plads' }
+  };
+  const feel = feelMap[domEl] || feelMap['VAND'];
+
+  setText('foelelser-featured-label', `Aktivt felt · ${elLabel} · ${feel.feeling}`);
+  setText('foelelser-featured-desc', feel.desc);
+}
+
+/* ---- Mindfulness (pra-mindfulness) ---- */
+function initPraMindfulness() {
+  const data = getUserCycles();
+  if (!data) return;
+  const domEl = data.dominant.element;
+  const elLabel = Calculations.ELEMENT_LABELS[domEl];
+
+  const mindMap = {
+    'VAND': 'Vand finder stilhed i dybden. Lyt til det der er under tankerne.',
+    'TRÆ': 'Træ finder nærvær i bevægelse. Mærk kroppen strække sig mod lyset.',
+    'ILD': 'Ild finder nærvær i forbindelse. Mærk hjertet og dem du elsker.',
+    'JORD': 'Jord finder nærvær i forankring. Mærk fødderne mod jorden.',
+    'METAL': 'Metal finder nærvær i frigivelse. Slip med udåndingen.'
+  };
+
+  setText('mindfulness-featured-label', `Din vej ind · ${elLabel}`);
+  setText('mindfulness-featured-text', mindMap[domEl] || '');
+}
+
+/* ---- Refleksion (pra-refleksion) ---- */
+function initPraRefleksion() {
+  const data = getUserCycles();
+  if (!data) return;
+  const phase = data.cycles.lifePhase;
+  const elLabel = Calculations.ELEMENT_LABELS[phase.element];
+
+  setText('refleksion-featured-label', `Fase ${phase.phase} · ${phase.name} · ${elLabel}`);
+
+  // Load phase-specific questions from data
+  const questions = typeof REFLEKSION_DATA !== 'undefined' ? REFLEKSION_DATA[phase.phase] : null;
+  const qList = document.getElementById('refleksion-questions');
+  if (questions && qList) {
+    qList.innerHTML = questions.map((q, i) => `
+      <div class="card"><div class="card-row"><div>
+        <div class="card-label">Spørgsmål ${i + 1}</div>
+        <div class="card-title">${q}</div>
+        <div class="card-desc">Tag dette spørgsmål med dig. Skriv i 10 minutter uden at stoppe.</div>
+      </div><div class="card-arrow" style="color:rgba(122,144,139,0.4)">→</div></div></div>
+    `).join('');
+  }
+}
+
+/* ---- Kost & Urter (pra-kost) ---- */
+function initPraKost() {
+  const data = getUserCycles();
+  if (!data) return;
+  const domEl = data.dominant.element;
+  const elLabel = Calculations.ELEMENT_LABELS[domEl];
+
+  setText('kost-featured-label', `Næring i dag · ${elLabel}`);
+
+  // Update food cards from INSIGHT_FOOD
+  const foods = typeof INSIGHT_FOOD !== 'undefined' ? INSIGHT_FOOD[domEl] : null;
+  const foodList = document.getElementById('kost-food-list');
+  if (foods && foodList) {
+    foodList.innerHTML = foods.map(f => `
+      <div class="card"><div class="card-row"><div>
+        <div class="card-label">${f.item}</div>
+        <div class="card-title">${f.item}</div>
+        <div class="card-desc">${f.desc}</div>
+      </div><div class="card-arrow" style="color:rgba(122,144,139,0.4)">→</div></div></div>
+    `).join('');
+  }
+
+  // Healing sound
+  const healing = typeof HEALING_SOUNDS !== 'undefined' ? HEALING_SOUNDS[domEl] : null;
+  if (healing) {
+    setText('kost-healing-label', `${elLabel}s healinglyd · ${healing.lyd}`);
+    setText('kost-healing-desc', healing.desc);
+  }
+}
+
+/* ---- Healinglyde (pra-healing) ---- */
+function initPraHealing() {
+  const data = getUserCycles();
+  if (!data) return;
+  const domEl = data.dominant.element;
+  const elLabel = Calculations.ELEMENT_LABELS[domEl];
+  const healing = typeof HEALING_SOUNDS !== 'undefined' ? HEALING_SOUNDS[domEl] : null;
+
+  if (healing) {
+    setText('healing-featured-label', `Din lyd · ${elLabel}`);
+    setText('healing-featured-text', `${healing.lyd} — ${healing.desc}`);
+  }
+}
+
+/* ---- Hvad Har Hjulpet Andre (pra-inspiration) ---- */
+function initPraInspiration() {
+  const data = getUserCycles();
+  if (!data) return;
+  const phase = data.cycles.lifePhase;
+
+  setText('inspiration-featured-label', `Mest brugt i Fase ${phase.phase}`);
+}
+
+/* ============================================================
+   NIVEAU 2 — Vinduer undersider
+   ============================================================ */
+
+/* ---- Tidsrejsen (vin-tidsrejse) ---- */
+function initVinTidsrejse() {
+  const dateInput = document.getElementById('tidsrejse-date');
+  const btn = document.getElementById('tidsrejse-btn');
+  const resultEl = document.getElementById('tidsrejse-result');
+
+  if (btn && dateInput) {
+    btn.addEventListener('click', () => {
+      const val = dateInput.value;
+      if (!val) return;
+      const targetDate = new Date(val);
+      const user = Storage.getUser();
+      if (!user || !user.birthdate) return;
+
+      const cycles = Calculations.allCycles(user.birthdate, targetDate);
+      const dominant = Calculations.getDominant(cycles.elements);
+      const elLabel = Calculations.ELEMENT_LABELS[dominant.element];
+      const phase = cycles.lifePhase;
+
+      if (resultEl) {
+        resultEl.innerHTML = `
+          <div class="card" style="margin-top:16px">
+            <div class="card-label">${formatDanishDate(targetDate)}</div>
+            <div class="card-title">Fase ${phase.phase} · ${phase.name}</div>
+            <div class="card-desc">
+              Livsfase: ${Calculations.ELEMENT_LABELS[phase.element]} ·
+              Årstid: ${cycles.season.season} (${Calculations.ELEMENT_LABELS[cycles.season.element]}) ·
+              Ugedag: ${cycles.weekday.day} (${Calculations.ELEMENT_LABELS[cycles.weekday.element]}) ·
+              Dominant: ${elLabel} (${dominant.count}/5)
+            </div>
+          </div>
+        `;
+        resultEl.style.display = 'block';
+      }
+    });
+  }
+}
+
+/* ---- Mit Livs Tidslinje (vin-tidslinje) ---- */
+function initVinTidslinje() {
+  const data = getUserCycles();
+  if (!data) return;
+  const age = data.cycles.age;
+  const phase = data.cycles.lifePhase;
+
+  setText('tidslinje-current', `Du er ${age} år · Fase ${phase.phase} · ${phase.name}`);
+
+  // Highlight current phase in timeline
+  const phases = document.querySelectorAll('.timeline-phase');
+  phases.forEach(p => {
+    const faseNum = parseInt(p.dataset.fase);
+    if (faseNum === phase.phase) {
+      p.classList.add('active');
+    }
+  });
+}
+
+/* ---- Vigtige Øjeblikke (vin-oejeblikke) ---- */
+function initVinOejeblikke() {
+  const data = getUserCycles();
+  if (!data) return;
+  const phase = data.cycles.lifePhase;
+
+  setText('oejeblikke-phase', `Fase ${phase.phase} · ${phase.name}`);
+}
+
+/* ============================================================
+   NIVEAU 2 — Relationer undersider (Sprint 12 stubs)
+   ============================================================ */
+
 function initRelLigeNu() {}
 function initRelToRytmer() {}
 function initRelTreGen() {}
 function initRelJeresEnergi() {}
 function initRelEpigenetik() {}
 
-// Praksis undersider
-function initPraYinYoga() {}
-function initPraEft() {}
-function initPraFoelelser() {}
-function initPraMindfulness() {}
-function initPraRefleksion() {}
-function initPraKost() {}
-function initPraHealing() {}
-function initPraInspiration() {}
+/* ============================================================
+   NIVEAU 2 — Rejse undersider (Sprint 12 stubs)
+   ============================================================ */
 
-// Rejse undersider
 function initRejUdvikling() {}
 function initRejJournal() {}
 function initRejFavoritter() {}
@@ -440,12 +779,10 @@ function initRejOpdagelser() {}
 function initRejAlleFaser() {}
 function initRejBaggrund() {}
 
-// Vinduer undersider
-function initVinTidsrejse() {}
-function initVinTidslinje() {}
-function initVinOejeblikke() {}
+/* ============================================================
+   NIVEAU 2 — Utility (Sprint 12 stubs)
+   ============================================================ */
 
-// Utility
 function initSoeg() {}
 function initIndstillinger() {}
 function initOmIsabelle() {}

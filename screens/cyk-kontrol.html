@@ -1,0 +1,130 @@
+<div class="section tone-cyklusser">
+  <div class="section-eyebrow">Mine Cyklusser · De fem elementer</div>
+  <div class="section-title">Kontrol-<br>cyklussen</div>
+  <div class="section-sub">De fem elementers dans<br>— næring og kontrol</div>
+  <div class="section-intro">De fem elementer nærer og kontrollerer hinanden i en evig dans. Vand nærer Træ. Træ nærer Ild. Ild nærer Jord. Jord nærer Metal. Metal nærer Vand. Og samtidig kontrollerer de hinanden: Vand slukker Ild. Træ udtørrer Jord. Ild smelter Metal. Jord dæmmer Vand. Metal fælder Træ.</div>
+
+  <!-- FIGUR: Pentagon-diagram med nærende og kontrollerende cyklusser -->
+  <div class="wave-timeline" style="background:rgba(108,130,169,0.03);border-color:rgba(108,130,169,0.07)">
+    <div class="wave-label" style="color:#8a96b3">De to cyklusser</div>
+    <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px;height:auto;display:block;margin:12px auto 8px">
+      <!-- Pentagon vertices: ILD(top), JORD(right), VAND(bottom-right), TRÆ(bottom-left), METAL(left) -->
+      <!-- Using positions roughly on a circle of radius 100, center at 150,140 -->
+      <!-- ILD: 150,45  JORD: 245,110  VAND: 210,210  TRÆ: 90,210  METAL: 55,110 -->
+
+      <!-- Nærende cyklus (outer, green dashed) -->
+      <path d="M 150,45 L 245,110 L 210,210 L 90,210 L 55,110 Z" fill="none" stroke="rgba(90,140,90,0.3)" stroke-width="1.2" stroke-dasharray="6,4"/>
+
+      <!-- Nærende pile (langs pentagon) -->
+      <line x1="150" y1="45" x2="245" y2="110" stroke="rgba(90,140,90,0.25)" stroke-width="0.8"/>
+      <line x1="245" y1="110" x2="210" y2="210" stroke="rgba(90,140,90,0.25)" stroke-width="0.8"/>
+      <line x1="210" y1="210" x2="90" y2="210" stroke="rgba(90,140,90,0.25)" stroke-width="0.8"/>
+      <line x1="90" y1="210" x2="55" y2="110" stroke="rgba(90,140,90,0.25)" stroke-width="0.8"/>
+      <line x1="55" y1="110" x2="150" y2="45" stroke="rgba(90,140,90,0.25)" stroke-width="0.8"/>
+
+      <!-- Kontrollerende cyklus (indre stjerne, rød dashed) -->
+      <line x1="150" y1="45" x2="210" y2="210" stroke="rgba(180,80,80,0.2)" stroke-width="0.8" stroke-dasharray="4,3"/>
+      <line x1="210" y1="210" x2="55" y2="110" stroke="rgba(180,80,80,0.2)" stroke-width="0.8" stroke-dasharray="4,3"/>
+      <line x1="55" y1="110" x2="245" y2="110" stroke="rgba(180,80,80,0.2)" stroke-width="0.8" stroke-dasharray="4,3"/>
+      <line x1="245" y1="110" x2="90" y2="210" stroke="rgba(180,80,80,0.2)" stroke-width="0.8" stroke-dasharray="4,3"/>
+      <line x1="90" y1="210" x2="150" y2="45" stroke="rgba(180,80,80,0.2)" stroke-width="0.8" stroke-dasharray="4,3"/>
+
+      <!-- Element-cirkler -->
+      <circle cx="150" cy="45" r="20" fill="rgba(108,130,169,0.10)" stroke="rgba(108,130,169,0.25)" stroke-width="0.8"/>
+      <text x="150" y="42" font-family="sans-serif" font-size="7" fill="#6c82a9" font-weight="400" letter-spacing="0.8" text-anchor="middle">ILD</text>
+      <text x="150" y="53" font-family="Georgia,serif" font-size="7" fill="#8a96b3" font-style="italic" text-anchor="middle">Hjerte</text>
+
+      <circle cx="245" cy="110" r="20" fill="rgba(108,130,169,0.06)" stroke="rgba(108,130,169,0.15)" stroke-width="0.6"/>
+      <text x="245" y="107" font-family="sans-serif" font-size="7" fill="#8a96b3" font-weight="300" letter-spacing="0.8" text-anchor="middle">JORD</text>
+      <text x="245" y="118" font-family="Georgia,serif" font-size="7" fill="#a3b0c5" font-style="italic" text-anchor="middle">Milt</text>
+
+      <circle cx="210" cy="210" r="20" fill="rgba(108,130,169,0.06)" stroke="rgba(108,130,169,0.15)" stroke-width="0.6"/>
+      <text x="210" y="207" font-family="sans-serif" font-size="7" fill="#8a96b3" font-weight="300" letter-spacing="0.8" text-anchor="middle">METAL</text>
+      <text x="210" y="218" font-family="Georgia,serif" font-size="7" fill="#a3b0c5" font-style="italic" text-anchor="middle">Lunger</text>
+
+      <circle cx="90" cy="210" r="20" fill="rgba(108,130,169,0.06)" stroke="rgba(108,130,169,0.15)" stroke-width="0.6"/>
+      <text x="90" y="207" font-family="sans-serif" font-size="7" fill="#8a96b3" font-weight="300" letter-spacing="0.8" text-anchor="middle">VAND</text>
+      <text x="90" y="218" font-family="Georgia,serif" font-size="7" fill="#a3b0c5" font-style="italic" text-anchor="middle">Nyrer</text>
+
+      <circle cx="55" cy="110" r="20" fill="rgba(108,130,169,0.06)" stroke="rgba(108,130,169,0.15)" stroke-width="0.6"/>
+      <text x="55" y="107" font-family="sans-serif" font-size="7" fill="#8a96b3" font-weight="300" letter-spacing="0.8" text-anchor="middle">TRÆ</text>
+      <text x="55" y="118" font-family="Georgia,serif" font-size="7" fill="#a3b0c5" font-style="italic" text-anchor="middle">Lever</text>
+
+      <!-- Legend -->
+      <line x1="60" y1="265" x2="90" y2="265" stroke="rgba(90,140,90,0.4)" stroke-width="1.2" stroke-dasharray="6,4"/>
+      <text x="95" y="268" font-family="sans-serif" font-size="7" fill="#8a96b3" font-weight="300">Nærende cyklus</text>
+      <line x1="60" y1="280" x2="90" y2="280" stroke="rgba(180,80,80,0.3)" stroke-width="0.8" stroke-dasharray="4,3"/>
+      <text x="95" y="283" font-family="sans-serif" font-size="7" fill="#8a96b3" font-weight="300">Kontrollerende cyklus</text>
+    </svg>
+    <div class="wave-caption" style="color:#8a96b3">Den ydre cirkel nærer. Den indre stjerne kontrollerer. Sammen holder de systemet i balance.</div>
+  </div>
+
+  <!-- FEELING-BOX -->
+  <div class="feeling-box" style="border-color:rgba(108,130,169,0.08);background:linear-gradient(135deg,rgba(108,130,169,0.04),rgba(139,154,157,0.04))">
+    <div class="feeling-label" style="color:#8a96b3">Hvad det betyder for dig</div>
+    <div class="feeling-text" style="color:#6c82a9">Kontrolcyklussen handler ikke om at noget er galt. Den handler om balance. Når et element er for stærkt, aktiveres kontrolmekanismen naturligt. Det er kroppens egen visdom — en selvregulering der har fungeret i tusinder af år.</div>
+  </div>
+
+  <!-- FEATURED: Dit element -->
+  <div class="featured feat-cyklusser">
+    <div class="featured-label" id="kontrol-dominant">Dit element: Vand</div>
+    <div class="featured-text">Se nedenfor hvad dit element nærer og kontrollerer — og hvad der nærer og kontrollerer dig.</div>
+    <div class="featured-sub">Baseret på dine fem cyklusser</div>
+  </div>
+
+  <div class="dots">· · ·</div>
+
+  <!-- 4 RELATIONSKORT -->
+  <div class="group-label" style="color:#6c82a9">De fire relationer</div>
+
+  <div class="card"><div class="card-row"><div>
+    <div class="card-label">Nærer</div>
+    <div class="card-title">Det du giver videre</div>
+    <div class="card-desc" id="kontrol-naerer">Vand nærer Træ. Din stille dybde giver vækst og retning til andre.</div>
+  </div></div></div>
+
+  <div class="card"><div class="card-row"><div>
+    <div class="card-label">Kontrollerer</div>
+    <div class="card-title">Det du holder i balance</div>
+    <div class="card-desc" id="kontrol-kontrollerer">Vand kontrollerer Ild. Din ro dæmper overmod og impulsivitet.</div>
+  </div></div></div>
+
+  <div class="card"><div class="card-row"><div>
+    <div class="card-label">Næret af</div>
+    <div class="card-title">Det der styrker dig</div>
+    <div class="card-desc" id="kontrol-naeret-af">Metal nærer Vand. Klarhed og struktur giver din dybde retning.</div>
+  </div></div></div>
+
+  <div class="card"><div class="card-row"><div>
+    <div class="card-label">Kontrolleret af</div>
+    <div class="card-title">Det der udfordrer dig</div>
+    <div class="card-desc" id="kontrol-kontrolleret-af">Jord kontrollerer Vand. For meget omsorg og bekymring kan begrænse din frie strøm.</div>
+  </div></div></div>
+
+  <div class="dots">· · ·</div>
+
+  <!-- INSIGHT-BOX -->
+  <div class="insight-box" style="background:rgba(108,130,169,0.05);border:1px solid rgba(108,130,169,0.10)">
+    <div class="insight-label" style="color:#8a96b3">Nøglen til balance</div>
+    <div class="insight-text" style="color:#6c82a9">Balance er ikke stilstand. Det er bevægelse. Kontrolcyklussen sikrer at intet element vokser sig for stærkt — og at det svage får næring. Når du mærker modstand, er det måske kontrolcyklussen der arbejder. Ikke imod dig — men for dig.</div>
+  </div>
+
+  <!-- PULL-QUOTE -->
+  <div class="pull-quote">
+    <div class="pull-quote-text" style="color:#8a96b3">«&#8201;De fem elementer er ikke separate kræfter. De er én bevægelse med fem ansigter. Og du bærer dem alle.&#8201;»</div>
+    <div class="pull-quote-attr">— Isabelle</div>
+  </div>
+
+  <!-- CROSS-LINKS -->
+  <div class="cross-links">
+    <div class="cross-links-label">Udforsk også</div>
+    <div class="cross-links-row">
+      <span class="cross-link" style="border-color:rgba(108,130,169,0.12);color:#8a96b3" onclick="Router.navigate('cyklusser')">Mine Cyklusser</span>
+      <span class="cross-link" style="border-color:rgba(108,130,169,0.12);color:#8a96b3" onclick="Router.navigate('cyk-cic')">Cyklusser i Cyklusser</span>
+      <span class="cross-link" style="border-color:rgba(108,130,169,0.12);color:#8a96b3" onclick="Router.navigate('cyk-ni-faser')">De Ni Livsfaser</span>
+    </div>
+  </div>
+
+  <div class="section-closer"><div class="lotus-fill"><img src="assets/images/rosa-lotus.png" alt=""></div></div>
+  <div class="back-to-top"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Tilbage til toppen ↑</a></div>
+</div>

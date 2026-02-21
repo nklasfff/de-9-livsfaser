@@ -1,0 +1,43 @@
+<div class="section tone-vinduer">
+  <div class="section-eyebrow">Mine Vinduer</div>
+  <div class="section-title">Tidsrejsen</div>
+  <div class="section-sub">V&aelig;lg en dato &middot; Se hvad der var aktivt</div>
+  <div class="section-intro">V&aelig;lg en dato &mdash; fortid eller fremtid &mdash; og se hvilke cyklusser der var aktive. For dig alene, eller sammen med nogen du holder af.</div>
+
+  <div class="feeling-box" style="border-color:rgba(107,95,123,0.08);background:linear-gradient(135deg,rgba(107,95,123,0.04),rgba(139,125,155,0.04))">
+    <div class="feeling-label" style="color:#a89bb3">Hvordan virker det?</div>
+    <div class="feeling-text" style="color:#6e5f7a">V&aelig;lg en dato nedenfor. Appen beregner automatisk hvilken livsfase, &aring;rstid, m&aring;ned, ugedag og organur der var aktivt &mdash; og hvad det betyder for din energi den dag.</div>
+  </div>
+
+  <!-- Date picker section -->
+  <div style="margin:24px 0">
+    <label style="display:block;font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#a89bb3;margin-bottom:8px">V&aelig;lg dato</label>
+    <input type="date" id="tidsrejse-date" style="width:100%;padding:14px 16px;border:1px solid rgba(107,95,123,0.15);border-radius:14px;font-family:'Playfair Display',serif;font-size:16px;color:#6B5F7B;background:rgba(107,95,123,0.03);outline:none">
+  </div>
+
+  <button id="tidsrejse-btn" style="width:100%;padding:14px;border:none;border-radius:14px;background:linear-gradient(135deg,#6B5F7B,#8B7D9B);color:white;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:24px">Se hvad der var aktivt &rarr;</button>
+
+  <!-- Results area -->
+  <div id="tidsrejse-results" style="display:none">
+    <!-- Will be populated by JS -->
+  </div>
+
+  <div class="dots">&middot; &middot; &middot;</div>
+
+  <div class="pull-quote">
+    <div class="pull-quote-text" style="color:#8B7D9B">&laquo;&thinsp;Tiden er ikke en linje. Den er en spiral &mdash; og de steder der g&oslash;r ondt, er de steder der vil forst&aring;s.&thinsp;&raquo;</div>
+    <div class="pull-quote-attr">&mdash; Isabelle</div>
+  </div>
+
+  <div class="cross-links">
+    <div class="cross-links-label">Udforsk ogs&aring;</div>
+    <div class="cross-links-row">
+      <span class="cross-link" style="border-color:rgba(107,95,123,0.12);color:#a89bb3" onclick="Router.navigate('vin-tidslinje')">Mit Livs Tidslinje</span>
+      <span class="cross-link" style="border-color:rgba(107,95,123,0.12);color:#a89bb3" onclick="Router.navigate('vin-oejeblikke')">Vigtige &Oslash;jeblikke</span>
+      <span class="cross-link" style="border-color:rgba(107,95,123,0.12);color:#a89bb3" onclick="Router.navigate('vinduer')">Mine Vinduer</span>
+    </div>
+  </div>
+
+  <div class="section-closer"><div class="lotus-fill"><img src="assets/images/rosa-lotus.png" alt=""></div></div>
+  <div class="back-to-top"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Tilbage til toppen &uarr;</a></div>
+</div>
