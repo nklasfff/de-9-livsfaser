@@ -1,4 +1,4 @@
-const CACHE_NAME = 'livsfaser-v4';
+const CACHE_NAME = 'livsfaser-v5';
 const urlsToCache = [
   './',
   './index.html',
@@ -53,7 +53,24 @@ const urlsToCache = [
   // Screens — Vinduer undersider
   './screens/vin-tidsrejse.html',
   './screens/vin-tidslinje.html',
-  './screens/vin-oejeblikke.html'
+  './screens/vin-oejeblikke.html',
+  // Screens — Relationer undersider
+  './screens/rel-lige-nu.html',
+  './screens/rel-to-rytmer.html',
+  './screens/rel-tre-gen.html',
+  './screens/rel-jeres-energi.html',
+  './screens/rel-epigenetik.html',
+  // Screens — Rejse undersider
+  './screens/rej-udvikling.html',
+  './screens/rej-journal.html',
+  './screens/rej-favoritter.html',
+  './screens/rej-opdagelser.html',
+  './screens/rej-alle-faser.html',
+  './screens/rej-baggrund.html',
+  // Screens — Utility
+  './screens/soeg.html',
+  './screens/indstillinger.html',
+  './screens/om-isabelle.html'
 ];
 
 // Install — cache core files

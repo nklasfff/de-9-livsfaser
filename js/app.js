@@ -759,30 +759,196 @@ function initVinOejeblikke() {
 }
 
 /* ============================================================
-   NIVEAU 2 — Relationer undersider (Sprint 12 stubs)
+   NIVEAU 2 — Relationer undersider
    ============================================================ */
 
-function initRelLigeNu() {}
-function initRelToRytmer() {}
-function initRelTreGen() {}
-function initRelJeresEnergi() {}
-function initRelEpigenetik() {}
+function initRelLigeNu() {
+  const data = getUserCycles();
+  if (!data) return;
+  const elLabel = Calculations.ELEMENT_LABELS[data.dominant.element];
+  setText('rel-featured-label', `Dig · ${elLabel}`);
+  setText('rel-featured-text', `${elLabel} dominerer dine cyklusser. Se hvordan det møder dine relationers elementer.`);
+}
+
+function initRelToRytmer() {
+  const data = getUserCycles();
+  if (!data) return;
+  const phase = data.cycles.lifePhase;
+  setText('rytmer-featured-label', `Din fase · ${phase.phase} · ${phase.name}`);
+}
+
+function initRelTreGen() {
+  const data = getUserCycles();
+  if (!data) return;
+  const phase = data.cycles.lifePhase;
+  const elLabel = Calculations.ELEMENT_LABELS[phase.element];
+  setText('tregen-featured-label', `Du · Fase ${phase.phase} · ${elLabel}`);
+}
+
+function initRelJeresEnergi() {
+  const dateInput = document.getElementById('energi-date');
+  const btn = document.getElementById('energi-btn');
+  const resultEl = document.getElementById('energi-result');
+
+  if (btn && dateInput) {
+    btn.addEventListener('click', () => {
+      const val = dateInput.value;
+      if (!val) return;
+      const targetDate = new Date(val);
+      const user = Storage.getUser();
+      if (!user || !user.birthdate) return;
+
+      const cycles = Calculations.allCycles(user.birthdate, targetDate);
+      const dominant = Calculations.getDominant(cycles.elements);
+      const elLabel = Calculations.ELEMENT_LABELS[dominant.element];
+
+      if (resultEl) {
+        resultEl.innerHTML = `
+          <div class="card" style="margin-top:16px">
+            <div class="card-label">${formatDanishDate(targetDate)}</div>
+            <div class="card-title">Din energi · ${elLabel}</div>
+            <div class="card-desc">
+              ${dominant.count} af 5 cyklusser peger mod ${elLabel}.
+              Livsfase: ${Calculations.ELEMENT_LABELS[cycles.lifePhase.element]} ·
+              Årstid: ${cycles.season.season} · Ugedag: ${cycles.weekday.day}
+            </div>
+          </div>
+        `;
+        resultEl.style.display = 'block';
+      }
+    });
+  }
+}
+
+function initRelEpigenetik() {
+  const data = getUserCycles();
+  if (!data) return;
+  const elLabel = Calculations.ELEMENT_LABELS[data.dominant.element];
+  setText('epigenetik-featured-label', `Dit element · ${elLabel}`);
+}
 
 /* ============================================================
-   NIVEAU 2 — Rejse undersider (Sprint 12 stubs)
+   NIVEAU 2 — Rejse undersider
    ============================================================ */
 
-function initRejUdvikling() {}
-function initRejJournal() {}
-function initRejFavoritter() {}
-function initRejOpdagelser() {}
-function initRejAlleFaser() {}
-function initRejBaggrund() {}
+function initRejUdvikling() {
+  const data = getUserCycles();
+  if (!data) return;
+  const phase = data.cycles.lifePhase;
+  setText('udvikling-featured-label', `Fase ${phase.phase} · ${phase.name}`);
+}
+
+function initRejJournal() {
+  const data = getUserCycles();
+  if (!data) return;
+  setText('journal-featured-label', `Din journal · Fase ${data.cycles.lifePhase.phase}`);
+}
+
+function initRejFavoritter() {
+  // Load saved favorites from localStorage
+  const favs = Storage.getFavorites ? Storage.getFavorites() : {};
+  const list = document.getElementById('favoritter-list');
+  if (list) {
+    const screens = favs.screens || [];
+    if (screens.length === 0) {
+      list.innerHTML = '<div class="card"><div class="card-row"><div><div class="card-desc">Du har endnu ingen favoritter. Gem sider du vil vende tilbage til.</div></div></div></div>';
+    } else {
+      list.innerHTML = screens.map(s => `
+        <div class="card" onclick="Router.navigate('${s}')"><div class="card-row"><div>
+          <div class="card-title">${s}</div>
+        </div><div class="card-arrow" style="color:rgba(138,150,169,0.4)">→</div></div></div>
+      `).join('');
+    }
+  }
+}
+
+function initRejOpdagelser() {
+  const data = getUserCycles();
+  if (!data) return;
+  setText('opdagelser-featured-label', `Fase ${data.cycles.lifePhase.phase} · opdagelser`);
+}
+
+function initRejAlleFaser() {
+  const data = getUserCycles();
+  if (!data) return;
+  const phase = data.cycles.lifePhase;
+  setText('alle-faser-current', `Du er i Fase ${phase.phase} · ${phase.name}`);
+
+  // Highlight current phase
+  const cards = document.querySelectorAll('.fase-card');
+  cards.forEach(card => {
+    const faseNum = parseInt(card.dataset.fase);
+    if (faseNum === phase.phase) card.classList.add('active');
+  });
+}
+
+function initRejBaggrund() {
+  // Mostly static content
+}
 
 /* ============================================================
-   NIVEAU 2 — Utility (Sprint 12 stubs)
+   NIVEAU 2 — Utility
    ============================================================ */
 
-function initSoeg() {}
-function initIndstillinger() {}
-function initOmIsabelle() {}
+function initSoeg() {
+  const input = document.getElementById('soeg-input');
+  if (input) {
+    input.addEventListener('input', () => {
+      const q = input.value.toLowerCase().trim();
+      const results = document.getElementById('soeg-results');
+      const list = document.getElementById('soeg-results-list');
+      if (!q || q.length < 2) {
+        if (results) results.style.display = 'none';
+        return;
+      }
+      // Simple search across screen names
+      const matches = Object.keys(Router.screens).filter(name => {
+        return name.includes(q) || (Router.screens[name].tone && Router.screens[name].tone.includes(q));
+      });
+      if (results && list) {
+        results.style.display = 'block';
+        list.innerHTML = matches.length > 0
+          ? matches.map(m => `<div class="card" onclick="Router.navigate('${m}')"><div class="card-row"><div><div class="card-title">${m}</div></div><div class="card-arrow">→</div></div></div>`).join('')
+          : '<div class="card"><div class="card-row"><div><div class="card-desc">Ingen resultater</div></div></div></div>';
+      }
+    });
+  }
+}
+
+function initIndstillinger() {
+  const user = Storage.getUser();
+  if (user && user.birthdate) {
+    setText('ind-birthdate', `Fødselsdato: ${user.birthdate}`);
+    const input = document.getElementById('ind-birth-input');
+    if (input) input.value = user.birthdate;
+  }
+
+  // Save new birthdate
+  const saveBtn = document.getElementById('ind-birth-save');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', () => {
+      const input = document.getElementById('ind-birth-input');
+      if (!input || !input.value) return;
+      const u = Storage.getUser() || {};
+      u.birthdate = input.value;
+      Storage.saveUser(u);
+      setText('ind-birthdate', `Fødselsdato: ${input.value}`);
+      alert('Gemt!');
+    });
+  }
+
+  // Reset data
+  const resetBtn = document.getElementById('ind-reset');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      if (confirm('Er du sikker? Alle data slettes.')) {
+        Storage.clearAll();
+        Router.navigate('onboarding', { direction: 'replace' });
+      }
+    });
+  }
+}
+
+function initOmIsabelle() {
+  // Mostly static content
+}
