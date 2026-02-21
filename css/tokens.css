@@ -1,0 +1,117 @@
+/* ============================================================
+   TOKENS — Design tokens for De 9 Livsfaser
+   ============================================================ */
+
+/* Self-hosted fonts */
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('../fonts/playfair-display-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('../fonts/playfair-display-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('../fonts/playfair-display-italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('../fonts/playfair-display-medium-italic.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DM Sans';
+  src: url('../fonts/dm-sans-light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DM Sans';
+  src: url('../fonts/dm-sans-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DM Sans';
+  src: url('../fonts/dm-sans-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Fonts */
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Core colors */
+  --bg: #FDFCFB;
+  --text-dark: #2a2520;
+  --text-body: #3a3530;
+  --text-mid: #555;
+  --text-light: #888;
+  --text-muted: #999;
+  --text-faint: #aaa;
+  --text-ghost: #bbb;
+  --text-pale: #ccc;
+
+  /* App accent colors */
+  --blaa: #6c82a9;
+  --blaa-light: #889ec3;
+  --blaa-pale: #9cabc3;
+  --neutral: #5A74A5;
+  --lilla: #6B5F7B;
+  --lilla-light: #8B7D9B;
+  --lilla-pale: #a89bb3;
+
+  /* Section tone colors */
+  --tone-cyklusser: #6c82a9;
+  --tone-relationer: #7b7a9e;
+  --tone-praksis: #7a908b;
+  --tone-rejse: #8a96a9;
+  --tone-vinduer: #6B5F7B;
+
+  /* Section light colors */
+  --tone-cyklusser-light: #889ec3;
+  --tone-relationer-light: #9e9db8;
+  --tone-relationer-pale: #a8a3be;
+  --tone-praksis-light: #9db3ad;
+  --tone-praksis-pale: #a3b3ae;
+  --tone-rejse-light: #a8b2c1;
+  --tone-rejse-pale: #adb5c1;
+  --tone-vinduer-light: #8B7D9B;
+  --tone-vinduer-pale: #a89bb3;
+
+  /* Functional */
+  --error: #C85A54;
+  --border-subtle: rgba(0,0,0,0.06);
+  --shadow-card: 0 2px 10px rgba(0,0,0,0.04);
+  --shadow-card-sm: 0 2px 8px rgba(0,0,0,0.03);
+
+  /* Layout */
+  --radius: 14px;
+  --radius-sm: 12px;
+  --radius-pill: 20px;
+  --radius-full: 50%;
+
+  /* Spacing */
+  --pad-screen: 24px;
+  --header-height: 60px;
+  --arc-nav-height: 100px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}

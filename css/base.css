@@ -1,0 +1,146 @@
+/* ============================================================
+   BASE — Reset, layout, header, transitions
+   ============================================================ */
+
+/* Reset */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+body {
+  background: var(--bg);
+  font-family: var(--font-sans);
+  color: var(--text-mid);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; border: none; background: none; }
+input { font: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+
+/* App shell layout */
+#app {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* HEADER */
+.app-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: var(--bg);
+  padding: var(--safe-top) 0 0;
+}
+.app-header-inner {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--pad-screen);
+  position: relative;
+}
+.app-header-title {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-style: italic;
+  color: var(--text-dark);
+  font-weight: 400;
+}
+.app-header-title span {
+  color: var(--lilla);
+  font-size: 28px;
+}
+.header-accent {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(108,130,169,0.28) 25%, rgba(108,130,169,0.28) 75%, transparent);
+  margin: 0 var(--pad-screen);
+}
+
+/* Back button */
+.back-btn {
+  position: absolute;
+  left: var(--pad-screen);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--blaa);
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.back-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.back-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Search icon */
+.search-btn {
+  position: absolute;
+  right: var(--pad-screen);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--blaa-pale);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.search-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.search-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Screen container */
+#screen-content {
+  padding-top: calc(56px + var(--safe-top) + 1px);
+  padding-bottom: calc(var(--arc-nav-height) + var(--safe-bottom));
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+}
+
+/* Screen transitions */
+.screen-enter {
+  animation: screenSlideIn 0.28s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+.screen-enter-back {
+  animation: screenSlideBack 0.28s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+.screen-fade {
+  animation: screenFade 0.22s ease forwards;
+}
+@keyframes screenSlideIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes screenSlideBack {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes screenFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Utility */
+.hidden { display: none !important; }
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
