@@ -188,7 +188,7 @@ img { max-width: 100%; height: auto; display: block; margin-left: auto; margin-r
 
 .drawer-sub {
   padding: 10px 24px 10px 40px; cursor: pointer;
-  font-family: var(--font-sans); font-size: 14px;
+  font-family: var(--font-sans); font-size: 15px;
   color: var(--text-muted); font-weight: 300;
 }
 .drawer-sub:active { background: rgba(108,130,169,0.05); }

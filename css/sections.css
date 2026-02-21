@@ -7,8 +7,8 @@
 .section-num {
   text-align: center;
   font-family: var(--font-sans);
-  font-size: 10px;
-  color: #bbb;
+  font-size: 11px;
+  color: #777;
   letter-spacing: 2px;
   text-transform: uppercase;
   margin-bottom: 6px;
@@ -16,11 +16,11 @@
 .section-eyebrow {
   text-align: center;
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 3px;
   text-transform: uppercase;
   margin-bottom: 8px;
-  opacity: 0.85;
+  opacity: 0.95;
 }
 .section-title {
   text-align: center;
@@ -34,7 +34,7 @@
 .section-sub {
   text-align: center;
   font-family: var(--font-sans);
-  font-size: 14.5px;
+  font-size: 15.5px;
   font-weight: 300;
   font-style: italic;
   margin-bottom: 28px;
@@ -43,7 +43,7 @@
 .section-intro {
   text-align: center;
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 15px;
   color: #888;
   font-weight: 300;
   line-height: 1.65;

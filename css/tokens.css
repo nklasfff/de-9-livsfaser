@@ -64,10 +64,10 @@
   --text-body: #3a3530;
   --text-mid: #555;
   --text-light: #888;
-  --text-muted: #999;
-  --text-faint: #aaa;
-  --text-ghost: #bbb;
-  --text-pale: #ccc;
+  --text-muted: #777;
+  --text-faint: #888;
+  --text-ghost: #999;
+  --text-pale: #aaa;
 
   /* App accent colors */
   --blaa: #6c82a9;
