@@ -44,14 +44,14 @@ img { max-width: 100%; height: auto; display: block; margin-left: auto; margin-r
 }
 .app-header-title {
   font-family: var(--font-serif);
-  font-size: 16px;
+  font-size: 17px;
   font-style: italic;
   color: var(--text-dark);
   font-weight: 400;
 }
 .app-header-title span {
   color: var(--lilla);
-  font-size: 28px;
+  font-size: 30px;
 }
 .header-accent {
   height: 1px;
@@ -66,7 +66,7 @@ img { max-width: 100%; height: auto; display: block; margin-left: auto; margin-r
   top: 50%;
   transform: translateY(-50%);
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 15px;
   color: var(--blaa);
   font-weight: 300;
   display: flex;
@@ -147,11 +147,11 @@ img { max-width: 100%; height: auto; display: block; margin-left: auto; margin-r
   border-bottom: 1px solid rgba(108,130,169,0.10);
 }
 .drawer-title {
-  font-family: var(--font-serif); font-size: 18px;
+  font-family: var(--font-serif); font-size: 20px;
   font-style: italic; color: var(--text-dark);
 }
 .drawer-close {
-  font-size: 28px; color: var(--blaa-pale); line-height: 1;
+  font-size: 30px; color: var(--blaa-pale); line-height: 1;
   padding: 0 4px;
 }
 
@@ -161,7 +161,7 @@ img { max-width: 100%; height: auto; display: block; margin-left: auto; margin-r
   padding: 12px 24px; cursor: pointer;
 }
 .drawer-item-title {
-  font-family: var(--font-sans); font-size: 14px;
+  font-family: var(--font-sans); font-size: 15px;
   color: var(--text-mid); font-weight: 400;
 }
 .drawer-item:active { background: rgba(108,130,169,0.05); }
@@ -170,12 +170,12 @@ img { max-width: 100%; height: auto; display: block; margin-left: auto; margin-r
 .drawer-section-header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 14px 24px; cursor: pointer;
-  font-family: var(--font-serif); font-size: 15px;
+  font-family: var(--font-serif); font-size: 16px;
   font-style: italic; color: var(--blaa);
 }
 .drawer-section-header:active { background: rgba(108,130,169,0.05); }
 .drawer-chevron {
-  font-style: normal; font-size: 18px; color: var(--blaa-pale);
+  font-style: normal; font-size: 20px; color: var(--blaa-pale);
   transition: transform 0.2s;
 }
 .drawer-section.open .drawer-chevron { transform: rotate(90deg); }
@@ -188,7 +188,7 @@ img { max-width: 100%; height: auto; display: block; margin-left: auto; margin-r
 
 .drawer-sub {
   padding: 10px 24px 10px 40px; cursor: pointer;
-  font-family: var(--font-sans); font-size: 13px;
+  font-family: var(--font-sans); font-size: 14px;
   color: var(--text-muted); font-weight: 300;
 }
 .drawer-sub:active { background: rgba(108,130,169,0.05); }
