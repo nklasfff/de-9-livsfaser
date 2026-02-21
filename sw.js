@@ -1,4 +1,4 @@
-const CACHE_NAME = 'livsfaser-v11';
+const CACHE_NAME = 'livsfaser-v12';
 const urlsToCache = [
   './',
   './index.html',
@@ -25,6 +25,21 @@ const urlsToCache = [
   './assets/images/min-rejse-ikigai.png',
   './assets/images/vinduer-tid-lilla.png',
   './assets/images/relationer-forside.png',
+  // Undersider-billeder
+  './assets/images/cyklusser_i_cyklusser_v4.svg',
+  './assets/images/de_ni_livsfaser.png',
+  './assets/images/de-fire-uger.png',
+  './assets/images/nyre_qi_generel.png',
+  './assets/images/kontrolcyklus.png',
+  './assets/images/to-rytmer-foto.png',
+  './assets/images/epigenetik-tidslinje.svg',
+  './assets/images/IMG_1475.png',
+  './assets/images/eft_front.png',
+  './assets/images/foelelsernes-kort.png',
+  './assets/images/refleksioner_figur.svg',
+  './assets/images/yinyang_highres.png',
+  './assets/images/favoritter_blad_HQ.png',
+  './assets/images/opdagelser_cirkler_HQ.png',
   // Screens — Onboarding + Forside
   './screens/onboarding.html',
   './screens/onboarding-result.html',
