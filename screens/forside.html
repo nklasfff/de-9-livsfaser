@@ -48,6 +48,33 @@
 <!-- VINDUER SECTION -->
 <div class="s">
   <div class="eyebrow">Tidsrejsen</div>
+
+  <!-- 9-fase bue -->
+  <div style="text-align:center;margin:4px 0 12px">
+    <svg viewBox="0 0 300 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px">
+      <path d="M 20,72 Q 150,0 280,72" fill="none" stroke="rgba(108,130,169,0.15)" stroke-width="0.7"/>
+      <circle cx="20" cy="72" r="8" fill="rgba(108,130,169,0.08)" stroke="rgba(108,130,169,0.20)" stroke-width="0.6"/>
+      <text x="20" y="75" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(108,130,169,0.5)" font-style="italic">1</text>
+      <circle cx="52" cy="52" r="8" fill="rgba(108,130,169,0.08)" stroke="rgba(108,130,169,0.20)" stroke-width="0.6"/>
+      <text x="52" y="55" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(108,130,169,0.5)" font-style="italic">2</text>
+      <circle cx="84" cy="38" r="8" fill="rgba(108,130,169,0.08)" stroke="rgba(108,130,169,0.20)" stroke-width="0.6"/>
+      <text x="84" y="41" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(108,130,169,0.5)" font-style="italic">3</text>
+      <circle cx="117" cy="28" r="8" fill="rgba(108,130,169,0.08)" stroke="rgba(108,130,169,0.20)" stroke-width="0.6"/>
+      <text x="117" y="31" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(108,130,169,0.5)" font-style="italic">4</text>
+      <circle cx="150" cy="24" r="8" fill="rgba(108,130,169,0.08)" stroke="rgba(108,130,169,0.20)" stroke-width="0.6"/>
+      <text x="150" y="27" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(108,130,169,0.5)" font-style="italic">5</text>
+      <circle cx="183" cy="28" r="8" fill="rgba(108,130,169,0.08)" stroke="rgba(108,130,169,0.20)" stroke-width="0.6"/>
+      <text x="183" y="31" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(108,130,169,0.5)" font-style="italic">6</text>
+      <circle cx="216" cy="38" r="8" fill="rgba(108,130,169,0.08)" stroke="rgba(108,130,169,0.20)" stroke-width="0.6"/>
+      <text x="216" y="41" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(108,130,169,0.5)" font-style="italic">7</text>
+      <circle cx="248" cy="52" r="8" fill="rgba(108,130,169,0.08)" stroke="rgba(108,130,169,0.20)" stroke-width="0.6"/>
+      <text x="248" y="55" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(108,130,169,0.5)" font-style="italic">8</text>
+      <circle cx="280" cy="72" r="9" fill="rgba(108,130,169,0.14)" stroke="rgba(108,130,169,0.30)" stroke-width="0.8" id="forside-arc-active"/>
+      <text x="280" y="75" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(108,130,169,0.7)" font-weight="500" font-style="italic">9</text>
+    </svg>
+    <div style="height:1px;max-width:240px;margin:6px auto 0;background:linear-gradient(90deg,transparent,rgba(108,130,169,0.18),transparent)"></div>
+  </div>
+
   <div class="title">Mine Vinduer</div>
   <div class="body-text">V&aelig;lg en dato og se hvad der var aktivt &mdash; for dig alene eller med nogen du holder af.</div>
   <div class="vinduer-card" onclick="Router.navigate('vinduer')">
@@ -86,11 +113,11 @@
     <div class="ci-q">Hvad m&aelig;rker du i kroppen?</div>
     <div class="ci-hint">V&aelig;lg det der passer &mdash; eller spring over</div>
     <div class="ci-btns">
-      <div class="ci-btn">&#x1f30a; Stille</div>
-      <div class="ci-btn">&#x1f331; Voksende</div>
-      <div class="ci-btn">&#x1f525; Intens</div>
-      <div class="ci-btn">&#x1f343; Rodf&aelig;stet</div>
-      <div class="ci-btn">&#x2728; Klar</div>
+      <div class="ci-btn"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c2-3 4-4 6-1s4 2 6-1 4-2 6 1"/><path d="M2 17c2-3 4-4 6-1s4 2 6-1 4-2 6 1" opacity="0.4"/></svg> Stille</div>
+      <div class="ci-btn"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V10"/><path d="M9 14c-2-1-3-3-2-5"/><path d="M15 14c2-1 3-3 2-5"/><path d="M12 10c0-3 2-6 5-8"/><path d="M12 10c0-3-2-6-5-8" opacity="0.5"/></svg> Voksende</div>
+      <div class="ci-btn"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c-4 0-6-3-6-7 0-5 6-12 6-12s6 7 6 12c0 4-2 7-6 7z"/><path d="M12 22v-8" opacity="0.4"/></svg> Intens</div>
+      <div class="ci-btn"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="4"/><path d="M12 14v4"/><path d="M8 22c0-2.2 1.8-4 4-4s4 1.8 4 4" opacity="0.5"/><path d="M9 7l-2-3" opacity="0.4"/><path d="M15 7l2-3" opacity="0.4"/></svg> Rodf&aelig;stet</div>
+      <div class="ci-btn"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83" opacity="0.4"/><path d="M16.24 7.76l2.83-2.83" opacity="0.4"/></svg> Klar</div>
     </div>
   </div>
 </div>
