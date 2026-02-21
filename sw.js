@@ -1,4 +1,4 @@
-const CACHE_NAME = 'livsfaser-v14';
+const CACHE_NAME = 'livsfaser-v15';
 const urlsToCache = [
   './',
   './index.html',
@@ -50,6 +50,13 @@ const urlsToCache = [
   './screens/praksis.html',
   './screens/rejse.html',
   './screens/vinduer.html',
+  // Screens — Cirkel-detaljer (0B-0G)
+  './screens/cir-dit-liv.html',
+  './screens/cir-livsfase.html',
+  './screens/cir-aarstid.html',
+  './screens/cir-maaned.html',
+  './screens/cir-ugedag.html',
+  './screens/cir-organur.html',
   // Screens — Cyklusser undersider
   './screens/cyk-cic.html',
   './screens/cyk-ni-faser.html',

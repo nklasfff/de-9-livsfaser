@@ -23,6 +23,14 @@ const Router = {
     'rejse':             { file: 'screens/rejse.html',             niveau: 1,  parent: 'forside',     tone: 'rejse',       init: 'initRejse' },
     'vinduer':           { file: 'screens/vinduer.html',           niveau: 1,  parent: 'forside',     tone: 'vinduer',     init: 'initVinduer' },
 
+    // Niveau 2 — Cirkel-detaljer (0B-0G fra forside koncentriske cirkler)
+    'cir-dit-liv':       { file: 'screens/cir-dit-liv.html',       niveau: 2,  parent: 'forside',     tone: null,          init: 'initCirDitLiv' },
+    'cir-livsfase':      { file: 'screens/cir-livsfase.html',      niveau: 2,  parent: 'forside',     tone: null,          init: 'initCirLivsfase' },
+    'cir-aarstid':       { file: 'screens/cir-aarstid.html',       niveau: 2,  parent: 'forside',     tone: null,          init: 'initCirAarstid' },
+    'cir-maaned':        { file: 'screens/cir-maaned.html',        niveau: 2,  parent: 'forside',     tone: null,          init: 'initCirMaaned' },
+    'cir-ugedag':        { file: 'screens/cir-ugedag.html',        niveau: 2,  parent: 'forside',     tone: null,          init: 'initCirUgedag' },
+    'cir-organur':       { file: 'screens/cir-organur.html',       niveau: 2,  parent: 'forside',     tone: null,          init: 'initCirOrganur' },
+
     // Niveau 2 — Cyklusser undersider
     'cyk-cic':           { file: 'screens/cyk-cic.html',           niveau: 2,  parent: 'cyklusser',   tone: 'cyklusser',   init: 'initCykCic' },
     'cyk-ni-faser':      { file: 'screens/cyk-ni-faser.html',      niveau: 2,  parent: 'cyklusser',   tone: 'cyklusser',   init: 'initCykNiFaser' },

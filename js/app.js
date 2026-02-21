@@ -498,6 +498,34 @@ function initVinduer() {
 }
 
 /* ============================================================
+   NIVEAU 2 — Cirkel-detaljer (0B-0G) fra forside
+   ============================================================ */
+
+function initCirDitLiv() {
+  // Static content from preview — no dynamic init needed
+}
+
+function initCirLivsfase() {
+  // Static content from preview — no dynamic init needed
+}
+
+function initCirAarstid() {
+  // Static content from preview — no dynamic init needed
+}
+
+function initCirMaaned() {
+  // Static content from preview — no dynamic init needed
+}
+
+function initCirUgedag() {
+  // Static content from preview — no dynamic init needed
+}
+
+function initCirOrganur() {
+  // Static content from preview — no dynamic init needed
+}
+
+/* ============================================================
    NIVEAU 2 — Cyklusser undersider
    ============================================================ */
 
