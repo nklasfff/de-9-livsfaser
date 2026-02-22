@@ -1,0 +1,239 @@
+/* ============================================================
+   BASE — Reset, layout, header, transitions
+   ============================================================ */
+
+/* Reset */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+body {
+  background: var(--bg);
+  font-family: var(--font-sans);
+  color: var(--text-mid);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; border: none; background: none; }
+input { font: inherit; }
+img { max-width: 100%; height: auto; display: block; margin-left: auto; margin-right: auto; }
+
+/* App shell layout */
+#app {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* HEADER */
+.app-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: var(--bg);
+  padding: var(--safe-top) 0 0;
+}
+.app-header-inner {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--pad-screen);
+  position: relative;
+}
+.app-header-title {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-style: italic;
+  color: var(--text-dark);
+  font-weight: 400;
+}
+.app-header-title span {
+  color: var(--lilla);
+  font-size: 30px;
+}
+.header-accent {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(108,130,169,0.28) 25%, rgba(108,130,169,0.28) 75%, transparent);
+  margin: 0 var(--pad-screen);
+}
+
+/* Back button */
+.back-btn {
+  position: absolute;
+  left: var(--pad-screen);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--blaa);
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.back-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.back-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Search icon */
+.search-btn {
+  position: absolute;
+  right: var(--pad-screen);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--blaa-pale);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.search-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.search-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Menu button (hamburger) */
+.menu-btn {
+  position: absolute;
+  left: var(--pad-screen);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--blaa);
+  padding: 4px;
+}
+.menu-btn svg { width: 20px; height: 20px; }
+/* Hide menu btn when back btn is visible */
+.back-btn.visible ~ .menu-btn,
+.menu-btn.hidden-by-back { display: none; }
+
+/* Drawer overlay */
+.drawer-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(0,0,0,0.25);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+.drawer-overlay.open { opacity: 1; pointer-events: auto; }
+
+/* Drawer panel */
+.drawer {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: 280px; max-width: 80vw;
+  z-index: 310;
+  background: var(--bg);
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding: var(--safe-top) 0 var(--safe-bottom);
+}
+.drawer.open { transform: translateX(0); }
+
+.drawer-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid rgba(108,130,169,0.10);
+}
+.drawer-title {
+  font-family: var(--font-serif); font-size: 20px;
+  font-style: italic; color: var(--text-dark);
+}
+.drawer-close {
+  font-size: 30px; color: var(--blaa-pale); line-height: 1;
+  padding: 0 4px;
+}
+
+.drawer-sections { padding: 12px 0; }
+
+.drawer-item {
+  padding: 12px 24px; cursor: pointer;
+}
+.drawer-item-title {
+  font-family: var(--font-sans); font-size: 15px;
+  color: var(--text-mid); font-weight: 400;
+}
+.drawer-item:active { background: rgba(108,130,169,0.05); }
+
+.drawer-section { border-bottom: 1px solid rgba(108,130,169,0.06); }
+.drawer-section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 24px; cursor: pointer;
+  font-family: var(--font-serif); font-size: 16px;
+  font-style: italic; color: var(--blaa);
+}
+.drawer-section-header:active { background: rgba(108,130,169,0.05); }
+.drawer-chevron {
+  font-style: normal; font-size: 20px; color: var(--blaa-pale);
+  transition: transform 0.2s;
+}
+.drawer-section.open .drawer-chevron { transform: rotate(90deg); }
+
+.drawer-section-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+.drawer-section.open .drawer-section-body { max-height: 500px; }
+
+.drawer-sub {
+  padding: 10px 24px 10px 40px; cursor: pointer;
+  font-family: var(--font-sans); font-size: 15px;
+  color: var(--text-muted); font-weight: 300;
+}
+.drawer-sub:active { background: rgba(108,130,169,0.05); }
+
+.drawer-divider {
+  height: 1px; margin: 8px 24px;
+  background: rgba(108,130,169,0.10);
+}
+
+/* Screen container */
+#screen-content {
+  padding-top: calc(56px + var(--safe-top) + 1px);
+  padding-bottom: 24px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+}
+
+/* Screen transitions */
+.screen-enter {
+  animation: screenSlideIn 0.28s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+.screen-enter-back {
+  animation: screenSlideBack 0.28s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+.screen-fade {
+  animation: screenFade 0.22s ease forwards;
+}
+@keyframes screenSlideIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes screenSlideBack {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes screenFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Utility */
+.hidden { display: none !important; }
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
