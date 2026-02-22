@@ -774,6 +774,93 @@ function initPraksis() {
   const domEl = dominant.element;
   const elLabel = Calculations.ELEMENT_LABELS[domEl];
 
+
+  // ---- WAVE 2 RENDERING ----
+
+  // Element Essay (Wave 2)
+  const elEssayEl = document.getElementById('fasedetail-element-essay');
+  if (elEssayEl && detail.elementEssay) {
+    elEssayEl.innerHTML = `
+      <div class="feeling-box" style="margin-top:16px">
+        <div class="feeling-label" style="color:#9cabc3">Om ${elLabel}-elementet</div>
+        <div class="feeling-text">${detail.elementEssay.replace(/\n\n/g, '</div><div class="feeling-text" style="margin-top:8px">')}</div>
+      </div>`;
+  }
+
+  // Balance / Ubalance (Wave 2)
+  const balanceEl = document.getElementById('fasedetail-balance');
+  if (balanceEl && detail.balanceTekst) {
+    let balanceHTML = `
+      <div class="group-label" style="color:#6c82a9;margin-top:20px">Balance & ubalance</div>
+      <div class="card" style="margin-bottom:8px"><div class="card-row"><div>
+        <div class="card-label">N\u00e5r ${elLabel.toLowerCase()} er i balance</div>
+        <div class="card-desc">${detail.balanceTekst}</div>
+      </div></div></div>`;
+    if (detail.ubalanceTegn) {
+      const ut = detail.ubalanceTegn;
+      balanceHTML += `
+      <div class="card" style="margin-bottom:8px"><div class="card-row"><div>
+        <div class="card-label">Fysiske tegn p\u00e5 ubalance</div>
+        <div class="card-desc"><ul style="margin:4px 0;padding-left:18px">${ut.fysiske.map(f => '<li style="margin-bottom:4px">' + f + '</li>').join('')}</ul></div>
+      </div></div></div>
+      <div class="card" style="margin-bottom:8px"><div class="card-row"><div>
+        <div class="card-label">Mentale og f\u00f8lelsesm\u00e6ssige tegn</div>
+        <div class="card-desc"><ul style="margin:4px 0;padding-left:18px">${ut.mentale.map(m => '<li style="margin-bottom:4px">' + m + '</li>').join('')}</ul></div>
+      </div></div></div>
+      <div class="card"><div class="card-row"><div>
+        <div class="card-label">Hvad der skaber ubalance</div>
+        <div class="card-desc">${ut.aarsag.replace(/\n\n/g, '<br><br>')}</div>
+      </div></div></div>`;
+    }
+    balanceEl.innerHTML = balanceHTML;
+  }
+
+  // Central F\u00f8lelse (Wave 2)
+  const centralEl = document.getElementById('fasedetail-central-foelelse');
+  if (centralEl && detail.centralFoelelse) {
+    const cf = detail.centralFoelelse;
+    centralEl.innerHTML = `
+      <div class="feeling-box" style="margin-top:16px;background:rgba(108,130,169,0.04);border:1px solid rgba(108,130,169,0.08);border-radius:16px;padding:20px">
+        <div class="feeling-label" style="color:#6c82a9;font-weight:600">${cf.title}</div>
+        <div class="feeling-text" style="margin-top:8px">${cf.tekst.replace(/\n\n/g, '</div><div class="feeling-text" style="margin-top:8px">')}</div>
+      </div>`;
+  }
+
+  // Denne fase i dig (Wave 2)
+  const denneFaseEl = document.getElementById('fasedetail-denne-fase');
+  if (denneFaseEl && detail.denneFaseIDig) {
+    denneFaseEl.innerHTML = `
+      <div class="feeling-box" style="margin-top:16px">
+        <div class="feeling-label" style="color:#9cabc3">Denne fase i dig</div>
+        <div class="feeling-text">${detail.denneFaseIDig.replace(/\n\n/g, '</div><div class="feeling-text" style="margin-top:8px">')}</div>
+      </div>`;
+  }
+
+  // Temaer narrativer (Wave 2)
+  const temaerEl = document.getElementById('fasedetail-temaer');
+  if (temaerEl && detail.temaerNarrativer && detail.temaerNarrativer.length > 0) {
+    temaerEl.innerHTML = `
+      <div class="group-label" style="color:#6c82a9;margin-top:20px">Temaer i denne fase</div>
+      ${detail.temaerNarrativer.map(t => `
+        <div class="card" style="margin-bottom:10px"><div class="card-row"><div>
+          <div class="card-label">${t.title}</div>
+          <div class="card-desc" style="margin-top:4px">${t.tekst.replace(/\n\n/g, '<br><br>')}</div>
+        </div></div></div>
+      `).join('')}`;
+  }
+
+  // \u00c5rets Rytme (Wave 2)
+  const aaretsEl = document.getElementById('fasedetail-aarets-rytme');
+  if (aaretsEl && detail.aaretsRytme) {
+    aaretsEl.innerHTML = `
+      <div class="group-label" style="color:#6c82a9;margin-top:20px">\u00c5rets rytme i denne fase</div>
+      <div class="card"><div class="card-row"><div>
+        <div class="card-desc">${detail.aaretsRytme.replace(/\n\n/g, '<br><br>')}</div>
+      </div></div></div>`;
+  }
+
+  // ---- END WAVE 2 ----
+
   // Insight text
   setText('pra-insight-text', `${elLabel} dominerer lige nu. Din krop beder om ${
     domEl === 'VAND' ? 'stilhed, dybde og n\u00e6ring nedefra' :
