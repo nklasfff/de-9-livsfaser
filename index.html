@@ -47,7 +47,7 @@
       <button class="drawer-close" onclick="toggleDrawer()">&times;</button>
     </div>
     <div class="drawer-sections">
-      <div class="drawer-item" onclick="Router.navigate('forside');toggleDrawer()">
+      <div class="drawer-item" onclick="Router.navigateFromDrawer('forside')">
         <span class="drawer-item-title">Forside</span>
       </div>
 
@@ -56,12 +56,12 @@
           <span>Mine Cyklusser</span><span class="drawer-chevron">&#8250;</span>
         </div>
         <div class="drawer-section-body">
-          <div class="drawer-sub" onclick="Router.navigate('cyklusser');toggleDrawer()">Oversigt</div>
-          <div class="drawer-sub" onclick="Router.navigate('cyk-cic');toggleDrawer()">Cyklusser i cyklusser</div>
-          <div class="drawer-sub" onclick="Router.navigate('cyk-ni-faser');toggleDrawer()">De ni livsfaser</div>
-          <div class="drawer-sub" onclick="Router.navigate('cyk-fire-uger');toggleDrawer()">De fire uger</div>
-          <div class="drawer-sub" onclick="Router.navigate('cyk-overgange');toggleDrawer()">Overgange</div>
-          <div class="drawer-sub" onclick="Router.navigate('cyk-kontrol');toggleDrawer()">Kontrolcyklussen</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('cyklusser',0)">Oversigt</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('cyk-cic',0)">Cyklusser i cyklusser</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('cyk-ni-faser',0)">De ni livsfaser</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('cyk-fire-uger',0)">De fire uger</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('cyk-overgange',0)">Overgange</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('cyk-kontrol',0)">Kontrolcyklussen</div>
         </div>
       </div>
 
@@ -70,12 +70,12 @@
           <span>Mine Relationer</span><span class="drawer-chevron">&#8250;</span>
         </div>
         <div class="drawer-section-body">
-          <div class="drawer-sub" onclick="Router.navigate('relationer');toggleDrawer()">Oversigt</div>
-          <div class="drawer-sub" onclick="Router.navigate('rel-lige-nu');toggleDrawer()">Relationer lige nu</div>
-          <div class="drawer-sub" onclick="Router.navigate('rel-to-rytmer');toggleDrawer()">To rytmer</div>
-          <div class="drawer-sub" onclick="Router.navigate('rel-tre-gen');toggleDrawer()">Tre generationer</div>
-          <div class="drawer-sub" onclick="Router.navigate('rel-jeres-energi');toggleDrawer()">Jeres energi</div>
-          <div class="drawer-sub" onclick="Router.navigate('rel-epigenetik');toggleDrawer()">Epigenetik &amp; arv</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('relationer',1)">Oversigt</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('rel-lige-nu',1)">Relationer lige nu</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('rel-to-rytmer',1)">To rytmer</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('rel-tre-gen',1)">Tre generationer</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('rel-jeres-energi',1)">Jeres energi</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('rel-epigenetik',1)">Epigenetik &amp; arv</div>
         </div>
       </div>
 
@@ -84,14 +84,14 @@
           <span>Min Praksis</span><span class="drawer-chevron">&#8250;</span>
         </div>
         <div class="drawer-section-body">
-          <div class="drawer-sub" onclick="Router.navigate('praksis');toggleDrawer()">Oversigt</div>
-          <div class="drawer-sub" onclick="Router.navigate('pra-yin-yoga');toggleDrawer()">Yin Yoga</div>
-          <div class="drawer-sub" onclick="Router.navigate('pra-eft');toggleDrawer()">EFT Tapping</div>
-          <div class="drawer-sub" onclick="Router.navigate('pra-foelelser');toggleDrawer()">F&oslash;lelseshjulet</div>
-          <div class="drawer-sub" onclick="Router.navigate('pra-mindfulness');toggleDrawer()">Mindfulness</div>
-          <div class="drawer-sub" onclick="Router.navigate('pra-refleksion');toggleDrawer()">Refleksion</div>
-          <div class="drawer-sub" onclick="Router.navigate('pra-kost');toggleDrawer()">Kost &amp; urter</div>
-          <div class="drawer-sub" onclick="Router.navigate('pra-inspiration');toggleDrawer()">Inspiration</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('praksis',2)">Oversigt</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('pra-yin-yoga',2)">Yin Yoga</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('pra-eft',2)">EFT Tapping</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('pra-foelelser',2)">F&oslash;lelseshjulet</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('pra-mindfulness',2)">Mindfulness</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('pra-refleksion',2)">Refleksion</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('pra-kost',2)">Kost &amp; urter</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('pra-inspiration',2)">Inspiration</div>
         </div>
       </div>
 
@@ -100,12 +100,12 @@
           <span>Min Rejse</span><span class="drawer-chevron">&#8250;</span>
         </div>
         <div class="drawer-section-body">
-          <div class="drawer-sub" onclick="Router.navigate('rejse');toggleDrawer()">Oversigt</div>
-          <div class="drawer-sub" onclick="Router.navigate('rej-udvikling');toggleDrawer()">Min udvikling</div>
-          <div class="drawer-sub" onclick="Router.navigate('rej-journal');toggleDrawer()">Min journal</div>
-          <div class="drawer-sub" onclick="Router.navigate('rej-favoritter');toggleDrawer()">Mine favoritter</div>
-          <div class="drawer-sub" onclick="Router.navigate('rej-opdagelser');toggleDrawer()">Mine opdagelser</div>
-          <div class="drawer-sub" onclick="Router.navigate('rej-baggrund');toggleDrawer()">Baggrundsviden</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('rejse',3)">Oversigt</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('rej-udvikling',3)">Min udvikling</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('rej-journal',3)">Min journal</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('rej-favoritter',3)">Mine favoritter</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('rej-opdagelser',3)">Mine opdagelser</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('rej-baggrund',3)">Baggrundsviden</div>
         </div>
       </div>
 
@@ -114,15 +114,15 @@
           <span>Mine Vinduer</span><span class="drawer-chevron">&#8250;</span>
         </div>
         <div class="drawer-section-body">
-          <div class="drawer-sub" onclick="Router.navigate('vinduer');toggleDrawer()">Oversigt</div>
-          <div class="drawer-sub" onclick="Router.navigate('vin-tidslinje');toggleDrawer()">Tidslinje</div>
-          <div class="drawer-sub" onclick="Router.navigate('vin-oejeblikke');toggleDrawer()">&#216;jeblikke</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('vinduer',4)">Oversigt</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('vin-tidslinje',4)">Tidslinje</div>
+          <div class="drawer-sub" onclick="Router.navigateFromDrawer('vin-oejeblikke',4)">&#216;jeblikke</div>
         </div>
       </div>
 
       <div class="drawer-divider"></div>
-      <div class="drawer-item" onclick="Router.navigate('indstillinger');toggleDrawer()"><span class="drawer-item-title">Indstillinger</span></div>
-      <div class="drawer-item" onclick="Router.navigate('om-isabelle');toggleDrawer()"><span class="drawer-item-title">Om Isabelle</span></div>
+      <div class="drawer-item" onclick="Router.navigateFromDrawer('indstillinger')"><span class="drawer-item-title">Indstillinger</span></div>
+      <div class="drawer-item" onclick="Router.navigateFromDrawer('om-isabelle')"><span class="drawer-item-title">Om Isabelle</span></div>
     </div>
   </nav>
 

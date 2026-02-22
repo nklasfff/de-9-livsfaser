@@ -154,10 +154,48 @@ const Router = {
     }
   },
 
+  /* ---- Navigate from drawer menu ---- */
+  _drawerOrigin: null,
+  _drawerSectionIndex: null,
+
+  navigateFromDrawer(name, sectionIndex) {
+    // Remember where the user was before opening the drawer
+    this._drawerOrigin = this.currentScreen;
+    this._drawerSectionIndex = sectionIndex !== undefined ? sectionIndex : null;
+    // Close drawer
+    toggleDrawer();
+    // Navigate to selected screen
+    this.navigate(name);
+  },
+
   /* ---- Go back ---- */
   goBack() {
     const screen = this.screens[this.currentScreen];
     if (!screen) return;
+
+    // If we came here from the drawer, go back to where we were and reopen drawer
+    if (this._drawerOrigin) {
+      const origin = this._drawerOrigin;
+      const sectionIdx = this._drawerSectionIndex;
+      this._drawerOrigin = null;
+      this._drawerSectionIndex = null;
+      this.history = this.history.filter(s => s !== origin);
+      this.navigate(origin, { direction: 'back' });
+      // Reopen drawer with the same section expanded
+      setTimeout(() => {
+        const drawer = document.getElementById('drawer');
+        const overlay = document.getElementById('drawer-overlay');
+        if (drawer) drawer.classList.add('open');
+        if (overlay) overlay.classList.add('open');
+        // Expand the section the user had open
+        if (sectionIdx !== null) {
+          const sections = document.querySelectorAll('.drawer-section');
+          sections.forEach(s => s.classList.remove('open'));
+          if (sections[sectionIdx]) sections[sectionIdx].classList.add('open');
+        }
+      }, 350);
+      return;
+    }
 
     // If we have a parent, go there
     if (screen.parent) {
