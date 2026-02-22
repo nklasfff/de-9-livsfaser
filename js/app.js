@@ -820,6 +820,9 @@ function initPraksis() {
     'METAL': 'Metallets \u00e5ndedr\u00e6t. Fokuseret ind gennem n\u00e6sen, lang kontrolleret ud\u00e5nding. Som en klokkes klang.'
   };
   setText('pra-breath-text', breathTexts[domEl] || '');
+
+  // Init breathing boxes on this page too
+  initBreathBoxes();
 }
 
 /* ---- Rejse (Section 4) ---- */
@@ -1342,6 +1345,92 @@ function initPraFoelelser() {
   setText('foelelser-featured-desc', feel.desc);
 }
 
+/* ============================================================
+   BREATHING ANIMATION (used on praksis + pra-mindfulness)
+   ============================================================ */
+
+let _breathInterval = null;
+let _breathPhase = 'idle'; // idle, inhale, hold, exhale
+
+function startBreathing(boxEl) {
+  if (_breathInterval) { stopBreathing(boxEl); return; }
+
+  const circle = boxEl.querySelector('.breath-circle');
+  const inner = boxEl.querySelector('.breath-inner');
+  const btn = boxEl.querySelector('.breath-start-btn');
+  if (!circle || !inner) return;
+
+  circle.classList.add('animating');
+  if (btn) btn.textContent = 'Stop';
+
+  function runCycle() {
+    // Inhale 4s
+    _breathPhase = 'inhale';
+    circle.className = 'breath-circle animating inhale';
+    inner.textContent = 'Indånd';
+
+    setTimeout(() => {
+      if (!_breathInterval) return;
+      // Hold 4s
+      _breathPhase = 'hold';
+      circle.className = 'breath-circle animating hold';
+      inner.textContent = 'Hold';
+
+      setTimeout(() => {
+        if (!_breathInterval) return;
+        // Exhale 6s
+        _breathPhase = 'exhale';
+        circle.className = 'breath-circle animating exhale';
+        inner.textContent = 'Udånd';
+      }, 4000);
+    }, 4000);
+  }
+
+  runCycle();
+  _breathInterval = setInterval(runCycle, 14000); // 4+4+6 = 14s full cycle
+}
+
+function stopBreathing(boxEl) {
+  if (_breathInterval) {
+    clearInterval(_breathInterval);
+    _breathInterval = null;
+  }
+  _breathPhase = 'idle';
+  const circle = boxEl.querySelector('.breath-circle');
+  const inner = boxEl.querySelector('.breath-inner');
+  const btn = boxEl.querySelector('.breath-start-btn');
+  if (circle) circle.className = 'breath-circle';
+  if (inner) inner.textContent = 'Indånd';
+  if (btn) btn.textContent = 'Begynd';
+}
+
+function initBreathBoxes() {
+  document.querySelectorAll('.breath-box').forEach(box => {
+    if (box._bound) return;
+    box._bound = true;
+
+    // Add start button if not present
+    if (!box.querySelector('.breath-start-btn')) {
+      const btn = document.createElement('div');
+      btn.className = 'breath-start-btn';
+      btn.textContent = 'Begynd';
+      box.appendChild(btn);
+    }
+
+    const btn = box.querySelector('.breath-start-btn');
+    if (btn) {
+      btn.addEventListener('click', () => startBreathing(box));
+    }
+
+    // Also make the circle itself clickable
+    const circle = box.querySelector('.breath-circle');
+    if (circle) {
+      circle.style.cursor = 'pointer';
+      circle.addEventListener('click', () => startBreathing(box));
+    }
+  });
+}
+
 /* ---- Mindfulness (pra-mindfulness) ---- */
 function initPraMindfulness() {
   const data = getUserCycles();
@@ -1359,6 +1448,9 @@ function initPraMindfulness() {
 
   setText('mindfulness-featured-label', `Din vej ind · ${elLabel}`);
   setText('mindfulness-featured-text', mindMap[domEl] || '');
+
+  // Init breathing boxes
+  initBreathBoxes();
 }
 
 /* ---- Refleksion (pra-refleksion) ---- */
@@ -1375,13 +1467,89 @@ function initPraRefleksion() {
   const qList = document.getElementById('refleksion-questions');
   if (questions && qList) {
     qList.innerHTML = questions.map((q, i) => `
-      <div class="card"><div class="card-row"><div>
+      <div class="card" onclick="toggleRefleksionWrite(this, ${i})" style="cursor:pointer"><div class="card-row"><div>
         <div class="card-label">Spørgsmål ${i + 1}</div>
         <div class="card-title">${q}</div>
-        <div class="card-desc">Tag dette spørgsmål med dig. Skriv i 10 minutter uden at stoppe.</div>
+        <div class="card-desc">Tryk for at skrive. 10 minutter uden at stoppe.</div>
       </div><div class="card-arrow" style="color:rgba(122,144,139,0.4)">→</div></div></div>
     `).join('');
   }
+
+  // Also make the static question cards on the page clickable
+  addRefleksionClickHandlers();
+}
+
+function toggleRefleksionWrite(cardEl, questionIndex) {
+  // Check if textarea is already open
+  if (cardEl.querySelector('.refl-textarea')) {
+    // Focus existing textarea
+    cardEl.querySelector('.refl-textarea').focus();
+    return;
+  }
+
+  // Get the question text
+  const title = cardEl.querySelector('.card-title');
+  const question = title ? title.textContent : '';
+
+  // Load existing refleksion for this question
+  const reflections = Storage.getReflections ? Storage.getReflections() : [];
+  const existing = reflections.find(r => r.question === question);
+
+  // Create textarea + save button
+  const writeDiv = document.createElement('div');
+  writeDiv.style.padding = '8px 16px 16px';
+  writeDiv.innerHTML = `
+    <textarea class="refl-textarea" placeholder="Skriv her...">${existing ? existing.text : ''}</textarea>
+    <div class="refl-save-btn" onclick="event.stopPropagation(); saveRefleksionNote(this, '${question.replace(/'/g, "\\'")}')">Gem refleksion</div>
+  `;
+  cardEl.appendChild(writeDiv);
+
+  // Remove arrow to indicate "open" state
+  const arrow = cardEl.querySelector('.card-arrow');
+  if (arrow) arrow.textContent = '↓';
+
+  // Focus textarea
+  setTimeout(() => writeDiv.querySelector('.refl-textarea').focus(), 100);
+}
+
+function saveRefleksionNote(btnEl, question) {
+  const textarea = btnEl.parentElement.querySelector('.refl-textarea');
+  if (!textarea || !textarea.value.trim()) return;
+
+  const entry = {
+    date: Storage.getLocalDateStr ? Storage.getLocalDateStr() : new Date().toISOString().split('T')[0],
+    question: question,
+    text: textarea.value.trim()
+  };
+
+  // Save to reflections array
+  const reflections = Storage.getReflections ? Storage.getReflections() : [];
+  // Remove existing for same question
+  const filtered = reflections.filter(r => r.question !== question);
+  filtered.push(entry);
+  if (Storage.saveReflections) {
+    Storage.saveReflections(filtered);
+  } else {
+    localStorage.setItem('livsfaser_reflections', JSON.stringify(filtered));
+  }
+
+  showActionToast('Refleksion gemt');
+}
+
+function addRefleksionClickHandlers() {
+  // Make all question cards on pra-refleksion page expandable
+  const cards = document.querySelectorAll('.card');
+  cards.forEach((card, i) => {
+    const title = card.querySelector('.card-title');
+    if (!title || card._reflBound) return;
+    const isQuestion = card.querySelector('.card-label') &&
+      card.querySelector('.card-label').textContent.includes('Spørgsmål');
+    if (isQuestion) {
+      card._reflBound = true;
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', () => toggleRefleksionWrite(card, i));
+    }
+  });
 }
 
 /* ---- Kost & Urter (pra-kost) ---- */
