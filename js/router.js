@@ -37,6 +37,7 @@ const Router = {
     'cyk-fire-uger':     { file: 'screens/cyk-fire-uger.html',     niveau: 2,  parent: 'cyklusser',   tone: 'cyklusser',   init: 'initCykFireUger' },
     'cyk-overgange':     { file: 'screens/cyk-overgange.html',     niveau: 2,  parent: 'cyklusser',   tone: 'cyklusser',   init: 'initCykOvergange' },
     'cyk-kontrol':       { file: 'screens/cyk-kontrol.html',       niveau: 2,  parent: 'cyklusser',   tone: 'cyklusser',   init: 'initCykKontrol' },
+    'livsfase-detail':   { file: 'screens/livsfase-detail.html',   niveau: 2,  parent: 'cyk-ni-faser', tone: 'cyklusser',  init: 'initLivsfaseDetail' },
 
     // Niveau 2 — Relationer undersider
     'rel-lige-nu':       { file: 'screens/rel-lige-nu.html',       niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelLigeNu' },

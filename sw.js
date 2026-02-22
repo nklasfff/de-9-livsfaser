@@ -1,4 +1,4 @@
-const CACHE_NAME = 'livsfaser-v54';
+const CACHE_NAME = 'livsfaser-v55';
 const urlsToCache = [
   './',
   './index.html',
@@ -60,6 +60,7 @@ const urlsToCache = [
   // Screens — Cyklusser undersider
   './screens/cyk-cic.html',
   './screens/cyk-ni-faser.html',
+  './screens/livsfase-detail.html',
   './screens/cyk-fire-uger.html',
   './screens/cyk-overgange.html',
   './screens/cyk-kontrol.html',

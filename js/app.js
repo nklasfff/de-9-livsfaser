@@ -946,6 +946,155 @@ function getCyclePairDesc(type, elA, elB) {
   return `${a} og ${b} spejler hinanden stille. Ingen konflikt, ingen forstærkning — bare sameksistens.`;
 }
 
+/* ---- Navigate to Livsfase Detail ---- */
+function navigateToFaseDetail(phaseNum) {
+  window._selectedPhase = parseInt(phaseNum) || 9;
+  Router.navigate('livsfase-detail');
+}
+
+/* ---- Livsfase Detail ---- */
+function initLivsfaseDetail() {
+  const phaseNum = window._selectedPhase || 9;
+  const phaseData = Calculations.PHASE_DATA[phaseNum];
+  const detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[phaseNum] : null;
+  if (!phaseData || !detail) return;
+
+  const elLabel = Calculations.ELEMENT_LABELS[phaseData.element];
+  const elTegn = Calculations.ELEMENT_TEGN[phaseData.element];
+
+  // Header
+  setText('fasedetail-eyebrow', `Fase ${phaseNum} af 9`);
+  setHTML('fasedetail-title', `${phaseData.name}`);
+  setText('fasedetail-sub', `${phaseData.startAge}\u2013${phaseData.endAge} \u00e5r \u00b7 ${elLabel} ${elTegn}`);
+  setText('fasedetail-intro', detail.introText);
+
+  // Feelings
+  setText('fasedetail-feeling-label', `${elLabel}-elementets f\u00f8lelser`);
+  setText('fasedetail-feeling-text', `I balance: ${detail.folelser.balance}. I ubalance: ${detail.folelser.ubalance}.`);
+
+  // Featured
+  setText('fasedetail-featured-label', `${elLabel} \u00b7 ${detail.organPar}`);
+  setText('fasedetail-featured-text', `Smag: ${detail.smag}. \u00c5rstid: ${detail.aarstid}. ${detail.vediskKobling}.`);
+  setText('fasedetail-featured-sub', `Livstemaer: ${detail.livstemaer.join(', ')}`);
+
+  // Krop & Sind
+  setText('fasedetail-krop-label', `Kroppen i Fase ${phaseNum} \u00b7 ${elLabel}`);
+  setText('fasedetail-krop-text', detail.kropTekst);
+  setText('fasedetail-sind-label', `Sindet i Fase ${phaseNum} \u00b7 ${elLabel}`);
+  setText('fasedetail-sind-text', detail.sindTekst);
+
+  // Praksis cards
+  const praksisEl = document.getElementById('fasedetail-praksis');
+  if (praksisEl) {
+    praksisEl.innerHTML = `
+      <div class="praksis-card" onclick="Router.navigate('pra-yin-yoga')"><div><div class="pk-label">\u00d8velse \u00b7 ${elLabel}</div><div class="pk-name">${detail.oevelse.title}</div><div class="pk-desc">${detail.oevelse.desc}</div></div><div class="pk-arrow">\u2192</div></div>
+      <div class="praksis-card" onclick="Router.navigate('pra-kost')"><div><div class="pk-label">N\u00e6ring \u00b7 ${elLabel}</div><div class="pk-name">${detail.kost.title}</div><div class="pk-desc">${detail.kost.desc}</div></div><div class="pk-arrow">\u2192</div></div>
+      <div class="praksis-card" onclick="Router.navigate('pra-healing')"><div><div class="pk-label">Healinglyd \u00b7 ${elLabel}</div><div class="pk-name">${detail.healingLyd.title}</div><div class="pk-desc">${detail.healingLyd.desc}</div></div><div class="pk-arrow">\u2192</div></div>
+    `;
+  }
+
+  // Refleksioner
+  const reflEl = document.getElementById('fasedetail-refleksioner');
+  if (reflEl && detail.refleksioner) {
+    reflEl.innerHTML = detail.refleksioner.map((q, i) => `
+      <div class="card" onclick="Router.navigate('pra-refleksion')"><div class="card-row"><div>
+        <div class="card-label">Sp\u00f8rgsm\u00e5l ${i + 1}</div>
+        <div class="card-title">${q}</div>
+        <div class="card-desc">Tag sp\u00f8rgsm\u00e5let med dig. Skriv i 10 minutter uden at stoppe.</div>
+      </div><div class="card-arrow" style="color:rgba(108,130,169,0.4)">\u2192</div></div></div>
+    `).join('');
+  }
+
+  // Insight — Psykologiske opgaver
+  setText('fasedetail-insight-label', `Psykologiske opgaver i Fase ${phaseNum}`);
+  setText('fasedetail-insight-text', detail.psykOpgaver.join('. ') + '.');
+
+  // Quick action
+  setText('fasedetail-quick-title', `${detail.oevelse.title} \u00b7 Yin Yoga`);
+  setText('fasedetail-quick-desc', detail.oevelse.desc);
+
+  // Prev/Next navigation
+  const navEl = document.getElementById('fasedetail-nav');
+  if (navEl) {
+    const prev = phaseNum > 1 ? phaseNum - 1 : null;
+    const next = phaseNum < 9 ? phaseNum + 1 : null;
+    const prevData = prev ? Calculations.PHASE_DATA[prev] : null;
+    const nextData = next ? Calculations.PHASE_DATA[next] : null;
+
+    navEl.innerHTML = `
+      ${prevData ? `<div class="card" style="flex:1;cursor:pointer" onclick="navigateToFaseDetail(${prev})"><div class="card-row"><div>
+        <div class="card-label">\u2190 Fase ${prev}</div>
+        <div class="card-title">${prevData.name}</div>
+      </div></div></div>` : '<div style="flex:1"></div>'}
+      ${nextData ? `<div class="card" style="flex:1;cursor:pointer" onclick="navigateToFaseDetail(${next})"><div class="card-row"><div>
+        <div class="card-label">Fase ${next} \u2192</div>
+        <div class="card-title">${nextData.name}</div>
+      </div></div></div>` : '<div style="flex:1"></div>'}
+    `;
+  }
+
+  // Check if this is user's current phase
+  const data = getUserCycles();
+  if (data && data.cycles.lifePhase.phase === phaseNum) {
+    const eyebrow = document.getElementById('fasedetail-eyebrow');
+    if (eyebrow) eyebrow.textContent += ' \u00b7 Du er her';
+  }
+}
+
+/* ---- Share text helper (for samtale\u00e5bnere, forbindelseskort) ---- */
+function copyCardText(el) {
+  const card = el.closest('.quick-action') || el.closest('.card');
+  if (!card) return;
+  const title = card.querySelector('.quick-action-title, .card-title');
+  const text = title ? title.textContent : '';
+  if (navigator.clipboard && text) {
+    navigator.clipboard.writeText(text).then(() => showActionToast('Kopieret'));
+  }
+}
+
+/* ---- Share via Web Share API ---- */
+function shareRelation(name) {
+  const title = `De 9 Livsfasers Energi \u2014 ${name || 'Relationer'}`;
+  const text = document.querySelector('.featured-text') ? document.querySelector('.featured-text').textContent : '';
+  if (navigator.share) {
+    navigator.share({ title, text, url: window.location.href }).catch(() => {});
+  } else {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text + '\n' + window.location.href).then(() => showActionToast('Kopieret'));
+    }
+  }
+}
+
+/* ---- Show moment cycles (vin-oejeblikke) ---- */
+function showMomentCycles(dateStr) {
+  const user = Storage.getUser();
+  if (!user || !user.birthdate || !dateStr) return;
+  const targetDate = new Date(dateStr);
+  const cycles = Calculations.allCycles(user.birthdate, targetDate);
+  const dominant = Calculations.getWeightedDominant(cycles);
+  const elLabel = Calculations.ELEMENT_LABELS[dominant.element];
+  const phase = cycles.lifePhase;
+
+  const detail = `Fase ${phase.phase}: ${phase.name} (${Calculations.ELEMENT_LABELS[phase.element]}). ` +
+    `\u00c5rstid: ${cycles.season.season}. Ugedag: ${cycles.weekday.day}. ` +
+    `Dominant element: ${elLabel}.`;
+
+  showActionToast(`${elLabel} dominerede`);
+
+  // Could navigate to vinduer for full analysis
+  Router.navigate('vinduer');
+}
+
+/* ---- Share a moment (vin-oejeblikke) ---- */
+function shareMoment(title, text) {
+  const shareText = `${title}: ${text}`;
+  if (navigator.share) {
+    navigator.share({ title: 'De 9 Livsfasers Energi', text: shareText, url: window.location.href }).catch(() => {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(shareText).then(() => showActionToast('Kopieret'));
+  }
+}
+
 /* ---- De Ni Livsfaser (cyk-ni-faser) ---- */
 function initCykNiFaser() {
   const data = getUserCycles();
