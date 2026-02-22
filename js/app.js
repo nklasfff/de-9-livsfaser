@@ -851,9 +851,129 @@ function initRejse() {
 }
 
 /* ---- Vinduer (Section 5) ---- */
+/* ---- Age at a specific date (not today) ---- */
+function ageAtDate(birthdate, targetDate) {
+  const birth = new Date(birthdate);
+  const target = new Date(targetDate);
+  let age = target.getFullYear() - birth.getFullYear();
+  const m = target.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && target.getDate() < birth.getDate())) age--;
+  return Math.max(0, age);
+}
+
+/* ---- Cycles for a person at a specific date ---- */
+function cyclesAtDate(birthdate, targetDate, isMale) {
+  const date = new Date(targetDate);
+  const age = ageAtDate(birthdate, date);
+  const lifePhase = isMale
+    ? Calculations.calculateMalePhase(age)
+    : Calculations.calculateLifePhase(age);
+  const season = Calculations.calculateSeason(date);
+  const weekday = Calculations.calculateWeekday(date);
+  return { age, lifePhase, season, weekday, date };
+}
+
+/* ---- Vinduer landing (date chips + person pills + calculation) ---- */
 function initVinduer() {
-  // Vinduer is mostly static content with date picker interaction
-  // Will be made more dynamic in Sprint 11
+  const user = Storage.getUser();
+  if (!user || !user.birthdate) return;
+  const relations = Storage.getRelations();
+
+  const nourishing = { 'VAND': 'TRÆ', 'TRÆ': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
+
+  // Preset date chip values
+  const now = new Date();
+  const chipDates = {
+    0: '1997-06-23',  // Da vi mødtes
+    1: '2017-09-08',  // Hendes 14-årsdag
+    2: (now.getFullYear() + 5) + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0'),  // Om 5 år
+    3: now.getFullYear() + '-12-24'  // Næste jul
+  };
+
+  const dateInput = document.getElementById('vinduer-date');
+  const btn = document.getElementById('vinduer-btn');
+  const resultEl = document.getElementById('vinduer-result');
+
+  // Date chips → set date input
+  const chips = document.querySelectorAll('.date-chip');
+  chips.forEach((chip, i) => {
+    if (chip._bound) return;
+    chip._bound = true;
+    chip.addEventListener('click', function() {
+      chips.forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+      if (dateInput && chipDates[i]) {
+        dateInput.value = chipDates[i];
+      }
+    });
+  });
+
+  // Person pills toggle
+  const pills = document.querySelectorAll('.person-pill');
+  pills.forEach((pill, i) => {
+    if (pill._bound) return;
+    pill._bound = true;
+    pill.addEventListener('click', function() {
+      if (i === 0) return; // "Dig" stays active
+      this.classList.toggle('active');
+    });
+  });
+
+  // Button → calculate
+  if (btn && dateInput && !btn._bound) {
+    btn._bound = true;
+    btn.addEventListener('click', () => {
+      const val = dateInput.value;
+      if (!val) {
+        showActionToast('Vælg en dato først');
+        return;
+      }
+      const targetDate = new Date(val);
+      const userCycles = cyclesAtDate(user.birthdate, targetDate, false);
+      const elLabel = Calculations.ELEMENT_LABELS[userCycles.lifePhase.element];
+
+      let html = `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">${formatDanishDate(targetDate)}</div>`;
+      html += `<div style="margin:8px 0"><strong style="color:#6B5F7B;font-weight:500">Dig:</strong> ${userCycles.age} år · Fase ${userCycles.lifePhase.phase}: ${userCycles.lifePhase.name} · ${elLabel}</div>`;
+      html += `<div style="font-size:13px;color:#8B7D9B">Årstid: ${userCycles.season.season} · ${userCycles.weekday.day}</div>`;
+
+      // Check which person pills are active
+      pills.forEach((pill, i) => {
+        if (i === 0 || !pill.classList.contains('active')) return;
+        // Try to find matching relation
+        let rel = null;
+        const pillText = pill.textContent.trim();
+        rel = relations.find(r => r.name === pillText);
+        if (!rel) {
+          // Use example data based on pill name
+          if (pillText === 'Clara') rel = { name: 'Clara', birthdate: '2003-09-08', gender: 'female' };
+          else if (pillText === 'Thomas') rel = { name: 'Thomas', birthdate: '1965-04-15', gender: 'male' };
+          else return;
+        }
+        if (!rel || !rel.birthdate) return;
+        const isMale = rel.gender === 'male';
+        const rc = cyclesAtDate(rel.birthdate, targetDate, isMale);
+        const relEl = Calculations.ELEMENT_LABELS[rc.lifePhase.element];
+
+        // TCM interaction
+        const uEl = userCycles.lifePhase.element;
+        const rEl = rc.lifePhase.element;
+        let interaction = '';
+        if (uEl === rEl) interaction = `Begge i ${Calculations.ELEMENT_LABELS[uEl]} — dyb resonans.`;
+        else if (nourishing[uEl] === rEl) interaction = `${Calculations.ELEMENT_LABELS[uEl]} nærer ${Calculations.ELEMENT_LABELS[rEl]}.`;
+        else if (nourishing[rEl] === uEl) interaction = `${Calculations.ELEMENT_LABELS[rEl]} nærer ${Calculations.ELEMENT_LABELS[uEl]}.`;
+        else interaction = `${Calculations.ELEMENT_LABELS[uEl]} møder ${Calculations.ELEMENT_LABELS[rEl]}.`;
+
+        html += `<div style="margin:10px 0;padding-top:8px;border-top:1px solid rgba(107,95,123,0.08)"><strong style="color:#9b8da8;font-weight:500">${rel.name}:</strong> ${rc.age} år · Fase ${rc.lifePhase.phase}: ${rc.lifePhase.name} · ${relEl}</div>`;
+        html += `<div style="font-size:13px;color:#8B7D9B;font-style:italic">${interaction}</div>`;
+      });
+
+      if (resultEl) {
+        resultEl.innerHTML = html;
+        resultEl.style.display = 'block';
+        resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
+  }
 }
 
 /* ============================================================
@@ -1380,32 +1500,114 @@ function initRelJeresEnergi() {
   const dateInput = document.getElementById('energi-date');
   const btn = document.getElementById('energi-btn');
   const resultEl = document.getElementById('energi-result');
+  const user = Storage.getUser();
+  if (!user || !user.birthdate) return;
+  const relations = Storage.getRelations();
 
-  if (btn && dateInput) {
+  // TCM interaction type
+  const nourishing = { 'VAND': 'TRÆ', 'TRÆ': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
+
+  function getInteractionText(elA, elB) {
+    const a = Calculations.ELEMENT_LABELS[elA];
+    const b = Calculations.ELEMENT_LABELS[elB];
+    if (elA === elB) return `Begge i ${a}. Dyb resonans — I forstår hinanden uden ord.`;
+    if (nourishing[elA] === elB) return `${a} nærer ${b}. Din energi bærer den andens videre.`;
+    if (nourishing[elB] === elA) return `${b} nærer ${a}. Den andens energi nærer dig.`;
+    return `${a} og ${b} mødes. Forskellige energier — men de kan berige hinanden.`;
+  }
+
+  // Date chips — preset dates
+  const chipDates = {
+    0: '2008-09-08',  // Clara 14 år
+    1: '2009-06-23',  // I mødtes
+    2: new Date().toISOString().split('T')[0],  // I dag
+    3: (new Date().getFullYear() + 5) + '-' + String(new Date().getMonth()+1).padStart(2,'0') + '-' + String(new Date().getDate()).padStart(2,'0')  // Om 5 år
+  };
+
+  const chipEls = document.querySelectorAll('#energi-chips > div');
+  chipEls.forEach((chip, i) => {
+    if (chip._bound) return;
+    chip._bound = true;
+    chip.style.cursor = 'pointer';
+    chip.addEventListener('click', function() {
+      chipEls.forEach(c => { c.style.opacity = '0.5'; c.style.fontWeight = '300'; });
+      this.style.opacity = '1';
+      this.style.fontWeight = '500';
+      if (dateInput && chipDates[i]) {
+        dateInput.value = chipDates[i];
+      }
+    });
+  });
+
+  // Person pills — toggle active
+  const pillEls = document.querySelectorAll('#energi-pills > div');
+  const pillState = [true, false, false]; // Dig is always selected
+  pillEls.forEach((pill, i) => {
+    if (pill._bound) return;
+    pill._bound = true;
+    pill.style.cursor = 'pointer';
+    if (i > 0) {
+      pill.addEventListener('click', function() {
+        pillState[i] = !pillState[i];
+        this.style.opacity = pillState[i] ? '1' : '0.4';
+        this.style.borderBottom = pillState[i] ? '2px solid rgba(123,122,158,0.4)' : 'none';
+      });
+    }
+  });
+
+  // "Se jeres energi" button
+  if (btn && dateInput && !btn._bound) {
+    btn._bound = true;
     btn.addEventListener('click', () => {
       const val = dateInput.value;
-      if (!val) return;
+      if (!val) {
+        showActionToast('Vælg en dato først');
+        return;
+      }
       const targetDate = new Date(val);
-      const user = Storage.getUser();
-      if (!user || !user.birthdate) return;
+      const userCycles = cyclesAtDate(user.birthdate, targetDate, false);
+      const elLabel = Calculations.ELEMENT_LABELS[userCycles.lifePhase.element];
 
-      const cycles = Calculations.allCycles(user.birthdate, targetDate);
-      const dominant = Calculations.getWeightedDominant(cycles);
-      const elLabel = Calculations.ELEMENT_LABELS[dominant.element];
+      let html = `
+        <div class="insight-label" style="color:#88839e">${formatDanishDate(targetDate)}</div>
+        <div style="margin:10px 0">
+          <strong style="color:#7b7a9e;font-weight:500">Dig:</strong>
+          ${userCycles.age} år · Fase ${userCycles.lifePhase.phase} · ${elLabel}<br>
+        </div>`;
+
+      // Find selected relations and show their data
+      const selectedRelations = [];
+      if (pillState[1]) { // Martin (partner)
+        const partner = relations.find(r => r.type === 'partner') || { name: 'Martin', birthdate: '1983-04-15', gender: 'male' };
+        selectedRelations.push(partner);
+      }
+      if (pillState[2]) { // Inge (mor)
+        const mor = relations.find(r => r.type === 'mor') || { name: 'Inge', birthdate: '1941-03-22', gender: 'female' };
+        selectedRelations.push(mor);
+      }
+
+      selectedRelations.forEach(rel => {
+        if (!rel.birthdate) return;
+        const isMale = rel.gender === 'male';
+        const rc = cyclesAtDate(rel.birthdate, targetDate, isMale);
+        const relElLabel = Calculations.ELEMENT_LABELS[rc.lifePhase.element];
+        const interaction = getInteractionText(userCycles.lifePhase.element, rc.lifePhase.element);
+        html += `
+          <div style="margin:10px 0">
+            <strong style="color:#9b8da8;font-weight:500">${rel.name}:</strong>
+            ${rc.age} år · Fase ${rc.lifePhase.phase} · ${relElLabel}<br>
+            <span style="color:#8a85a0;font-style:italic;font-size:14px">${interaction}</span>
+          </div>`;
+      });
+
+      if (selectedRelations.length === 0) {
+        html += `<div style="color:#8a85a0;font-style:italic;margin-top:8px">Vælg en person ovenfor for at se jeres energier sammen.</div>`;
+      }
 
       if (resultEl) {
-        resultEl.innerHTML = `
-          <div class="card" style="margin-top:16px">
-            <div class="card-label">${formatDanishDate(targetDate)}</div>
-            <div class="card-title">Din energi · ${elLabel}</div>
-            <div class="card-desc">
-              Din energi samler sig i ${elLabel}.
-              Livsfase: ${Calculations.ELEMENT_LABELS[cycles.lifePhase.element]} ·
-              Årstid: ${cycles.season.season} · Ugedag: ${cycles.weekday.day}
-            </div>
-          </div>
-        `;
+        resultEl.innerHTML = html;
         resultEl.style.display = 'block';
+        resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     });
   }
