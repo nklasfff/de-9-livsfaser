@@ -185,14 +185,15 @@
   <!-- CHECK-IN FORM AREA -->
   <div id="udvikling-checkin">
     <!-- Energi-chips -->
-    <div style="background:linear-gradient(135deg,rgba(138,150,169,0.06),rgba(138,150,169,0.02));border:1px solid rgba(138,150,169,0.10);border-radius:14px;padding:16px;margin:0 0 12px">
-      <div style="font-family:sans-serif;font-size:12px;color:#8892a1;letter-spacing:1.5px;font-weight:400;text-transform:uppercase;text-align:center;margin-bottom:12px">Hvordan f&oslash;les din energi lige nu?</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
-        <div style="padding:8px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;color:#8a96a9;background:rgba(138,150,169,0.06);border:1px solid rgba(138,150,169,0.12)">&#x1F30A; Stille</div>
-        <div style="padding:8px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;color:#8a96a9;background:rgba(138,150,169,0.06);border:1px solid rgba(138,150,169,0.12)">&#x1F331; Voksende</div>
-        <div style="padding:8px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;color:#8a96a9;background:rgba(138,150,169,0.06);border:1px solid rgba(138,150,169,0.12)">&#x1F525; Intens</div>
-        <div style="padding:8px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;color:#8a96a9;background:rgba(138,150,169,0.06);border:1px solid rgba(138,150,169,0.12)">&#x1F33F; Rodf&aelig;stet</div>
-        <div style="padding:8px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;color:#8a96a9;background:rgba(138,150,169,0.12);border:1px solid rgba(138,150,169,0.20)">&#x2728; Klar</div>
+    <div class="checkin-card">
+      <div class="ci-q">Hvordan f&oslash;les din energi lige nu?</div>
+      <div class="ci-hint">V&aelig;lg det der passer &mdash; eller spring over</div>
+      <div class="ci-btns">
+        <div class="ci-btn"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c2-3 4-4 6-1s4 2 6-1 4-2 6 1"/><path d="M2 17c2-3 4-4 6-1s4 2 6-1 4-2 6 1" opacity="0.4"/></svg> Stille</div>
+        <div class="ci-btn"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V10"/><path d="M9 14c-2-1-3-3-2-5"/><path d="M15 14c2-1 3-3 2-5"/><path d="M12 10c0-3 2-6 5-8"/><path d="M12 10c0-3-2-6-5-8" opacity="0.5"/></svg> Voksende</div>
+        <div class="ci-btn"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c-4 0-6-3-6-7 0-5 6-12 6-12s6 7 6 12c0 4-2 7-6 7z"/><path d="M12 22v-8" opacity="0.4"/></svg> Intens</div>
+        <div class="ci-btn"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="4"/><path d="M12 14v4"/><path d="M8 22c0-2.2 1.8-4 4-4s4 1.8 4 4" opacity="0.5"/><path d="M9 7l-2-3" opacity="0.4"/><path d="M15 7l2-3" opacity="0.4"/></svg> Rodf&aelig;stet</div>
+        <div class="ci-btn"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83" opacity="0.4"/><path d="M16.24 7.76l2.83-2.83" opacity="0.4"/></svg> Klar</div>
       </div>
     </div>
 
