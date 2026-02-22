@@ -310,11 +310,12 @@ function initForside() {
   setText('forside-climate-text', climate.text);
   setText('forside-climate-sub', `${climate.label} \u2014 ${dominant.count} af 5 cyklusser peger mod ${elLabel(dominant.element)}`);
 
-  // Praksis cards — based on dominant element
+  // Praksis cards — based on dominant element, rotated daily
   const domEl = dominant.element;
-  const yoga = typeof INSIGHT_YOGA !== 'undefined' && INSIGHT_YOGA[domEl] ? INSIGHT_YOGA[domEl][0] : null;
+  const ri = Calculations.dayRotation(3);
+  const yoga = typeof INSIGHT_YOGA !== 'undefined' && INSIGHT_YOGA[domEl] ? INSIGHT_YOGA[domEl][ri % INSIGHT_YOGA[domEl].length] : null;
   const healing = typeof HEALING_SOUNDS !== 'undefined' ? HEALING_SOUNDS[domEl] : null;
-  const food = typeof INSIGHT_FOOD !== 'undefined' && INSIGHT_FOOD[domEl] ? INSIGHT_FOOD[domEl][0] : null;
+  const food = typeof INSIGHT_FOOD !== 'undefined' && INSIGHT_FOOD[domEl] ? INSIGHT_FOOD[domEl][ri % INSIGHT_FOOD[domEl].length] : null;
 
   const praksisCards = document.querySelectorAll('.praksis-card');
   if (praksisCards.length >= 3) {
@@ -445,8 +446,9 @@ function initPraksis() {
     'klarhed og slip. Giv slip p\u00e5 \u00e9n ting der tynger.'
   }`);
 
-  // Quick action — yoga
-  const yoga = typeof INSIGHT_YOGA !== 'undefined' && INSIGHT_YOGA[domEl] ? INSIGHT_YOGA[domEl][0] : null;
+  // Quick action — yoga (rotated daily)
+  const praRi = Calculations.dayRotation(3);
+  const yoga = typeof INSIGHT_YOGA !== 'undefined' && INSIGHT_YOGA[domEl] ? INSIGHT_YOGA[domEl][praRi % INSIGHT_YOGA[domEl].length] : null;
   if (yoga) {
     setText('pra-quick-title', `${yoga.pose.split('(')[0].trim()} \u00b7 Yin Yoga`);
     setText('pra-quick-desc', yoga.desc);

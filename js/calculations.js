@@ -117,7 +117,7 @@ const Calculations = {
       return { season: 'Forår', element: 'TRÆ' };
     if ((month === 6 && day >= 21) || month === 7 || (month === 8 && day < 23))
       return { season: 'Sommer', element: 'ILD' };
-    if ((month === 8 && day >= 23) || month === 9 || (month === 9 && day < 23))
+    if ((month === 8 && day >= 23) || (month === 9 && day < 23))
       return { season: 'Sensommer', element: 'JORD' };
     return { season: 'Efterår', element: 'METAL' };
   },
@@ -178,6 +178,20 @@ const Calculations = {
       date,
       birthdate
     };
+  },
+
+  /* ---- Phase progress ---- */
+  calculatePhaseProgress(age) {
+    const phase = this.calculateLifePhase(age);
+    const progress = (age - phase.startAge) / (phase.endAge - phase.startAge);
+    return { ...phase, progress: Math.min(Math.max(progress, 0), 1), yearsLeft: Math.max(phase.endAge - age, 0) };
+  },
+
+  /* ---- Day-based rotation index (for varying recommendations) ---- */
+  dayRotation(arrayLength) {
+    const d = new Date();
+    const dayOfYear = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+    return dayOfYear % (arrayLength || 3);
   },
 
   /* ---- Dominant element ---- */
