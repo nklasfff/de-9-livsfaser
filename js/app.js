@@ -876,7 +876,7 @@ function cyclesAtDate(birthdate, targetDate, isMale) {
   return { age, lifePhase, season, weekday, date };
 }
 
-/* ---- Vinduer landing (date chips + person pills + calculation) ---- */
+/* ---- Vinduer landing (solo-first date explorer + optional relations) ---- */
 function initVinduer() {
   const user = Storage.getUser();
   if (!user || !user.birthdate) return;
@@ -884,18 +884,83 @@ function initVinduer() {
 
   const nourishing = { 'VAND': 'TRÆ', 'TRÆ': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
 
-  // Preset date chip values
+  // Personal date presets based on user's birthdate
   const now = new Date();
+  const bd = new Date(user.birthdate);
+  const pad2 = n => String(n).padStart(2, '0');
+  const toDateStr = d => d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate());
+
   const chipDates = {
-    0: '1997-06-23',  // Da vi mødtes
-    1: '2017-09-08',  // Hendes 14-årsdag
-    2: (now.getFullYear() + 5) + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0'),  // Om 5 år
+    0: toDateStr(new Date(bd.getFullYear() + 14, bd.getMonth(), bd.getDate())),  // Da du var 14
+    1: toDateStr(new Date(bd.getFullYear() + 21, bd.getMonth(), bd.getDate())),  // Da du var 21
+    2: toDateStr(new Date(now.getFullYear() + 5, now.getMonth(), now.getDate())),  // Om 5 år
     3: now.getFullYear() + '-12-24'  // Næste jul
   };
 
   const dateInput = document.getElementById('vinduer-date');
   const btn = document.getElementById('vinduer-btn');
   const resultEl = document.getElementById('vinduer-result');
+
+  // Render person pills dynamically (only if user has relations)
+  const pillsContainer = document.getElementById('vin-person-pills');
+  if (pillsContainer) {
+    if (relations.length > 0) {
+      let pillsHtml = '<div class="person-pill active"><span class="person-pill-dot"></span>Dig</div>';
+      relations.forEach(r => {
+        pillsHtml += `<div class="person-pill"><span class="person-pill-dot"></span>${r.name}</div>`;
+      });
+      pillsContainer.innerHTML = pillsHtml;
+    } else {
+      pillsContainer.innerHTML = '<div style="font-size:13px;color:#8B7D9B">Ingen relationer tilf&oslash;jet. <span style="color:#6c82a9;cursor:pointer;text-decoration:underline" onclick="Router.navigate(\'relationer\')">Tilf&oslash;j &rarr;</span></div>';
+    }
+  }
+
+  // Render time-shift section dynamically (about YOUR next changes)
+  const timeShiftEl = document.getElementById('vin-time-shift');
+  if (timeShiftEl) {
+    const userAge = Calculations.calculateAge(user.birthdate);
+    const currentPhase = Calculations.calculateLifePhase(userAge);
+    const nextPhaseAge = currentPhase ? currentPhase.endAge : null;
+    const yearsToNext = nextPhaseAge ? (nextPhaseAge - userAge) : null;
+
+    let shiftHtml = '<div class="time-shift-item" style="background:rgba(107,95,123,0.04);border-color:rgba(107,95,123,0.08)">';
+    shiftHtml += '<div class="time-shift-when" style="color:#a89bb3">Din næste faseskift</div>';
+    if (yearsToNext !== null && yearsToNext > 0) {
+      const nextPhase = Calculations.calculateLifePhase(nextPhaseAge);
+      const nextEl = nextPhase ? Calculations.ELEMENT_LABELS[nextPhase.element] : '';
+      const nextName = nextPhase ? nextPhase.name : '';
+      shiftHtml += `<div class="time-shift-what" style="color:#6B5F7B">Om ${Math.round(yearsToNext)} år · Fase ${nextPhase ? nextPhase.phase : ''}: ${nextName} (${nextEl})</div>`;
+    } else {
+      shiftHtml += '<div class="time-shift-what" style="color:#6B5F7B">Du er i din niende og sidste fase</div>';
+    }
+    shiftHtml += '</div>';
+
+    // Next season shift
+    const season = Calculations.calculateSeason(now);
+    const seasonDates = [
+      { m: 2, d: 20, name: 'Forår', el: 'TRÆ' },
+      { m: 5, d: 21, name: 'Sommer', el: 'ILD' },
+      { m: 7, d: 23, name: 'Sensommer', el: 'JORD' },
+      { m: 8, d: 23, name: 'Efterår', el: 'METAL' },
+      { m: 11, d: 21, name: 'Vinter', el: 'VAND' }
+    ];
+    let nextSeason = null;
+    for (const s of seasonDates) {
+      const sDate = new Date(now.getFullYear(), s.m, s.d);
+      if (sDate > now) { nextSeason = { ...s, date: sDate }; break; }
+    }
+    if (!nextSeason) {
+      const s = seasonDates[0];
+      nextSeason = { ...s, date: new Date(now.getFullYear() + 1, s.m, s.d) };
+    }
+    const daysToSeason = Math.ceil((nextSeason.date - now) / (1000*60*60*24));
+    shiftHtml += `<div class="time-shift-item" style="background:rgba(107,95,123,0.04);border-color:rgba(107,95,123,0.08)">`;
+    shiftHtml += `<div class="time-shift-when" style="color:#a89bb3">Næste årstidsskift</div>`;
+    shiftHtml += `<div class="time-shift-what" style="color:#6B5F7B">Om ${daysToSeason} dage · ${nextSeason.name} (${Calculations.ELEMENT_LABELS[nextSeason.el]})</div>`;
+    shiftHtml += '</div>';
+
+    timeShiftEl.innerHTML = shiftHtml;
+  }
 
   // Date chips → set date input
   const chips = document.querySelectorAll('.date-chip');
@@ -911,16 +976,19 @@ function initVinduer() {
     });
   });
 
-  // Person pills toggle
-  const pills = document.querySelectorAll('.person-pill');
-  pills.forEach((pill, i) => {
-    if (pill._bound) return;
-    pill._bound = true;
-    pill.addEventListener('click', function() {
-      if (i === 0) return; // "Dig" stays active
-      this.classList.toggle('active');
+  // Person pills toggle (delegated since pills are dynamic)
+  if (pillsContainer && !pillsContainer._bound) {
+    pillsContainer._bound = true;
+    pillsContainer.addEventListener('click', function(e) {
+      const pill = e.target.closest('.person-pill');
+      if (!pill) return;
+      // First pill ("Dig") stays active
+      const allPills = pillsContainer.querySelectorAll('.person-pill');
+      const idx = Array.from(allPills).indexOf(pill);
+      if (idx === 0) return;
+      pill.classList.toggle('active');
     });
-  });
+  }
 
   // Button → calculate
   if (btn && dateInput && !btn._bound) {
@@ -935,23 +1003,32 @@ function initVinduer() {
       const userCycles = cyclesAtDate(user.birthdate, targetDate, false);
       const elLabel = Calculations.ELEMENT_LABELS[userCycles.lifePhase.element];
 
+      // Compare with today if different date
+      const today = new Date();
+      const isToday = val === toDateStr(today);
+      const isPast = targetDate < today;
+
       let html = `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">${formatDanishDate(targetDate)}</div>`;
       html += `<div style="margin:8px 0"><strong style="color:#6B5F7B;font-weight:500">Dig:</strong> ${userCycles.age} år · Fase ${userCycles.lifePhase.phase}: ${userCycles.lifePhase.name} · ${elLabel}</div>`;
       html += `<div style="font-size:13px;color:#8B7D9B">Årstid: ${userCycles.season.season} · ${userCycles.weekday.day}</div>`;
 
-      // Check which person pills are active
-      pills.forEach((pill, i) => {
+      // If not today, show comparison with now
+      if (!isToday) {
+        const nowCycles = cyclesAtDate(user.birthdate, today, false);
+        const nowEl = Calculations.ELEMENT_LABELS[nowCycles.lifePhase.element];
+        html += `<div style="margin:10px 0;padding:10px 12px;background:rgba(107,95,123,0.04);border-radius:10px;font-size:13px;color:#8B7D9B">`;
+        html += `<div style="font-weight:600;color:#6B5F7B;margin-bottom:4px">${isPast ? 'Dengang vs nu' : 'Nu vs da'}</div>`;
+        html += `<div>${isPast ? 'Dengang' : 'Da'}: Fase ${userCycles.lifePhase.phase} (${elLabel}) · ${userCycles.age} år</div>`;
+        html += `<div>Nu: Fase ${nowCycles.lifePhase.phase} (${nowEl}) · ${nowCycles.age} år</div>`;
+        html += `</div>`;
+      }
+
+      // Check which person pills are active (from dynamic pills)
+      const activePills = pillsContainer ? pillsContainer.querySelectorAll('.person-pill') : [];
+      activePills.forEach((pill, i) => {
         if (i === 0 || !pill.classList.contains('active')) return;
-        // Try to find matching relation
-        let rel = null;
         const pillText = pill.textContent.trim();
-        rel = relations.find(r => r.name === pillText);
-        if (!rel) {
-          // Use example data based on pill name
-          if (pillText === 'Clara') rel = { name: 'Clara', birthdate: '2003-09-08', gender: 'female' };
-          else if (pillText === 'Thomas') rel = { name: 'Thomas', birthdate: '1965-04-15', gender: 'male' };
-          else return;
-        }
+        const rel = relations.find(r => r.name === pillText);
         if (!rel || !rel.birthdate) return;
         const isMale = rel.gender === 'male';
         const rc = cyclesAtDate(rel.birthdate, targetDate, isMale);
