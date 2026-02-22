@@ -1,6 +1,6 @@
 <svg width="1200" height="700" xmlns="http://www.w3.org/2000/svg">
   <!-- Grøn baggrund -->
-  <rect width="1200" height="700" fill="#8B9A9D"/>
+  <rect width="1200" height="700" fill="#7b7a9e"/>
   
   <!-- Header - centreret -->
   <text x="600" y="70" font-family="Times New Roman, serif" font-size="36" font-weight="bold" text-anchor="middle" fill="#000000">
