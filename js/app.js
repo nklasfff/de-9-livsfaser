@@ -30,6 +30,344 @@ function getUserCycles() {
   return { user, cycles, dominant };
 }
 
+/* ============================================================
+   CHECK-IN & JOURNAL — Sprint 2
+   ============================================================ */
+
+const TrackingState = {
+  checkinMood: null,
+  trackingPeriod: '7d',
+  journalFilter: 'recent'
+};
+
+const MOOD_LABELS = {
+  'vand': 'Stille', 'trae': 'Voksende', 'ild': 'Intens',
+  'jord': 'Rodfæstet', 'metal': 'Klar'
+};
+
+/* ---- selectMood: Global — called from HTML onclick on ci-btn ---- */
+function selectMood(id, el) {
+  TrackingState.checkinMood = id;
+
+  // Visual: remove active from siblings, add to this one
+  const parent = el.closest('.ci-btns');
+  if (parent) {
+    parent.querySelectorAll('.ci-btn').forEach(b => b.classList.remove('ci-btn--active'));
+  }
+  el.classList.add('ci-btn--active');
+
+  // On forside (no save button), save immediately as quick check-in
+  const saveBtn = document.getElementById('udvikling-save-btn');
+  if (!saveBtn) {
+    const data = getUserCycles();
+    const entry = {
+      date: Storage.getLocalDateStr(),
+      mood: id,
+      note: '',
+      cycles: data ? {
+        lifePhase: data.cycles.lifePhase.element,
+        season: data.cycles.season.element,
+        weekday: data.cycles.weekday.element,
+        organ: data.cycles.organ.element,
+        dominant: data.dominant.element
+      } : null
+    };
+    Storage.saveCheckin(entry);
+
+    const statusEl = document.getElementById('forside-checkin-status');
+    if (statusEl) statusEl.textContent = 'Check-in gemt ✓';
+    showActionToast('Check-in gemt ✓');
+
+    // Disable further clicks (one per day from forside)
+    if (parent) {
+      parent.querySelectorAll('.ci-btn').forEach(b => {
+        b.style.pointerEvents = 'none';
+        b.style.opacity = '0.6';
+      });
+      el.style.opacity = '1';
+    }
+  }
+}
+
+/* ---- saveCheckin: Global — called from rej-udvikling save button ---- */
+function saveCheckin() {
+  const mood = TrackingState.checkinMood;
+  if (!mood) {
+    showActionToast('Vælg en energi først');
+    return;
+  }
+
+  const noteEl = document.getElementById('udvikling-note');
+  const note = noteEl ? noteEl.value.trim() : '';
+
+  const data = getUserCycles();
+  const entry = {
+    date: Storage.getLocalDateStr(),
+    mood: mood,
+    note: note,
+    cycles: data ? {
+      lifePhase: data.cycles.lifePhase.element,
+      season: data.cycles.season.element,
+      weekday: data.cycles.weekday.element,
+      organ: data.cycles.organ.element,
+      dominant: data.dominant.element
+    } : null
+  };
+
+  Storage.saveCheckin(entry);
+  TrackingState.checkinMood = null;
+  if (noteEl) noteEl.value = '';
+
+  // Reset mood buttons
+  document.querySelectorAll('#udvikling-checkin .ci-btn').forEach(b => b.classList.remove('ci-btn--active'));
+
+  showActionToast('Check-in gemt ✓');
+
+  // Re-render
+  initRejUdvikling();
+}
+
+/* ---- saveJournal: Global — called from rej-journal save button ---- */
+function saveJournal() {
+  const noteEl = document.getElementById('journal-note');
+  const note = noteEl ? noteEl.value.trim() : '';
+  if (!note) {
+    showActionToast('Skriv noget først');
+    return;
+  }
+
+  const data = getUserCycles();
+  const entry = {
+    date: Storage.getLocalDateStr(),
+    text: note,
+    phase: data ? data.cycles.lifePhase.phase : null,
+    season: data ? data.cycles.season.season : null,
+    element: data ? data.dominant.element : null
+  };
+
+  // Save
+  const journal = JSON.parse(localStorage.getItem('livsfaser_journal') || '[]');
+  journal.unshift(entry);
+  localStorage.setItem('livsfaser_journal', JSON.stringify(journal));
+
+  if (noteEl) noteEl.value = '';
+  showActionToast('Refleksion gemt ✓');
+
+  // Re-render entries
+  renderJournalEntries();
+}
+
+/* ---- setTrackingPeriod: Filter chips for rej-udvikling ---- */
+function setTrackingPeriod(period, el) {
+  TrackingState.trackingPeriod = period;
+
+  // Update chip styling
+  const parent = el.parentElement;
+  if (parent) {
+    parent.querySelectorAll('div').forEach(chip => {
+      chip.style.background = 'rgba(138,150,169,0.04)';
+      chip.style.fontWeight = '400';
+      chip.style.border = '1px solid rgba(138,150,169,0.08)';
+    });
+    el.style.background = 'rgba(138,150,169,0.12)';
+    el.style.fontWeight = '500';
+    el.style.border = 'none';
+  }
+
+  // Re-render stats and timeline
+  renderCheckinStats();
+  renderCheckinTimeline();
+}
+
+/* ---- setJournalFilter: Filter chips for rej-journal ---- */
+function setJournalFilter(filter, el) {
+  TrackingState.journalFilter = filter;
+
+  // Update chip styling
+  const parent = el.parentElement;
+  if (parent) {
+    parent.querySelectorAll('div').forEach(chip => {
+      chip.style.background = 'rgba(138,150,169,0.04)';
+      chip.style.fontWeight = '400';
+      chip.style.border = '1px solid rgba(138,150,169,0.08)';
+    });
+    el.style.background = 'rgba(138,150,169,0.12)';
+    el.style.fontWeight = '500';
+    el.style.border = 'none';
+  }
+
+  renderJournalEntries();
+}
+
+/* ---- Helper: Get checkins for period ---- */
+function getCheckinsForPeriod(period) {
+  const all = Storage.getCheckins();
+  if (period === 'all') return all;
+
+  const now = new Date();
+  const days = period === '7d' ? 7 : period === '30d' ? 30 : 90;
+  const cutoff = new Date(now.getFullYear(), now.getMonth(), now.getDate() - days);
+
+  return all.filter(c => {
+    const d = new Date(c.date);
+    return d >= cutoff;
+  });
+}
+
+/* ---- Render check-in stats (rej-udvikling) ---- */
+function renderCheckinStats() {
+  const statsEl = document.getElementById('udvikling-stats');
+  if (!statsEl) return;
+
+  const checkins = getCheckinsForPeriod(TrackingState.trackingPeriod);
+  const journal = JSON.parse(localStorage.getItem('livsfaser_journal') || '[]');
+
+  if (checkins.length === 0) return; // Keep mockup data
+
+  // Count unique elements
+  const elements = new Set();
+  checkins.forEach(c => { if (c.mood) elements.add(c.mood); });
+
+  // Calculate streak
+  let streak = 0;
+  const today = Storage.getLocalDateStr();
+  const dateSet = new Set(checkins.map(c => c.date));
+  let checkDate = new Date();
+  while (true) {
+    const ds = Storage.getLocalDateStr(checkDate);
+    if (dateSet.has(ds)) {
+      streak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  statsEl.innerHTML = `
+    <div class="stat-box"><div class="stat-number">${checkins.length}</div><div class="stat-label-text">Check-ins</div></div>
+    <div class="stat-box"><div class="stat-number">${journal.length}</div><div class="stat-label-text">Refleksioner</div></div>
+    <div class="stat-box"><div class="stat-number">${elements.size}<span style="font-size:12px;font-style:normal;opacity:0.8">/5</span></div><div class="stat-label-text">Elementer</div></div>
+    <div class="stat-box"><div class="stat-number">${streak}</div><div class="stat-label-text">Dages streak</div></div>
+  `;
+}
+
+/* ---- Render check-in timeline (rej-udvikling) ---- */
+function renderCheckinTimeline() {
+  const el = document.getElementById('udvikling-timeline');
+  if (!el) return;
+
+  const checkins = getCheckinsForPeriod(TrackingState.trackingPeriod);
+  if (checkins.length === 0) {
+    el.innerHTML = '';
+    return;
+  }
+
+  // Sort newest first
+  const sorted = [...checkins].sort((a, b) => b.date.localeCompare(a.date));
+
+  el.innerHTML = `
+    <div class="group-label" style="color:#8a96a9">Dine check-ins</div>
+    ${sorted.slice(0, 20).map(c => {
+      const label = MOOD_LABELS[c.mood] || c.mood;
+      const dateObj = new Date(c.date + 'T12:00:00');
+      const dateStr = `${dateObj.getDate()}. ${MONTHS_DA[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+      const elLabel = c.cycles && c.cycles.dominant ? Calculations.ELEMENT_LABELS[c.cycles.dominant] || '' : '';
+      return `<div style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:14px;margin:0 0 8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:${c.note ? '6px' : '0'}">
+          <div>
+            <span style="font-family:sans-serif;font-size:12px;color:#8892a1;letter-spacing:1px;text-transform:uppercase">${dateStr}</span>
+          </div>
+          <div style="display:flex;gap:6px">
+            <span style="padding:3px 10px;border-radius:12px;font-family:sans-serif;font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">${label}</span>
+            ${elLabel ? `<span style="padding:3px 10px;border-radius:12px;font-family:sans-serif;font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">${elLabel}</span>` : ''}
+          </div>
+        </div>
+        ${c.note ? `<div style="font-family:Georgia,serif;font-size:14px;color:#6e7d91;font-style:italic;line-height:1.5">${c.note}</div>` : ''}
+      </div>`;
+    }).join('')}
+  `;
+}
+
+/* ---- setFavFilter: Filter tabs for rej-favoritter ---- */
+function setFavFilter(tab, el) {
+  // Update chip styling
+  const parent = el.parentElement;
+  if (parent) {
+    parent.querySelectorAll('div').forEach(chip => {
+      chip.style.background = 'rgba(138,150,169,0.04)';
+      chip.style.fontWeight = '400';
+      chip.style.border = '1px solid rgba(138,150,169,0.08)';
+    });
+    el.style.background = 'rgba(138,150,169,0.12)';
+    el.style.fontWeight = '500';
+    el.style.border = 'none';
+  }
+
+  // Show/hide sections
+  document.querySelectorAll('[data-fav-tab]').forEach(section => {
+    section.style.display = section.dataset.favTab === tab ? '' : 'none';
+  });
+}
+
+/* ---- setOpdFilter: Filter tabs for rej-opdagelser ---- */
+function setOpdFilter(cat, el) {
+  // Update chip styling
+  const parent = el.parentElement;
+  if (parent) {
+    parent.querySelectorAll('div').forEach(chip => {
+      chip.style.background = 'rgba(138,150,169,0.04)';
+      chip.style.fontWeight = '400';
+      chip.style.border = '1px solid rgba(138,150,169,0.08)';
+    });
+    el.style.background = 'rgba(138,150,169,0.12)';
+    el.style.fontWeight = '500';
+    el.style.border = 'none';
+  }
+
+  // Show/hide cards
+  document.querySelectorAll('[data-opd-cat]').forEach(card => {
+    card.style.display = (cat === 'alle' || card.dataset.opdCat === cat) ? '' : 'none';
+  });
+}
+
+/* ---- Render journal entries (rej-journal) ---- */
+function renderJournalEntries() {
+  const el = document.getElementById('journal-entries');
+  if (!el) return;
+
+  const all = JSON.parse(localStorage.getItem('livsfaser_journal') || '[]');
+
+  if (all.length === 0) return; // Keep mockup example entries
+
+  // Filter
+  let filtered = all;
+  const now = new Date();
+  if (TrackingState.journalFilter === 'recent') {
+    filtered = all.slice(0, 5);
+  } else if (TrackingState.journalFilter === 'month') {
+    const monthStart = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+    filtered = all.filter(j => j.date >= monthStart);
+  }
+
+  el.innerHTML = filtered.map(j => {
+    const dateObj = new Date(j.date + 'T12:00:00');
+    const dateStr = `${dateObj.getDate()}. ${MONTHS_DA[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+    const elLabel = j.element ? (Calculations.ELEMENT_LABELS[j.element] || j.element) : '';
+    const phase = j.phase ? `Fase ${j.phase}` : '';
+    const season = j.season || '';
+
+    const tags = [phase, season, elLabel].filter(Boolean);
+
+    return `<div style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:16px;margin:0 0 10px">
+      <div style="font-family:sans-serif;font-size:12px;color:#8892a1;letter-spacing:1.5px;font-weight:400;text-transform:uppercase;margin-bottom:6px">${dateStr}</div>
+      <div style="font-family:sans-serif;font-size:15px;color:#6e7d91;line-height:1.6;margin-bottom:10px">${j.text}</div>
+      ${tags.length > 0 ? `<div style="display:flex;gap:6px;flex-wrap:wrap">
+        ${tags.map(t => `<span style="padding:3px 10px;border-radius:12px;font-family:sans-serif;font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">${t}</span>`).join('')}
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+
 /* ---- Analyze inner climate ---- */
 function analyzeClimate(elements, dominant) {
   const counts = {};
@@ -309,6 +647,25 @@ function initForside() {
   const climate = analyzeClimate(cycles.elements, dominant);
   setText('forside-climate-text', climate.text);
   setText('forside-climate-sub', `${climate.label} \u2014 din energi samler sig i ${elLabel(dominant.element)}`);
+
+  // Check-in status — show if already done today
+  const today = Storage.getLocalDateStr();
+  const todayCheckin = Storage.getCheckins().find(c => c.date === today);
+  const checkinStatus = document.getElementById('forside-checkin-status');
+  if (todayCheckin && checkinStatus) {
+    checkinStatus.textContent = `I dag: ${MOOD_LABELS[todayCheckin.mood] || todayCheckin.mood} ✓`;
+    // Disable further mood selection
+    const ciBtns = document.querySelectorAll('.checkin-card .ci-btn');
+    const moodOrder = ['vand', 'trae', 'ild', 'jord', 'metal'];
+    ciBtns.forEach((btn, i) => {
+      btn.style.pointerEvents = 'none';
+      btn.style.opacity = '0.6';
+      if (moodOrder[i] === todayCheckin.mood) {
+        btn.classList.add('ci-btn--active');
+        btn.style.opacity = '1';
+      }
+    });
+  }
 
   // Praksis cards — based on dominant element, rotated daily
   const domEl = dominant.element;
@@ -920,13 +1277,79 @@ function initRejUdvikling() {
   const data = getUserCycles();
   if (!data) return;
   const phase = data.cycles.lifePhase;
-  setText('udvikling-featured-label', `Fase ${phase.phase} · ${phase.name}`);
+  const elLabel = Calculations.ELEMENT_LABELS[data.dominant.element];
+  setText('udvikling-featured-label', `Din udvikling · ${elLabel}`);
+
+  // Check if already checked in today
+  const today = Storage.getLocalDateStr();
+  const checkins = Storage.getCheckins();
+  const todayCheckin = checkins.find(c => c.date === today);
+  const statusEl = document.getElementById('udvikling-checkin-status');
+
+  if (todayCheckin) {
+    if (statusEl) statusEl.textContent = `Du har allerede tjekket ind i dag (${MOOD_LABELS[todayCheckin.mood] || todayCheckin.mood})`;
+
+    // Pre-highlight the mood button
+    const btns = document.querySelectorAll('#udvikling-checkin .ci-btn');
+    const moodOrder = ['vand', 'trae', 'ild', 'jord', 'metal'];
+    btns.forEach((btn, i) => {
+      if (moodOrder[i] === todayCheckin.mood) btn.classList.add('ci-btn--active');
+    });
+  }
+
+  // Update stats with real data
+  renderCheckinStats();
+
+  // Update featured text with real data
+  if (checkins.length > 0) {
+    const streak = calculateStreak(checkins);
+    const elCounts = {};
+    checkins.forEach(c => { if (c.mood) elCounts[c.mood] = (elCounts[c.mood] || 0) + 1; });
+    const topMood = Object.entries(elCounts).sort((a, b) => b[1] - a[1])[0];
+    const topLabel = topMood ? (MOOD_LABELS[topMood[0]] || topMood[0]) : '';
+    const featEl = document.querySelector('.featured.feat-rejse .featured-text');
+    if (featEl && checkins.length >= 3) {
+      featEl.textContent = `${checkins.length} check-ins. ${streak > 1 ? streak + ' dages streak. ' : ''}Dit dominerende humør er ${topLabel} — og et mønster begynder at vise sig.`;
+    }
+  }
+
+  // Render timeline
+  renderCheckinTimeline();
+}
+
+function calculateStreak(checkins) {
+  let streak = 0;
+  let checkDate = new Date();
+  const dateSet = new Set(checkins.map(c => c.date));
+  while (true) {
+    const ds = Storage.getLocalDateStr(checkDate);
+    if (dateSet.has(ds)) {
+      streak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+  return streak;
 }
 
 function initRejJournal() {
   const data = getUserCycles();
   if (!data) return;
   setText('journal-featured-label', `Din journal · Fase ${data.cycles.lifePhase.phase}`);
+
+  // Render saved journal entries (only if there are any — otherwise keep mockup examples)
+  renderJournalEntries();
+
+  // Update featured text with real count
+  const journal = JSON.parse(localStorage.getItem('livsfaser_journal') || '[]');
+  if (journal.length > 0) {
+    const featEl = document.querySelector('.featured.feat-rejse .featured-text');
+    if (featEl) {
+      const phase = data.cycles.lifePhase;
+      featEl.textContent = `${journal.length} refleksion${journal.length !== 1 ? 'er' : ''}. Dine ord samler sig — og over tid træder mønstre frem du ikke kunne se indefra.`;
+    }
+  }
 }
 
 function initRejFavoritter() {

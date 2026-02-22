@@ -76,10 +76,10 @@
   <div style="font-family:Georgia,serif;font-size:15px;color:#6e7d91;text-align:center;margin:-4px 0 12px;font-style:italic;line-height:1.6">Dine tanker samler sig her som blade p&aring; en sti.<br>N&aring;r du l&aelig;ser dem igen, kan du m&aring;ske se hvad der var p&aring; vej &mdash;<br>f&oslash;r du selv vidste det.</div>
 
   <!-- Filter-chips -->
-  <div style="display:flex;gap:8px;justify-content:center;margin:0 0 16px">
-    <div style="padding:6px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;font-weight:500;letter-spacing:0.5px;background:rgba(138,150,169,0.12);color:#8a96a9">Seneste</div>
-    <div style="padding:6px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;font-weight:400;letter-spacing:0.5px;background:rgba(138,150,169,0.04);color:#8d95a1;border:1px solid rgba(138,150,169,0.08)">Denne m&aring;ned</div>
-    <div style="padding:6px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;font-weight:400;letter-spacing:0.5px;background:rgba(138,150,169,0.04);color:#8d95a1;border:1px solid rgba(138,150,169,0.08)">Alle</div>
+  <div id="journal-filter-chips" style="display:flex;gap:8px;justify-content:center;margin:0 0 16px">
+    <div onclick="setJournalFilter('recent',this)" style="padding:6px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;font-weight:500;letter-spacing:0.5px;background:rgba(138,150,169,0.12);color:#8a96a9;cursor:pointer">Seneste</div>
+    <div onclick="setJournalFilter('month',this)" style="padding:6px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;font-weight:400;letter-spacing:0.5px;background:rgba(138,150,169,0.04);color:#8d95a1;border:1px solid rgba(138,150,169,0.08);cursor:pointer">Denne m&aring;ned</div>
+    <div onclick="setJournalFilter('all',this)" style="padding:6px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;font-weight:400;letter-spacing:0.5px;background:rgba(138,150,169,0.04);color:#8d95a1;border:1px solid rgba(138,150,169,0.08);cursor:pointer">Alle</div>
   </div>
 
   <!-- JOURNAL ENTRIES AREA -->

@@ -17,11 +17,11 @@
   <div class="featured feat-rejse"><div class="featured-label" id="opdagelser-featured-label">12 opdagelser &middot; 47 dage</div><div class="featured-text">Dine opdagelser danner m&oslash;nstre. Den seneste indsigt: Vand-elementet g&aring;r igen &mdash; i dine cyklusser, dine relationer og din krop.</div><div class="featured-sub">Se alle opdagelser &rarr;</div></div>
 
   <!-- FILTER TABS -->
-  <div style="display:flex;gap:8px;justify-content:center;margin:4px 0 16px">
-    <div style="padding:6px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;font-weight:500;letter-spacing:0.5px;background:rgba(138,150,169,0.12);color:#8a96a9">Alle</div>
-    <div style="padding:6px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;font-weight:400;letter-spacing:0.5px;background:rgba(138,150,169,0.04);color:#8d95a1;border:1px solid rgba(138,150,169,0.08)">Cyklusser</div>
-    <div style="padding:6px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;font-weight:400;letter-spacing:0.5px;background:rgba(138,150,169,0.04);color:#8d95a1;border:1px solid rgba(138,150,169,0.08)">Relationer</div>
-    <div style="padding:6px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;font-weight:400;letter-spacing:0.5px;background:rgba(138,150,169,0.04);color:#8d95a1;border:1px solid rgba(138,150,169,0.08)">Vinduer</div>
+  <div id="opd-filter-chips" style="display:flex;gap:8px;justify-content:center;margin:4px 0 16px">
+    <div onclick="setOpdFilter('alle',this)" style="padding:6px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;font-weight:500;letter-spacing:0.5px;background:rgba(138,150,169,0.12);color:#8a96a9;cursor:pointer">Alle</div>
+    <div onclick="setOpdFilter('cyklusser',this)" style="padding:6px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;font-weight:400;letter-spacing:0.5px;background:rgba(138,150,169,0.04);color:#8d95a1;border:1px solid rgba(138,150,169,0.08);cursor:pointer">Cyklusser</div>
+    <div onclick="setOpdFilter('relationer',this)" style="padding:6px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;font-weight:400;letter-spacing:0.5px;background:rgba(138,150,169,0.04);color:#8d95a1;border:1px solid rgba(138,150,169,0.08);cursor:pointer">Relationer</div>
+    <div onclick="setOpdFilter('vinduer',this)" style="padding:6px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;font-weight:400;letter-spacing:0.5px;background:rgba(138,150,169,0.04);color:#8d95a1;border:1px solid rgba(138,150,169,0.08);cursor:pointer">Vinduer</div>
   </div>
 
   <!-- STATUS GRADIENT-BOKS -->
@@ -36,7 +36,7 @@
   <div class="group-label" style="color:#8a96a9">Dine opdagelser</div>
 
   <!-- Opdagelse 1 (highlight) -->
-  <div style="background:rgba(138,150,169,0.06);border:1px solid rgba(138,150,169,0.12);border-radius:14px;padding:16px;margin:0 0 10px;border-left:3px solid rgba(138,150,169,0.30)">
+  <div data-opd-cat="relationer" style="background:rgba(138,150,169,0.06);border:1px solid rgba(138,150,169,0.12);border-radius:14px;padding:16px;margin:0 0 10px;border-left:3px solid rgba(138,150,169,0.30)">
     <div style="font-family:sans-serif;font-size:12px;color:#8892a1;letter-spacing:1.2px;font-weight:400;text-transform:uppercase;margin-bottom:6px">I dag &middot; 18. februar 2026</div>
     <div style="font-family:sans-serif;font-size:15px;color:#6e7d91;line-height:1.6;margin-bottom:10px">Din mor var i Fase 5, Ild-energi, da hun bar dig. Den varme du m&aelig;rker i dig &mdash; udstr&aring;lingen og uroen n&aring;r du ikke er set &mdash; har rod i hendes element.</div>
     <div style="display:flex;align-items:center;gap:8px">
@@ -47,7 +47,7 @@
   </div>
 
   <!-- Opdagelse 2 -->
-  <div style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:16px;margin:0 0 10px">
+  <div data-opd-cat="cyklusser" style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:16px;margin:0 0 10px">
     <div style="font-family:sans-serif;font-size:12px;color:#8892a1;letter-spacing:1.2px;font-weight:400;text-transform:uppercase;margin-bottom:6px">15. Februar 2026</div>
     <div style="font-family:sans-serif;font-size:15px;color:#6e7d91;line-height:1.6;margin-bottom:10px">Fire af dine fem cyklusser peger mod Vand lige nu. Det er sj&aelig;ldent &mdash; og det er m&aring;ske derfor du m&aelig;rker en trang til stilhed og dybde.</div>
     <div style="display:flex;align-items:center;gap:8px">
@@ -58,7 +58,7 @@
   </div>
 
   <!-- Opdagelse 3 -->
-  <div style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:16px;margin:0 0 10px">
+  <div data-opd-cat="vinduer" style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:16px;margin:0 0 10px">
     <div style="font-family:sans-serif;font-size:12px;color:#8892a1;letter-spacing:1.2px;font-weight:400;text-transform:uppercase;margin-bottom:6px">12. Februar 2026</div>
     <div style="font-family:sans-serif;font-size:15px;color:#6e7d91;line-height:1.6;margin-bottom:10px">Vand n&aelig;rer Tr&aelig;. Din stilhed giver din datter plads til at vokse &mdash; det der f&oslash;les som afstand, er m&aring;ske det bedste du giver hende.</div>
     <div style="display:flex;align-items:center;gap:8px">
@@ -69,7 +69,7 @@
   </div>
 
   <!-- Opdagelse 4 -->
-  <div style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:16px;margin:0 0 10px">
+  <div data-opd-cat="vinduer" style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:16px;margin:0 0 10px">
     <div style="font-family:sans-serif;font-size:12px;color:#8892a1;letter-spacing:1.2px;font-weight:400;text-transform:uppercase;margin-bottom:6px">8. Februar 2026</div>
     <div style="font-family:sans-serif;font-size:15px;color:#6e7d91;line-height:1.6;margin-bottom:10px">Da du var 38, var tre cyklusser i Ild og to i Jord. Det var krydsfeltet &mdash; du br&aelig;ndte og landede p&aring; samme tid. Det var ikke kaos. Det var overgang.</div>
     <div style="display:flex;align-items:center;gap:8px">
@@ -80,7 +80,7 @@
   </div>
 
   <!-- Opdagelse 5 -->
-  <div style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:16px;margin:0 0 10px">
+  <div data-opd-cat="relationer" style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:16px;margin:0 0 10px">
     <div style="font-family:sans-serif;font-size:12px;color:#8892a1;letter-spacing:1.2px;font-weight:400;text-transform:uppercase;margin-bottom:6px">3. Februar 2026</div>
     <div style="font-family:sans-serif;font-size:15px;color:#6e7d91;line-height:1.6;margin-bottom:10px">Du og din partner er forskudt med 4 &aring;r i jeres livscyklusser. Du gik ind i Vand-energi da han stadig var i Metal. Det forklarer en hel del.</div>
     <div style="display:flex;align-items:center;gap:8px">
@@ -91,7 +91,7 @@
   </div>
 
   <!-- Opdagelse 6 -->
-  <div style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:16px;margin:0 0 10px">
+  <div data-opd-cat="cyklusser" style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:16px;margin:0 0 10px">
     <div style="font-family:sans-serif;font-size:12px;color:#8892a1;letter-spacing:1.2px;font-weight:400;text-transform:uppercase;margin-bottom:6px">28. Januar 2026</div>
     <div style="font-family:sans-serif;font-size:15px;color:#6e7d91;line-height:1.6;margin-bottom:10px">Nyre-meridianen er mest aktiv om vinteren og mellem kl. 17 og 19. Dine to dybeste cyklusser &mdash; livsfase og &aring;rstid &mdash; m&oslash;des der.</div>
     <div style="display:flex;align-items:center;gap:8px">
