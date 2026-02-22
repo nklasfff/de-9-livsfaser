@@ -990,40 +990,158 @@ function initVinduer() {
     });
   }
 
-  // Button → calculate
+  // Button → calculate and show rich result
   if (btn && dateInput && !btn._bound) {
     btn._bound = true;
     btn.addEventListener('click', () => {
       const val = dateInput.value;
-      if (!val) {
-        showActionToast('Vælg en dato først');
-        return;
-      }
+      if (!val) { showActionToast('Vælg en dato først'); return; }
+
       const targetDate = new Date(val);
       const userCycles = cyclesAtDate(user.birthdate, targetDate, false);
+      const monthCycle = Calculations.calculateCalendarMonth(targetDate);
       const elLabel = Calculations.ELEMENT_LABELS[userCycles.lifePhase.element];
+      const phase = userCycles.lifePhase;
+      const detail = LIVSFASE_DETAIL[phase.phase];
 
-      // Compare with today if different date
       const today = new Date();
       const isToday = val === toDateStr(today);
-      const isPast = targetDate < today;
+      const isPast = targetDate < today && !isToday;
 
-      let html = `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">${formatDanishDate(targetDate)}</div>`;
-      html += `<div style="margin:8px 0"><strong style="color:#6B5F7B;font-weight:500">Dig:</strong> ${userCycles.age} år · Fase ${userCycles.lifePhase.phase}: ${userCycles.lifePhase.name} · ${elLabel}</div>`;
-      html += `<div style="font-size:13px;color:#8B7D9B">Årstid: ${userCycles.season.season} · ${userCycles.weekday.day}</div>`;
+      // Element climate (4 cycles: livsfase, årstid, ugedag, måned)
+      const cycleEls = [phase.element, userCycles.season.element, userCycles.weekday.element, monthCycle.element];
+      const elCount = {};
+      cycleEls.forEach(e => { elCount[e] = (elCount[e] || 0) + 1; });
+      const sortedEls = Object.entries(elCount).sort((a, b) => b[1] - a[1]);
+      const dominant = sortedEls[0][0];
+      const dominantLabel = Calculations.ELEMENT_LABELS[dominant];
+      const varEr = isPast ? 'var' : 'er';
 
-      // If not today, show comparison with now
-      if (!isToday) {
-        const nowCycles = cyclesAtDate(user.birthdate, today, false);
-        const nowEl = Calculations.ELEMENT_LABELS[nowCycles.lifePhase.element];
-        html += `<div style="margin:10px 0;padding:10px 12px;background:rgba(107,95,123,0.04);border-radius:10px;font-size:13px;color:#8B7D9B">`;
-        html += `<div style="font-weight:600;color:#6B5F7B;margin-bottom:4px">${isPast ? 'Dengang vs nu' : 'Nu vs da'}</div>`;
-        html += `<div>${isPast ? 'Dengang' : 'Da'}: Fase ${userCycles.lifePhase.phase} (${elLabel}) · ${userCycles.age} år</div>`;
-        html += `<div>Nu: Fase ${nowCycles.lifePhase.phase} (${nowEl}) · ${nowCycles.age} år</div>`;
+      let html = '';
+
+      // ── HEADER ──
+      html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">${formatDanishDate(targetDate)} ${targetDate.getFullYear()}</div>`;
+      html += `<div style="font-family:Georgia,serif;font-size:22px;font-weight:600;color:#6B5F7B;margin:4px 0 2px">Du ${varEr} ${userCycles.age} år</div>`;
+
+      // ── FASE-KORT ──
+      html += `<div style="margin:14px 0;padding:14px 16px;background:rgba(107,95,123,0.06);border-radius:14px;border:1px solid rgba(107,95,123,0.10)">`;
+      html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase">Fase ${phase.phase} · ${elLabel}</div>`;
+      html += `<div style="font-family:Georgia,serif;font-size:19px;font-weight:600;color:#6B5F7B;margin:4px 0">${phase.name}</div>`;
+      html += `<div style="font-size:13px;color:#8B7D9B">${detail.organPar} · ${detail.aarstid}</div>`;
+      html += `<div style="font-family:Georgia,serif;font-size:14px;color:#6B5F7B;margin-top:10px;line-height:1.6;font-style:italic">${detail.introText}</div>`;
+      html += `</div>`;
+
+      // ── ELEMENT-KLIMA ──
+      html += `<div style="margin:16px 0 12px">`;
+      html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">${isPast ? 'Dit element-klima dengang' : 'Dit element-klima'}</div>`;
+      ['VAND','TRÆ','ILD','JORD','METAL'].forEach(el => {
+        const cnt = elCount[el] || 0;
+        if (cnt === 0) return;
+        const pct = (cnt / 4) * 100;
+        html += `<div style="display:flex;align-items:center;margin:4px 0;font-size:13px">`;
+        html += `<div style="width:42px;color:#8B7D9B">${Calculations.ELEMENT_LABELS[el]}</div>`;
+        html += `<div style="flex:1;height:6px;background:rgba(107,95,123,0.08);border-radius:3px;margin:0 8px"><div style="height:100%;width:${pct}%;background:rgba(107,95,123,0.35);border-radius:3px"></div></div>`;
+        html += `<div style="width:16px;text-align:right;color:#a89bb3">${cnt}</div>`;
+        html += `</div>`;
+      });
+      if (sortedEls[0][1] >= 3) {
+        html += `<div style="font-family:Georgia,serif;font-size:13px;color:#8B7D9B;margin-top:8px;font-style:italic">${dominantLabel} ${isPast ? 'dominerede' : 'dominerer'}. ${sortedEls[0][1]} af fire cyklusser ${isPast ? 'pegede' : 'peger'} mod ${dominantLabel}.</div>`;
+      } else if (sortedEls[0][1] === 2 && sortedEls.length > 1 && sortedEls[1][1] === 2) {
+        const el2 = Calculations.ELEMENT_LABELS[sortedEls[1][0]];
+        html += `<div style="font-family:Georgia,serif;font-size:13px;color:#8B7D9B;margin-top:8px;font-style:italic">${dominantLabel} og ${el2} ${isPast ? 'delte' : 'deler'} styrken — to kræfter i balance.</div>`;
+      }
+      html += `</div>`;
+
+      // ── FØLELSER ──
+      if (detail.folelser) {
+        html += `<div style="margin:14px 0;padding:12px 14px;background:rgba(107,95,123,0.04);border-radius:12px">`;
+        html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">${isPast ? 'Hvad du måske mærkede' : 'Hvad du måske mærker'}</div>`;
+        html += `<div style="font-size:13px;color:#6B5F7B;line-height:1.5"><span style="color:#a89bb3">I balance:</span> ${detail.folelser.balance}</div>`;
+        html += `<div style="font-size:13px;color:#6B5F7B;line-height:1.5;margin-top:3px"><span style="color:#a89bb3">I ubalance:</span> ${detail.folelser.ubalance}</div>`;
         html += `</div>`;
       }
 
-      // Check which person pills are active (from dynamic pills)
+      // ── KROPPEN ──
+      html += `<div style="margin:14px 0">`;
+      html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Kroppen</div>`;
+      html += `<div style="font-family:Georgia,serif;font-size:14px;color:#6B5F7B;line-height:1.6">${detail.kropTekst}</div>`;
+      html += `</div>`;
+
+      // ── SINDET ──
+      html += `<div style="margin:14px 0">`;
+      html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Sindet</div>`;
+      html += `<div style="font-family:Georgia,serif;font-size:14px;color:#6B5F7B;line-height:1.6">${detail.sindTekst}</div>`;
+      html += `</div>`;
+
+      // ── ÅRSTID + UGEDAG ──
+      html += `<div style="margin:14px 0;padding:10px 14px;background:rgba(107,95,123,0.03);border-radius:10px;border:1px solid rgba(107,95,123,0.06)">`;
+      html += `<div style="font-size:13px;color:#8B7D9B">${userCycles.season.season} · ${Calculations.ELEMENT_LABELS[userCycles.season.element]}-energi · ${userCycles.weekday.day}</div>`;
+      html += `</div>`;
+
+      // ── ANBEFALINGER ──
+      html += `<div style="margin:16px 0">`;
+      html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">${isPast ? 'Hvad der kunne have hjulpet' : 'Hvad du kan gøre'}</div>`;
+      if (detail.oevelse) {
+        html += `<div style="margin:6px 0;padding:10px 12px;background:rgba(107,95,123,0.04);border-radius:10px">`;
+        html += `<div style="font-size:12px;color:#a89bb3;margin-bottom:2px">Øvelse</div>`;
+        html += `<div style="font-size:14px;color:#6B5F7B;font-weight:500">${detail.oevelse.title}</div>`;
+        html += `<div style="font-size:13px;color:#8B7D9B;margin-top:2px">${detail.oevelse.desc}</div>`;
+        html += `</div>`;
+      }
+      if (detail.kost) {
+        html += `<div style="margin:6px 0;padding:10px 12px;background:rgba(107,95,123,0.04);border-radius:10px">`;
+        html += `<div style="font-size:12px;color:#a89bb3;margin-bottom:2px">Næring</div>`;
+        html += `<div style="font-size:14px;color:#6B5F7B;font-weight:500">${detail.kost.title}</div>`;
+        html += `<div style="font-size:13px;color:#8B7D9B;margin-top:2px">${detail.kost.desc}</div>`;
+        html += `</div>`;
+      }
+      if (detail.healingLyd) {
+        html += `<div style="margin:6px 0;padding:10px 12px;background:rgba(107,95,123,0.04);border-radius:10px">`;
+        html += `<div style="font-size:12px;color:#a89bb3;margin-bottom:2px">Healinglyd</div>`;
+        html += `<div style="font-size:14px;color:#6B5F7B;font-weight:500">${detail.healingLyd.title}</div>`;
+        html += `<div style="font-size:13px;color:#8B7D9B;margin-top:2px">${detail.healingLyd.desc}</div>`;
+        html += `</div>`;
+      }
+      html += `</div>`;
+
+      // ── REFLEKSION ──
+      if (detail.refleksioner && detail.refleksioner.length > 0) {
+        const rIdx = Math.floor(Math.random() * detail.refleksioner.length);
+        html += `<div style="margin:16px 0;padding:14px 16px;background:rgba(107,95,123,0.05);border-radius:14px;border-left:3px solid rgba(107,95,123,0.20)">`;
+        html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Refleksion</div>`;
+        html += `<div style="font-family:Georgia,serif;font-size:15px;color:#6B5F7B;line-height:1.5;font-style:italic">${detail.refleksioner[rIdx]}</div>`;
+        html += `</div>`;
+      }
+
+      // ── DENGANG VS NU ──
+      if (!isToday) {
+        const nowCycles = cyclesAtDate(user.birthdate, today, false);
+        const nowEl = Calculations.ELEMENT_LABELS[nowCycles.lifePhase.element];
+
+        html += `<div style="margin:16px 0;padding:14px 16px;background:rgba(107,95,123,0.06);border-radius:14px;border:1px solid rgba(107,95,123,0.10)">`;
+        html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">${isPast ? 'Dengang og nu' : 'Nu og da'}</div>`;
+        html += `<div style="display:flex;gap:12px">`;
+        html += `<div style="flex:1;padding:10px;background:rgba(107,95,123,0.04);border-radius:10px">`;
+        html += `<div style="font-size:11px;color:#a89bb3;margin-bottom:4px">${isPast ? 'Dengang' : 'Da'}</div>`;
+        html += `<div style="font-size:14px;color:#6B5F7B;font-weight:500">Fase ${phase.phase}: ${phase.name}</div>`;
+        html += `<div style="font-size:13px;color:#8B7D9B">${elLabel} · ${userCycles.age} år</div>`;
+        html += `</div>`;
+        html += `<div style="flex:1;padding:10px;background:rgba(107,95,123,0.04);border-radius:10px">`;
+        html += `<div style="font-size:11px;color:#a89bb3;margin-bottom:4px">Nu</div>`;
+        html += `<div style="font-size:14px;color:#6B5F7B;font-weight:500">Fase ${nowCycles.lifePhase.phase}: ${nowCycles.lifePhase.name}</div>`;
+        html += `<div style="font-size:13px;color:#8B7D9B">${nowEl} · ${nowCycles.age} år</div>`;
+        html += `</div>`;
+        html += `</div>`;
+
+        if (phase.element !== nowCycles.lifePhase.element) {
+          html += `<div style="font-family:Georgia,serif;font-size:13px;color:#8B7D9B;margin-top:8px;font-style:italic">Fra ${elLabel} til ${nowEl} — din energi har skiftet karakter. Det du ${isPast ? 'mærkede dengang' : 'vil mærke da'} og det du mærker nu hører til forskellige verdener.</div>`;
+        } else {
+          html += `<div style="font-family:Georgia,serif;font-size:13px;color:#8B7D9B;margin-top:8px;font-style:italic">Samme element ${isPast ? 'dengang' : 'da'} og nu — ${elLabel} følger dig. Måske kender du den energi bedre end du tror.</div>`;
+        }
+        html += `</div>`;
+      }
+
+      // ── RELATIONER ──
       const activePills = pillsContainer ? pillsContainer.querySelectorAll('.person-pill') : [];
       activePills.forEach((pill, i) => {
         if (i === 0 || !pill.classList.contains('active')) return;
@@ -1034,24 +1152,30 @@ function initVinduer() {
         const rc = cyclesAtDate(rel.birthdate, targetDate, isMale);
         const relEl = Calculations.ELEMENT_LABELS[rc.lifePhase.element];
 
-        // TCM interaction
-        const uEl = userCycles.lifePhase.element;
+        const uEl = phase.element;
         const rEl = rc.lifePhase.element;
         let interaction = '';
-        if (uEl === rEl) interaction = `Begge i ${Calculations.ELEMENT_LABELS[uEl]} — dyb resonans.`;
-        else if (nourishing[uEl] === rEl) interaction = `${Calculations.ELEMENT_LABELS[uEl]} nærer ${Calculations.ELEMENT_LABELS[rEl]}.`;
-        else if (nourishing[rEl] === uEl) interaction = `${Calculations.ELEMENT_LABELS[rEl]} nærer ${Calculations.ELEMENT_LABELS[uEl]}.`;
-        else interaction = `${Calculations.ELEMENT_LABELS[uEl]} møder ${Calculations.ELEMENT_LABELS[rEl]}.`;
+        if (uEl === rEl) interaction = `Begge i ${Calculations.ELEMENT_LABELS[uEl]} — dyb resonans. I ${isPast ? 'delte' : 'deler'} den samme grundenergi.`;
+        else if (nourishing[uEl] === rEl) interaction = `Dit ${Calculations.ELEMENT_LABELS[uEl]} ${isPast ? 'nærede' : 'nærer'} ${rel.name}s ${Calculations.ELEMENT_LABELS[rEl]}. Du ${isPast ? 'gav' : 'giver'} naturligt energi videre.`;
+        else if (nourishing[rEl] === uEl) interaction = `${rel.name}s ${Calculations.ELEMENT_LABELS[rEl]} ${isPast ? 'nærede' : 'nærer'} dit ${Calculations.ELEMENT_LABELS[uEl]}. Du ${isPast ? 'modtog' : 'modtager'} energi.`;
+        else interaction = `${Calculations.ELEMENT_LABELS[uEl]} ${isPast ? 'mødte' : 'møder'} ${Calculations.ELEMENT_LABELS[rEl]} — forskellige energier der kan udfordre og berige.`;
 
-        html += `<div style="margin:10px 0;padding-top:8px;border-top:1px solid rgba(107,95,123,0.08)"><strong style="color:#9b8da8;font-weight:500">${rel.name}:</strong> ${rc.age} år · Fase ${rc.lifePhase.phase}: ${rc.lifePhase.name} · ${relEl}</div>`;
-        html += `<div style="font-size:13px;color:#8B7D9B;font-style:italic">${interaction}</div>`;
+        html += `<div style="margin:16px 0;padding:14px 16px;background:rgba(107,95,123,0.05);border-radius:14px;border:1px solid rgba(107,95,123,0.08)">`;
+        html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">${rel.name}</div>`;
+        html += `<div style="font-size:14px;color:#6B5F7B;font-weight:500">${rc.age} år · Fase ${rc.lifePhase.phase}: ${rc.lifePhase.name}</div>`;
+        html += `<div style="font-size:13px;color:#8B7D9B;margin-top:2px">${relEl}</div>`;
+        html += `<div style="font-family:Georgia,serif;font-size:13px;color:#8B7D9B;margin-top:8px;font-style:italic">${interaction}</div>`;
+        html += `</div>`;
       });
 
+      // Show result and hide hint
       if (resultEl) {
+        resultEl.style.cssText = 'display:block;margin-top:12px;padding:16px;background:rgba(255,255,255,0.6);border:1px solid rgba(107,95,123,0.12);border-radius:16px';
         resultEl.innerHTML = html;
-        resultEl.style.display = 'block';
         resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
+      const hint = resultEl ? resultEl.parentElement.querySelector('.date-preview-hint') : null;
+      if (hint) hint.style.display = 'none';
     });
   }
 }
