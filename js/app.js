@@ -26,15 +26,15 @@ function getUserCycles() {
   const user = Storage.getUser();
   if (!user || !user.birthdate) return null;
   const cycles = Calculations.allCycles(user.birthdate, new Date());
-  const dominant = Calculations.getDominant(cycles.elements);
+  const dominant = Calculations.getWeightedDominant(cycles);
   return { user, cycles, dominant };
 }
 
 /* ---- Analyze inner climate ---- */
-function analyzeClimate(elements) {
+function analyzeClimate(elements, dominant) {
   const counts = {};
   elements.forEach(e => { counts[e] = (counts[e] || 0) + 1; });
-  const dominant = Calculations.getDominant(elements);
+  if (!dominant) dominant = Calculations.getDominant(elements);
   const nourishing = { 'VAND': 'TR\u00c6', 'TR\u00c6': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
 
   // Count nourishing pairs
@@ -50,7 +50,7 @@ function analyzeClimate(elements) {
     }
   }
 
-  if (dominant.count >= 3) return INNER_CLIMATE.fuld_resonans;
+  if ((dominant.score || 0) >= 5 || dominant.count >= 3) return INNER_CLIMATE.fuld_resonans;
   if (nourishCount >= 2) return INNER_CLIMATE.naerende_flow;
   if (challengeCount >= 2) return INNER_CLIMATE.indre_storm;
   if (challengeCount === 1 && nourishCount >= 1) return INNER_CLIMATE.kreativ_spaending;
@@ -218,7 +218,7 @@ function initOnboardingResult() {
   setText('result-kanji', elTegn);
 
   // Climate
-  const climate = analyzeClimate(cycles.elements);
+  const climate = analyzeClimate(cycles.elements, dominant);
   setText('result-climate', climate.label);
   setText('result-main-text', climate.text);
 
@@ -306,9 +306,9 @@ function initForside() {
   if (circOrganur) circOrganur.textContent = `${cycles.organ.hours} \u2013 ${cycles.organ.organ}`;
 
   // Climate card
-  const climate = analyzeClimate(cycles.elements);
+  const climate = analyzeClimate(cycles.elements, dominant);
   setText('forside-climate-text', climate.text);
-  setText('forside-climate-sub', `${climate.label} \u2014 ${dominant.count} af 5 cyklusser peger mod ${elLabel(dominant.element)}`);
+  setText('forside-climate-sub', `${climate.label} \u2014 din energi samler sig i ${elLabel(dominant.element)}`);
 
   // Praksis cards — based on dominant element, rotated daily
   const domEl = dominant.element;
@@ -368,7 +368,7 @@ function initCyklusser() {
   }
 
   // Texts
-  setText('cyk-ea-text', `${elLabel} dominerer. Din energi samler sig i dybden \u2014 ${dominant.count} af ${cycles.elements.length} cyklusser peger mod ${elLabel}.`);
+  setText('cyk-ea-text', `${elLabel} dominerer. Din energi samler sig i dybden \u2014 dine stærkeste cyklusser peger mod ${elLabel}.`);
 
   // Feeling text
   const feelTexts = {
@@ -381,7 +381,7 @@ function initCyklusser() {
   setText('cyk-feeling-text', feelTexts[domEl] || '');
 
   // Featured text
-  setText('cyk-featured-text', `${dominant.count} af dine fem cyklusser peger mod ${elLabel}. Din energi samler sig i \u00e9n retning.`);
+  setText('cyk-featured-text', `Dine stærkeste cyklusser peger mod ${elLabel}. Din energi samler sig i én retning.`);
 
   // Healing sound
   const healing = typeof HEALING_SOUNDS !== 'undefined' ? HEALING_SOUNDS[domEl] : null;
@@ -555,7 +555,7 @@ function initCykCic() {
   }
 
   // Update climate text
-  const climate = analyzeClimate(cycles.elements);
+  const climate = analyzeClimate(cycles.elements, dominant);
   setText('cic-climate-label', climate.label);
   setText('cic-climate-text', climate.text);
 
@@ -884,7 +884,7 @@ function initRelJeresEnergi() {
       if (!user || !user.birthdate) return;
 
       const cycles = Calculations.allCycles(user.birthdate, targetDate);
-      const dominant = Calculations.getDominant(cycles.elements);
+      const dominant = Calculations.getWeightedDominant(cycles);
       const elLabel = Calculations.ELEMENT_LABELS[dominant.element];
 
       if (resultEl) {
@@ -893,7 +893,7 @@ function initRelJeresEnergi() {
             <div class="card-label">${formatDanishDate(targetDate)}</div>
             <div class="card-title">Din energi · ${elLabel}</div>
             <div class="card-desc">
-              ${dominant.count} af 5 cyklusser peger mod ${elLabel}.
+              Din energi samler sig i ${elLabel}.
               Livsfase: ${Calculations.ELEMENT_LABELS[cycles.lifePhase.element]} ·
               Årstid: ${cycles.season.season} · Ugedag: ${cycles.weekday.day}
             </div>

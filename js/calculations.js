@@ -194,7 +194,7 @@ const Calculations = {
     return dayOfYear % (arrayLength || 3);
   },
 
-  /* ---- Dominant element ---- */
+  /* ---- Dominant element (simple count) ---- */
   getDominant(elements) {
     const counts = {};
     elements.forEach(e => { counts[e] = (counts[e] || 0) + 1; });
@@ -203,6 +203,39 @@ const Calculations = {
       if (c > max) { max = c; dominant = el; }
     });
     return { element: dominant, count: max, counts };
+  },
+
+  /* ---- Weighted dominant element ---- */
+  /*  Livsfasen (7 år) vejer tungere end organur (2 timer).
+      Returnerer SAMME format som getDominant() for bagudkompatibilitet. */
+  getWeightedDominant(cycles) {
+    const WEIGHTS = {
+      lifePhase: 3,     // 7 år — stærkeste signal
+      season: 2,        // ~3 måneder
+      monthCycle: 1.5,  // 1 måned
+      weekday: 1,       // 1 dag
+      organ: 0.5        // 2 timer — svageste
+    };
+
+    const scores = { 'VAND': 0, 'TRÆ': 0, 'ILD': 0, 'JORD': 0, 'METAL': 0 };
+
+    scores[cycles.lifePhase.element]  += WEIGHTS.lifePhase;
+    scores[cycles.season.element]     += WEIGHTS.season;
+    scores[cycles.monthCycle.element] += WEIGHTS.monthCycle;
+    scores[cycles.weekday.element]    += WEIGHTS.weekday;
+    scores[cycles.organ.element]      += WEIGHTS.organ;
+
+    let max = 0, dominant = 'VAND';
+    Object.entries(scores).forEach(([el, s]) => {
+      if (s > max) { max = s; dominant = el; }
+    });
+
+    // Bagudkompatibel: count + counts fra simpel optælling
+    const counts = {};
+    cycles.elements.forEach(e => { counts[e] = (counts[e] || 0) + 1; });
+    const count = counts[dominant] || 0;
+
+    return { element: dominant, count, counts, score: max, scores };
   }
 };
 

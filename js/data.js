@@ -402,7 +402,7 @@ const INNER_CLIMATE = {
 
 const DYNAMISK_TEKST = {
   'VAND': {
-    dominant: 'Fire af dine cyklusser peger mod Vand. Det er m\u00e5ske derfor du m\u00e6rker en trang til at tr\u00e6kke dig. Det er ikke svaghed \u2014 det er {cyklusser} der taler med \u00e9n stemme.',
+    dominant: 'Vandet kalder dybt i dig lige nu. Det er måske derfor du mærker en trang til at trække dig. Det er ikke svaghed \u2014 det er {cyklusser} der taler med én stemme.',
     strong: 'Vandet er tydeligt i dig lige nu. {konkret} M\u00e6rk det \u2014 det er din intuition der har noget at sige.',
     present: 'Vandet flyder stille med dig i dag. {konkret} En invitation til at lytte indad.'
   },
