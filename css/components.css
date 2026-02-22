@@ -298,6 +298,22 @@
 .pull-quote-text { font-family: var(--font-serif); font-size: 20px; font-style: italic; color: #8a96a9; line-height: 1.6; }
 .pull-quote-attr { font-family: var(--font-sans); font-size: 12px; color: #888; font-weight: 300; margin-top: 10px; letter-spacing: 1px; }
 
+/* FIGURE WRAPPER — consistent spacing for all illustrations */
+.fig {
+  text-align: center;
+  margin: 0 auto 8px;
+}
+.fig img {
+  width: 100%;
+  max-width: 300px;
+  display: block;
+  margin: 0 auto;
+  border-radius: 12px;
+}
+.wave-timeline .fig {
+  margin: 12px auto 8px;
+}
+
 /* WAVE-TIMELINE */
 .wave-timeline { margin: 28px 0 8px; text-align: center; background: rgba(108,130,169,0.03); border: 1px solid rgba(108,130,169,0.07); border-radius: var(--radius); padding: 20px 14px 16px; }
 .wave-label { font-family: var(--font-sans); font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--blaa-pale); margin-bottom: 4px; }
