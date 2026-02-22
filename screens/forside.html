@@ -1,0 +1,116 @@
+<div class="s">
+  <div class="eyebrow" id="forside-date">I dag</div>
+  <div class="title">Lige nu</div>
+  <div class="body-text">Livsfasen, &aring;rstiden, m&aring;neden, ugedagen og dit organ &mdash; disse fem rytmer danner det kryds du lever i.</div>
+
+  <!-- Concentric circles SVG (static version — will be dynamic later) -->
+  <div class="circles" id="forside-circles">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-25 0 450 440" style="width:100%;max-width:340px;">
+      <defs>
+        <path id="curve0" d="M 40 120 A 210 90 0 0 1 360 120"/>
+        <path id="curve1" d="M 40 200 A 180 120 0 0 1 360 200"/>
+        <path id="curve2" d="M 75 231 A 140 93 0 0 1 325 231"/>
+        <path id="curve3" d="M 105 260 A 105 70 0 0 1 295 260"/>
+        <path id="curve4" d="M 135 284 A 75 50 0 0 1 265 284"/>
+      </defs>
+      <g onclick="Router.navigate('cir-livsfase')" style="cursor:pointer">
+        <ellipse cx="200" cy="199" rx="220" ry="147" fill="#7d8fad"/>
+        <text x="200" y="74" text-anchor="middle" font-family="'Playfair Display', serif" font-size="15" font-weight="500" fill="#fff" letter-spacing="1">LIVSFASE</text>
+        <text font-family="'Playfair Display', serif" font-size="15" fill="rgba(255,255,255,0.92)" text-anchor="middle" font-style="italic"><textPath href="#curve0" startOffset="50%" id="circle-livsfase">Fase 9 &#8211; Vand</textPath></text>
+      </g>
+      <g onclick="Router.navigate('cir-aarstid')" style="cursor:pointer">
+        <ellipse cx="200" cy="220" rx="180" ry="120" fill="#8a9bb8"/>
+        <text x="200" y="120" text-anchor="middle" font-family="'Playfair Display', serif" font-size="15" font-weight="500" fill="#fff" letter-spacing="1">&#197;RSTID</text>
+        <text font-family="'Playfair Display', serif" font-size="15" fill="rgba(255,255,255,0.92)" text-anchor="middle" font-style="italic"><textPath href="#curve1" startOffset="50%" id="circle-aarstid">Vinter &#8211; Vand</textPath></text>
+      </g>
+      <g onclick="Router.navigate('cir-maaned')" style="cursor:pointer">
+        <ellipse cx="200" cy="241" rx="140" ry="93" fill="#9aabc5"/>
+        <text x="200" y="166" text-anchor="middle" font-family="'Playfair Display', serif" font-size="15" font-weight="500" fill="#fff" letter-spacing="1">M&#197;NED</text>
+        <text font-family="'Playfair Display', serif" font-size="15" fill="rgba(255,255,255,0.92)" text-anchor="middle" font-style="italic"><textPath href="#curve2" startOffset="50%" id="circle-maaned">Februar &#8211; Vand</textPath></text>
+      </g>
+      <g onclick="Router.navigate('cir-ugedag')" style="cursor:pointer">
+        <ellipse cx="200" cy="260" rx="105" ry="70" fill="#adbcd2"/>
+        <text x="200" y="207" text-anchor="middle" font-family="'Playfair Display', serif" font-size="15" font-weight="500" fill="#fff" letter-spacing="1">UGEDAG</text>
+        <text font-family="'Playfair Display', serif" font-size="15" fill="rgba(255,255,255,0.92)" text-anchor="middle" font-style="italic"><textPath href="#curve3" startOffset="50%" id="circle-ugedag">Fredag &#8211; Metal</textPath></text>
+      </g>
+      <g onclick="Router.navigate('cir-organur')" style="cursor:pointer">
+        <ellipse cx="200" cy="276" rx="75" ry="50" fill="#c0ccdd"/>
+        <text x="200" y="245" text-anchor="middle" font-family="'Playfair Display', serif" font-size="15" font-weight="500" fill="#fff" letter-spacing="1">ORGANUR</text>
+        <text font-family="'Playfair Display', serif" font-size="15" fill="rgba(255,255,255,0.92)" text-anchor="middle" font-style="italic"><textPath href="#curve4" startOffset="50%" id="circle-organur">09&#8211;11 &#8211; Milten</textPath></text>
+      </g>
+      <g onclick="Router.navigate('cir-dit-liv')" style="cursor:pointer">
+        <ellipse cx="200" cy="294" rx="38" ry="25" fill="#7d8fad"/>
+        <text x="200" y="289" text-anchor="middle" font-family="'Playfair Display', serif" font-size="17" font-weight="500" fill="#fff">DIT</text>
+        <text x="200" y="304" text-anchor="middle" font-family="'Playfair Display', serif" font-size="17" font-weight="500" fill="#fff">LIV</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Climate card -->
+  <div class="forside-card" id="forside-climate" onclick="Router.navigate('cyk-cic')">
+    <div class="card-label">Dit indre klima</div>
+    <div class="card-text" id="forside-climate-text">Dine fem cyklusser danner et m&oslash;nster. Se hvad det betyder for dig lige nu.</div>
+    <div class="card-sub" id="forside-climate-sub">Tryk for at se den fulde analyse</div>
+    <a class="card-link">Se den fulde analyse &rarr;</a>
+  </div>
+</div>
+
+<div class="dots">&middot; &middot; &middot;</div>
+
+<!-- VINDUER SECTION -->
+<div class="s">
+  <div class="eyebrow">Tidsrejsen</div>
+
+  <div style="text-align:center;margin:0 auto 0">
+    <img src="assets/images/vinduer-tid-lilla.png" alt="Tidsvinduet" style="width:100%;height:auto">
+  </div>
+
+  <div class="title" style="margin-top:4px">Mine Vinduer</div>
+  <div class="body-text">V&aelig;lg en dato og se hvad der var aktivt &mdash; for dig alene eller med nogen du holder af.</div>
+  <div class="vinduer-card" style="margin-top:60px" onclick="Router.navigate('vinduer')">
+    <div class="vinduer-body">
+      <div class="vinduer-label">Din livsbue</div>
+      <div class="vinduer-title">Ni faser &middot; &Eacute;n rejse</div>
+      <div class="vinduer-text">Se hvad der var aktivt da du m&oslash;dte din partner. Forst&aring; et sv&aelig;rt &aring;r. Kig fremad mod det der kommer.</div>
+    </div>
+    <div class="vinduer-footer">
+      <div class="vinduer-footer-text">&Aring;bn Mine Vinduer</div>
+      <div class="vinduer-footer-arrow">&rarr;</div>
+    </div>
+  </div>
+</div>
+
+<div class="dots">&middot; &middot; &middot;</div>
+
+<!-- PRAKSIS SECTION -->
+<div class="s">
+  <div class="eyebrow">Min Praksis</div>
+  <div class="title">Hvad du kan g&oslash;re<br>i dag</div>
+  <div class="body-text">Tilpasset dine elementer. V&aelig;lg det der kalder &mdash; eller lad v&aelig;re. Begge dele er rigtigt.</div>
+  <div class="praksis-card" onclick="Router.navigate('pra-yin-yoga')"><div><div class="pk-label">Yin Yoga &middot; Vand</div><div class="pk-name">Butterfly</div><div class="pk-desc">&Aring;bner hofterne og stimulerer nyremeridianen. 3&ndash;5 min.</div></div><div class="pk-arrow">&rarr;</div></div>
+  <div class="praksis-card" onclick="Router.navigate('pra-healing')"><div><div class="pk-label">Healinglyd &middot; Vand</div><div class="pk-name">Chuiii</div><div class="pk-desc">Lyd der vibrerer dybt og n&aelig;rer din grundl&aelig;ggende livsenergi.</div></div><div class="pk-arrow">&rarr;</div></div>
+  <div class="praksis-card" onclick="Router.navigate('pra-kost')"><div><div class="pk-label">N&aelig;ring &middot; Vand</div><div class="pk-name">Sort sesam &amp; valn&oslash;dder</div><div class="pk-desc">N&aelig;rer nyreessensen og styrker livskraften.</div></div><div class="pk-arrow">&rarr;</div></div>
+</div>
+
+<div class="dots">&middot; &middot; &middot;</div>
+
+<!-- CHECK-IN -->
+<div class="s" style="padding-bottom:28px">
+  <div class="eyebrow">M&aelig;rk efter</div>
+  <div class="title">Hvordan har du det<br>lige nu?</div>
+  <div class="body-text">M&aelig;rk efter i kroppen &mdash; og lad appen spejle det du allerede ved.</div>
+  <div class="checkin-card">
+    <div class="ci-q">Hvad m&aelig;rker du i kroppen?</div>
+    <div class="ci-hint">V&aelig;lg det der passer &mdash; eller spring over</div>
+    <div class="ci-btns">
+      <div class="ci-btn"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c2-3 4-4 6-1s4 2 6-1 4-2 6 1"/><path d="M2 17c2-3 4-4 6-1s4 2 6-1 4-2 6 1" opacity="0.4"/></svg> Stille</div>
+      <div class="ci-btn"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V10"/><path d="M9 14c-2-1-3-3-2-5"/><path d="M15 14c2-1 3-3 2-5"/><path d="M12 10c0-3 2-6 5-8"/><path d="M12 10c0-3-2-6-5-8" opacity="0.5"/></svg> Voksende</div>
+      <div class="ci-btn"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c-4 0-6-3-6-7 0-5 6-12 6-12s6 7 6 12c0 4-2 7-6 7z"/><path d="M12 22v-8" opacity="0.4"/></svg> Intens</div>
+      <div class="ci-btn"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="4"/><path d="M12 14v4"/><path d="M8 22c0-2.2 1.8-4 4-4s4 1.8 4 4" opacity="0.5"/><path d="M9 7l-2-3" opacity="0.4"/><path d="M15 7l2-3" opacity="0.4"/></svg> Rodf&aelig;stet</div>
+      <div class="ci-btn"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83" opacity="0.4"/><path d="M16.24 7.76l2.83-2.83" opacity="0.4"/></svg> Klar</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-closer"><div class="lotus-fill"><img src="assets/images/lotus-adskiller.png" alt=""></div></div>
+<div class="back-to-top"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Tilbage til toppen &uarr;</a></div>
