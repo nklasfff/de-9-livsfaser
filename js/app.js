@@ -1000,34 +1000,236 @@ function initSoeg() {
   }
 }
 
+/* ---- Indstillinger helpers ---- */
+const IND_DEFAULTS = {
+  menstruation: false, moon: true, cycleLength: 28,
+  morning: true, evening: true, cycleShift: false, season: true, weekly: false,
+  morningTime: '07:30', eveningTime: '21:00',
+  anon: true, collective: true, share: true,
+  dark: false, system: true
+};
+
+// Toggle ID → settings key mapping
+const IND_TOGGLE_MAP = {
+  'ind-toggle-menstruation': 'menstruation', 'ind-toggle-moon': 'moon',
+  'ind-toggle-morning': 'morning', 'ind-toggle-evening': 'evening',
+  'ind-toggle-cycle-shift': 'cycleShift', 'ind-toggle-season': 'season',
+  'ind-toggle-weekly': 'weekly', 'ind-toggle-anon': 'anon',
+  'ind-toggle-collective': 'collective', 'ind-toggle-share': 'share',
+  'ind-toggle-dark': 'dark', 'ind-toggle-system': 'system'
+};
+
+function getIndSettings() {
+  const saved = localStorage.getItem('indstillinger');
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    Object.keys(IND_DEFAULTS).forEach(k => { if (parsed[k] === undefined) parsed[k] = IND_DEFAULTS[k]; });
+    return parsed;
+  }
+  return JSON.parse(JSON.stringify(IND_DEFAULTS));
+}
+
+function saveIndSettings(s) {
+  localStorage.setItem('indstillinger', JSON.stringify(s));
+}
+
+// Global — called from onclick in HTML
+function toggleIndSetting(el) {
+  const id = el.id;
+  const key = IND_TOGGLE_MAP[id];
+  if (!key) return;
+
+  const s = getIndSettings();
+  s[key] = !s[key];
+  saveIndSettings(s);
+
+  // Update user.tracksMenstruation when menstruation toggle changes
+  if (key === 'menstruation') {
+    const u = Storage.getUser() || {};
+    u.tracksMenstruation = s.menstruation;
+    Storage.saveUser(u);
+  }
+
+  // Toggle CSS class
+  el.classList.toggle('ind-toggle--on', s[key]);
+}
+
 function initIndstillinger() {
   const user = Storage.getUser();
+  const settings = getIndSettings();
+
+  // --- Profil ---
   if (user && user.birthdate) {
-    setText('ind-birthdate', `Fødselsdato: ${user.birthdate}`);
+    const bd = new Date(user.birthdate);
+    const formatted = `${bd.getDate()}. ${MONTHS_DA[bd.getMonth()]} ${bd.getFullYear()}`;
+    setText('ind-birthdate', formatted);
     const input = document.getElementById('ind-birth-input');
     if (input) input.value = user.birthdate;
+
+    // Phase info
+    const cycles = Calculations.allCycles(user.birthdate, new Date());
+    const phase = cycles.lifePhase;
+    const elLabel = Calculations.ELEMENT_LABELS[phase.element];
+    setText('ind-phase-info', `Du er ${Math.floor((new Date() - bd) / 31557600000)} år · Fase ${phase.phase}: ${phase.name} · ${elLabel}`);
+  }
+
+  // Name
+  const nameInput = document.getElementById('ind-name-input');
+  if (nameInput) {
+    if (user && user.name) nameInput.value = user.name;
+    if (!nameInput._bound) {
+      nameInput._bound = true;
+      nameInput.addEventListener('change', () => {
+        const u = Storage.getUser() || {};
+        u.name = nameInput.value.trim();
+        Storage.saveUser(u);
+      });
+    }
   }
 
   // Save new birthdate
   const saveBtn = document.getElementById('ind-birth-save');
-  if (saveBtn) {
+  if (saveBtn && !saveBtn._bound) {
+    saveBtn._bound = true;
     saveBtn.addEventListener('click', () => {
       const input = document.getElementById('ind-birth-input');
       if (!input || !input.value) return;
       const u = Storage.getUser() || {};
       u.birthdate = input.value;
       Storage.saveUser(u);
-      setText('ind-birthdate', `Fødselsdato: ${input.value}`);
-      alert('Gemt!');
+      initIndstillinger(); // Re-render with new data
     });
   }
 
-  // Reset data
+  // --- Restore toggle states from settings ---
+  Object.entries(IND_TOGGLE_MAP).forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('ind-toggle--on', !!settings[key]);
+  });
+
+  // --- Cycle length ---
+  const cycleInput = document.getElementById('ind-cycle-length');
+  if (cycleInput) {
+    cycleInput.value = settings.cycleLength || 28;
+    if (!cycleInput._bound) {
+      cycleInput._bound = true;
+      cycleInput.addEventListener('change', () => {
+        const s = getIndSettings();
+        s.cycleLength = parseInt(cycleInput.value) || 28;
+        saveIndSettings(s);
+      });
+    }
+  }
+
+  // --- Notification times ---
+  const morningTime = document.getElementById('ind-morning-time');
+  if (morningTime) {
+    morningTime.value = settings.morningTime || '07:30';
+    if (!morningTime._bound) {
+      morningTime._bound = true;
+      morningTime.addEventListener('change', () => {
+        const s = getIndSettings();
+        s.morningTime = morningTime.value;
+        saveIndSettings(s);
+      });
+    }
+  }
+  const eveningTime = document.getElementById('ind-evening-time');
+  if (eveningTime) {
+    eveningTime.value = settings.eveningTime || '21:00';
+    if (!eveningTime._bound) {
+      eveningTime._bound = true;
+      eveningTime.addEventListener('change', () => {
+        const s = getIndSettings();
+        s.eveningTime = eveningTime.value;
+        saveIndSettings(s);
+      });
+    }
+  }
+
+  // --- Relations count ---
+  const relations = Storage.getRelations ? Storage.getRelations() : [];
+  setText('ind-relations-count', `Du har ${relations.length} relation${relations.length !== 1 ? 'er' : ''} tilføjet.`);
+
+  // --- Export ---
+  const exportBtn = document.getElementById('ind-export');
+  if (exportBtn && !exportBtn._bound) {
+    exportBtn._bound = true;
+    exportBtn.addEventListener('click', () => {
+      const data = {
+        user: Storage.getUser(),
+        relations: Storage.getRelations ? Storage.getRelations() : [],
+        indstillinger: getIndSettings(),
+        checkins: JSON.parse(localStorage.getItem('checkins') || '[]'),
+        journal: JSON.parse(localStorage.getItem('livsfaser_journal') || '[]'),
+        reflections: JSON.parse(localStorage.getItem('livsfaser_reflections') || '[]'),
+        favorites: JSON.parse(localStorage.getItem('favorites') || '{}')
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `livsfaser-backup-${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  // --- Import ---
+  const importBtn = document.getElementById('ind-import');
+  if (importBtn && !importBtn._bound) {
+    importBtn._bound = true;
+    importBtn.addEventListener('click', () => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const data = JSON.parse(ev.target.result);
+            if (data.user) Storage.saveUser(data.user);
+            if (data.relations && Storage.saveRelations) Storage.saveRelations(data.relations);
+            if (data.indstillinger) saveIndSettings(data.indstillinger);
+            if (data.checkins) localStorage.setItem('checkins', JSON.stringify(data.checkins));
+            if (data.journal) localStorage.setItem('livsfaser_journal', JSON.stringify(data.journal));
+            if (data.reflections) localStorage.setItem('livsfaser_reflections', JSON.stringify(data.reflections));
+            if (data.favorites) localStorage.setItem('favorites', JSON.stringify(data.favorites));
+            alert('Data importeret!');
+            initIndstillinger(); // Re-render
+          } catch (err) {
+            alert('Fejl: Filen kunne ikke læses.');
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    });
+  }
+
+  // --- Show onboarding ---
+  const onboardingBtn = document.getElementById('ind-show-onboarding');
+  if (onboardingBtn && !onboardingBtn._bound) {
+    onboardingBtn._bound = true;
+    onboardingBtn.addEventListener('click', () => {
+      Router.navigate('onboarding');
+    });
+  }
+
+  // --- Reset data ---
   const resetBtn = document.getElementById('ind-reset');
-  if (resetBtn) {
+  if (resetBtn && !resetBtn._bound) {
+    resetBtn._bound = true;
     resetBtn.addEventListener('click', () => {
       if (confirm('Er du sikker? Alle data slettes.')) {
         Storage.clearAll();
+        localStorage.removeItem('indstillinger');
+        localStorage.removeItem('checkins');
+        localStorage.removeItem('livsfaser_journal');
+        localStorage.removeItem('livsfaser_reflections');
+        localStorage.removeItem('favorites');
         Router.navigate('onboarding', { direction: 'replace' });
       }
     });

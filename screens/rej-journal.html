@@ -61,12 +61,12 @@
 
   <!-- Tekstfelt -->
   <div style="background:#fff;border:1px solid rgba(138,150,169,0.10);border-radius:14px;padding:14px;margin:0 0 12px">
-    <div style="font-family:Georgia,serif;font-size:15px;color:#8d95a1;font-style:italic;min-height:80px;line-height:1.7">Skriv her &mdash; eller lad det hvile&hellip;</div>
+    <textarea id="journal-note" placeholder="Skriv her — eller lad det hvile…" style="width:100%;border:none;outline:none;font-family:Georgia,serif;font-size:15px;color:#555;font-style:italic;min-height:80px;line-height:1.7;resize:vertical;background:transparent"></textarea>
   </div>
 
   <!-- Gem-knap -->
   <div style="text-align:center;margin:0 0 16px">
-    <div style="display:inline-block;padding:10px 28px;border-radius:20px;font-family:sans-serif;font-size:15px;font-weight:500;color:#8a96a9;border:1px solid rgba(138,150,169,0.25);letter-spacing:0.5px">Gem refleksion</div>
+    <div id="journal-save-btn" onclick="saveJournal()" style="display:inline-block;padding:10px 28px;border-radius:20px;font-family:sans-serif;font-size:15px;font-weight:500;color:#8a96a9;border:1px solid rgba(138,150,169,0.25);letter-spacing:0.5px;cursor:pointer">Gem refleksion</div>
   </div>
 
   <div class="dots">&middot; &middot; &middot;</div>
