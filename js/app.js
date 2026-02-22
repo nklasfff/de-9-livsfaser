@@ -1307,35 +1307,137 @@ function initLivsfaseDetail() {
   setText('fasedetail-sind-label', `Sindet i Fase ${phaseNum} \u00b7 ${elLabel}`);
   setText('fasedetail-sind-text', detail.sindTekst);
 
-  // Praksis cards
-  const praksisEl = document.getElementById('fasedetail-praksis');
-  if (praksisEl) {
-    praksisEl.innerHTML = `
-      <div class="praksis-card" onclick="Router.navigate('pra-yin-yoga')"><div><div class="pk-label">\u00d8velse \u00b7 ${elLabel}</div><div class="pk-name">${detail.oevelse.title}</div><div class="pk-desc">${detail.oevelse.desc}</div></div><div class="pk-arrow">\u2192</div></div>
-      <div class="praksis-card" onclick="Router.navigate('pra-kost')"><div><div class="pk-label">N\u00e6ring \u00b7 ${elLabel}</div><div class="pk-name">${detail.kost.title}</div><div class="pk-desc">${detail.kost.desc}</div></div><div class="pk-arrow">\u2192</div></div>
-      <div class="praksis-card" onclick="Router.navigate('pra-healing')"><div><div class="pk-label">Healinglyd \u00b7 ${elLabel}</div><div class="pk-name">${detail.healingLyd.title}</div><div class="pk-desc">${detail.healingLyd.desc}</div></div><div class="pk-arrow">\u2192</div></div>
-    `;
+  // Element Info (Wave 1)
+  const elInfoEl = document.getElementById('fasedetail-element-info');
+  if (elInfoEl && detail.elementInfo) {
+    const ei = detail.elementInfo;
+    elInfoEl.innerHTML = `
+      <div class="card" style="margin-top:12px">
+        <div class="card-row"><div>
+          <div class="card-label">${elLabel}-elementet</div>
+          <div class="card-desc" style="margin-top:8px">
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14px;line-height:1.6">
+              <span style="color:#9cabc3">Energi</span><span>${ei.energi}</span>
+              <span style="color:#9cabc3">Sanseorgan</span><span>${ei.sanseorgan}</span>
+              <span style="color:#9cabc3">Kropsv\u00e6v</span><span>${ei.kropsvaev}</span>
+              <span style="color:#9cabc3">Farve</span><span>${ei.farve}</span>
+            </div>
+          </div>
+        </div></div>
+      </div>`;
   }
 
-  // Refleksioner
+  // Fasens R\u00e5d (Wave 1)
+  const raadEl = document.getElementById('fasedetail-raad');
+  if (raadEl && detail.fasensRaad && detail.fasensRaad.length > 0) {
+    raadEl.innerHTML = `
+      <div class="group-label" style="color:#6c82a9">Fasens r\u00e5d</div>
+      ${detail.fasensRaad.map(r => `
+        <div class="card" style="margin-bottom:8px"><div class="card-row"><div>
+          <div class="card-desc">${r}</div>
+        </div></div></div>
+      `).join('')}
+      <div class="dots">\u00b7 \u00b7 \u00b7</div>`;
+  }
+
+  // Praksis cards — render 5 exercises if available, fallback to old 3
+  const praksisEl = document.getElementById('fasedetail-praksis');
+  if (praksisEl) {
+    if (detail.oevelser && detail.oevelser.length > 0) {
+      const typeLabels = { krop: 'Krop', aandedraet: '\u00c5ndedr\u00e6t', meridian: 'Meridian', yinyoga: 'Yin Yoga', sind: 'Sind' };
+      praksisEl.innerHTML = detail.oevelser.map(oe => `
+        <div class="praksis-card"><div>
+          <div class="pk-label">${typeLabels[oe.type] || oe.type} \u00b7 ${elLabel}</div>
+          <div class="pk-name">${oe.title}</div>
+          <div class="pk-desc">${oe.desc}</div>
+        </div></div>
+      `).join('');
+    } else {
+      praksisEl.innerHTML = `
+        <div class="praksis-card" onclick="Router.navigate('pra-yin-yoga')"><div><div class="pk-label">\u00d8velse \u00b7 ${elLabel}</div><div class="pk-name">${detail.oevelse.title}</div><div class="pk-desc">${detail.oevelse.desc}</div></div><div class="pk-arrow">\u2192</div></div>
+        <div class="praksis-card" onclick="Router.navigate('pra-kost')"><div><div class="pk-label">N\u00e6ring \u00b7 ${elLabel}</div><div class="pk-name">${detail.kost.title}</div><div class="pk-desc">${detail.kost.desc}</div></div><div class="pk-arrow">\u2192</div></div>
+        <div class="praksis-card" onclick="Router.navigate('pra-healing')"><div><div class="pk-label">Healinglyd \u00b7 ${elLabel}</div><div class="pk-name">${detail.healingLyd.title}</div><div class="pk-desc">${detail.healingLyd.desc}</div></div><div class="pk-arrow">\u2192</div></div>
+      `;
+    }
+  }
+
+  // Kost detaljer (Wave 1)
+  const kostDetEl = document.getElementById('fasedetail-kost-detaljer');
+  if (kostDetEl && detail.kostDetaljer) {
+    const kd = detail.kostDetaljer;
+    kostDetEl.innerHTML = `
+      <div class="group-label" style="color:#6c82a9;margin-top:20px">Kost & n\u00e6ring</div>
+      <div class="card" style="margin-bottom:8px"><div class="card-row"><div>
+        <div class="card-label">F\u00f8devarer der st\u00f8tter</div>
+        <div class="card-desc">${kd.fodevarer}</div>
+      </div></div></div>
+      <div class="card" style="margin-bottom:8px"><div class="card-row"><div>
+        <div class="card-label">Urter & krydderier</div>
+        <div class="card-desc">${kd.urter}</div>
+      </div></div></div>
+      <div class="card"><div class="card-row"><div>
+        <div class="card-label">Undg\u00e5 eller reducer</div>
+        <div class="card-desc">${kd.undgaa}</div>
+      </div></div></div>`;
+  }
+
+  // Refleksioner — combine original + ekstra
   const reflEl = document.getElementById('fasedetail-refleksioner');
-  if (reflEl && detail.refleksioner) {
-    reflEl.innerHTML = detail.refleksioner.map((q, i) => `
-      <div class="card" onclick="Router.navigate('pra-refleksion')"><div class="card-row"><div>
+  if (reflEl) {
+    const allRefl = (detail.refleksioner || []).concat(detail.ekstraRefleksioner || []);
+    reflEl.innerHTML = allRefl.map((q, i) => `
+      <div class="card" style="margin-bottom:8px"><div class="card-row"><div>
         <div class="card-label">Sp\u00f8rgsm\u00e5l ${i + 1}</div>
         <div class="card-title">${q}</div>
-        <div class="card-desc">Tag sp\u00f8rgsm\u00e5let med dig. Skriv i 10 minutter uden at stoppe.</div>
-      </div><div class="card-arrow" style="color:rgba(108,130,169,0.4)">\u2192</div></div></div>
+      </div></div></div>
     `).join('');
+  }
+
+  // Relationer i fasen (Wave 1)
+  const relEl = document.getElementById('fasedetail-relationer');
+  if (relEl && detail.relationerIFasen) {
+    relEl.innerHTML = `
+      <div class="group-label" style="color:#6c82a9">Relationer i denne fase</div>
+      <div class="card"><div class="card-row"><div>
+        <div class="card-desc">${detail.relationerIFasen}</div>
+      </div></div></div>`;
+  }
+
+  // Uden b\u00f8rn (Wave 1, phases 5-9)
+  const udenBornEl = document.getElementById('fasedetail-uden-born');
+  if (udenBornEl && detail.udenBorn) {
+    udenBornEl.innerHTML = `
+      <div class="card" style="margin-top:12px"><div class="card-row"><div>
+        <div class="card-label">Et liv uden b\u00f8rn i denne fase</div>
+        <div class="card-desc">${detail.udenBorn}</div>
+      </div></div></div>`;
   }
 
   // Insight — Psykologiske opgaver
   setText('fasedetail-insight-label', `Psykologiske opgaver i Fase ${phaseNum}`);
   setText('fasedetail-insight-text', detail.psykOpgaver.join('. ') + '.');
 
-  // Quick action
-  setText('fasedetail-quick-title', `${detail.oevelse.title} \u00b7 Yin Yoga`);
-  setText('fasedetail-quick-desc', detail.oevelse.desc);
+  // Overgang (Wave 1)
+  const overgangEl = document.getElementById('fasedetail-overgang');
+  if (overgangEl && detail.overgangTekst) {
+    const nextPhase = phaseNum < 9 ? phaseNum + 1 : null;
+    const overgangLabel = nextPhase ? `Overgangen til Fase ${nextPhase}` : 'Cirklen forts\u00e6tter';
+    overgangEl.innerHTML = `
+      <div class="feeling-box" style="margin-top:20px">
+        <div class="feeling-label" style="color:#9cabc3">${overgangLabel}</div>
+        <div class="feeling-text">${detail.overgangTekst}</div>
+      </div>`;
+  }
+
+  // Quick action — use yin yoga exercise if available
+  const yinyogaOev = detail.oevelser ? detail.oevelser.find(o => o.type === 'yinyoga') : null;
+  if (yinyogaOev) {
+    setText('fasedetail-quick-title', `${yinyogaOev.title} \u00b7 Yin Yoga`);
+    setText('fasedetail-quick-desc', yinyogaOev.desc);
+  } else {
+    setText('fasedetail-quick-title', `${detail.oevelse.title} \u00b7 Yin Yoga`);
+    setText('fasedetail-quick-desc', detail.oevelse.desc);
+  }
 
   // Prev/Next navigation
   const navEl = document.getElementById('fasedetail-nav');
