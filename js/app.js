@@ -965,13 +965,9 @@ function cyclesAtDate(birthdate, targetDate, isMale) {
 
 /* ---- Vinduer landing (solo-first date explorer + optional relations) ---- */
 function initVinduer() {
-  try {
-  console.log('[VINDUER] initVinduer() called');
   const user = Storage.getUser();
-  console.log('[VINDUER] user:', JSON.stringify(user));
-  if (!user || !user.birthdate) { console.log('[VINDUER] EARLY RETURN — no user or birthdate'); return; }
+  if (!user || !user.birthdate) return;
   const relations = Storage.getRelations();
-  console.log('[VINDUER] relations:', relations.length);
 
   const nourishing = { 'VAND': 'TRÆ', 'TRÆ': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
 
@@ -1054,14 +1050,14 @@ function initVinduer() {
   }
 
   // Date chips → set date input
-  console.log('[VINDUER] About to bind chips. dateInput:', !!dateInput, 'btn:', !!btn);
+
   const chips = document.querySelectorAll('.date-chip');
-  console.log('[VINDUER] Found', chips.length, 'date-chip elements');
+
   chips.forEach((chip, i) => {
-    if (chip._bound) { console.log('[VINDUER] chip', i, 'already bound, skipping'); return; }
+    if (chip._bound) return;
     chip._bound = true;
     chip.addEventListener('click', function() {
-      console.log('[VINDUER] Chip', i, 'clicked, date:', chipDates[i]);
+
       chips.forEach(c => c.classList.remove('active'));
       this.classList.add('active');
       if (dateInput && chipDates[i]) {
@@ -1085,12 +1081,12 @@ function initVinduer() {
   }
 
   // Button → calculate and show rich result
-  console.log('[VINDUER] btn:', !!btn, 'dateInput:', !!dateInput, 'btn._bound:', btn && btn._bound);
+
   if (btn && dateInput && !btn._bound) {
     btn._bound = true;
-    console.log('[VINDUER] Button listener ATTACHED');
+
     btn.addEventListener('click', () => {
-      console.log('[VINDUER] Button clicked, dateInput.value:', dateInput.value);
+
       const val = dateInput.value;
       if (!val) { showActionToast('Vælg en dato først'); return; }
 
@@ -1275,8 +1271,6 @@ function initVinduer() {
       if (hint) hint.style.display = 'none';
     });
   }
-  console.log('[VINDUER] initVinduer() COMPLETED successfully');
-  } catch(e) { console.error('[VINDUER] ERROR in initVinduer:', e.message, e.stack); }
 }
 
 /* ============================================================

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'livsfaser-v64';
+const CACHE_NAME = 'livsfaser-v65';
 const urlsToCache = [
   './',
   './index.html',
@@ -95,16 +95,22 @@ const urlsToCache = [
   './screens/om-isabelle.html'
 ];
 
-// Install — cache core files
+// Install — cache core files (bypass HTTP cache to always get fresh files)
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(cache =>
+      Promise.all(
+        urlsToCache.map(url =>
+          fetch(url, { cache: 'reload' })
+            .then(resp => { if (resp.ok) cache.put(url, resp); })
+            .catch(() => cache.add(url))
+        )
+      )
+    ).then(() => self.skipWaiting())
   );
 });
 
-// Activate — clean old caches
+// Activate — clean old caches + take over immediately
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(names =>
@@ -117,27 +123,42 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch — cache first, then network, then cache screen files
+// Fetch — Network first for code/HTML, cache first for images
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
-      return fetch(event.request).then(response => {
-        // Cache screen files and fonts dynamically
-        if (response.ok && (
-          event.request.url.includes('/screens/') ||
-          event.request.url.includes('/fonts/')
-        )) {
+  const url = event.request.url;
+  const isCodeOrHTML = url.endsWith('.js') || url.endsWith('.css') || url.endsWith('.html')
+    || url.endsWith('/') || event.request.mode === 'navigate';
+
+  if (isCodeOrHTML) {
+    // Network first — always try to get fresh code
+    event.respondWith(
+      fetch(event.request).then(response => {
+        if (response.ok) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
         }
         return response;
-      });
-    }).catch(() => {
-      // Offline fallback
-      if (event.request.mode === 'navigate') {
-        return caches.match('./index.html');
-      }
-    })
-  );
+      }).catch(() => {
+        // Offline — fall back to cache
+        return caches.match(event.request).then(cached => {
+          if (cached) return cached;
+          if (event.request.mode === 'navigate') return caches.match('./index.html');
+        });
+      })
+    );
+  } else {
+    // Cache first for images/icons (they rarely change)
+    event.respondWith(
+      caches.match(event.request).then(cached => {
+        if (cached) return cached;
+        return fetch(event.request).then(response => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          }
+          return response;
+        });
+      }).catch(() => {})
+    );
+  }
 });

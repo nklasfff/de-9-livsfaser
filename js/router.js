@@ -148,14 +148,9 @@ const Router = {
     }
 
     // Call init function
-    console.log('[ROUTER] screen.init:', screen.init, 'typeof:', typeof window[screen.init]);
     if (screen.init && typeof window[screen.init] === 'function') {
-      console.log('[ROUTER] Calling', screen.init);
       window[screen.init]();
-      console.log('[ROUTER]', screen.init, 'returned');
       if (screen.niveau === 2 && typeof updateSaveBtn === 'function') updateSaveBtn();
-    } else {
-      console.warn('[ROUTER] Init function NOT FOUND:', screen.init);
     }
   },
 
