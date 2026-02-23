@@ -2782,6 +2782,370 @@ function initRelEpigenetik() {
   setText('epigenetik-featured-label', `Dit element · ${elLabel}`);
 }
 
+/* ── Jeres Konstellation — multi-person gruppe-dynamik ── */
+
+const KONST_CLIMATE_TEXTS = {
+  'fuld_resonans': {
+    label: 'Fuld resonans',
+    text: 'Jeres felt vibrerer i samklang. Når så mange elementer mødes i resonans, opstår der en sjælden stilhed — som om I alle forstår uden at sige noget. Det er kraft, men også sårbarhed.'
+  },
+  'naerende_flow': {
+    label: 'Nærende flow',
+    text: 'Der strømmer energi mellem jer — den ene nærer den anden, som ringe i vandet. Det er et felt der bærer. Pas på at den der giver mest, også selv får næring.'
+  },
+  'kreativ_spaending': {
+    label: 'Kreativ spænding',
+    text: 'Jeres konstellation bærer spænding — elementer der udfordrer hinanden. Det kan føles tungt, men det er også dér forandring sker. Spændingen er ikke et problem. Den er materialet.'
+  },
+  'dynamisk_felt': {
+    label: 'Dynamisk felt',
+    text: 'Jeres konstellation er mangfoldig — der er både næring, spejling og udfordring. Det er et levende felt med mange lag. Ingen enkelt dynamik dominerer.'
+  },
+  'stille_balance': {
+    label: 'Stille balance',
+    text: 'Jeres elementer mødes uden de store konflikter. Det er et roligt felt — måske for roligt til tider. Balancen er smuk, men vækst kræver også lidt friktion.'
+  }
+};
+
+const KONST_GROUP_TEXTS = {
+  'VAND': 'Gruppen bærer dybde og intuition. I mærker hinanden uden ord — men risikerer at drukne i det uskrevne.',
+  'TRÆ': 'Gruppen peger opad — vækst, nyt, forandring. Der er energi, men også risiko for at vokse i hver sin retning.',
+  'ILD': 'Gruppen brænder. Der er passion og nærvær, men også risiko for udbrændthed. Hvem holder ilden, og hvem brænder sig?',
+  'JORD': 'Gruppen er rodfæstet. I søger tryghed og næring hos hinanden. Men Jord kan også blive tung, hvis ingen bevæger sig.',
+  'METAL': 'Gruppen har klarhed og retning. I ser essensen. Men Metal kan føles koldt, hvis der ikke er plads til det bløde.'
+};
+
+const KONST_PAIR_POETISK = {
+  'resonans': [
+    'spejler hinanden i stilhed',
+    'deler den samme grundtone',
+    'genkender noget dybt i den anden'
+  ],
+  'naerer': [
+    'giver næring til den andens vækst',
+    'bærer den andens rytme videre',
+    'styrker det den anden bygger på'
+  ],
+  'naeres': [
+    'modtager næring og ro',
+    'vokser i den andens nærhed',
+    'finder styrke i det der gives'
+  ],
+  'udfordrer': [
+    'skaber kreativ friktion',
+    'stiller krav til den anden',
+    'tvinger hinanden til at vokse'
+  ],
+  'moeder': [
+    'bringer noget uventet ind',
+    'udvider hinandens felt',
+    'tilfører det den anden ikke selv bærer'
+  ]
+};
+
+function initRelKonstellation() {
+  const data = getUserCycles();
+  if (!data) return;
+  const { cycles, dominant } = data;
+  const userEl = dominant.element;
+  const userElLabel = Calculations.ELEMENT_LABELS[userEl];
+  const now = new Date();
+  const nourishing = { 'VAND': 'TRÆ', 'TRÆ': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
+  const controlling = { 'VAND': 'ILD', 'TRÆ': 'JORD', 'ILD': 'METAL', 'JORD': 'VAND', 'METAL': 'TRÆ' };
+
+  const relations = Storage.getRelations();
+  const useExample = !relations || relations.length === 0;
+  const rels = useExample
+    ? [{ name: 'Partner', birthdate: '1983-04-15', gender: 'male', type: 'partner' },
+       { name: 'Mor', birthdate: '1958-03-22', gender: 'female', type: 'mor' },
+       { name: 'Datter', birthdate: '1994-07-10', gender: 'female', type: 'barn' }]
+    : relations;
+
+  // Track selected state (Dig always selected, first 2 others selected by default)
+  const selected = [true]; // index 0 = Dig
+  rels.forEach((_, i) => selected.push(i < 2));
+
+  // ── PERSON PILLS ──
+  const pillsEl = document.getElementById('konst-pills');
+  if (pillsEl) {
+    let html = `<div style="background:rgba(123,122,158,0.14);border-radius:20px;padding:8px 16px;font-family:sans-serif;font-size:13px;color:#7b7a9e;font-weight:500;opacity:1;border-bottom:2px solid rgba(123,122,158,0.4)">Dig</div>`;
+    rels.forEach((r, i) => {
+      const active = selected[i + 1];
+      html += `<div class="konst-pill" data-idx="${i + 1}" style="background:rgba(184,166,192,${active ? '0.12' : '0.05'});border-radius:20px;padding:8px 16px;font-family:sans-serif;font-size:13px;color:#9b8da8;font-weight:${active ? '500' : '300'};cursor:pointer;opacity:${active ? '1' : '0.5'};border-bottom:${active ? '2px solid rgba(184,166,192,0.4)' : '2px solid transparent'};transition:all 0.2s">${r.name}</div>`;
+    });
+    pillsEl.innerHTML = html;
+
+    // Bind pill clicks
+    pillsEl.querySelectorAll('.konst-pill').forEach(pill => {
+      pill.addEventListener('click', function() {
+        const idx = parseInt(this.getAttribute('data-idx'));
+        selected[idx] = !selected[idx];
+        this.style.opacity = selected[idx] ? '1' : '0.5';
+        this.style.fontWeight = selected[idx] ? '500' : '300';
+        this.style.background = selected[idx] ? 'rgba(184,166,192,0.12)' : 'rgba(184,166,192,0.05)';
+        this.style.borderBottom = selected[idx] ? '2px solid rgba(184,166,192,0.4)' : '2px solid transparent';
+      });
+    });
+  }
+
+  // ── SE KONSTELLATION KNAP ──
+  const btn = document.getElementById('konst-btn');
+  const resultEl = document.getElementById('konst-result');
+  if (btn && !btn._bound) {
+    btn._bound = true;
+    btn.addEventListener('click', () => {
+      // Gather selected people
+      const people = [{ name: 'Dig', el: userEl, elLabel: userElLabel, cycles: cycles, isSelf: true }];
+      rels.forEach((r, i) => {
+        if (!selected[i + 1]) return;
+        const isMale = r.gender === 'male';
+        const rc = cyclesAtDate(r.birthdate, now, isMale);
+        const theirEl = rc.lifePhase.element;
+        people.push({
+          name: r.name,
+          el: theirEl,
+          elLabel: Calculations.ELEMENT_LABELS[theirEl],
+          cycles: rc,
+          isSelf: false,
+          type: r.type || '',
+          gender: r.gender
+        });
+      });
+
+      if (people.length < 3) {
+        showActionToast('Vælg mindst 2 personer udover dig selv');
+        return;
+      }
+
+      // ── ANALYZE ALL PAIRWISE INTERACTIONS ──
+      const pairs = [];
+      for (let a = 0; a < people.length; a++) {
+        for (let b = a + 1; b < people.length; b++) {
+          const elA = people[a].el;
+          const elB = people[b].el;
+          let interType;
+          if (elA === elB) interType = 'resonans';
+          else if (nourishing[elA] === elB) interType = 'naerer';
+          else if (nourishing[elB] === elA) interType = 'naeres';
+          else if (controlling[elA] === elB || controlling[elB] === elA) interType = 'udfordrer';
+          else interType = 'moeder';
+
+          const poetTexts = KONST_PAIR_POETISK[interType];
+          const poetisk = poetTexts[Math.floor(Math.random() * poetTexts.length)];
+
+          pairs.push({
+            a: people[a], b: people[b],
+            type: interType,
+            poetisk: poetisk
+          });
+        }
+      }
+
+      // ── ELEMENT DISTRIBUTION ──
+      const elCount = { 'VAND': 0, 'TRÆ': 0, 'ILD': 0, 'JORD': 0, 'METAL': 0 };
+      people.forEach(p => elCount[p.el]++);
+      const dominant = Object.entries(elCount).sort((a, b) => b[1] - a[1]);
+      const dominantEl = dominant[0][0];
+      const dominantLabel = Calculations.ELEMENT_LABELS[dominantEl];
+      const missing = dominant.filter(([el, c]) => c === 0).map(([el]) => Calculations.ELEMENT_LABELS[el]);
+
+      // ── GROUP CLIMATE ──
+      const resonansCount = pairs.filter(p => p.type === 'resonans').length;
+      const naerCount = pairs.filter(p => p.type === 'naerer' || p.type === 'naeres').length;
+      const udfordrCount = pairs.filter(p => p.type === 'udfordrer').length;
+      const totalPairs = pairs.length;
+
+      let climateKey;
+      if (resonansCount >= totalPairs * 0.5) climateKey = 'fuld_resonans';
+      else if (naerCount >= totalPairs * 0.5) climateKey = 'naerende_flow';
+      else if (udfordrCount >= totalPairs * 0.5) climateKey = 'kreativ_spaending';
+      else if (udfordrCount === 0 && resonansCount === 0) climateKey = 'stille_balance';
+      else climateKey = 'dynamisk_felt';
+
+      const climate = KONST_CLIMATE_TEXTS[climateKey];
+
+      // ── BUILD RESULT HTML ──
+      let html = '';
+
+      // 1. GROUP CLIMATE
+      html += `<div class="featured feat-relationer" style="margin-bottom:16px">`;
+      html += `<div class="featured-label">${climate.label} · ${people.length} personer</div>`;
+      html += `<div class="featured-text">${climate.text}</div>`;
+      html += `</div>`;
+
+      // 2. ELEMENT DISTRIBUTION
+      html += `<div class="insight-box" style="background:rgba(123,122,158,0.05);border:1px solid rgba(123,122,158,0.10);margin-bottom:16px">`;
+      html += `<div class="insight-label" style="color:#88839e">Jeres element-fordeling</div>`;
+
+      // Bar visualization
+      const allElements = ['VAND', 'TRÆ', 'ILD', 'JORD', 'METAL'];
+      allElements.forEach(el => {
+        const count = elCount[el];
+        const pct = Math.round((count / people.length) * 100);
+        const label = Calculations.ELEMENT_LABELS[el];
+        const names = people.filter(p => p.el === el).map(p => p.name).join(', ');
+        html += `<div style="margin-bottom:8px">`;
+        html += `<div style="display:flex;justify-content:space-between;font-family:sans-serif;font-size:12px;color:#7b7a9e;margin-bottom:3px"><span>${label}${count > 0 ? ' · ' + names : ''}</span><span>${count}</span></div>`;
+        html += `<div style="height:6px;background:rgba(123,122,158,0.08);border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:rgba(123,122,158,${count > 0 ? '0.35' : '0.05'});border-radius:3px;transition:width 0.5s"></div></div>`;
+        html += `</div>`;
+      });
+
+      // Dominant + missing text
+      html += `<div style="font-family:Georgia,serif;font-size:14px;color:#7b7a9e;font-style:italic;margin-top:12px;line-height:1.6">`;
+      html += KONST_GROUP_TEXTS[dominantEl];
+      if (missing.length > 0) {
+        html += ` <span style="color:#88839e">${missing.join(' og ')} mangler i jeres felt — det er det I søger udenfor.</span>`;
+      }
+      html += `</div>`;
+      html += `</div>`;
+
+      // 3. PAIRWISE INTERACTIONS
+      html += `<div class="group-label" style="color:#7b7a9e">Hvem m&oslash;der hvem</div>`;
+      pairs.forEach(pair => {
+        const typeLabels = {
+          'resonans': 'Resonans',
+          'naerer': 'N\u00e6rer',
+          'naeres': 'N\u00e6res af',
+          'udfordrer': 'Udfordrer',
+          'moeder': 'M\u00f8der'
+        };
+        const typeColors = {
+          'resonans': 'rgba(123,122,158,0.12)',
+          'naerer': 'rgba(91,140,90,0.10)',
+          'naeres': 'rgba(74,144,164,0.10)',
+          'udfordrer': 'rgba(200,90,84,0.08)',
+          'moeder': 'rgba(184,166,192,0.08)'
+        };
+
+        html += `<div style="background:${typeColors[pair.type]};border:1px solid rgba(123,122,158,0.08);border-radius:14px;padding:14px 16px;margin-bottom:8px">`;
+        html += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">`;
+        html += `<div style="font-family:sans-serif;font-size:13px;color:#7b7a9e;font-weight:500">${pair.a.name} <span style="color:#aaa">&amp;</span> ${pair.b.name}</div>`;
+        html += `<div style="font-family:sans-serif;font-size:11px;color:#88839e;background:rgba(123,122,158,0.08);border-radius:10px;padding:2px 8px">${typeLabels[pair.type]}</div>`;
+        html += `</div>`;
+        html += `<div style="font-family:sans-serif;font-size:12px;color:#88839e;margin-bottom:4px">${pair.a.elLabel} ${pair.type === 'resonans' ? '=' : pair.type === 'naerer' ? '\u2192' : pair.type === 'naeres' ? '\u2190' : '\u2194'} ${pair.b.elLabel}</div>`;
+        html += `<div style="font-family:Georgia,serif;font-size:13px;color:#7b7a9e;font-style:italic;line-height:1.5">${pair.a.name} og ${pair.b.name} ${pair.poetisk}.</div>`;
+        html += `</div>`;
+      });
+
+      // 4. WHAT IT MEANS FOR THIS GROUP
+      html += `<div style="margin-top:16px"></div>`;
+      html += `<div class="quick-action" style="background:linear-gradient(135deg,rgba(123,122,158,0.06),rgba(123,122,158,0.02));border-color:rgba(123,122,158,0.10)">`;
+      html += `<div class="quick-action-label" style="color:#88839e">Hvad det betyder</div>`;
+
+      const personNames = people.map(p => p.name).join(', ').replace(/, ([^,]*)$/, ' og $1');
+      html += `<div class="quick-action-title" style="color:#7b7a9e">Når ${personNames} er sammen</div>`;
+
+      // Dynamic concrete text
+      let concreteText = '';
+      if (resonansCount > 0) {
+        const resPairs = pairs.filter(p => p.type === 'resonans');
+        concreteText += `${resPairs.map(p => p.a.name + ' og ' + p.b.name).join(', ')} deler element — det giver genkendelse og ro. `;
+      }
+      if (udfordrCount > 0) {
+        const udPairs = pairs.filter(p => p.type === 'udfordrer');
+        concreteText += `${udPairs.map(p => p.a.name + ' og ' + p.b.name).join(', ')} udfordrer hinanden — det er der væksten ligger. `;
+      }
+      if (naerCount > 0) {
+        const naerPairs = pairs.filter(p => p.type === 'naerer' || p.type === 'naeres');
+        concreteText += `${naerPairs.map(p => p.a.name + ' og ' + p.b.name).join(', ')} nærer hinanden — energien flyder naturligt.`;
+      }
+      if (!concreteText) {
+        concreteText = 'Jeres elementer mødes uden stærke TCM-forbindelser. Det giver frihed, men kræver bevidst forbindelse.';
+      }
+
+      html += `<div class="quick-action-desc" style="color:#777">${concreteText}</div>`;
+      html += `</div>`;
+
+      // 5. SPØRG DIG SELV
+      html += `<div class="quick-action" style="background:linear-gradient(135deg,rgba(123,122,158,0.06),rgba(123,122,158,0.02));border-color:rgba(123,122,158,0.10);margin-top:12px">`;
+      html += `<div class="quick-action-label" style="color:#88839e">Sp\u00f8rg dig selv</div>`;
+      html += `<div class="quick-action-title" style="color:#7b7a9e">Hvad sker der i rummet, n\u00e5r I alle er samlet?</div>`;
+      html += `<div class="quick-action-desc" style="color:#777">M\u00e6rk efter: hvem taler mest? Hvem tr\u00e6kker sig? Hvem holder feltet? Det er ikke tilf\u00e6ldigt — det er elementerne der forhandler.</div>`;
+      html += `</div>`;
+
+      if (useExample) {
+        html += `<div style="font-family:sans-serif;font-size:12px;color:#aaa;text-align:center;margin-top:12px;font-style:italic">Eksempel-data — tilf\u00f8j dine egne relationer i onboarding</div>`;
+      }
+
+      // Show result
+      if (resultEl) {
+        resultEl.innerHTML = html;
+        resultEl.style.display = 'block';
+        resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      // Update figure caption
+      const caption = document.getElementById('konst-figur-caption');
+      if (caption) {
+        caption.textContent = `${people.length} personer · ${dominantLabel} dominerer · ${climate.label}`;
+      }
+
+      // Render constellation SVG figure
+      renderKonstellationFigur(people, pairs);
+    });
+  }
+
+  // Auto-click if 3+ people are pre-selected (for immediate result)
+  const preSelected = selected.filter(s => s).length;
+  if (preSelected >= 3 && btn) {
+    setTimeout(() => btn.click(), 200);
+  }
+}
+
+function renderKonstellationFigur(people, pairs) {
+  const container = document.getElementById('konst-figur');
+  if (!container) return;
+
+  const W = 300, H = 280;
+  const cx = W / 2, cy = H / 2 - 10;
+  const R = people.length <= 3 ? 70 : 80;
+  const nodeR = 28;
+
+  // Position people in a circle
+  const positions = people.map((p, i) => {
+    const angle = (-Math.PI / 2) + (2 * Math.PI * i / people.length);
+    return {
+      x: cx + R * Math.cos(angle),
+      y: cy + R * Math.sin(angle)
+    };
+  });
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:300px;display:block;margin:0 auto" xmlns="http://www.w3.org/2000/svg">`;
+
+  // Draw connection lines
+  pairs.forEach(pair => {
+    const idxA = people.indexOf(pair.a);
+    const idxB = people.indexOf(pair.b);
+    const posA = positions[idxA];
+    const posB = positions[idxB];
+
+    const lineColors = {
+      'resonans': 'rgba(123,122,158,0.35)',
+      'naerer': 'rgba(91,140,90,0.30)',
+      'naeres': 'rgba(74,144,164,0.30)',
+      'udfordrer': 'rgba(200,90,84,0.25)',
+      'moeder': 'rgba(184,166,192,0.20)'
+    };
+    const dashArray = pair.type === 'udfordrer' ? '4,3' : pair.type === 'moeder' ? '2,4' : 'none';
+
+    svg += `<line x1="${posA.x}" y1="${posA.y}" x2="${posB.x}" y2="${posB.y}" stroke="${lineColors[pair.type]}" stroke-width="${pair.type === 'resonans' ? 2.5 : 1.5}" ${dashArray !== 'none' ? 'stroke-dasharray="' + dashArray + '"' : ''}/>`;
+  });
+
+  // Draw person nodes
+  people.forEach((p, i) => {
+    const pos = positions[i];
+    const fillOpacity = p.isSelf ? 0.15 : 0.10;
+    const strokeOpacity = p.isSelf ? 0.40 : 0.25;
+
+    svg += `<circle cx="${pos.x}" cy="${pos.y}" r="${nodeR}" fill="rgba(123,122,158,${fillOpacity})" stroke="rgba(123,122,158,${strokeOpacity})" stroke-width="1.5"/>`;
+    svg += `<text x="${pos.x}" y="${pos.y - 5}" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#7b7a9e" font-weight="${p.isSelf ? '600' : '400'}">${p.name}</text>`;
+    svg += `<text x="${pos.x}" y="${pos.y + 9}" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#88839e">${p.elLabel}</text>`;
+  });
+
+  svg += `</svg>`;
+  container.innerHTML = svg;
+}
+
 /* ============================================================
    NIVEAU 2 — Rejse undersider
    ============================================================ */

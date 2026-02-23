@@ -45,6 +45,7 @@ const Router = {
     'rel-tre-gen':       { file: 'screens/rel-tre-gen.html',       niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelTreGen' },
     'rel-jeres-energi':  { file: 'screens/rel-jeres-energi.html',  niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelJeresEnergi' },
     'rel-epigenetik':    { file: 'screens/rel-epigenetik.html',    niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelEpigenetik' },
+    'rel-konstellation': { file: 'screens/rel-konstellation.html', niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelKonstellation' },
 
     // Niveau 2 — Praksis undersider
     'pra-yin-yoga':      { file: 'screens/pra-yin-yoga.html',      niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraYinYoga' },
