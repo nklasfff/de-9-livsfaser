@@ -8,42 +8,14 @@
     <img src="assets/images/relationer_blad_liberation_HQ.png" alt="Relationer" style="width:100%;max-width:200px;mix-blend-mode:multiply;filter:saturate(0.7)">
   </div>
 
-  <div class="profil-row" id="rel-profil-row">
-    <div class="profil-item"><div class="profil-circle" style="background:rgba(123,122,158,0.18);color:#7b7a9e">D</div><div class="profil-name">Dig</div><div class="profil-meta" id="rel-profil-dig">Fase 9 &middot; Vand</div></div>
-    <div class="profil-item"><div class="profil-circle" style="background:rgba(123,122,158,0.12);color:#7b7a9e">M</div><div class="profil-name">Martin</div><div class="profil-meta">Fase 6 &middot; Jord</div></div>
-    <div class="profil-item"><div class="profil-circle" style="background:rgba(123,122,158,0.12);color:#7b7a9e">I</div><div class="profil-name">Inge</div><div class="profil-meta">Fase 9 &middot; Vand</div></div>
-    <div class="profil-item"><div class="profil-circle" style="background:rgba(123,122,158,0.05);border:1.5px dashed rgba(123,122,158,0.25);color:#88839e">+</div><div class="profil-name" style="color:#88839e">Tilf&oslash;j</div></div>
-  </div>
+  <!-- PROFIL-ROW (dynamisk) -->
+  <div id="rel-profil-row" class="profil-row"></div>
 
-  <div class="insight-box" style="background:rgba(123,122,158,0.05);border:1px solid rgba(123,122,158,0.10)">
-    <div class="insight-label" style="color:#88839e">Jeres energi lige nu</div>
-    <div class="insight-text" style="color:#7b7a9e" id="rel-insight-text">Du er i Vand, Martin i Jord. Det dybe og det trygge m&oslash;des stille &mdash; en kombination der kan overraske jer begge.</div>
-  </div>
+  <!-- LIVE PULS — dynamisk -->
+  <div id="rel-live-pulse"></div>
 
-  <!-- DET I MÅSKE MÆRKER -->
-  <div class="feeling-box" style="border-color:rgba(123,122,158,0.08);background:linear-gradient(135deg,rgba(123,122,158,0.04),rgba(184,166,192,0.04))">
-    <div class="feeling-label" style="color:#88839e">Det I m&aring;ske m&aelig;rker</div>
-    <div class="feeling-text" style="color:#7b7a8e" id="rel-feeling-text">M&aring;ske f&oslash;les det som om I taler forbi hinanden. Eller som om noget er forskudt &mdash; uden at nogen af jer kan s&aelig;tte ord p&aring; det. Det er reelt. Vand s&oslash;ger dybde, Jord s&oslash;ger tryghed. I m&oslash;des et sted midt imellem.</div>
-  </div>
-
-  <!-- FEATURED BOKS -->
-  <div class="featured feat-relationer" onclick="Router.navigate('rel-lige-nu')">
-    <div class="featured-label">Lige nu mellem jer</div>
-    <div class="featured-text" id="rel-featured-text">Vand n&aelig;rer Tr&aelig;, og Jord kontrollerer Vand. Martin giver dig stabilitet &mdash; men du m&aelig;rker ogs&aring; en begr&aelig;nsning.</div>
-    <div class="featured-sub">Se den fulde sammenligning &rarr;</div>
-  </div>
-
-  <!-- NÆSTE SKIFT -->
-  <div class="time-shift" id="rel-time-shift">
-    <div class="time-shift-item" style="background:rgba(123,122,158,0.04);border-color:rgba(123,122,158,0.08)">
-      <div class="time-shift-when" style="color:#88839e">Martins n&aelig;ste faseskift</div>
-      <div class="time-shift-what" style="color:#7b7a9e">Om 5 &aring;r &middot; Jord &rarr; Metal</div>
-    </div>
-    <div class="time-shift-item" style="background:rgba(123,122,158,0.04);border-color:rgba(123,122,158,0.08)">
-      <div class="time-shift-when" style="color:#88839e">I m&oslash;des i samme element</div>
-      <div class="time-shift-what" style="color:#7b7a9e">N&aring;r Martin n&aring;r Metal &middot; 2031</div>
-    </div>
-  </div>
+  <!-- NÆSTE SKIFT — dynamisk -->
+  <div id="rel-time-shift" class="time-shift"></div>
 
   <div class="dots">&middot; &middot; &middot;</div>
 
@@ -51,13 +23,8 @@
   <div class="group-label" style="color:#7b7a9e">Lige nu</div>
   <div class="card" onclick="Router.navigate('rel-lige-nu')"><div class="card-row"><div><div class="card-label">Relationer lige nu</div><div class="card-title">Hvem er t&aelig;t p&aring; dig?</div><div class="card-desc">Se hvem der er i dit liv, og hvad der er aktivt mellem jer. Jeres elementer m&oslash;des &mdash; nogle dage let, andre dage tungt.</div></div><div class="card-arrow">&rarr;</div></div></div>
 
-  <!-- SAMTALEÅBNER -->
-  <div class="quick-action" style="background:linear-gradient(135deg,rgba(123,122,158,0.06),rgba(123,122,158,0.02));border-color:rgba(123,122,158,0.10)">
-    <div class="quick-action-label" style="color:#88839e">Brug den her s&aelig;tning i dag</div>
-    <div class="quick-action-title" style="color:#7b7a9e" id="rel-samtale-title">&laquo;&thinsp;Hvad fylder mest for dig lige nu?&thinsp;&raquo;</div>
-    <div class="quick-action-desc" style="color:#777" id="rel-samtale-desc">Jord-energi har brug for at blive set i sin helhed. Sp&oslash;rgsm&aring;let &aring;bner rummet &mdash; uden at kr&aelig;ve svar.</div>
-    <div class="quick-action-btn" style="border-color:rgba(123,122,158,0.25);color:#7b7a9e">Del med Martin &rarr;</div>
-  </div>
+  <!-- SAMTALEÅBNER (dynamisk) -->
+  <div id="rel-samtale-box"></div>
 
   <div class="dots">&middot; &middot; &middot;</div>
 
@@ -66,12 +33,8 @@
   <div class="card" onclick="Router.navigate('rel-to-rytmer')"><div class="card-row"><div><div class="card-label">To rytmer</div><div class="card-title">Hendes syv &aring;r, hans otte</div><div class="card-desc">Kvinder f&oslash;lger en syv-&aring;rs cyklus, m&aelig;nd en otte-&aring;rs. Se hvor I m&oslash;des, og hvor jeres faser glider fra hinanden.</div></div><div class="card-arrow">&rarr;</div></div></div>
   <div class="card" onclick="Router.navigate('rel-tre-gen')"><div class="card-row"><div><div class="card-label">Tre generationer</div><div class="card-title">Mor &middot; Dig &middot; Barn</div><div class="card-desc">Tre livsfaser der spejler og udfordrer hinanden. Arv, frihed og fornyelse flettes sammen p&aring; tv&aelig;rs af generationer.</div></div><div class="card-arrow">&rarr;</div></div></div>
 
-  <!-- FÆLLES HANDLING -->
-  <div class="quick-action" style="background:linear-gradient(135deg,rgba(123,122,158,0.06),rgba(184,166,192,0.03));border-color:rgba(123,122,158,0.10)">
-    <div class="quick-action-label" style="color:#88839e">Noget I kan g&oslash;re sammen</div>
-    <div class="quick-action-title" style="color:#7b7a9e" id="rel-faelles-title">G&aring; en stille tur &mdash; uden at skulle noget</div>
-    <div class="quick-action-desc" style="color:#777" id="rel-faelles-desc">N&aring;r Vand m&oslash;der Jord, er stilheden jeres bedste sprog. G&aring; side om side. Lad ordene komme n&aring;r de er klar.</div>
-  </div>
+  <!-- FÆLLES HANDLING (dynamisk) -->
+  <div id="rel-faelles-box"></div>
 
   <div class="dots">&middot; &middot; &middot;</div>
 
@@ -86,14 +49,8 @@
     <div class="pull-quote-attr">&mdash; Isabelle</div>
   </div>
 
-  <!-- FIGUR — Jeres møde (Venn) -->
-  <div class="wave-timeline" style="background:rgba(123,122,158,0.03);border-color:rgba(123,122,158,0.07)">
-    <div class="wave-label" style="color:#88839e">Jeres m&oslash;de</div>
-    <div class="fig">
-      <img src="assets/images/rel-jeres-moede.png" alt="Jeres møde" style="max-width:400px">
-    </div>
-    <div class="wave-caption" style="color:#8a85a0">To energier, &eacute;t m&oslash;dested. Jord giver fundament. Vand giver dybde. Sammen finder I balancen.</div>
-  </div>
+  <!-- FIGUR — Jeres møde (dynamisk) -->
+  <div id="rel-jeres-moede-wrap"></div>
 
   <div class="dots">&middot; &middot; &middot;</div>
 

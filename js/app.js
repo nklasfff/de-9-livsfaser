@@ -771,6 +771,12 @@ function initForside() {
   // Elementer section
   renderElementIntro();
 
+  // Relation card (live partner/first relation)
+  renderForsideRelation(cycles, dominant);
+
+  // Tidsrejse quick-chips
+  renderForsideChips();
+
   // Praksis cards — based on dominant element, rotated daily
   const domEl = dominant.element;
   const ri = Calculations.dayRotation(3);
@@ -797,6 +803,143 @@ function initForside() {
     }
   }
 
+}
+
+/* ============================================================
+   FORSIDE — Live relation card
+   ============================================================ */
+
+function renderForsideRelation(userCycles, userDominant) {
+  const container = document.getElementById('forside-relation');
+  if (!container) return;
+
+  const relations = Storage.getRelations();
+  if (!relations || relations.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+
+  // Prefer partner, then first relation
+  const rel = relations.find(r => r.type === 'partner') || relations[0];
+  if (!rel || !rel.birthdate) {
+    container.innerHTML = '';
+    return;
+  }
+
+  const now = new Date();
+  const isMale = rel.gender === 'male';
+  const theirCycles = cyclesAtDate(rel.birthdate, now, isMale);
+  const userEl = userCycles.lifePhase.element;
+  const theirEl = theirCycles.lifePhase.element;
+  const userElLabel = Calculations.ELEMENT_LABELS[userEl];
+  const theirElLabel = Calculations.ELEMENT_LABELS[theirEl];
+
+  // TCM interaction
+  const nourishing = { 'VAND': 'TRÆ', 'TRÆ': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
+
+  let interType, interLabel, interText;
+
+  if (userEl === theirEl) {
+    interType = 'resonans';
+    interLabel = 'Dyb resonans';
+    interText = `I deler ${userElLabel}-elementet lige nu. Når begge er i det samme felt, forstår I hinanden uden ord — og mærker hinandens energi stærkere end normalt.`;
+  } else if (nourishing[userEl] === theirEl) {
+    interType = 'naerer';
+    interLabel = 'Du nærer';
+    interText = `Dit ${userElLabel} nærer ${rel.name}s ${theirElLabel}. Din energi bærer den andens videre — måske uden du tænker over det.`;
+  } else if (nourishing[theirEl] === userEl) {
+    interType = 'naeres';
+    interLabel = 'Du næres';
+    interText = `${rel.name}s ${theirElLabel} nærer dit ${userElLabel}. Der er noget i den andens rytme der giver dig ro lige nu.`;
+  } else {
+    interType = 'moeder';
+    interLabel = 'Møde mellem elementer';
+    interText = `Dit ${userElLabel} og ${rel.name}s ${theirElLabel} er to forskellige kræfter. Det kan udfordre — men det kan også åbne noget nyt mellem jer.`;
+  }
+
+  container.innerHTML = `
+    <div class="forside-card" style="margin-top:16px;cursor:pointer" onclick="Router.navigate('relationer')">
+      <div class="card-label">Dig og ${rel.name} · ${interLabel}</div>
+      <div class="card-text" style="font-family:Georgia,serif;font-size:15px;font-style:italic;color:#6c7a8a;line-height:1.55">${interText}</div>
+      <a class="card-link">Se jeres dynamik →</a>
+    </div>`;
+}
+
+/* ============================================================
+   FORSIDE — Tidsrejse quick-chips
+   ============================================================ */
+
+function renderForsideChips() {
+  const container = document.getElementById('forside-tidsrejse-chips');
+  if (!container) return;
+
+  const user = Storage.getUser();
+  if (!user || !user.birthdate) { container.innerHTML = ''; return; }
+
+  const now = new Date();
+  const bd = new Date(user.birthdate);
+  const age = ageAtDate(user.birthdate, now);
+  const currentPhase = Calculations.calculateLifePhase(age);
+  const pad2 = n => String(n).padStart(2, '0');
+  const toDateStr = d => d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate());
+
+  const chips = [];
+
+  // Chip 1: "Dit faseskift" — date of next 7-year boundary
+  if (currentPhase && currentPhase.endAge && currentPhase.endAge > age) {
+    const nextAge = currentPhase.endAge;
+    const shiftDate = new Date(bd.getFullYear() + nextAge, bd.getMonth(), bd.getDate());
+    const yearsLeft = nextAge - age;
+    chips.push({
+      label: `Dit faseskift · om ${yearsLeft} år`,
+      date: toDateStr(shiftDate)
+    });
+  }
+
+  // Chip 2: "For 7 år siden" — one full phase back
+  const pastDate = new Date(bd.getFullYear() + (age - 7), bd.getMonth(), bd.getDate());
+  if (age >= 7) {
+    chips.push({
+      label: `Da du var ${age - 7}`,
+      date: toDateStr(pastDate)
+    });
+  }
+
+  // Chip 3: "Om 5 år"
+  const futureDate = new Date(now.getFullYear() + 5, now.getMonth(), now.getDate());
+  chips.push({
+    label: 'Om 5 år',
+    date: toDateStr(futureDate)
+  });
+
+  // Chip 4: "Næste årstid" — next solstice/equinox
+  const seasonDates = [
+    { m: 2, d: 20, name: 'Forår' },
+    { m: 5, d: 21, name: 'Sommer' },
+    { m: 8, d: 23, name: 'Efterår' },
+    { m: 11, d: 21, name: 'Vinter' }
+  ];
+  for (const s of seasonDates) {
+    const sDate = new Date(now.getFullYear(), s.m, s.d);
+    if (sDate > now) {
+      chips.push({ label: s.name, date: toDateStr(sDate) });
+      break;
+    }
+  }
+  // If none found (late December), pick spring next year
+  if (chips.length < 4) {
+    const s = seasonDates[0];
+    chips.push({ label: s.name, date: new Date(now.getFullYear()+1, s.m, s.d).getFullYear() + '-03-20' });
+  }
+
+  container.innerHTML = chips.map(c =>
+    `<div style="padding:8px 14px;background:rgba(108,130,169,0.06);border:1px solid rgba(108,130,169,0.12);border-radius:20px;font-family:'DM Sans',sans-serif;font-size:13px;color:#6c82a9;cursor:pointer;white-space:nowrap" onclick="navigateToVinduerWithDate('${c.date}')">${c.label}</div>`
+  ).join('');
+}
+
+function navigateToVinduerWithDate(dateStr) {
+  window._vinduerPresetDate = dateStr;
+  Router.navigate('vinduer');
 }
 
 /* ============================================================
@@ -908,16 +1051,165 @@ function initRelationer() {
   const data = getUserCycles();
   if (!data) return;
   const { cycles, dominant } = data;
-  const elLabel = Calculations.ELEMENT_LABELS[dominant.element];
+  const userEl = dominant.element;
+  const elLabel = Calculations.ELEMENT_LABELS[userEl];
 
-  // User profile
-  setText('rel-profil-dig', `Fase ${cycles.lifePhase.phase} \u00b7 ${elLabel}`);
+  const relations = Storage.getRelations();
+  const now = new Date();
+  const nourishing = { 'VAND': 'TRÆ', 'TRÆ': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
 
-  // Samtale-\u00e5bnere fra data
-  const samtale = typeof TO_RYTMER_SAMTALE !== 'undefined' ? TO_RYTMER_SAMTALE[dominant.element] : null;
-  if (samtale) {
-    setText('rel-samtale-title', `\u00ab\u2009${samtale.spoerg}\u2009\u00bb`);
-    setText('rel-samtale-desc', `${elLabel}-energi har brug for at blive set i sin helhed. Sp\u00f8rgsm\u00e5let \u00e5bner rummet.`);
+  // Use real relations or example data
+  const useExample = !relations || relations.length === 0;
+  const rels = useExample
+    ? [{ name: 'Partner', birthdate: '1983-04-15', gender: 'male', type: 'partner' },
+       { name: 'Mor', birthdate: '1958-03-22', gender: 'female', type: 'mor' }]
+    : relations;
+
+  // Calculate cycles for all relations
+  const relData = rels.map(r => {
+    const isMale = r.gender === 'male';
+    const rc = cyclesAtDate(r.birthdate, now, isMale);
+    const theirEl = rc.lifePhase.element;
+    const theirElLabel = Calculations.ELEMENT_LABELS[theirEl];
+
+    let interType, interLabel;
+    if (userEl === theirEl) { interType = 'resonans'; interLabel = 'Dyb resonans'; }
+    else if (nourishing[userEl] === theirEl) { interType = 'naerer'; interLabel = 'Du nærer'; }
+    else if (nourishing[theirEl] === userEl) { interType = 'naeres'; interLabel = 'Du næres'; }
+    else { interType = 'moeder'; interLabel = 'Møde'; }
+
+    return { ...r, cycles: rc, el: theirEl, elLabel: theirElLabel, interType, interLabel };
+  });
+
+  // ── PROFIL-ROW ──
+  const profilRow = document.getElementById('rel-profil-row');
+  if (profilRow) {
+    let html = `<div class="profil-item"><div class="profil-circle" style="background:rgba(123,122,158,0.18);color:#7b7a9e">D</div><div class="profil-name">Dig</div><div class="profil-meta">Fase ${cycles.lifePhase.phase} · ${elLabel}</div></div>`;
+    relData.forEach(r => {
+      const initial = r.name.charAt(0).toUpperCase();
+      html += `<div class="profil-item"><div class="profil-circle" style="background:rgba(123,122,158,0.12);color:#7b7a9e">${initial}</div><div class="profil-name">${r.name}</div><div class="profil-meta">${r.elLabel} · ${r.interLabel}</div></div>`;
+    });
+    html += `<div class="profil-item" onclick="Router.navigate('rel-lige-nu')"><div class="profil-circle" style="background:rgba(123,122,158,0.05);border:1.5px dashed rgba(123,122,158,0.25);color:#88839e">+</div><div class="profil-name" style="color:#88839e">Tilføj</div></div>`;
+    profilRow.innerHTML = html;
+  }
+
+  // ── LIVE PULSE (per-relation cards) ──
+  const pulseEl = document.getElementById('rel-live-pulse');
+  if (pulseEl) {
+    let html = '';
+
+    // Climate/insight
+    const resonansCount = relData.filter(r => r.interType === 'resonans').length;
+    const naererCount = relData.filter(r => r.interType === 'naerer' || r.interType === 'naeres').length;
+    let climateLabel, climateText;
+    if (resonansCount >= 2) {
+      climateLabel = 'Dyb resonans';
+      climateText = 'Flere af dine relationer deler element med dig. Det giver en sjælden samklang — brug den.';
+    } else if (naererCount >= 2) {
+      climateLabel = 'Nærende felt';
+      climateText = 'Dine relationer nærer hinanden lige nu. Energien flyder — giv den plads.';
+    } else if (relData.some(r => r.interType === 'moeder')) {
+      climateLabel = 'Kreativ spænding';
+      climateText = 'Forskellige elementer mødes i dit felt. Det kan udfordre — men det åbner også for noget nyt.';
+    } else {
+      climateLabel = 'Stille felt';
+      climateText = 'Jeres energier mødes i et roligt felt. Der er plads til at mærke efter.';
+    }
+
+    html += `<div class="insight-box" style="background:rgba(123,122,158,0.05);border:1px solid rgba(123,122,158,0.10)">`;
+    html += `<div class="insight-label" style="color:#88839e">Jeres energi lige nu · ${climateLabel}</div>`;
+    html += `<div class="insight-text" style="color:#7b7a9e">${climateText}</div>`;
+    html += `</div>`;
+
+    // Per-relation pulse cards
+    relData.forEach(r => {
+      let interText;
+      if (r.interType === 'resonans') interText = `Begge i ${r.elLabel}. I forstår hinanden uden ord.`;
+      else if (r.interType === 'naerer') interText = `Dit ${elLabel} nærer ${r.name}s ${r.elLabel}. Din energi bærer videre.`;
+      else if (r.interType === 'naeres') interText = `${r.name}s ${r.elLabel} nærer dit ${elLabel}. Du modtager.`;
+      else interText = `${elLabel} møder ${r.elLabel} — forskellige kræfter der kan berige hinanden.`;
+
+      html += `<div class="card" style="margin-bottom:8px;cursor:pointer" onclick="Router.navigate('rel-lige-nu')"><div class="card-row"><div>`;
+      html += `<div class="card-label">${r.name} · ${r.interLabel}</div>`;
+      html += `<div class="card-title">Fase ${r.cycles.lifePhase.phase}: ${r.cycles.lifePhase.name} · ${r.elLabel}</div>`;
+      html += `<div class="card-desc" style="font-style:italic">${interText}</div>`;
+      html += `</div><div class="card-arrow">→</div></div></div>`;
+    });
+
+    if (useExample) {
+      html += `<div style="font-family:sans-serif;font-size:12px;color:#aaa;text-align:center;margin-top:8px;font-style:italic">Eksempel-data — <span style="color:#7b7a9e;cursor:pointer;text-decoration:underline" onclick="Router.navigate('rel-lige-nu')">tilføj dine relationer</span></div>`;
+    }
+
+    pulseEl.innerHTML = html;
+  }
+
+  // ── NÆSTE SKIFT ──
+  const timeShiftEl = document.getElementById('rel-time-shift');
+  if (timeShiftEl && relData.length > 0) {
+    const primary = relData[0];
+    const theirAge = primary.cycles.age;
+    const isMale = primary.gender === 'male';
+    const phaseLen = isMale ? 8 : 7;
+    const theirPhase = primary.cycles.lifePhase;
+    const yearsToShift = theirPhase.endAge ? (theirPhase.endAge - theirAge) : null;
+
+    let html = '';
+    if (yearsToShift !== null && yearsToShift > 0) {
+      const nextPhase = isMale
+        ? Calculations.calculateMalePhase(theirPhase.endAge)
+        : Calculations.calculateLifePhase(theirPhase.endAge);
+      const nextEl = nextPhase ? Calculations.ELEMENT_LABELS[nextPhase.element] : '';
+      html += `<div class="time-shift-item" style="background:rgba(123,122,158,0.04);border-color:rgba(123,122,158,0.08)">`;
+      html += `<div class="time-shift-when" style="color:#88839e">${primary.name}s næste faseskift</div>`;
+      html += `<div class="time-shift-what" style="color:#7b7a9e">Om ${Math.round(yearsToShift)} år · ${primary.elLabel} → ${nextEl}</div>`;
+      html += `</div>`;
+    }
+    timeShiftEl.innerHTML = html;
+  }
+
+  // ── SAMTALE-ÅBNER ──
+  const samtaleBox = document.getElementById('rel-samtale-box');
+  if (samtaleBox) {
+    const samtale = typeof TO_RYTMER_SAMTALE !== 'undefined' ? TO_RYTMER_SAMTALE[userEl] : null;
+    const primaryName = relData.length > 0 ? relData[0].name : 'dem';
+    if (samtale) {
+      samtaleBox.innerHTML = `
+        <div class="quick-action" style="background:linear-gradient(135deg,rgba(123,122,158,0.06),rgba(123,122,158,0.02));border-color:rgba(123,122,158,0.10)">
+          <div class="quick-action-label" style="color:#88839e">Brug den her sætning i dag</div>
+          <div class="quick-action-title" style="color:#7b7a9e">«\u2009${samtale.spoerg}\u2009»</div>
+          <div class="quick-action-desc" style="color:#777">${elLabel}-energi har brug for at blive set i sin helhed. Spørgsmålet åbner rummet.</div>
+        </div>`;
+    }
+  }
+
+  // ── FÆLLES HANDLING ──
+  const faellesBox = document.getElementById('rel-faelles-box');
+  if (faellesBox) {
+    const recs = typeof RELATION_RECOMMENDATIONS !== 'undefined' ? RELATION_RECOMMENDATIONS[userEl] : null;
+    if (recs && recs.sammen) {
+      faellesBox.innerHTML = `
+        <div class="quick-action" style="background:linear-gradient(135deg,rgba(123,122,158,0.06),rgba(184,166,192,0.03));border-color:rgba(123,122,158,0.10)">
+          <div class="quick-action-label" style="color:#88839e">Noget I kan gøre sammen</div>
+          <div class="quick-action-desc" style="color:#777">${recs.sammen}</div>
+        </div>`;
+    }
+  }
+
+  // ── JERES MØDE FIGUR ──
+  const moedeWrap = document.getElementById('rel-jeres-moede-wrap');
+  if (moedeWrap && relData.length > 0) {
+    const primary = relData[0];
+    const caption = primary.interType === 'resonans'
+      ? `Begge i ${elLabel}. Dyb resonans — jeres energier forstærker hinanden.`
+      : `${elLabel} og ${primary.elLabel}. To kræfter der mødes og danner noget nyt.`;
+    moedeWrap.innerHTML = `
+      <div class="wave-timeline" style="background:rgba(123,122,158,0.03);border-color:rgba(123,122,158,0.07)">
+        <div class="wave-label" style="color:#88839e">Jeres møde</div>
+        <div class="fig">
+          <img src="assets/images/rel-jeres-moede.png" alt="Jeres møde" style="max-width:400px">
+        </div>
+        <div class="wave-caption" style="color:#8a85a0">${caption}</div>
+      </div>`;
   }
 }
 
@@ -1416,6 +1708,14 @@ function initVinduer() {
         html += `</div>`;
       });
 
+      // Link to relationer if user has relations but none selected
+      const anyRelSelected = Array.from(activePills).some((p, i) => i > 0 && p.classList.contains('active'));
+      if (relations.length > 0 && !anyRelSelected) {
+        html += `<div style="text-align:center;margin-top:16px">`;
+        html += `<div style="padding:10px 16px;background:rgba(123,122,158,0.05);border:1px solid rgba(123,122,158,0.10);border-radius:12px;display:inline-block;cursor:pointer;font-family:Georgia,serif;font-size:13px;font-style:italic;color:#7b7a9e" onclick="document.querySelectorAll('#vin-person-pills .person-pill')[1].click()">Se med ${relations[0].name} →</div>`;
+        html += `</div>`;
+      }
+
       // Show result and hide hint
       if (resultEl) {
         resultEl.style.cssText = 'display:block;margin-top:12px;padding:16px;background:rgba(255,255,255,0.6);border:1px solid rgba(107,95,123,0.12);border-radius:16px';
@@ -1425,6 +1725,13 @@ function initVinduer() {
       const hint = resultEl ? resultEl.parentElement.querySelector('.date-preview-hint') : null;
       if (hint) hint.style.display = 'none';
     });
+  }
+
+  // Auto-fill if navigated from forside chips
+  if (window._vinduerPresetDate && dateInput && btn) {
+    dateInput.value = window._vinduerPresetDate;
+    window._vinduerPresetDate = null;
+    setTimeout(() => btn.click(), 150);
   }
 }
 
@@ -2195,9 +2502,141 @@ function initVinOejeblikke() {
 function initRelLigeNu() {
   const data = getUserCycles();
   if (!data) return;
-  const elLabel = Calculations.ELEMENT_LABELS[data.dominant.element];
-  setText('rel-featured-label', `Dig · ${elLabel}`);
-  setText('rel-featured-text', `${elLabel} dominerer dine cyklusser. Se hvordan det møder dine relationers elementer.`);
+  const { cycles, dominant } = data;
+  const userEl = dominant.element;
+  const elLabel = Calculations.ELEMENT_LABELS[userEl];
+  const now = new Date();
+  const nourishing = { 'VAND': 'TRÆ', 'TRÆ': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
+  const controlling = { 'VAND': 'ILD', 'TRÆ': 'JORD', 'ILD': 'METAL', 'JORD': 'VAND', 'METAL': 'TRÆ' };
+
+  const relations = Storage.getRelations();
+  const useExample = !relations || relations.length === 0;
+  const rels = useExample
+    ? [{ name: 'Partner', birthdate: '1983-04-15', gender: 'male', type: 'partner' },
+       { name: 'Mor', birthdate: '1958-03-22', gender: 'female', type: 'mor' }]
+    : relations;
+
+  const relData = rels.map(r => {
+    const isMale = r.gender === 'male';
+    const rc = cyclesAtDate(r.birthdate, now, isMale);
+    const theirEl = rc.lifePhase.element;
+    const theirElLabel = Calculations.ELEMENT_LABELS[theirEl];
+
+    let interType, interTitle, interDesc;
+    if (userEl === theirEl) {
+      interType = 'resonans';
+      interTitle = `${theirElLabel} spejler ${elLabel}`;
+      interDesc = `I deler den samme grundenergi. Det er som en stille genkendelse — I forstår hinanden uden at forklare.`;
+    } else if (nourishing[userEl] === theirEl) {
+      interType = 'naerer';
+      interTitle = `${elLabel} nærer ${theirElLabel}`;
+      interDesc = `Din energi bærer ${r.name}s videre. Du giver — måske mere end du selv mærker.`;
+    } else if (nourishing[theirEl] === userEl) {
+      interType = 'naeres';
+      interTitle = `${theirElLabel} nærer ${elLabel}`;
+      interDesc = `${r.name}s energi nærer din. Der er noget i den andens rytme der giver dig ro.`;
+    } else if (controlling[userEl] === theirEl || controlling[theirEl] === userEl) {
+      interType = 'udfordrer';
+      interTitle = `${elLabel} og ${theirElLabel} udfordrer`;
+      interDesc = `Det er en kreativ spænding — to kræfter der forhandler. Det kan føles tungt, men det kan også skabe vækst.`;
+    } else {
+      interType = 'moeder';
+      interTitle = `${elLabel} møder ${theirElLabel}`;
+      interDesc = `To forskellige energier der kan berige hinanden når der er plads.`;
+    }
+
+    return { ...r, cycles: rc, el: theirEl, elLabel: theirElLabel, interType, interTitle, interDesc };
+  });
+
+  // ── KLIMA + FEATURED ──
+  const climateEl = document.getElementById('rel-now-climate');
+  if (climateEl) {
+    const primary = relData[0];
+    let html = `<div class="featured feat-relationer">`;
+    html += `<div class="featured-label">Dig og ${primary.name} · ${primary.interType === 'resonans' ? 'Dyb resonans' : primary.interType === 'naerer' ? 'Du nærer' : primary.interType === 'naeres' ? 'Du næres' : 'Møde'}</div>`;
+    html += `<div class="featured-text">${elLabel} møder ${primary.elLabel}. ${primary.interDesc}</div>`;
+    html += `</div>`;
+    climateEl.innerHTML = html;
+  }
+
+  // ── PERSON-KORT ──
+  const personList = document.getElementById('rel-person-list');
+  if (personList) {
+    let html = '';
+    relData.forEach(r => {
+      html += `<div class="card" style="margin-bottom:8px"><div class="card-row"><div>`;
+      html += `<div class="card-label">${r.name} · ${r.type || ''} · ${r.elLabel}</div>`;
+      html += `<div class="card-title">${r.interTitle}</div>`;
+      html += `<div class="card-desc">${r.interDesc}</div>`;
+
+      // Expandable layers
+      html += `<div id="rel-layers-${r.name.replace(/\s/g,'')}" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(123,122,158,0.08)">`;
+
+      // Livsfase vs livsfase
+      html += `<div style="font-size:12px;color:#88839e;margin-bottom:4px">Livsfase</div>`;
+      html += `<div style="font-size:13px;color:#6B5F7B;margin-bottom:8px">Du: Fase ${cycles.lifePhase.phase} (${elLabel}) · ${r.name}: Fase ${r.cycles.lifePhase.phase} (${r.elLabel})</div>`;
+
+      // Årstid + ugedag (shared)
+      const userSeason = Calculations.ELEMENT_LABELS[cycles.season.element];
+      const userWeekday = Calculations.ELEMENT_LABELS[cycles.weekday.element];
+      html += `<div style="font-size:12px;color:#88839e;margin-bottom:4px">Fælles cyklusser</div>`;
+      html += `<div style="font-size:13px;color:#6B5F7B;margin-bottom:8px">I deler årstid (${userSeason}) og ugedag (${userWeekday}) — det er det fælles fundament.</div>`;
+
+      html += `</div>`;
+
+      html += `<div style="margin-top:8px;font-size:12px;color:#7b7a9e;cursor:pointer" onclick="var el=document.getElementById('rel-layers-${r.name.replace(/\s/g,'')}');if(el.style.display==='none'){el.style.display='block';this.textContent='Skjul lag ↑'}else{el.style.display='none';this.textContent='Se alle lag ↓'}">Se alle lag ↓</div>`;
+
+      html += `</div><div class="card-arrow">→</div></div></div>`;
+    });
+
+    if (useExample) {
+      html += `<div style="font-family:sans-serif;font-size:12px;color:#aaa;text-align:center;margin-top:8px;font-style:italic">Eksempel-data — tilføj dine egne relationer i onboarding</div>`;
+    }
+
+    personList.innerHTML = html;
+  }
+
+  // ── INSIGHT + TIME-SHIFT ──
+  const insightEl = document.getElementById('rel-now-insight');
+  if (insightEl) {
+    let html = '';
+
+    // Dynamic insight text
+    const elNames = relData.map(r => `${r.name} i ${r.elLabel}`).join(', ');
+    html += `<div class="insight-box" style="background:rgba(123,122,158,0.05);border:1px solid rgba(123,122,158,0.10)">`;
+    html += `<div class="insight-label" style="color:#88839e">Jeres element-dynamik</div>`;
+    html += `<div class="insight-text" style="color:#7b7a9e">${elLabel} dominerer i dig. ${elNames}. Hver relation aktiverer en forskellig del af dit element — og det skifter med tiden.</div>`;
+    html += `</div>`;
+
+    // Time shifts for first relation
+    if (relData.length > 0) {
+      const primary = relData[0];
+      const isMale = primary.gender === 'male';
+      const theirPhase = primary.cycles.lifePhase;
+      const yearsToShift = theirPhase.endAge ? (theirPhase.endAge - primary.cycles.age) : null;
+
+      html += `<div class="time-shift">`;
+      if (yearsToShift !== null && yearsToShift > 0) {
+        const nextPhase = isMale
+          ? Calculations.calculateMalePhase(theirPhase.endAge)
+          : Calculations.calculateLifePhase(theirPhase.endAge);
+        const nextEl = nextPhase ? Calculations.ELEMENT_LABELS[nextPhase.element] : '';
+        html += `<div class="time-shift-item" style="background:rgba(123,122,158,0.04);border-color:rgba(123,122,158,0.08)">`;
+        html += `<div class="time-shift-when" style="color:#88839e">${primary.name}s næste faseskift</div>`;
+        html += `<div class="time-shift-what" style="color:#7b7a9e">Om ${Math.round(yearsToShift)} år · ${primary.elLabel} → ${nextEl}</div>`;
+        html += `</div>`;
+      }
+
+      // Link to tidsrejse
+      html += `<div class="time-shift-item" style="background:rgba(123,122,158,0.04);border-color:rgba(123,122,158,0.08);cursor:pointer" onclick="navigateToVinduerWithDate('${new Date(now.getFullYear()+5, now.getMonth(), now.getDate()).toISOString().split('T')[0]}')">`;
+      html += `<div class="time-shift-when" style="color:#88839e">Se det på en anden dato</div>`;
+      html += `<div class="time-shift-what" style="color:#7b7a9e">Åbn tidsrejsen →</div>`;
+      html += `</div>`;
+      html += `</div>`;
+    }
+
+    insightEl.innerHTML = html;
+  }
 }
 
 function initRelToRytmer() {

@@ -53,6 +53,9 @@
     <div class="card-sub" id="forside-climate-sub">Tryk for at se den fulde analyse</div>
     <a class="card-link">Se den fulde analyse &rarr;</a>
   </div>
+
+  <!-- RELATION CARD (dynamisk — fyldes af renderForsideRelation) -->
+  <div id="forside-relation"></div>
 </div>
 
 <div class="dots">&middot; &middot; &middot;</div>
@@ -67,7 +70,11 @@
 
   <div class="title" style="margin-top:4px">Mine Vinduer</div>
   <div class="body-text">Skriv en dato &mdash; se hvem du var. Dine fem cyklusser afsl&oslash;rer hvad der var p&aring; spil dengang, og hvad der venter forude.</div>
-  <div class="vinduer-card" style="margin-top:60px" onclick="Router.navigate('vinduer')">
+
+  <!-- Quick-chips (dynamiske — fyldes af renderForsideChips) -->
+  <div id="forside-tidsrejse-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 8px"></div>
+
+  <div class="vinduer-card" style="margin-top:24px" onclick="Router.navigate('vinduer')">
     <div class="vinduer-body">
       <div class="vinduer-label">Din livsbue</div>
       <div class="vinduer-title">Ni faser &middot; &Eacute;n rejse</div>

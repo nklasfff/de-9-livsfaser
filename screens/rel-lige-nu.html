@@ -19,21 +19,14 @@
     <div class="feeling-text" style="color:#7b7a8e">M&aring;ske undrer du dig over, hvorfor nogle mennesker f&oslash;les som at komme hjem &mdash; mens andre langsomt t&oslash;mmer dig. Det handler ikke om vilje. Det handler om elementer der m&oslash;des, rytmer der kolliderer eller flyder sammen. Kroppen ved det f&oslash;r sproget.</div>
   </div>
 
-  <!-- FEATURED -->
-  <div class="featured feat-relationer">
-    <div class="featured-label" id="rel-featured-label">Dig og Martin lige nu</div>
-    <div class="featured-text" id="rel-featured-text">Vand m&oslash;der Jord. Hans omsorg giver dig retning &mdash; men du m&aelig;rker ogs&aring; en tyngde, en begr&aelig;nsning. Det er ikke forkert. Det er to elementer der forhandler.</div>
-    <div class="featured-sub">Se den fulde sammenligning &rarr;</div>
-  </div>
+  <!-- KLIMA + FEATURED (dynamisk) -->
+  <div id="rel-now-climate"></div>
 
   <div class="dots">&middot; &middot; &middot;</div>
 
-  <!-- PERSON-KORT -->
+  <!-- PERSON-KORT (dynamisk) -->
   <div class="group-label" style="color:#7b7a9e">Dine relationer</div>
-  <div id="rel-person-list">
-    <div class="card" onclick="Router.navigate('rel-to-rytmer')"><div class="card-row"><div><div class="card-label">Martin &middot; Partner &middot; Jord</div><div class="card-title">Jord kontrollerer Vand</div><div class="card-desc">Jord giver stabilitet og fundament &mdash; men i TCM kontrollerer Jord ogs&aring; Vand. Du m&aelig;rker det som tryghed blandet med begr&aelig;nsning. Forskydningen er reel &mdash; og midlertidig.</div></div><div class="card-arrow">&rarr;</div></div></div>
-    <div class="card" onclick="Router.navigate('rel-tre-gen')"><div class="card-row"><div><div class="card-label">Inge &middot; Mor &middot; Vand</div><div class="card-title">Vand spejler Vand</div><div class="card-desc">I deler den samme dybde &mdash; en stille forst&aring;else uden ord. To kvinder i Visdom-fasen. Det er sj&aelig;ldent, og det er kostbart. M&aelig;rk det n&aelig;ste gang I taler.</div></div><div class="card-arrow">&rarr;</div></div></div>
-  </div>
+  <div id="rel-person-list"></div>
 
   <!-- QUICK-ACTION: Spørg dig selv -->
   <div class="quick-action" style="background:linear-gradient(135deg,rgba(123,122,158,0.06),rgba(123,122,158,0.02));border-color:rgba(123,122,158,0.10)">
@@ -53,23 +46,8 @@
     <div class="wave-caption" style="color:#8a85a0">Hver relation b&aelig;rer begge dele. Det der n&aelig;rer kan ogs&aring; udfordre &mdash; og det der udfordrer kan vise vej.</div>
   </div>
 
-  <!-- INSIGHT-BOX -->
-  <div class="insight-box" style="background:rgba(123,122,158,0.05);border:1px solid rgba(123,122,158,0.10)">
-    <div class="insight-label" style="color:#88839e">Jeres element-dynamik</div>
-    <div class="insight-text" style="color:#7b7a9e" id="rel-insight-text">N&aring;r Vand dominerer i dig, s&oslash;ger du dybde og stilhed. Martin i Jord s&oslash;ger tryghed og fundament. Inge i Vand spejler din s&oslash;gen. Hver relation aktiverer en forskellig del af dit element &mdash; og det skifter med tiden.</div>
-  </div>
-
-  <!-- TIME-SHIFT -->
-  <div class="time-shift" id="rel-time-shift">
-    <div class="time-shift-item" style="background:rgba(123,122,158,0.04);border-color:rgba(123,122,158,0.08)">
-      <div class="time-shift-when" style="color:#88839e">Martins n&aelig;ste faseskift</div>
-      <div class="time-shift-what" style="color:#7b7a9e">Om 5 &aring;r &middot; Jord &rarr; Metal</div>
-    </div>
-    <div class="time-shift-item" style="background:rgba(123,122,158,0.04);border-color:rgba(123,122,158,0.08)">
-      <div class="time-shift-when" style="color:#88839e">Jeres rejse sammen</div>
-      <div class="time-shift-what" style="color:#7b7a9e">17 &aring;r &middot; 3 faseskift delt</div>
-    </div>
-  </div>
+  <!-- INSIGHT + TIME-SHIFT (dynamisk) -->
+  <div id="rel-now-insight"></div>
 
   <!-- PULL-QUOTE -->
   <div class="pull-quote">
