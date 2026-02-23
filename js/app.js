@@ -124,7 +124,7 @@ function selectMood(id, el) {
   }
 }
 
-/* ---- toggleCheckinSupport: Fold out empathy + 3 recommendations ---- */
+/* ---- toggleCheckinSupport: Fold out empathy + 4 recommendations ---- */
 function toggleCheckinSupport() {
   const panel = document.getElementById('ci-support-panel');
   if (!panel) return;
@@ -147,6 +147,7 @@ function toggleCheckinSupport() {
   const healing = (typeof HEALING_SOUNDS !== 'undefined') ? HEALING_SOUNDS[element] : null;
   const yoga = (typeof INSIGHT_YOGA !== 'undefined' && INSIGHT_YOGA[element]) ? INSIGHT_YOGA[element][0] : null;
   const food = (typeof INSIGHT_FOOD !== 'undefined' && INSIGHT_FOOD[element]) ? INSIGHT_FOOD[element][0] : null;
+  const focus = (typeof INSIGHT_FOCUS !== 'undefined' && INSIGHT_FOCUS[element]) ? INSIGHT_FOCUS[element][0] : null;
 
   let recsHTML = '';
   if (yoga) {
@@ -164,10 +165,18 @@ function toggleCheckinSupport() {
     </div>`;
   }
   if (food) {
-    recsHTML += `<div class="ci-rec" onclick="Router.navigate('pra-kost')">
+    recsHTML += `<div class="ci-rec" onclick="Router.navigate('pra-kost')" style="margin-bottom:8px">
       <div class="ci-rec-label">Næring · ${elLabel}</div>
       <div class="ci-rec-title">${food.item}</div>
       <div class="ci-rec-desc">${food.desc}</div>
+    </div>`;
+  }
+  if (focus) {
+    const focusParts = focus.split(' – ');
+    recsHTML += `<div class="ci-rec">
+      <div class="ci-rec-label">Fokus · ${elLabel}</div>
+      <div class="ci-rec-title">${focusParts[0]}</div>
+      <div class="ci-rec-desc">${focusParts[1] || focus}</div>
     </div>`;
   }
 
@@ -734,6 +743,19 @@ function initForside() {
   const climate = analyzeClimate(cycles.elements, dominant);
   setText('forside-climate-text', climate.text);
   setText('forside-climate-sub', `${climate.label} \u2014 din energi samler sig i ${elLabel(dominant.element)}`);
+
+  // Reset check-in state on every forside load
+  TrackingState.checkinMood = null;
+  const allCiBtns = document.querySelectorAll('.checkin-card .ci-btn');
+  allCiBtns.forEach(b => {
+    b.classList.remove('ci-btn--active');
+    b.style.pointerEvents = '';
+    b.style.opacity = '';
+  });
+  const supportLink = document.getElementById('ci-support-link');
+  if (supportLink) supportLink.style.display = 'none';
+  const supportPanel = document.getElementById('ci-support-panel');
+  if (supportPanel) { supportPanel.style.display = 'none'; supportPanel.innerHTML = ''; }
 
   // Check-in status — show if already done today
   const today = Storage.getLocalDateStr();
