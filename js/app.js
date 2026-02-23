@@ -758,7 +758,6 @@ function initForside() {
   renderCheckinPatterns();
 
   // Elementer section
-  renderElementPentagon();
   renderElementIntro();
 
   // Praksis cards — based on dominant element, rotated daily
@@ -821,47 +820,6 @@ const ELEMENT_INTRO = {
   'JORD': 'Jord er forankring og omsorg. Den bærer, nærer og holder fast. Lige nu har du en særlig evne til at skabe tryghed — for dig selv og andre.',
   'METAL': 'Metal er klarhed og essentiel styrke. Det skærer igennem og viser det væsentlige. Lige nu har du adgang til en dyb klarhed om hvad der virkelig betyder noget.'
 };
-
-function renderElementPentagon() {
-  const container = document.getElementById('forside-elementer-svg');
-  if (!container) return;
-
-  const data = getUserCycles();
-  const domElement = data ? data.dominant.element : 'VAND';
-
-  // Pentagon points (260x260, center 130,125)
-  const cx = 130, cy = 125, R = 90;
-  const elements = ['VAND', 'TRÆ', 'ILD', 'JORD', 'METAL'];
-  const labels = { 'VAND': 'Vand', 'TRÆ': 'Træ', 'ILD': 'Ild', 'JORD': 'Jord', 'METAL': 'Metal' };
-  const angles = elements.map((_, i) => (i * 2 * Math.PI / 5) - Math.PI / 2);
-  const pts = angles.map(a => ({ x: cx + R * Math.cos(a), y: cy + R * Math.sin(a) }));
-
-  // Build SVG
-  let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 260" style="width:100%;max-width:240px;">`;
-
-  // Nourishing cycle lines (VAND→TRÆ→ILD→JORD→METAL→VAND)
-  for (let i = 0; i < 5; i++) {
-    const next = (i + 1) % 5;
-    svg += `<line x1="${pts[i].x}" y1="${pts[i].y}" x2="${pts[next].x}" y2="${pts[next].y}" stroke="#b0bec5" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>`;
-  }
-
-  // Element circles + labels
-  for (let i = 0; i < 5; i++) {
-    const el = elements[i];
-    const isDom = (el === domElement);
-    const fill = isDom ? 'rgba(108,130,169,0.22)' : 'rgba(138,150,169,0.08)';
-    const stroke = isDom ? '#6c82a9' : 'rgba(138,150,169,0.3)';
-    const textColor = isDom ? '#6c82a9' : '#8a96a9';
-    const fontWeight = isDom ? '500' : '400';
-    const r = isDom ? 30 : 26;
-
-    svg += `<circle cx="${pts[i].x}" cy="${pts[i].y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${isDom ? 1.5 : 0.8}"/>`;
-    svg += `<text x="${pts[i].x}" y="${pts[i].y + 1}" text-anchor="middle" dominant-baseline="middle" font-family="'Playfair Display', serif" font-size="${isDom ? 14 : 12.5}" font-style="italic" font-weight="${fontWeight}" fill="${textColor}">${labels[el]}</text>`;
-  }
-
-  svg += `</svg>`;
-  container.innerHTML = svg;
-}
 
 function renderElementIntro() {
   const container = document.getElementById('forside-element-tekst');
