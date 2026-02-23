@@ -95,8 +95,6 @@ function selectMood(id, el) {
     };
     Storage.saveCheckin(entry);
 
-    const statusEl = document.getElementById('forside-checkin-status');
-    if (statusEl) statusEl.textContent = 'Check-in gemt \u2713';
     showActionToast('Check-in gemt \u2713');
 
     // Show "Forslag til støtte" link (user chooses to expand)
@@ -763,11 +761,9 @@ function initForside() {
     b.style.opacity = '';
   });
   const supportLink = document.getElementById('ci-support-link');
-  if (supportLink) supportLink.style.display = 'none';
+  if (supportLink) supportLink.style.display = '';
   const supportPanel = document.getElementById('ci-support-panel');
   if (supportPanel) { supportPanel.style.display = 'none'; supportPanel.innerHTML = ''; }
-
-  // Check-in status — always start fresh (user can check in multiple times per day)
 
   // Mærk efter — render patterns
   renderCheckinPatterns();
