@@ -695,6 +695,9 @@ function initForside() {
       praksisCards[2].querySelector('.pk-desc').textContent = food.desc;
     }
   }
+
+  // Check if FAB requested scroll to hjaelp section
+  if (typeof _checkHjaelpScroll === 'function') _checkHjaelpScroll();
 }
 
 /* ============================================================
@@ -803,12 +806,19 @@ function updateHjaelpFAB(screenName) {
 }
 
 function hjaelpFabClick() {
+  window._scrollToHjaelp = true;
   Router.navigate('forside');
-  // Scroll to hjaelp section after navigation
-  setTimeout(() => {
-    const section = document.getElementById('forside-hjaelp');
-    if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 350);
+}
+
+// Called at end of initForside() — checks if we should scroll to hjaelp
+function _checkHjaelpScroll() {
+  if (window._scrollToHjaelp) {
+    window._scrollToHjaelp = false;
+    setTimeout(() => {
+      const section = document.getElementById('forside-hjaelp');
+      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  }
 }
 
 /* ---- Cyklusser (Section 1) ---- */
