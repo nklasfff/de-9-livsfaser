@@ -814,13 +814,12 @@ function renderForsideRelation(userCycles, userDominant) {
   if (!container) return;
 
   const relations = Storage.getRelations();
-  if (!relations || relations.length === 0) {
-    container.innerHTML = '';
-    return;
-  }
+  const useExample = !relations || relations.length === 0;
 
-  // Prefer partner, then first relation
-  const rel = relations.find(r => r.type === 'partner') || relations[0];
+  // Prefer partner, then first relation — fallback to example
+  const rel = useExample
+    ? { name: 'Partner', birthdate: '1983-04-15', gender: 'male', type: 'partner' }
+    : (relations.find(r => r.type === 'partner') || relations[0]);
   if (!rel || !rel.birthdate) {
     container.innerHTML = '';
     return;
@@ -857,11 +856,16 @@ function renderForsideRelation(userCycles, userDominant) {
     interText = `Dit ${userElLabel} og ${rel.name}s ${theirElLabel} er to forskellige kræfter. Det kan udfordre — men det kan også åbne noget nyt mellem jer.`;
   }
 
+  const exampleNote = useExample
+    ? '<div style="font-size:11px;color:#aaa;margin-top:6px;font-style:italic">Eksempel — tilføj dine relationer i Mine Relationer</div>'
+    : '';
+
   container.innerHTML = `
     <div class="forside-card" style="margin-top:16px;cursor:pointer" onclick="Router.navigate('relationer')">
       <div class="card-label">Dig og ${rel.name} · ${interLabel}</div>
       <div class="card-text" style="font-family:Georgia,serif;font-size:15px;font-style:italic;color:#6c7a8a;line-height:1.55">${interText}</div>
       <a class="card-link">Se jeres dynamik →</a>
+      ${exampleNote}
     </div>`;
 }
 
