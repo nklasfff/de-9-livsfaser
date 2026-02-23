@@ -1,4 +1,4 @@
-const CACHE_NAME = 'livsfaser-v82';
+const CACHE_NAME = 'livsfaser-v83';
 const urlsToCache = [
   './',
   './index.html',
@@ -40,6 +40,8 @@ const urlsToCache = [
   './assets/images/yinyang_highres.png',
   './assets/images/favoritter_blad_HQ.png',
   './assets/images/opdagelser_cirkler_HQ.png',
+  './assets/images/tidslinje-livets-bue.png',
+  './assets/images/tidslinje-tre-lag.png',
   // Screens — Onboarding + Forside
   './screens/onboarding.html',
   './screens/onboarding-result.html',
