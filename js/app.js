@@ -814,13 +814,14 @@ function hjaelpFabClick() {
 function _checkHjaelpScroll() {
   if (window._scrollToHjaelp) {
     window._scrollToHjaelp = false;
-    // Use requestAnimationFrame to ensure DOM is painted, then scroll
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const section = document.getElementById('forside-hjaelp');
-        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    });
+    // Wait for screen-enter animation to finish, then jump to section
+    setTimeout(() => {
+      const section = document.getElementById('forside-hjaelp');
+      if (section) {
+        const y = section.getBoundingClientRect().top + window.scrollY - 70;
+        window.scrollTo(0, y);
+      }
+    }, 350);
   }
 }
 
