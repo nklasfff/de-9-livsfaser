@@ -45,6 +45,15 @@ const MOOD_LABELS = {
   'jord': 'Rodfæstet', 'metal': 'Klar'
 };
 
+/* ---- Mood empathy texts (Isabelle's voice) ---- */
+const MOOD_EMPATI = {
+  vand: 'Stilheden er din styrke lige nu. Vandet i dig s\u00f8ger indad \u2014 giv det plads.',
+  trae: 'Du vokser. M\u00e5ske kan du m\u00e6rke det som en uro, men det er livskraft der udfolder sig.',
+  ild: 'Din ild br\u00e6nder. Den energi du m\u00e6rker er pr\u00e6cis d\u00e9r, hvor din kraft samler sig.',
+  jord: 'Du st\u00e5r solidt. N\u00e5r jorden b\u00e6rer dig, kan du b\u00e6re andre.',
+  metal: 'Klarheden er en gave. Metal sk\u00e6rer igennem og viser dig det v\u00e6sentlige.'
+};
+
 /* ---- selectMood: Global — called from HTML onclick on ci-btn ---- */
 function selectMood(id, el) {
   TrackingState.checkinMood = id;
@@ -75,8 +84,28 @@ function selectMood(id, el) {
     Storage.saveCheckin(entry);
 
     const statusEl = document.getElementById('forside-checkin-status');
-    if (statusEl) statusEl.textContent = 'Check-in gemt ✓';
-    showActionToast('Check-in gemt ✓');
+    if (statusEl) statusEl.textContent = 'Check-in gemt \u2713';
+    showActionToast('Check-in gemt \u2713');
+
+    // Show empathic response
+    const responseEl = document.getElementById('checkin-response');
+    if (responseEl && MOOD_EMPATI[id]) {
+      responseEl.innerHTML = `<div class="ci-empati">${MOOD_EMPATI[id]}</div>`;
+      responseEl.style.display = '';
+      responseEl.className = 'ci-response ci-response--visible';
+
+      // Auto-hide after 6 seconds
+      setTimeout(() => {
+        if (responseEl.style.display !== 'none') {
+          responseEl.style.opacity = '0';
+          setTimeout(() => {
+            responseEl.style.display = 'none';
+            responseEl.style.opacity = '';
+            responseEl.className = 'ci-response';
+          }, 400);
+        }
+      }, 6000);
+    }
 
     // Disable further clicks (one per day from forside)
     if (parent) {
@@ -667,8 +696,9 @@ function initForside() {
     });
   }
 
-  // Hj\u00e6lp mig nu — render tags
-  renderHjaelpMigNu(dominant);
+  // M\u00e6rk efter — render tilstands-tags + patterns
+  renderCheckinTags();
+  renderCheckinPatterns();
 
   // Praksis cards — based on dominant element, rotated daily
   const domEl = dominant.element;
@@ -696,28 +726,24 @@ function initForside() {
     }
   }
 
-  // Check if FAB requested scroll to hjaelp section
-  if (typeof _checkHjaelpScroll === 'function') _checkHjaelpScroll();
 }
 
 /* ============================================================
-   HJ\u00c6LP MIG NU — F\u00f8lelsesbaseret hj\u00e6lp
+   M\u00c6RK EFTER — Udvidet check-in med tilstands-tags
    ============================================================ */
 
-function renderHjaelpMigNu(dominant) {
-  const container = document.getElementById('hjaelp-tags');
+function renderCheckinTags() {
+  const container = document.getElementById('checkin-tags');
   if (!container || typeof HJAELP_TAGS === 'undefined') return;
 
-  container.innerHTML = HJAELP_TAGS.map(tag =>
-    `<button class="hjaelp-tag" onclick="selectHjaelpTag('${tag.id}')">${tag.label}</button>`
+  // Select 5 most relevant tags (mix of positive and negative)
+  const selectedTags = HJAELP_TAGS.slice(0, 5);
+  container.innerHTML = selectedTags.map(tag =>
+    `<button class="ci-tag" onclick="selectCheckinTag('${tag.id}',this)">${tag.label}</button>`
   ).join('');
-
-  // Reset result area
-  const result = document.getElementById('hjaelp-result');
-  if (result) { result.style.display = 'none'; result.innerHTML = ''; }
 }
 
-function selectHjaelpTag(tagId) {
+function selectCheckinTag(tagId, el) {
   const tag = HJAELP_TAGS.find(t => t.id === tagId);
   if (!tag) return;
 
@@ -726,102 +752,82 @@ function selectHjaelpTag(tagId) {
   const elLabel = Calculations.ELEMENT_LABELS[element] || element;
 
   // Highlight selected tag
-  document.querySelectorAll('.hjaelp-tag').forEach(btn => {
-    btn.classList.toggle('hjaelp-tag--active', btn.textContent === tag.label);
-  });
+  document.querySelectorAll('.ci-tag').forEach(btn => btn.classList.remove('ci-tag--active'));
+  if (el) el.classList.add('ci-tag--active');
 
   // Empati text
   const empati = (typeof HJAELP_EMPATI !== 'undefined' && HJAELP_EMPATI[tagId]) || '';
 
-  // Krop text
-  let kropTekst = '';
-  if (typeof HJAELP_KROP !== 'undefined' && HJAELP_KROP[tagId]) {
-    kropTekst = HJAELP_KROP[tagId][element] || '';
-  }
-
-  // Actions from existing data
+  // Find one recommendation (healing sound)
   const healing = (typeof HEALING_SOUNDS !== 'undefined') ? HEALING_SOUNDS[element] : null;
-  const yoga = (typeof INSIGHT_YOGA !== 'undefined' && INSIGHT_YOGA[element]) ? INSIGHT_YOGA[element][0] : null;
-  const food = (typeof INSIGHT_FOOD !== 'undefined' && INSIGHT_FOOD[element]) ? INSIGHT_FOOD[element][0] : null;
 
-  let actionsHTML = '';
+  const responseEl = document.getElementById('checkin-response');
+  if (!responseEl) return;
+
+  let recHTML = '';
   if (healing) {
-    actionsHTML += `<div class="hjaelp-action" onclick="Router.navigate('pra-healing')">
-      <div class="hjaelp-action-label">\u00c5ndedr\u00e6t \u00b7 ${elLabel}</div>
-      <div class="hjaelp-action-title">${healing.lyd}</div>
-      <div class="hjaelp-action-desc">${healing.desc}</div>
-    </div>`;
-  }
-  if (yoga) {
-    actionsHTML += `<div class="hjaelp-action" onclick="Router.navigate('pra-yin-yoga')">
-      <div class="hjaelp-action-label">Krop \u00b7 ${elLabel}</div>
-      <div class="hjaelp-action-title">${yoga.pose.split('(')[0].trim()}</div>
-      <div class="hjaelp-action-desc">${yoga.desc}</div>
-    </div>`;
-  }
-  if (food) {
-    actionsHTML += `<div class="hjaelp-action" onclick="Router.navigate('pra-kost')">
-      <div class="hjaelp-action-label">N\u00e6ring \u00b7 ${elLabel}</div>
-      <div class="hjaelp-action-title">${food.item}</div>
-      <div class="hjaelp-action-desc">${food.desc}</div>
-    </div>`;
+    recHTML = `
+      <div class="ci-rec" onclick="Router.navigate('pra-healing')">
+        <div class="ci-rec-label">\u00c5ndedr\u00e6t \u00b7 ${elLabel}</div>
+        <div class="ci-rec-title">${healing.lyd}</div>
+        <div class="ci-rec-desc">${healing.desc}</div>
+      </div>`;
   }
 
-  const result = document.getElementById('hjaelp-result');
-  if (!result) return;
-
-  result.innerHTML = `
-    <div class="hjaelp-empati">${empati}</div>
-    ${kropTekst ? `<div class="hjaelp-krop">
-      <div class="hjaelp-krop-label">Hvad din krop siger</div>
-      <div class="hjaelp-krop-text">${kropTekst}</div>
-    </div>` : ''}
-    <div class="hjaelp-actions">${actionsHTML}</div>
-    <div class="hjaelp-nulstil"><a onclick="resetHjaelp()">Pr\u00f8v en anden \u2190</a></div>
+  responseEl.innerHTML = `
+    <div class="ci-empati">${empati}</div>
+    ${recHTML}
   `;
+  responseEl.style.display = '';
+  responseEl.className = 'ci-response ci-response--visible';
 
-  result.style.display = '';
-  result.className = 'hjaelp-result hjaelp-result--visible';
+  // Save as check-in
+  const entry = {
+    date: Storage.getLocalDateStr(),
+    mood: tag.element ? tag.element.toLowerCase() : 'vand',
+    tag: tagId,
+    note: '',
+    cycles: data ? {
+      lifePhase: data.cycles.lifePhase.element,
+      season: data.cycles.season.element,
+      weekday: data.cycles.weekday.element,
+      organ: data.cycles.organ.element,
+      dominant: data.dominant.element
+    } : null
+  };
+  Storage.saveCheckin(entry);
 
-  // Scroll to result
+  const statusEl = document.getElementById('forside-checkin-status');
+  if (statusEl) statusEl.textContent = 'Check-in gemt \u2713';
+  showActionToast('Check-in gemt \u2713');
+
+  // Auto-hide response after 8 seconds
   setTimeout(() => {
-    result.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 100);
+    if (responseEl.style.display !== 'none') {
+      responseEl.style.opacity = '0';
+      setTimeout(() => {
+        responseEl.style.display = 'none';
+        responseEl.style.opacity = '';
+        responseEl.className = 'ci-response';
+      }, 400);
+    }
+  }, 8000);
 }
 
-function resetHjaelp() {
-  document.querySelectorAll('.hjaelp-tag').forEach(btn => btn.classList.remove('hjaelp-tag--active'));
-  const result = document.getElementById('hjaelp-result');
-  if (result) { result.style.display = 'none'; result.innerHTML = ''; result.className = 'hjaelp-result'; }
-}
+function renderCheckinPatterns() {
+  const patternsEl = document.getElementById('checkin-patterns');
+  if (!patternsEl) return;
 
-/* ---- FAB: Flydende hj\u00e6lp-knap ---- */
-function updateHjaelpFAB(screenName) {
-  const fab = document.getElementById('hjaelp-fab');
-  if (!fab) return;
-  const screen = Router.screens[screenName];
-  // Show on niveau 1+ screens (not forside, not onboarding)
-  const show = screen && screen.niveau >= 1;
-  fab.classList.toggle('hjaelp-fab--hidden', !show);
-}
-
-function hjaelpFabClick() {
-  window._scrollToHjaelp = true;
-  Router.navigate('forside');
-}
-
-// Called at end of initForside() — checks if we should scroll to hjaelp
-function _checkHjaelpScroll() {
-  if (window._scrollToHjaelp) {
-    window._scrollToHjaelp = false;
-    // Wait for screen-enter animation to finish, then jump to section
-    setTimeout(() => {
-      const section = document.getElementById('forside-hjaelp');
-      if (section) {
-        const y = section.getBoundingClientRect().top + window.scrollY - 70;
-        window.scrollTo(0, y);
-      }
-    }, 350);
+  const checkins = Storage.getCheckins ? Storage.getCheckins() : [];
+  if (checkins.length >= 3) {
+    patternsEl.innerHTML = `
+      <div class="ci-patterns-card" onclick="Router.navigate('rej-udvikling')">
+        <div class="ci-patterns-text">Du har tjekket ind ${checkins.length} gange. Se dine m\u00f8nstre \u2192</div>
+      </div>
+    `;
+    patternsEl.style.display = '';
+  } else {
+    patternsEl.style.display = 'none';
   }
 }
 

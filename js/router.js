@@ -153,8 +153,6 @@ const Router = {
       if (screen.niveau === 2 && typeof updateSaveBtn === 'function') updateSaveBtn();
     }
 
-    // Update FAB visibility
-    if (typeof updateHjaelpFAB === 'function') updateHjaelpFAB(name);
   },
 
   /* ---- Navigate from drawer menu ---- */
