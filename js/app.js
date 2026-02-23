@@ -767,27 +767,7 @@ function initForside() {
   const supportPanel = document.getElementById('ci-support-panel');
   if (supportPanel) { supportPanel.style.display = 'none'; supportPanel.innerHTML = ''; }
 
-  // Check-in status — show if already done today
-  const today = Storage.getLocalDateStr();
-  const todayCheckin = Storage.getCheckins().find(c => c.date === today);
-  const checkinStatus = document.getElementById('forside-checkin-status');
-  if (todayCheckin && checkinStatus) {
-    checkinStatus.textContent = `I dag: ${MOOD_LABELS[todayCheckin.mood] || todayCheckin.mood} ✓`;
-    // Disable further mood selection
-    const ciBtns = document.querySelectorAll('.checkin-card .ci-btn');
-    const moodOrder = ['vand', 'trae', 'ild', 'jord', 'metal', 'tung', 'rastloes', 'saarbar', 'varm', 'urolig'];
-    ciBtns.forEach((btn, i) => {
-      btn.style.pointerEvents = 'none';
-      btn.style.opacity = '0.6';
-      if (moodOrder[i] === todayCheckin.mood) {
-        btn.classList.add('ci-btn--active');
-        btn.style.opacity = '1';
-      }
-    });
-    // Re-show support link so user can access recommendations for saved mood
-    TrackingState.checkinMood = todayCheckin.mood;
-    if (supportLink) supportLink.style.display = '';
-  }
+  // Check-in status — always start fresh (user can check in multiple times per day)
 
   // Mærk efter — render patterns
   renderCheckinPatterns();
