@@ -784,6 +784,9 @@ function initForside() {
         btn.style.opacity = '1';
       }
     });
+    // Re-show support link so user can access recommendations for saved mood
+    TrackingState.checkinMood = todayCheckin.mood;
+    if (supportLink) supportLink.style.display = '';
   }
 
   // Mærk efter — render patterns
