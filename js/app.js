@@ -667,6 +667,9 @@ function initForside() {
     });
   }
 
+  // Hj\u00e6lp mig nu — render tags
+  renderHjaelpMigNu(dominant);
+
   // Praksis cards — based on dominant element, rotated daily
   const domEl = dominant.element;
   const ri = Calculations.dayRotation(3);
@@ -692,6 +695,120 @@ function initForside() {
       praksisCards[2].querySelector('.pk-desc').textContent = food.desc;
     }
   }
+}
+
+/* ============================================================
+   HJ\u00c6LP MIG NU — F\u00f8lelsesbaseret hj\u00e6lp
+   ============================================================ */
+
+function renderHjaelpMigNu(dominant) {
+  const container = document.getElementById('hjaelp-tags');
+  if (!container || typeof HJAELP_TAGS === 'undefined') return;
+
+  container.innerHTML = HJAELP_TAGS.map(tag =>
+    `<button class="hjaelp-tag" onclick="selectHjaelpTag('${tag.id}')">${tag.label}</button>`
+  ).join('');
+
+  // Reset result area
+  const result = document.getElementById('hjaelp-result');
+  if (result) { result.style.display = 'none'; result.innerHTML = ''; }
+}
+
+function selectHjaelpTag(tagId) {
+  const tag = HJAELP_TAGS.find(t => t.id === tagId);
+  if (!tag) return;
+
+  const data = getUserCycles();
+  const element = tag.element || (data ? data.dominant.element : 'VAND');
+  const elLabel = Calculations.ELEMENT_LABELS[element] || element;
+
+  // Highlight selected tag
+  document.querySelectorAll('.hjaelp-tag').forEach(btn => {
+    btn.classList.toggle('hjaelp-tag--active', btn.textContent === tag.label);
+  });
+
+  // Empati text
+  const empati = (typeof HJAELP_EMPATI !== 'undefined' && HJAELP_EMPATI[tagId]) || '';
+
+  // Krop text
+  let kropTekst = '';
+  if (typeof HJAELP_KROP !== 'undefined' && HJAELP_KROP[tagId]) {
+    kropTekst = HJAELP_KROP[tagId][element] || '';
+  }
+
+  // Actions from existing data
+  const healing = (typeof HEALING_SOUNDS !== 'undefined') ? HEALING_SOUNDS[element] : null;
+  const yoga = (typeof INSIGHT_YOGA !== 'undefined' && INSIGHT_YOGA[element]) ? INSIGHT_YOGA[element][0] : null;
+  const food = (typeof INSIGHT_FOOD !== 'undefined' && INSIGHT_FOOD[element]) ? INSIGHT_FOOD[element][0] : null;
+
+  let actionsHTML = '';
+  if (healing) {
+    actionsHTML += `<div class="hjaelp-action" onclick="Router.navigate('pra-healing')">
+      <div class="hjaelp-action-label">\u00c5ndedr\u00e6t \u00b7 ${elLabel}</div>
+      <div class="hjaelp-action-title">${healing.lyd}</div>
+      <div class="hjaelp-action-desc">${healing.desc}</div>
+    </div>`;
+  }
+  if (yoga) {
+    actionsHTML += `<div class="hjaelp-action" onclick="Router.navigate('pra-yin-yoga')">
+      <div class="hjaelp-action-label">Krop \u00b7 ${elLabel}</div>
+      <div class="hjaelp-action-title">${yoga.pose.split('(')[0].trim()}</div>
+      <div class="hjaelp-action-desc">${yoga.desc}</div>
+    </div>`;
+  }
+  if (food) {
+    actionsHTML += `<div class="hjaelp-action" onclick="Router.navigate('pra-kost')">
+      <div class="hjaelp-action-label">N\u00e6ring \u00b7 ${elLabel}</div>
+      <div class="hjaelp-action-title">${food.item}</div>
+      <div class="hjaelp-action-desc">${food.desc}</div>
+    </div>`;
+  }
+
+  const result = document.getElementById('hjaelp-result');
+  if (!result) return;
+
+  result.innerHTML = `
+    <div class="hjaelp-empati">${empati}</div>
+    ${kropTekst ? `<div class="hjaelp-krop">
+      <div class="hjaelp-krop-label">Hvad din krop siger</div>
+      <div class="hjaelp-krop-text">${kropTekst}</div>
+    </div>` : ''}
+    <div class="hjaelp-actions">${actionsHTML}</div>
+    <div class="hjaelp-nulstil"><a onclick="resetHjaelp()">Pr\u00f8v en anden \u2190</a></div>
+  `;
+
+  result.style.display = '';
+  result.className = 'hjaelp-result hjaelp-result--visible';
+
+  // Scroll to result
+  setTimeout(() => {
+    result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+function resetHjaelp() {
+  document.querySelectorAll('.hjaelp-tag').forEach(btn => btn.classList.remove('hjaelp-tag--active'));
+  const result = document.getElementById('hjaelp-result');
+  if (result) { result.style.display = 'none'; result.innerHTML = ''; result.className = 'hjaelp-result'; }
+}
+
+/* ---- FAB: Flydende hj\u00e6lp-knap ---- */
+function updateHjaelpFAB(screenName) {
+  const fab = document.getElementById('hjaelp-fab');
+  if (!fab) return;
+  const screen = Router.screens[screenName];
+  // Show on niveau 1+ screens (not forside, not onboarding)
+  const show = screen && screen.niveau >= 1;
+  fab.classList.toggle('hjaelp-fab--hidden', !show);
+}
+
+function hjaelpFabClick() {
+  Router.navigate('forside');
+  // Scroll to hjaelp section after navigation
+  setTimeout(() => {
+    const section = document.getElementById('forside-hjaelp');
+    if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 350);
 }
 
 /* ---- Cyklusser (Section 1) ---- */
