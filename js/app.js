@@ -814,10 +814,13 @@ function hjaelpFabClick() {
 function _checkHjaelpScroll() {
   if (window._scrollToHjaelp) {
     window._scrollToHjaelp = false;
-    setTimeout(() => {
-      const section = document.getElementById('forside-hjaelp');
-      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
+    // Use requestAnimationFrame to ensure DOM is painted, then scroll
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const section = document.getElementById('forside-hjaelp');
+        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
   }
 }
 
