@@ -596,8 +596,18 @@ function toggleSection(header) {
 document.addEventListener('DOMContentLoaded', () => {
   // Register service worker
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').catch(err => {
+    navigator.serviceWorker.register('./sw.js').then(reg => {
+      // Force check for updates every page load
+      reg.update();
+    }).catch(err => {
       console.warn('SW registration failed:', err);
+    });
+    // Auto-reload when new SW takes control (skipWaiting + claim)
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (refreshing) return;
+      refreshing = true;
+      window.location.reload();
     });
   }
 
