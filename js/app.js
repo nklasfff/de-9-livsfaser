@@ -42,7 +42,14 @@ const TrackingState = {
 
 const MOOD_LABELS = {
   'vand': 'Stille', 'trae': 'Voksende', 'ild': 'Intens',
-  'jord': 'Rodfæstet', 'metal': 'Klar'
+  'jord': 'Rodfæstet', 'metal': 'Klar',
+  'tung': 'Tung', 'rastloes': 'Rastløs', 'saarbar': 'Sårbar',
+  'varm': 'Varm', 'urolig': 'Urolig'
+};
+
+const MOOD_ELEMENT_MAP = {
+  'vand': 'VAND', 'trae': 'TRÆ', 'ild': 'ILD', 'jord': 'JORD', 'metal': 'METAL',
+  'tung': 'VAND', 'rastloes': 'TRÆ', 'saarbar': 'METAL', 'varm': 'ILD', 'urolig': 'JORD'
 };
 
 /* ---- Mood empathy texts (Isabelle's voice) ---- */
@@ -51,7 +58,12 @@ const MOOD_EMPATI = {
   trae: 'Du vokser. M\u00e5ske kan du m\u00e6rke det som en uro, men det er livskraft der udfolder sig.',
   ild: 'Din ild br\u00e6nder. Den energi du m\u00e6rker er pr\u00e6cis d\u00e9r, hvor din kraft samler sig.',
   jord: 'Du st\u00e5r solidt. N\u00e5r jorden b\u00e6rer dig, kan du b\u00e6re andre.',
-  metal: 'Klarheden er en gave. Metal sk\u00e6rer igennem og viser dig det v\u00e6sentlige.'
+  metal: 'Klarheden er en gave. Metal skærer igennem og viser dig det væsentlige.',
+  tung: 'Tyngden du mærker er ikke svaghed — den er kroppen der beder dig synke ned. Vandet i dig har brug for hvile.',
+  rastloes: 'Rastløsheden er leveren der rykker i dig. Træet vil bevæge sig — giv det retning, eller giv det luft.',
+  saarbar: 'Sårbarhed er den mest modige tilstand. Lungerne åbner sig når du tør mærke alt det usagte.',
+  varm: 'Varmen i dig vil ud. Hjertet banker hurtigere, ilden samler sig — brug den, eller lad den varme dig indefra.',
+  urolig: 'Uro er jordens signal om at du bærer for meget. Milten beder dig sætte noget ned.'
 };
 
 /* ---- selectMood: Global — called from HTML onclick on ci-btn ---- */
@@ -87,24 +99,18 @@ function selectMood(id, el) {
     if (statusEl) statusEl.textContent = 'Check-in gemt \u2713';
     showActionToast('Check-in gemt \u2713');
 
-    // Show empathic response
-    const responseEl = document.getElementById('checkin-response');
-    if (responseEl && MOOD_EMPATI[id]) {
-      responseEl.innerHTML = `<div class="ci-empati">${MOOD_EMPATI[id]}</div>`;
-      responseEl.style.display = '';
-      responseEl.className = 'ci-response ci-response--visible';
+    // Show "Forslag til støtte" link (user chooses to expand)
+    const supportLink = document.getElementById('ci-support-link');
+    if (supportLink) {
+      supportLink.style.display = '';
+      supportLink.style.animation = 'ciFadeIn 0.4s ease';
+    }
 
-      // Auto-hide after 6 seconds
-      setTimeout(() => {
-        if (responseEl.style.display !== 'none') {
-          responseEl.style.opacity = '0';
-          setTimeout(() => {
-            responseEl.style.display = 'none';
-            responseEl.style.opacity = '';
-            responseEl.className = 'ci-response';
-          }, 400);
-        }
-      }, 6000);
+    // Collapse support panel if it was open from a previous mood
+    const supportPanel = document.getElementById('ci-support-panel');
+    if (supportPanel) {
+      supportPanel.style.display = 'none';
+      supportPanel.innerHTML = '';
     }
 
     // Disable further clicks (one per day from forside)
@@ -116,6 +122,58 @@ function selectMood(id, el) {
       el.style.opacity = '1';
     }
   }
+}
+
+/* ---- toggleCheckinSupport: Fold out empathy + 3 recommendations ---- */
+function toggleCheckinSupport() {
+  const panel = document.getElementById('ci-support-panel');
+  if (!panel) return;
+
+  // Toggle: if already visible, collapse
+  if (panel.style.display !== 'none' && panel.innerHTML !== '') {
+    panel.style.display = 'none';
+    panel.innerHTML = '';
+    return;
+  }
+
+  const moodId = TrackingState.checkinMood;
+  if (!moodId) return;
+
+  const element = MOOD_ELEMENT_MAP[moodId] || 'VAND';
+  const elLabel = Calculations.ELEMENT_LABELS[element] || element;
+  const empati = MOOD_EMPATI[moodId] || '';
+
+  // Get recommendations
+  const healing = (typeof HEALING_SOUNDS !== 'undefined') ? HEALING_SOUNDS[element] : null;
+  const yoga = (typeof INSIGHT_YOGA !== 'undefined' && INSIGHT_YOGA[element]) ? INSIGHT_YOGA[element][0] : null;
+  const food = (typeof INSIGHT_FOOD !== 'undefined' && INSIGHT_FOOD[element]) ? INSIGHT_FOOD[element][0] : null;
+
+  let recsHTML = '';
+  if (yoga) {
+    recsHTML += `<div class="ci-rec" onclick="Router.navigate('pra-yin-yoga')" style="margin-bottom:8px">
+      <div class="ci-rec-label">Yin Yoga · ${elLabel}</div>
+      <div class="ci-rec-title">${yoga.pose.split('(')[0].trim()}</div>
+      <div class="ci-rec-desc">${yoga.desc}</div>
+    </div>`;
+  }
+  if (healing) {
+    recsHTML += `<div class="ci-rec" onclick="Router.navigate('pra-healing')" style="margin-bottom:8px">
+      <div class="ci-rec-label">Healinglyd · ${elLabel}</div>
+      <div class="ci-rec-title">${healing.lyd}</div>
+      <div class="ci-rec-desc">${healing.desc}</div>
+    </div>`;
+  }
+  if (food) {
+    recsHTML += `<div class="ci-rec" onclick="Router.navigate('pra-kost')">
+      <div class="ci-rec-label">Næring · ${elLabel}</div>
+      <div class="ci-rec-title">${food.item}</div>
+      <div class="ci-rec-desc">${food.desc}</div>
+    </div>`;
+  }
+
+  panel.innerHTML = `<div class="ci-empati">${empati}</div>${recsHTML}`;
+  panel.style.display = '';
+  panel.style.animation = 'ciFadeIn 0.4s ease';
 }
 
 /* ---- saveCheckin: Global — called from rej-udvikling save button ---- */
@@ -685,7 +743,7 @@ function initForside() {
     checkinStatus.textContent = `I dag: ${MOOD_LABELS[todayCheckin.mood] || todayCheckin.mood} ✓`;
     // Disable further mood selection
     const ciBtns = document.querySelectorAll('.checkin-card .ci-btn');
-    const moodOrder = ['vand', 'trae', 'ild', 'jord', 'metal'];
+    const moodOrder = ['vand', 'trae', 'ild', 'jord', 'metal', 'tung', 'rastloes', 'saarbar', 'varm', 'urolig'];
     ciBtns.forEach((btn, i) => {
       btn.style.pointerEvents = 'none';
       btn.style.opacity = '0.6';
@@ -696,9 +754,12 @@ function initForside() {
     });
   }
 
-  // M\u00e6rk efter — render tilstands-tags + patterns
-  renderCheckinTags();
+  // Mærk efter — render patterns
   renderCheckinPatterns();
+
+  // Elementer section
+  renderElementPentagon();
+  renderElementIntro();
 
   // Praksis cards — based on dominant element, rotated daily
   const domEl = dominant.element;
@@ -729,90 +790,8 @@ function initForside() {
 }
 
 /* ============================================================
-   M\u00c6RK EFTER — Udvidet check-in med tilstands-tags
+   MÆRK EFTER — Check-in patterns
    ============================================================ */
-
-function renderCheckinTags() {
-  const container = document.getElementById('checkin-tags');
-  if (!container || typeof HJAELP_TAGS === 'undefined') return;
-
-  // Select 5 most relevant tags (mix of positive and negative)
-  const selectedTags = HJAELP_TAGS.slice(0, 5);
-  container.innerHTML = selectedTags.map(tag =>
-    `<button class="ci-tag" onclick="selectCheckinTag('${tag.id}',this)">${tag.label}</button>`
-  ).join('');
-}
-
-function selectCheckinTag(tagId, el) {
-  const tag = HJAELP_TAGS.find(t => t.id === tagId);
-  if (!tag) return;
-
-  const data = getUserCycles();
-  const element = tag.element || (data ? data.dominant.element : 'VAND');
-  const elLabel = Calculations.ELEMENT_LABELS[element] || element;
-
-  // Highlight selected tag
-  document.querySelectorAll('.ci-tag').forEach(btn => btn.classList.remove('ci-tag--active'));
-  if (el) el.classList.add('ci-tag--active');
-
-  // Empati text
-  const empati = (typeof HJAELP_EMPATI !== 'undefined' && HJAELP_EMPATI[tagId]) || '';
-
-  // Find one recommendation (healing sound)
-  const healing = (typeof HEALING_SOUNDS !== 'undefined') ? HEALING_SOUNDS[element] : null;
-
-  const responseEl = document.getElementById('checkin-response');
-  if (!responseEl) return;
-
-  let recHTML = '';
-  if (healing) {
-    recHTML = `
-      <div class="ci-rec" onclick="Router.navigate('pra-healing')">
-        <div class="ci-rec-label">\u00c5ndedr\u00e6t \u00b7 ${elLabel}</div>
-        <div class="ci-rec-title">${healing.lyd}</div>
-        <div class="ci-rec-desc">${healing.desc}</div>
-      </div>`;
-  }
-
-  responseEl.innerHTML = `
-    <div class="ci-empati">${empati}</div>
-    ${recHTML}
-  `;
-  responseEl.style.display = '';
-  responseEl.className = 'ci-response ci-response--visible';
-
-  // Save as check-in
-  const entry = {
-    date: Storage.getLocalDateStr(),
-    mood: tag.element ? tag.element.toLowerCase() : 'vand',
-    tag: tagId,
-    note: '',
-    cycles: data ? {
-      lifePhase: data.cycles.lifePhase.element,
-      season: data.cycles.season.element,
-      weekday: data.cycles.weekday.element,
-      organ: data.cycles.organ.element,
-      dominant: data.dominant.element
-    } : null
-  };
-  Storage.saveCheckin(entry);
-
-  const statusEl = document.getElementById('forside-checkin-status');
-  if (statusEl) statusEl.textContent = 'Check-in gemt \u2713';
-  showActionToast('Check-in gemt \u2713');
-
-  // Auto-hide response after 8 seconds
-  setTimeout(() => {
-    if (responseEl.style.display !== 'none') {
-      responseEl.style.opacity = '0';
-      setTimeout(() => {
-        responseEl.style.display = 'none';
-        responseEl.style.opacity = '';
-        responseEl.className = 'ci-response';
-      }, 400);
-    }
-  }, 8000);
-}
 
 function renderCheckinPatterns() {
   const patternsEl = document.getElementById('checkin-patterns');
@@ -829,6 +808,76 @@ function renderCheckinPatterns() {
   } else {
     patternsEl.style.display = 'none';
   }
+}
+
+/* ============================================================
+   FORSIDE — Fem Elementer pentagon + intro
+   ============================================================ */
+
+const ELEMENT_INTRO = {
+  'VAND': 'Vand er det dybeste element — det der bærer alt andet. Lige nu kalder det på stilhed, hvile og tillid til det, der ikke kan ses endnu.',
+  'TRÆ': 'Træ er vækst og retning. Det presser opad og udad, med kraft og vilje. Lige nu mærker du måske en trang til at skabe, bevæge dig, handle.',
+  'ILD': 'Ild er glæde, intensitet og forbindelse. Den brænder i dig som nærvær og lidenskab. Lige nu er din evne til at møde andre på sit stærkeste.',
+  'JORD': 'Jord er forankring og omsorg. Den bærer, nærer og holder fast. Lige nu har du en særlig evne til at skabe tryghed — for dig selv og andre.',
+  'METAL': 'Metal er klarhed og essentiel styrke. Det skærer igennem og viser det væsentlige. Lige nu har du adgang til en dyb klarhed om hvad der virkelig betyder noget.'
+};
+
+function renderElementPentagon() {
+  const container = document.getElementById('forside-elementer-svg');
+  if (!container) return;
+
+  const data = getUserCycles();
+  const domElement = data ? data.dominant.element : 'VAND';
+
+  // Pentagon points (260x260, center 130,125)
+  const cx = 130, cy = 125, R = 90;
+  const elements = ['VAND', 'TRÆ', 'ILD', 'JORD', 'METAL'];
+  const labels = { 'VAND': 'Vand', 'TRÆ': 'Træ', 'ILD': 'Ild', 'JORD': 'Jord', 'METAL': 'Metal' };
+  const angles = elements.map((_, i) => (i * 2 * Math.PI / 5) - Math.PI / 2);
+  const pts = angles.map(a => ({ x: cx + R * Math.cos(a), y: cy + R * Math.sin(a) }));
+
+  // Build SVG
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 260" style="width:100%;max-width:240px;">`;
+
+  // Nourishing cycle lines (VAND→TRÆ→ILD→JORD→METAL→VAND)
+  for (let i = 0; i < 5; i++) {
+    const next = (i + 1) % 5;
+    svg += `<line x1="${pts[i].x}" y1="${pts[i].y}" x2="${pts[next].x}" y2="${pts[next].y}" stroke="#b0bec5" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>`;
+  }
+
+  // Element circles + labels
+  for (let i = 0; i < 5; i++) {
+    const el = elements[i];
+    const isDom = (el === domElement);
+    const fill = isDom ? 'rgba(108,130,169,0.22)' : 'rgba(138,150,169,0.08)';
+    const stroke = isDom ? '#6c82a9' : 'rgba(138,150,169,0.3)';
+    const textColor = isDom ? '#6c82a9' : '#8a96a9';
+    const fontWeight = isDom ? '500' : '400';
+    const r = isDom ? 30 : 26;
+
+    svg += `<circle cx="${pts[i].x}" cy="${pts[i].y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${isDom ? 1.5 : 0.8}"/>`;
+    svg += `<text x="${pts[i].x}" y="${pts[i].y + 1}" text-anchor="middle" dominant-baseline="middle" font-family="'Playfair Display', serif" font-size="${isDom ? 14 : 12.5}" font-style="italic" font-weight="${fontWeight}" fill="${textColor}">${labels[el]}</text>`;
+  }
+
+  svg += `</svg>`;
+  container.innerHTML = svg;
+}
+
+function renderElementIntro() {
+  const container = document.getElementById('forside-element-tekst');
+  if (!container) return;
+
+  const data = getUserCycles();
+  const domElement = data ? data.dominant.element : 'VAND';
+  const elLabel = Calculations.ELEMENT_LABELS[domElement] || domElement;
+  const introText = ELEMENT_INTRO[domElement] || '';
+
+  container.innerHTML = `
+    <div class="card-label">DIT ELEMENT LIGE NU</div>
+    <div class="card-text">${introText}</div>
+    <a class="card-link">Udforsk elementerne →</a>
+  `;
+  container.onclick = () => Router.navigate('cyk-kontrol');
 }
 
 /* ---- Cyklusser (Section 1) ---- */

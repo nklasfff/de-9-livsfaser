@@ -55,6 +55,8 @@
   </div>
 </div>
 
+<div class="dots">&middot; &middot; &middot;</div>
+
 <!-- VINDUER SECTION -->
 <div class="s">
   <div class="eyebrow">Tidsrejsen</div>
@@ -92,6 +94,19 @@
 
 <div class="dots">&middot; &middot; &middot;</div>
 
+<!-- ELEMENTER SECTION -->
+<div class="s">
+  <div class="eyebrow">Elementerne</div>
+  <div class="title">Fem kr&aelig;fter<br>i dig</div>
+  <div class="body-text">Alt i naturen &mdash; og i dig &mdash; bev&aelig;ger sig gennem fem elementer. De n&aelig;rer hinanden, udfordrer hinanden, og danner et kredsl&oslash;b der aldrig stopper.</div>
+
+  <div id="forside-elementer-svg" style="text-align:center;margin:10px auto 20px"></div>
+
+  <div id="forside-element-tekst" class="forside-card" style="cursor:pointer"></div>
+</div>
+
+<div class="dots">&middot; &middot; &middot;</div>
+
 <!-- CHECK-IN -->
 <div class="s" style="padding-bottom:28px">
   <div class="fig">
@@ -102,22 +117,24 @@
   <div class="body-text">Din krop ved allerede svaret. M&aelig;rk efter &mdash; appen husker det for dig og viser m&oslash;nstre over tid.</div>
 
   <div class="checkin-card" id="forside-checkin">
-    <!-- 5 element-mood knapper -->
-    <div class="ci-label">Hvad m&aelig;rker du i kroppen?</div>
     <div class="ci-btns" id="checkin-moods">
       <div class="ci-btn" onclick="selectMood('vand',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c2-3 4-4 6-1s4 2 6-1 4-2 6 1"/><path d="M2 17c2-3 4-4 6-1s4 2 6-1 4-2 6 1" opacity="0.4"/></svg> Stille</div>
       <div class="ci-btn" onclick="selectMood('trae',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V10"/><path d="M9 14c-2-1-3-3-2-5"/><path d="M15 14c2-1 3-3 2-5"/><path d="M12 10c0-3 2-6 5-8"/><path d="M12 10c0-3-2-6-5-8" opacity="0.5"/></svg> Voksende</div>
       <div class="ci-btn" onclick="selectMood('ild',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c-4 0-6-3-6-7 0-5 6-12 6-12s6 7 6 12c0 4-2 7-6 7z"/><path d="M12 22v-8" opacity="0.4"/></svg> Intens</div>
       <div class="ci-btn" onclick="selectMood('jord',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="4"/><path d="M12 14v4"/><path d="M8 22c0-2.2 1.8-4 4-4s4 1.8 4 4" opacity="0.5"/><path d="M9 7l-2-3" opacity="0.4"/><path d="M15 7l2-3" opacity="0.4"/></svg> Rodf&aelig;stet</div>
       <div class="ci-btn" onclick="selectMood('metal',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83" opacity="0.4"/><path d="M16.24 7.76l2.83-2.83" opacity="0.4"/></svg> Klar</div>
+      <div class="ci-btn" onclick="selectMood('tung',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c0 0-2 4-2 8s2 6 2 10"/><path d="M10 17c-1 2-2 3-4 3" opacity="0.4"/><path d="M14 17c1 2 2 3 4 3" opacity="0.4"/></svg> Tung</div>
+      <div class="ci-btn" onclick="selectMood('rastloes',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18l4-6 4 4 4-8 4 6"/><path d="M4 22h16" opacity="0.4"/></svg> Rastl&oslash;s</div>
+      <div class="ci-btn" onclick="selectMood('saarbar',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14c0 0 2-2 4-2s4 2 4 2"/><path d="M12 3v5"/><path d="M7 6c2 1 3 2 5 2s3-1 5-2" opacity="0.5"/></svg> S&aring;rbar</div>
+      <div class="ci-btn" onclick="selectMood('varm',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-4 0-6-2.5-6-6 0-4 6-10 6-10s6 6 6 10c0 3.5-2 6-6 6z"/><path d="M12 21v-6"/><path d="M9.5 17c1.5-1 3.5-1 5 0" opacity="0.4"/></svg> Varm</div>
+      <div class="ci-btn" onclick="selectMood('urolig',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 5c-1 2-3 3-3 7"/><path d="M12 5c1 2 3 3 3 7" opacity="0.5"/><path d="M8 20c2-1 3-2 4-4"/><path d="M16 20c-2-1-3-2-4-4" opacity="0.4"/></svg> Urolig</div>
     </div>
 
-    <!-- Tilstands-tags (rendered by JS) -->
-    <div class="ci-label" style="margin-top:18px">Eller mere specifikt?</div>
-    <div class="ci-tags" id="checkin-tags"></div>
-
-    <!-- Empatisk svar (vises naar man vaelger) -->
-    <div id="checkin-response" style="display:none"></div>
+    <!-- Forslag til stoette (vises naar mood valgt) -->
+    <div id="ci-support-link" style="display:none">
+      <a class="ci-support-toggle" onclick="toggleCheckinSupport()">Forslag til st&oslash;tte &darr;</a>
+    </div>
+    <div id="ci-support-panel" style="display:none"></div>
 
     <!-- Status -->
     <div id="forside-checkin-status" style="text-align:center;margin-top:10px;font-family:sans-serif;font-size:13px;color:#8a96a9"></div>

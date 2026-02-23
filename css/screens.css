@@ -256,26 +256,16 @@
 .isa-act { display: flex; flex-direction: column; align-items: center; gap: 4px; font-family: var(--font-sans); font-size: 13px; color: #777; font-weight: 300; cursor: pointer; }
 .isa-act span:first-child { font-size: 20px; }
 
-/* ---- M\00c6RK EFTER — Udvidet check-in ---- */
-.ci-label {
-  font-family: var(--font-sans); font-size: 14px;
-  color: #888; font-weight: 300; text-align: center;
-  margin-bottom: 12px;
+/* ---- MÆRK EFTER — Check-in support toggle ---- */
+.ci-support-toggle {
+  display: block; text-align: center; margin-top: 16px;
+  font-family: var(--font-serif); font-size: 15px;
+  font-style: italic; color: var(--neutral); cursor: pointer;
+  text-decoration: none;
 }
-.ci-tags {
-  display: flex; flex-wrap: wrap; gap: 7px;
-  justify-content: center;
-}
-.ci-tag {
-  padding: 9px 15px; border-radius: var(--radius-pill);
-  border: 1px solid rgba(108,130,169,0.18); background: white;
-  font-family: var(--font-sans); font-size: 14px; font-weight: 300;
-  color: var(--blaa); cursor: pointer;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
-}
-.ci-tag:active,
-.ci-tag--active {
-  background: var(--blaa); color: white; border-color: var(--blaa);
+.ci-support-toggle:active { opacity: 0.7; }
+#ci-support-panel {
+  margin-top: 16px;
 }
 .ci-response {
   margin-top: 18px;
