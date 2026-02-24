@@ -921,10 +921,10 @@ function renderForsideRelation(userCycles, userDominant) {
     : '';
 
   container.innerHTML = `
-    <div class="forside-card" style="margin-top:16px;cursor:pointer" onclick="Router.navigate('relationer')">
-      <div class="card-label">Dig og ${rel.name} · ${interLabel}</div>
+    <div class="forside-card" style="margin-top:16px;cursor:pointer" onclick="navigateToRelation('${rel.name}')">
+      <div class="card-label">Dig og ${rel.name} \u00b7 ${interLabel}</div>
       <div class="card-text" style="font-family:Georgia,serif;font-size:15px;font-style:italic;color:#6c7a8a;line-height:1.55">${interText}</div>
-      <a class="card-link">Se jeres dynamik →</a>
+      <a class="card-link">Se jeres dynamik \u2192</a>
       ${exampleNote}
     </div>`;
 }
@@ -1153,7 +1153,7 @@ function initRelationer() {
       const initial = r.name.charAt(0).toUpperCase();
       html += `<div class="profil-item"><div class="profil-circle" style="background:rgba(123,122,158,0.12);color:#7b7a9e">${initial}</div><div class="profil-name">${r.name}</div><div class="profil-meta">${r.elLabel} · ${r.interLabel}</div></div>`;
     });
-    html += `<div class="profil-item" onclick="Router.navigate('rel-lige-nu')"><div class="profil-circle" style="background:rgba(123,122,158,0.05);border:1.5px dashed rgba(123,122,158,0.25);color:#88839e">+</div><div class="profil-name" style="color:#88839e">Tilføj</div></div>`;
+    html += `<div class="profil-item" onclick="Router.navigate('indstillinger')"><div class="profil-circle" style="background:rgba(123,122,158,0.05);border:1.5px dashed rgba(123,122,158,0.25);color:#88839e">+</div><div class="profil-name" style="color:#88839e">Tilf\u00f8j</div></div>`;
     profilRow.innerHTML = html;
   }
 
@@ -1193,7 +1193,7 @@ function initRelationer() {
       else if (r.interType === 'naeres') interText = `${r.name}s ${r.elLabel} nærer dit ${elLabel}. Du modtager.`;
       else interText = `${elLabel} møder ${r.elLabel} — forskellige kræfter der kan berige hinanden.`;
 
-      html += `<div class="card" style="margin-bottom:8px;cursor:pointer" onclick="Router.navigate('rel-lige-nu')"><div class="card-row"><div>`;
+      html += `<div class="card" style="margin-bottom:8px;cursor:pointer" onclick="navigateToRelation('${r.name}')"><div class="card-row"><div>`;
       html += `<div class="card-label">${r.name} · ${r.interLabel}</div>`;
       html += `<div class="card-title">Fase ${r.cycles.lifePhase.phase}: ${r.cycles.lifePhase.name} · ${r.elLabel}</div>`;
       html += `<div class="card-desc" style="font-style:italic">${interText}</div>`;
@@ -1201,7 +1201,7 @@ function initRelationer() {
     });
 
     if (useExample) {
-      html += `<div style="font-family:sans-serif;font-size:12px;color:#aaa;text-align:center;margin-top:8px;font-style:italic">Eksempel-data — <span style="color:#7b7a9e;cursor:pointer;text-decoration:underline" onclick="Router.navigate('rel-lige-nu')">tilføj dine relationer</span></div>`;
+      html += `<div style="font-family:sans-serif;font-size:12px;color:#aaa;text-align:center;margin-top:8px;font-style:italic">Eksempel-data \u2014 <span style="color:#7b7a9e;cursor:pointer;text-decoration:underline" onclick="Router.navigate('indstillinger')">tilf\u00f8j dine relationer</span></div>`;
     }
 
     pulseEl.innerHTML = html;
@@ -2778,6 +2778,11 @@ const RelDeepState = {
   people: []
 };
 
+function navigateToRelation(personName) {
+  window._selectedRelPerson = personName;
+  Router.navigate('din-relation');
+}
+
 function initDinRelation() {
   const data = getUserCycles();
   if (!data) return;
@@ -2793,13 +2798,21 @@ function initDinRelation() {
 
   RelDeepState.people = rels;
   RelDeepState.targetDate = null;
-  RelDeepState.selectedPerson = rels[0] || null;
+
+  // Check if a specific person was pre-selected (e.g. from relationer pulse cards)
+  let defaultIndex = 0;
+  if (window._selectedRelPerson) {
+    const idx = rels.findIndex(r => r.name === window._selectedRelPerson);
+    if (idx >= 0) defaultIndex = idx;
+    window._selectedRelPerson = null;  // Clear after use
+  }
+  RelDeepState.selectedPerson = rels[defaultIndex] || null;
 
   // Render person pills
   const pillsEl = document.getElementById('rel-deep-pills');
   if (pillsEl) {
     pillsEl.innerHTML = rels.map((r, i) =>
-      `<span class="rel-deep-pill${i === 0 ? ' active' : ''}" onclick="selectRelDeepPerson(${i}, this)">${r.name}</span>`
+      `<span class="rel-deep-pill${i === defaultIndex ? ' active' : ''}" onclick="selectRelDeepPerson(${i}, this)">${r.name}</span>`
     ).join('');
   }
 
