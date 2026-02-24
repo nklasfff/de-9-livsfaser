@@ -1,66 +1,111 @@
-<div class="s">
-  <div class="eyebrow">Dit liv lige nu</div>
-  <div class="title">Dit samlede billede</div>
-  <div class="body-text">Alt det du b&aelig;rer i dig lige nu &mdash; din livsfase, &aring;rstiden, m&aring;neden, ugedagen og dit organ &mdash; samlet i &eacute;t &oslash;jeblik.</div>
+<!-- HERO: Din livsfase -->
+<div class="dybde-section">
+  <div class="eyebrow">Din livsfase</div>
+  <div id="dybde-fase-label" style="font-family:var(--font-serif);font-size:28px;color:var(--text-dark);text-align:center;margin:16px 0 8px">Fase 5 &middot; Ild</div>
+  <div id="dybde-intro" style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.65;text-align:center;max-width:360px;margin:0 auto"></div>
+</div>
 
-  <!-- KANJI FIGUR: 水 (dominant element Vand) -->
-  <div style="text-align:center;margin:18px auto 24px">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" style="width:140px;height:auto">
-      <text x="100" y="110" text-anchor="middle" font-family="serif" font-size="108" fill="#7d8fad" opacity="0.75" id="cir-kanji">&#x6C34;</text>
-      <text x="100" y="170" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="18" fill="#aaa" letter-spacing="2" text-transform="uppercase" font-weight="300" id="cir-element-label">VAND</text>
-    </svg>
-  </div>
+<!-- DENNE FASE I DIG -->
+<div class="dybde-section">
+  <div class="eyebrow">Denne fase i dig</div>
+  <div id="dybde-denne-fase" class="dybde-body"></div>
+</div>
 
-  <!-- ELEMENT INFOBOKS -->
-  <div style="background:rgba(108,130,169,0.05);border:1px solid rgba(108,130,169,0.10);border-radius:14px;padding:16px 20px;margin-bottom:22px;text-align:center">
-    <div style="font-family:'DM Sans',sans-serif;font-size:11px;color:#9cabc3;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px">Dominerende element</div>
-    <div style="font-family:'Playfair Display',Georgia,serif;font-size:20px;font-style:italic;color:#6c82a9;margin-bottom:4px" id="cir-element-name">Vand</div>
-    <div style="font-family:'DM Sans',sans-serif;font-size:14.5px;color:#777;font-weight:300;line-height:1.5" id="cir-element-quality">Flydende, dyb, intuitiv, modtagelig</div>
-  </div>
+<div class="dots">&middot; &middot; &middot;</div>
 
-  <!-- BESKRIVELSE -->
-  <div style="font-family:'Playfair Display',Georgia,serif;font-size:16px;font-style:italic;color:#6c7a8a;line-height:1.65;text-align:center;margin-bottom:22px" id="cir-description">4 af dine 5 cyklusser peger mod Vand. Din energi samler sig i &eacute;n retning &mdash; det er sj&aelig;ldent, og det m&aelig;rkes. N&aring;r s&aring; mange lag af dit liv deler element, opst&aring;r der en dyb resonans. Det er som en akkord der klinger hele vejen igennem.</div>
+<!-- DIN CENTRALE F&Oslash;LELSE -->
+<div class="dybde-section">
+  <div class="eyebrow">Din centrale f&oslash;lelse</div>
+  <div id="dybde-foelelse-title" style="font-family:var(--font-serif);font-size:22px;font-style:italic;color:var(--text-dark);margin-bottom:12px"></div>
+  <div id="dybde-foelelse-tekst" class="dybde-body"></div>
+</div>
 
-  <div class="dots">&middot; &middot; &middot;</div>
+<div class="dots">&middot; &middot; &middot;</div>
 
-  <!-- DINE 5 CYKLUSSER (kort oversigt) -->
-  <div style="font-family:'DM Sans',sans-serif;font-size:11px;color:#9cabc3;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px">Dine fem cyklusser</div>
-  <div id="cir-five-cycles">
-    <div class="forside-card" style="margin-bottom:8px" onclick="Router.navigate('cir-livsfase')">
-      <div class="card-label" style="color:#5A74A5">Livsfase &middot; Vand</div>
-      <div class="card-text" style="font-size:15px">Fase 9: Visdom &mdash; 56&ndash;63 &aring;r</div>
+<!-- KROP & SIND -->
+<div class="dybde-section">
+  <div class="eyebrow">Krop &amp; sind</div>
+  <div class="dybde-krop-sind-grid">
+    <div class="dybde-krop-sind-card">
+      <div class="dybde-krop-sind-label">Kroppen</div>
+      <div id="dybde-krop" class="dybde-body"></div>
     </div>
-    <div class="forside-card" style="margin-bottom:8px" onclick="Router.navigate('cir-aarstid')">
-      <div class="card-label" style="color:#5A74A5">&Aring;rstid &middot; Vand</div>
-      <div class="card-text" style="font-size:15px">Vinter &mdash; Februar</div>
-    </div>
-    <div class="forside-card" style="margin-bottom:8px" onclick="Router.navigate('cir-maaned')">
-      <div class="card-label" style="color:#5A74A5">M&aring;ned &middot; Vand</div>
-      <div class="card-text" style="font-size:15px">Nym&aring;ne &mdash; Uge 1</div>
-    </div>
-    <div class="forside-card" style="margin-bottom:8px" onclick="Router.navigate('cir-ugedag')">
-      <div class="card-label" style="color:#5A74A5">Ugedag &middot; Jord</div>
-      <div class="card-text" style="font-size:15px">L&oslash;rdag &mdash; Saturns dag</div>
-    </div>
-    <div class="forside-card" style="margin-bottom:8px" onclick="Router.navigate('cir-organur')">
-      <div class="card-label" style="color:#5A74A5">Organur &middot; Vand</div>
-      <div class="card-text" style="font-size:15px">Nyrer &middot; 17&ndash;19</div>
+    <div class="dybde-krop-sind-card">
+      <div class="dybde-krop-sind-label">Sindet</div>
+      <div id="dybde-sind" class="dybde-body"></div>
     </div>
   </div>
+</div>
 
-  <div class="dots">&middot; &middot; &middot;</div>
+<div class="dots">&middot; &middot; &middot;</div>
 
-  <!-- ANBEFALINGER -->
-  <div style="font-family:'DM Sans',sans-serif;font-size:11px;color:#9cabc3;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px">Hvad kan du g&oslash;re?</div>
-  <div style="font-family:'DM Sans',sans-serif;font-size:15px;color:#888;font-weight:300;line-height:1.55;margin-bottom:16px;font-style:italic">Dine elementer viser tre veje ind &mdash; v&aelig;lg den der kalder p&aring; dig, eller lad v&aelig;re.</div>
+<!-- TEGN P&Aring; BALANCE / UBALANCE -->
+<div class="dybde-section">
+  <div class="eyebrow">Tegn p&aring; balance</div>
+  <div id="dybde-balance" class="dybde-body"></div>
+</div>
 
-  <div class="praksis-card" onclick="Router.navigate('pra-yin-yoga')"><div><div class="pk-label">&Oslash;velse &middot; Vand</div><div class="pk-name">Butterfly (Baddha Konasana)</div><div class="pk-desc">&Aring;bner hofterne og stimulerer nyremeridianen. Sid 3&ndash;5 min og lad kroppen synke.</div></div><div class="pk-arrow">&rarr;</div></div>
-  <div class="praksis-card" onclick="Router.navigate('pra-kost')"><div><div class="pk-label">N&aelig;ring &middot; Vand</div><div class="pk-name">Sort sesam &amp; valn&oslash;dder</div><div class="pk-desc">N&aelig;rer nyreessensen og styrker livskraften.</div></div><div class="pk-arrow">&rarr;</div></div>
-  <div class="praksis-card" onclick="Router.navigate('pra-healing')"><div><div class="pk-label">Meridianstrygning &middot; Vand</div><div class="pk-name">Nyrernes meridian</div><div class="pk-desc">Fra fodens underside opad langs indersiden af benet. Samler livets erfaring op fra jorden.</div></div><div class="pk-arrow">&rarr;</div></div>
-  <div style="background:rgba(108,130,169,0.05);border:1px solid rgba(108,130,169,0.10);border-radius:14px;padding:16px 20px;margin-top:32px;text-align:center;cursor:pointer" onclick="Router.navigate('pra-refleksion')">
-    <div style="font-family:'DM Sans',sans-serif;font-size:11px;color:#9cabc3;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px">Refleksion</div>
-    <div style="font-family:'Playfair Display',Georgia,serif;font-size:16px;font-style:italic;color:#6c82a9;line-height:1.5">Hvad ville du g&oslash;re, hvis du vidste at din krop allerede b&aelig;rer svaret?</div>
-  </div>
+<div class="dybde-section" style="padding-top:8px">
+  <div class="eyebrow">Tegn p&aring; ubalance</div>
+  <div id="dybde-ubalance"></div>
+</div>
+
+<div class="dots">&middot; &middot; &middot;</div>
+
+<!-- FASENS TEMAER -->
+<div class="dybde-section">
+  <div class="eyebrow">Fasens temaer</div>
+  <div id="dybde-temaer"></div>
+</div>
+
+<div class="dots">&middot; &middot; &middot;</div>
+
+<!-- FASENS &Oslash;VELSER -->
+<div class="dybde-section">
+  <div class="eyebrow">Fasens &oslash;velser</div>
+  <div id="dybde-oevelser"></div>
+</div>
+
+<div class="dots">&middot; &middot; &middot;</div>
+
+<!-- REFLEKSION -->
+<div class="dybde-section">
+  <div class="eyebrow">Refleksion</div>
+  <div id="dybde-refleksion" style="font-family:var(--font-serif);font-size:17px;font-style:italic;color:var(--text-dark);line-height:1.6;margin-bottom:14px"></div>
+  <a onclick="Router.navigate('rej-journal')" style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--blaa);opacity:0.7;cursor:pointer;text-decoration:none">Skriv i din journal &rarr;</a>
+</div>
+
+<div class="dots">&middot; &middot; &middot;</div>
+
+<!-- FASENS R&Aring;D -->
+<div class="dybde-section">
+  <div class="eyebrow">Fasens r&aring;d</div>
+  <div id="dybde-raad"></div>
+</div>
+
+<div class="dots">&middot; &middot; &middot;</div>
+
+<!-- DIT ELEMENT -->
+<div class="dybde-section">
+  <div class="eyebrow">Dit element</div>
+  <div id="dybde-element-essay" class="dybde-body"></div>
+</div>
+
+<div class="dots">&middot; &middot; &middot;</div>
+
+<!-- RELATIONER I DENNE FASE -->
+<div class="dybde-section">
+  <div class="eyebrow">Relationer i denne fase</div>
+  <div id="dybde-relationer" class="dybde-body" style="margin-bottom:14px"></div>
+  <a onclick="Router.navigate('rel-lige-nu')" style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--blaa);opacity:0.7;cursor:pointer;text-decoration:none">Se dine relationer &rarr;</a>
+</div>
+
+<div class="dots">&middot; &middot; &middot;</div>
+
+<!-- OVERGANGEN -->
+<div class="dybde-section" style="padding-bottom:32px">
+  <div class="eyebrow">Overgangen</div>
+  <div id="dybde-overgang" class="dybde-body"></div>
 </div>
 
 <div class="section-closer"><div class="lotus-fill"><img src="assets/images/lotus-adskiller.png" alt=""></div></div>

@@ -349,3 +349,119 @@
   font-family: var(--font-serif); font-size: 15px;
   font-style: italic; color: var(--neutral);
 }
+
+/* ============================================================
+   DYBDE — cir-dit-liv "Dit Dybe Billede"
+   ============================================================ */
+
+.dybde-section {
+  padding: 24px 20px 0;
+}
+.dybde-body {
+  font-family: var(--font-sans); font-size: 15px;
+  color: var(--text-body); line-height: 1.65; font-weight: 300;
+}
+.dybde-body p, .dybde-body-p {
+  margin: 0 0 12px;
+  font-family: var(--font-sans); font-size: 15px;
+  color: var(--text-body); line-height: 1.65; font-weight: 300;
+}
+
+/* Expandable sections */
+.dybde-expand-more { display: none; }
+.dybde-expand-more.active { display: block; }
+.dybde-expand-btn {
+  display: inline-block; margin-top: 6px;
+  font-family: var(--font-serif); font-size: 14px;
+  font-style: italic; color: var(--blaa); opacity: 0.7;
+  cursor: pointer; text-decoration: none;
+}
+.dybde-expand-btn:active { opacity: 1; }
+
+/* Krop & Sind grid */
+.dybde-krop-sind-grid {
+  display: flex; flex-direction: column; gap: 14px;
+}
+.dybde-krop-sind-card {
+  background: rgba(108,130,169,0.04);
+  border: 1px solid rgba(108,130,169,0.08);
+  border-radius: var(--radius); padding: 16px 18px;
+}
+.dybde-krop-sind-label {
+  font-family: var(--font-sans); font-size: 11px;
+  color: var(--text-light); letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 8px;
+}
+
+/* Ubalance */
+.dybde-ubalance-group { margin-bottom: 10px; }
+.dybde-ubalance-label {
+  font-family: var(--font-sans); font-size: 13px;
+  color: var(--text-mid); font-weight: 500;
+  margin-bottom: 6px;
+}
+.dybde-ubalance-list {
+  margin: 0; padding: 0 0 0 18px;
+  font-family: var(--font-sans); font-size: 14px;
+  color: var(--text-body); line-height: 1.6; font-weight: 300;
+}
+.dybde-ubalance-list li { margin-bottom: 4px; }
+
+/* Tema-kort (expanderbare) */
+.dybde-tema-card {
+  background: rgba(108,130,169,0.04);
+  border: 1px solid rgba(108,130,169,0.08);
+  border-radius: var(--radius); padding: 16px 18px;
+  margin-bottom: 10px; cursor: pointer;
+  transition: background 0.15s;
+}
+.dybde-tema-card:active { background: rgba(108,130,169,0.08); }
+.dybde-tema-header {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.dybde-tema-title {
+  font-family: var(--font-serif); font-size: 16px;
+  color: var(--text-dark); font-style: italic;
+}
+.dybde-tema-arrow {
+  font-size: 14px; color: var(--text-light); opacity: 0.6;
+}
+.dybde-tema-body {
+  display: none; margin-top: 14px;
+}
+.dybde-tema-card.active .dybde-tema-body { display: block; }
+.dybde-tema-body p {
+  font-family: var(--font-sans); font-size: 14.5px;
+  color: var(--text-body); line-height: 1.65; font-weight: 300;
+  margin: 0 0 10px;
+}
+
+/* Øvelses-kort */
+.dybde-oevelse-card {
+  background: rgba(108,130,169,0.04);
+  border: 1px solid rgba(108,130,169,0.08);
+  border-radius: var(--radius); padding: 14px 18px;
+  margin-bottom: 10px;
+}
+.dybde-oevelse-type {
+  font-family: var(--font-sans); font-size: 11px;
+  color: var(--blaa); letter-spacing: 1.5px;
+  text-transform: uppercase; margin-bottom: 4px; opacity: 0.7;
+}
+.dybde-oevelse-title {
+  font-family: var(--font-serif); font-size: 16px;
+  color: var(--text-dark); margin-bottom: 6px;
+}
+.dybde-oevelse-desc {
+  font-family: var(--font-sans); font-size: 14px;
+  color: var(--text-body); line-height: 1.55; font-weight: 300;
+}
+
+/* Råd */
+.dybde-raad-item {
+  font-family: var(--font-sans); font-size: 14.5px;
+  color: var(--text-body); line-height: 1.6; font-weight: 300;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(108,130,169,0.06);
+}
+.dybde-raad-item:last-child { border-bottom: none; }

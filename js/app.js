@@ -1803,8 +1803,196 @@ function initVinduer() {
    NIVEAU 2 — Cirkel-detaljer (0B-0G) fra forside
    ============================================================ */
 
+/* ---- Expandable text helpers for dybde-screens ---- */
+
+function formatExpandable(text, wordLimit) {
+  if (!text) return '';
+  // Split into paragraphs, then words
+  const paragraphs = text.split('\n\n').filter(p => p.trim());
+  const allWords = text.split(/\s+/);
+  if (allWords.length <= wordLimit) {
+    // Short enough — show all, split into paragraphs
+    return paragraphs.map(p => `<p>${p.trim()}</p>`).join('');
+  }
+  // Find split point: show first N words, hide rest
+  let wordCount = 0;
+  let visibleParagraphs = [];
+  let hiddenParagraphs = [];
+  let splitDone = false;
+  for (let i = 0; i < paragraphs.length; i++) {
+    const pWords = paragraphs[i].trim().split(/\s+/);
+    if (!splitDone && wordCount + pWords.length > wordLimit && visibleParagraphs.length > 0) {
+      splitDone = true;
+    }
+    if (splitDone) {
+      hiddenParagraphs.push(paragraphs[i].trim());
+    } else {
+      visibleParagraphs.push(paragraphs[i].trim());
+      wordCount += pWords.length;
+    }
+  }
+  if (hiddenParagraphs.length === 0) {
+    return visibleParagraphs.map(p => `<p>${p}</p>`).join('');
+  }
+  return visibleParagraphs.map(p => `<p>${p}</p>`).join('') +
+    `<div class="dybde-expand-more">${hiddenParagraphs.map(p => `<p>${p}</p>`).join('')}</div>` +
+    `<a class="dybde-expand-btn" onclick="toggleDybdeExpand(this)">L\u00e6s mere \u2193</a>`;
+}
+
+function toggleDybdeExpand(btn) {
+  const expandMore = btn.previousElementSibling;
+  if (!expandMore) return;
+  const isOpen = expandMore.classList.contains('active');
+  expandMore.classList.toggle('active');
+  btn.textContent = isOpen ? 'L\u00e6s mere \u2193' : 'L\u00e6s mindre \u2191';
+}
+
+function renderDybdeUbalance(container, ubalanceTegn) {
+  if (!container || !ubalanceTegn) return;
+  let html = '';
+  if (ubalanceTegn.fysiske && ubalanceTegn.fysiske.length) {
+    html += '<div class="dybde-ubalance-group">';
+    html += '<div class="dybde-ubalance-label">Fysiske tegn</div>';
+    html += '<ul class="dybde-ubalance-list">';
+    ubalanceTegn.fysiske.forEach(t => { html += `<li>${t}</li>`; });
+    html += '</ul></div>';
+  }
+  if (ubalanceTegn.mentale && ubalanceTegn.mentale.length) {
+    html += '<div class="dybde-ubalance-group">';
+    html += '<div class="dybde-ubalance-label">Mentale tegn</div>';
+    html += '<ul class="dybde-ubalance-list">';
+    ubalanceTegn.mentale.forEach(t => { html += `<li>${t}</li>`; });
+    html += '</ul></div>';
+  }
+  if (ubalanceTegn.aarsag) {
+    html += '<div class="dybde-expand-more">';
+    html += '<div class="dybde-ubalance-group" style="margin-top:12px">';
+    html += '<div class="dybde-ubalance-label">\u00c5rsager</div>';
+    const aarsagParagraphs = ubalanceTegn.aarsag.split('\n\n').filter(p => p.trim());
+    aarsagParagraphs.forEach(p => { html += `<p class="dybde-body-p">${p.trim()}</p>`; });
+    html += '</div></div>';
+    html += '<a class="dybde-expand-btn" onclick="toggleDybdeExpand(this)">Vis \u00e5rsager \u2193</a>';
+  }
+  container.innerHTML = html;
+}
+
+function renderDybdeTemaer(container, temaer) {
+  if (!container || !temaer || !temaer.length) return;
+  container.innerHTML = temaer.map((tema, i) =>
+    `<div class="dybde-tema-card" onclick="toggleDybdeTema(this)">` +
+      `<div class="dybde-tema-header">` +
+        `<span class="dybde-tema-title">${tema.title}</span>` +
+        `<span class="dybde-tema-arrow">\u2193</span>` +
+      `</div>` +
+      `<div class="dybde-tema-body">${tema.tekst.split('\n\n').filter(p => p.trim()).map(p => `<p>${p.trim()}</p>`).join('')}</div>` +
+    `</div>`
+  ).join('');
+}
+
+function toggleDybdeTema(card) {
+  const isOpen = card.classList.contains('active');
+  card.classList.toggle('active');
+  const arrow = card.querySelector('.dybde-tema-arrow');
+  if (arrow) arrow.textContent = isOpen ? '\u2193' : '\u2191';
+}
+
+function renderDybdeOevelser(container, oevelser) {
+  if (!container || !oevelser || !oevelser.length) return;
+  const typeLabels = {
+    'krop': 'Krop', 'aandedraet': '\u00c5ndedr\u00e6t', 'meridian': 'Meridian',
+    'yinyoga': 'Yin Yoga', 'sind': 'Sind', 'par': 'Par'
+  };
+  container.innerHTML = oevelser.map(ov =>
+    `<div class="dybde-oevelse-card">` +
+      `<div class="dybde-oevelse-type">${typeLabels[ov.type] || ov.type}</div>` +
+      `<div class="dybde-oevelse-title">${ov.title}</div>` +
+      `<div class="dybde-oevelse-desc">${ov.desc}</div>` +
+    `</div>`
+  ).join('');
+}
+
+function renderDybdeRaad(container, raad) {
+  if (!container || !raad || !raad.length) return;
+  // Show first 3, expand for more
+  const visible = raad.slice(0, 3);
+  const hidden = raad.slice(3);
+  let html = visible.map(r => `<div class="dybde-raad-item">${r}</div>`).join('');
+  if (hidden.length) {
+    html += `<div class="dybde-expand-more">${hidden.map(r => `<div class="dybde-raad-item">${r}</div>`).join('')}</div>`;
+    html += `<a class="dybde-expand-btn" onclick="toggleDybdeExpand(this)">Vis flere r\u00e5d \u2193</a>`;
+  }
+  container.innerHTML = html;
+}
+
+/* ---- Dit Dybe Billede (cir-dit-liv) ---- */
+
 function initCirDitLiv() {
-  // Static content from preview — no dynamic init needed
+  const data = getUserCycles();
+  if (!data) return;
+  const { cycles, dominant } = data;
+  const phase = cycles.lifePhase;
+  const phaseNum = phase.phase;
+  const detail = LIVSFASE_DETAIL[phaseNum];
+  if (!detail) return;
+  const elLabel = Calculations.ELEMENT_LABELS[phase.element] || phase.element;
+
+  // 1. Hero
+  setText('dybde-fase-label', `Fase ${phaseNum} \u00b7 ${elLabel}`);
+  setText('dybde-intro', detail.introText);
+
+  // 2. Denne fase i dig
+  const denneFaseEl = document.getElementById('dybde-denne-fase');
+  if (denneFaseEl) denneFaseEl.innerHTML = formatExpandable(detail.denneFaseIDig, 80);
+
+  // 3. Central f\u00f8lelse
+  setText('dybde-foelelse-title', detail.centralFoelelse.title);
+  const foelelseEl = document.getElementById('dybde-foelelse-tekst');
+  if (foelelseEl) foelelseEl.innerHTML = formatExpandable(detail.centralFoelelse.tekst, 80);
+
+  // 4. Krop & Sind
+  const kropEl = document.getElementById('dybde-krop');
+  if (kropEl) kropEl.innerHTML = formatExpandable(detail.kropTekst, 60);
+  const sindEl = document.getElementById('dybde-sind');
+  if (sindEl) sindEl.innerHTML = formatExpandable(detail.sindTekst, 60);
+
+  // 5. Balance / Ubalance
+  const balanceEl = document.getElementById('dybde-balance');
+  if (balanceEl) balanceEl.innerHTML = formatExpandable(detail.balanceTekst, 80);
+  renderDybdeUbalance(document.getElementById('dybde-ubalance'), detail.ubalanceTegn);
+
+  // 6. Temaer
+  renderDybdeTemaer(document.getElementById('dybde-temaer'), detail.temaerNarrativer);
+
+  // 7. \u00d8velser
+  renderDybdeOevelser(document.getElementById('dybde-oevelser'), detail.oevelser);
+
+  // 8. Refleksion (dagligt roteret)
+  if (detail.ekstraRefleksioner && detail.ekstraRefleksioner.length) {
+    const ri = Calculations.dayRotation(detail.ekstraRefleksioner.length);
+    setText('dybde-refleksion', detail.ekstraRefleksioner[ri]);
+  } else if (detail.refleksioner && detail.refleksioner.length) {
+    const ri = Calculations.dayRotation(detail.refleksioner.length);
+    setText('dybde-refleksion', detail.refleksioner[ri]);
+  }
+
+  // 9. Fasens r\u00e5d
+  renderDybdeRaad(document.getElementById('dybde-raad'), detail.fasensRaad);
+
+  // 10. Element essay
+  const essayEl = document.getElementById('dybde-element-essay');
+  if (essayEl) essayEl.innerHTML = formatExpandable(detail.elementEssay, 80);
+
+  // 11. Relationer i fasen
+  const relEl = document.getElementById('dybde-relationer');
+  if (relEl && detail.relationerIFasen) {
+    relEl.innerHTML = formatExpandable(detail.relationerIFasen, 80);
+  }
+
+  // 12. Overgang
+  const overgangEl = document.getElementById('dybde-overgang');
+  if (overgangEl && detail.overgangTekst) {
+    overgangEl.innerHTML = formatExpandable(detail.overgangTekst, 80);
+  }
 }
 
 function initCirLivsfase() {
