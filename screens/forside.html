@@ -61,21 +61,56 @@
 <!-- UDFORSK -->
 <div class="s" style="padding-top:0;padding-bottom:28px">
   <div class="eyebrow">Udforsk</div>
-  <div id="forside-explore" style="display:flex;flex-direction:column;gap:8px">
-    <div class="forside-explore-card" onclick="Router.navigate('cyklusser')" style="background:rgba(108,130,169,0.04);border:1px solid rgba(108,130,169,0.08)">
-      <span style="color:#6c82a9">Mine Cyklusser</span><span style="color:rgba(108,130,169,0.4)">&rarr;</span>
+  <div id="forside-explore" style="display:flex;flex-direction:column;gap:14px">
+
+    <!-- Cyklusser -->
+    <div class="explore-group">
+      <div class="explore-heading" onclick="Router.navigate('cyklusser')" style="color:#6c82a9">Mine Cyklusser <span style="opacity:0.4">&rarr;</span></div>
+      <div class="explore-links">
+        <span class="explore-link" onclick="Router.navigate('cyk-cic')" style="color:#6c82a9;border-color:rgba(108,130,169,0.15)">Cyklusser i cyklusser</span>
+        <span class="explore-link" onclick="Router.navigate('cyk-ni-faser')" style="color:#6c82a9;border-color:rgba(108,130,169,0.15)">De ni faser</span>
+        <span class="explore-link" onclick="Router.navigate('cyk-fire-uger')" style="color:#6c82a9;border-color:rgba(108,130,169,0.15)">Fire uger</span>
+      </div>
     </div>
-    <div class="forside-explore-card" onclick="Router.navigate('relationer')" style="background:rgba(123,122,158,0.04);border:1px solid rgba(123,122,158,0.08)">
-      <span style="color:#7b7a9e">Mine Relationer</span><span style="color:rgba(123,122,158,0.4)">&rarr;</span>
+
+    <!-- Relationer -->
+    <div class="explore-group">
+      <div class="explore-heading" onclick="Router.navigate('relationer')" style="color:#7b7a9e">Mine Relationer <span style="opacity:0.4">&rarr;</span></div>
+      <div class="explore-links">
+        <span class="explore-link" onclick="Router.navigate('rel-lige-nu')" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)">Lige nu</span>
+        <span class="explore-link" onclick="Router.navigate('rel-to-rytmer')" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)">To rytmer</span>
+        <span class="explore-link" onclick="Router.navigate('rel-tre-gen')" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)">Tre generationer</span>
+      </div>
     </div>
-    <div class="forside-explore-card" onclick="Router.navigate('praksis')" style="background:rgba(122,144,139,0.04);border:1px solid rgba(122,144,139,0.08)">
-      <span style="color:#7a908b">Min Praksis</span><span style="color:rgba(122,144,139,0.4)">&rarr;</span>
+
+    <!-- Praksis -->
+    <div class="explore-group">
+      <div class="explore-heading" onclick="Router.navigate('praksis')" style="color:#7a908b">Min Praksis <span style="opacity:0.4">&rarr;</span></div>
+      <div class="explore-links">
+        <span class="explore-link" onclick="Router.navigate('pra-yin-yoga')" style="color:#7a908b;border-color:rgba(122,144,139,0.15)">Yin Yoga</span>
+        <span class="explore-link" onclick="Router.navigate('pra-mindfulness')" style="color:#7a908b;border-color:rgba(122,144,139,0.15)">Mindfulness</span>
+        <span class="explore-link" onclick="Router.navigate('pra-refleksion')" style="color:#7a908b;border-color:rgba(122,144,139,0.15)">Refleksion</span>
+      </div>
     </div>
-    <div class="forside-explore-card" onclick="Router.navigate('rejse')" style="background:rgba(138,150,169,0.04);border:1px solid rgba(138,150,169,0.08)">
-      <span style="color:#8a96a9">Min Rejse</span><span style="color:rgba(138,150,169,0.4)">&rarr;</span>
+
+    <!-- Rejse -->
+    <div class="explore-group">
+      <div class="explore-heading" onclick="Router.navigate('rejse')" style="color:#8a96a9">Min Rejse <span style="opacity:0.4">&rarr;</span></div>
+      <div class="explore-links">
+        <span class="explore-link" onclick="Router.navigate('rej-udvikling')" style="color:#8a96a9;border-color:rgba(138,150,169,0.15)">Udvikling</span>
+        <span class="explore-link" onclick="Router.navigate('rej-journal')" style="color:#8a96a9;border-color:rgba(138,150,169,0.15)">Journal</span>
+        <span class="explore-link" onclick="Router.navigate('rej-alle-faser')" style="color:#8a96a9;border-color:rgba(138,150,169,0.15)">Alle faser</span>
+      </div>
     </div>
-    <div class="forside-explore-card" onclick="Router.navigate('vinduer')" style="background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.08)">
-      <span style="color:#6B5F7B">Mine Vinduer</span><span style="color:rgba(107,95,123,0.4)">&rarr;</span>
+
+    <!-- Vinduer -->
+    <div class="explore-group">
+      <div class="explore-heading" onclick="Router.navigate('vinduer')" style="color:#6B5F7B">Mine Vinduer <span style="opacity:0.4">&rarr;</span></div>
+      <div class="explore-links">
+        <span class="explore-link" onclick="Router.navigate('vin-tidslinje')" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)">Tidslinje</span>
+        <span class="explore-link" onclick="Router.navigate('vin-oejeblikke')" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)">&Oslash;jeblikke</span>
+      </div>
     </div>
+
   </div>
 </div>

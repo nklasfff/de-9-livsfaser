@@ -199,35 +199,29 @@ const Router = {
       return;
     }
 
-    // If we have a parent, go there
-    if (screen.parent) {
-      this.history = this.history.filter(s => s !== screen.parent);
-      this.navigate(screen.parent, { direction: 'back' });
-    } else if (this.history.length > 0) {
+    // History-based back: go to previous screen (flat navigation)
+    if (this.history.length > 0) {
       const prev = this.history.pop();
       this.navigate(prev, { direction: 'back' });
+    } else if (screen.parent) {
+      // Fallback to parent if no history
+      this.navigate(screen.parent, { direction: 'back' });
     }
   },
 
   /* ---- Infer direction ---- */
   _inferDirection(name) {
-    const target = this.screens[name];
-    const current = this.currentScreen ? this.screens[this.currentScreen] : null;
-
     // No current → replace (initial load)
-    if (!current) return 'replace';
+    if (!this.currentScreen) return 'replace';
 
-    // Arc nav tap → fade
-    if (this.arcMap[name] !== undefined && current.niveau <= 1) return 'fade';
+    // Going to forside is always back
+    if (name === 'forside') return 'back';
 
-    // Going deeper → forward
-    if (target.niveau > current.niveau) return 'forward';
+    // If target is in history stack, it's going back
+    if (this.history.includes(name)) return 'back';
 
-    // Going up → back
-    if (target.niveau < current.niveau) return 'back';
-
-    // Same level → fade
-    return 'fade';
+    // Everything else is forward
+    return 'forward';
   },
 
   /* ---- Update header ---- */
@@ -236,11 +230,11 @@ const Router = {
     const searchBtn = document.getElementById('search-btn');
     const menuBtn = document.getElementById('menu-btn');
 
-    // Back button: visible when not on forside or onboarding
-    const showBack = screen.niveau > 0;
+    // Back button: visible on all screens except forside and onboarding
+    const showBack = name !== 'forside' && screen.niveau >= 0;
     if (backBtn) backBtn.classList.toggle('visible', showBack);
 
-    // Menu button: visible when back is NOT visible, and not on onboarding
+    // Menu button: visible only on forside (when back is NOT visible)
     if (menuBtn) {
       const showMenu = !showBack && screen.niveau >= 0;
       menuBtn.style.display = showMenu ? '' : 'none';
