@@ -1,7 +1,8 @@
-<!-- VELKOMST -->
+<!-- PRÆSENTATION -->
 <div class="dybde-section" style="text-align:center">
   <div class="eyebrow" style="color:#7a908b">Din praksis</div>
-  <div id="prak-title" style="font-family:var(--font-serif);font-size:28px;color:var(--text-dark);margin:16px 0 8px"></div>
+  <div id="prak-title" style="font-family:var(--font-serif);font-size:28px;color:var(--text-dark);margin:16px 0 4px"></div>
+  <div id="prak-sub" style="font-family:var(--font-sans);font-size:13px;color:#7a908b;letter-spacing:1px;margin-bottom:12px"></div>
   <div id="prak-intro" style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.65;max-width:340px;margin:0 auto"></div>
 </div>
 
@@ -10,20 +11,76 @@
   <img src="assets/images/din-krop.jpg" alt="Din krop" style="max-width:280px;opacity:0.85;mix-blend-mode:multiply;filter:saturate(0.7);border-radius:14px">
 </div>
 
-<!-- DIN KROP NU — element-specifik -->
+<!-- INSIGHT — kort kontekst -->
 <div class="dybde-section" style="padding-top:20px">
-  <div id="prak-body-box" style="padding:14px 18px;background:rgba(122,144,139,0.05);border:1px solid rgba(122,144,139,0.10);border-radius:var(--radius)">
-    <div id="prak-body-label" style="font-family:var(--font-sans);font-size:11px;color:#7a908b;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px"></div>
-    <div id="prak-body-text" style="font-family:var(--font-sans);font-size:14.5px;color:var(--text-body);line-height:1.55;font-weight:300"></div>
+  <div class="insight-box" style="background:rgba(122,144,139,0.05);border:1px solid rgba(122,144,139,0.10)">
+    <div class="insight-label" style="color:#83938e" id="prak-insight-label">Dagens element</div>
+    <div class="insight-text" style="color:#7a908b" id="prak-insight-text"></div>
+  </div>
+</div>
+
+<!-- FEELING BOX — emotionel bro -->
+<div class="dybde-section" style="padding-top:0">
+  <div class="feeling-box" style="border-color:rgba(122,144,139,0.08);background:linear-gradient(135deg,rgba(122,144,139,0.04),rgba(139,154,157,0.04))">
+    <div class="feeling-label" style="color:#83938e">Det kroppen pr&oslash;ver at fort&aelig;lle dig</div>
+    <div class="feeling-text" style="color:#6b7f79" id="prak-feeling-text"></div>
   </div>
 </div>
 
 <div class="dots" style="color:#9cb5b0">&middot; &middot; &middot;</div>
 
-<!-- DYK DYBERE — alle praksisser som expandable sektioner -->
+<!-- ANBEFALET LIGE NU -->
 <div class="dybde-section">
-  <div class="eyebrow" style="color:#7a908b">Dyk dybere</div>
-  <div id="prak-deep-content" style="display:flex;flex-direction:column;gap:8px"></div>
+  <div id="prak-featured" class="quick-action" style="background:linear-gradient(135deg,rgba(122,144,139,0.06),rgba(122,144,139,0.02));border-color:rgba(122,144,139,0.10);cursor:pointer">
+    <div class="quick-action-label" style="color:#83938e" id="prak-featured-label">Anbefalet lige nu</div>
+    <div class="quick-action-title" style="color:#7a908b" id="prak-featured-title"></div>
+    <div class="quick-action-desc" style="color:#777" id="prak-featured-desc"></div>
+    <div class="quick-action-btn" style="border-color:rgba(122,144,139,0.25);color:#7a908b">Pr&oslash;v nu &rarr;</div>
+  </div>
+</div>
+
+<div class="dots" style="color:#9cb5b0">&middot; &middot; &middot;</div>
+
+<!-- PRAKSIS-KORT — veje ind -->
+<div class="dybde-section">
+  <div id="prak-cards"></div>
+</div>
+
+<!-- &Aring;NDEDR&AElig;T -->
+<div class="dybde-section" style="padding-top:0">
+  <div class="breath-box">
+    <div class="breath-label" id="prak-breath-label">Tag tre vejrtr&aelig;kninger</div>
+    <div class="breath-circle">
+      <div class="breath-inner">Ind&aring;nd</div>
+    </div>
+    <div class="breath-steps">
+      <span class="breath-step">Ind 4s</span>
+      <span class="breath-dot">&middot;</span>
+      <span class="breath-step">Hold 4s</span>
+      <span class="breath-dot">&middot;</span>
+      <span class="breath-step">Ud 6s</span>
+    </div>
+    <div class="breath-text" id="prak-breath-text"></div>
+  </div>
+</div>
+
+<div class="dots" style="color:#9cb5b0">&middot; &middot; &middot;</div>
+
+<!-- PULL QUOTE -->
+<div class="pull-quote">
+  <div class="pull-quote-text" style="color:#8a9e98">&laquo;&thinsp;Kroppen lyver aldrig. Den taler bare et sprog vi har glemt at lytte til.&thinsp;&raquo;</div>
+  <div class="pull-quote-attr">&mdash; Isabelle</div>
+</div>
+
+<!-- FIGUR 2 — Vejen ind -->
+<div class="dybde-section" style="padding-top:0">
+  <div style="background:rgba(122,144,139,0.03);border:1px solid rgba(122,144,139,0.07);border-radius:var(--radius);padding:20px;text-align:center">
+    <div style="font-family:var(--font-sans);font-size:11px;color:#83938e;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">Vejen ind</div>
+    <div class="fig">
+      <img src="assets/images/praksis-spejl.png" alt="Vejen ind" style="max-width:300px">
+    </div>
+    <div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:#8a9e98;margin-top:10px;line-height:1.5">Tre lag. Overfladen er symptomerne. Praksis er vejen. Stilheden er m&aring;let.</div>
+  </div>
 </div>
 
 <div class="dots" style="color:#9cb5b0">&middot; &middot; &middot;</div>
