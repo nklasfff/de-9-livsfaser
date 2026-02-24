@@ -2915,37 +2915,18 @@ function initDinRelation() {
   const { cycles, dominant } = data;
   const phase = cycles.lifePhase;
   const phaseNum = phase.phase;
-  const detail = LIVSFASE_DETAIL[phaseNum];
   const elLabel = Calculations.ELEMENT_LABELS[phase.element] || phase.element;
 
-  // === 1. PRÆSENTATION ===
-  setText('rel-deep-title', 'Fase ' + phaseNum + ' \u00b7 ' + elLabel);
+  // Titel + intro
+  setText('rel-title', 'Fase ' + phaseNum + ' \u00b7 ' + elLabel);
   const introTexts = [
     'Ingen relation eksisterer i et vakuum. Hver forbindelse b\u00e6rer begge menneskers rytme \u2014 og n\u00e5r rytmerne m\u00f8des, opst\u00e5r noget nyt.',
     'De mennesker du har t\u00e6ttest p\u00e5 dig, m\u00e6rker din fase lige s\u00e5 tydeligt som du m\u00e6rker deres. Her kan du udforske hvad der sker i m\u00f8det.',
     'Relationer forandrer sig med faserne. Det der f\u00f8ltes let for et \u00e5r siden, kan f\u00f8les tungt nu \u2014 eller omvendt. Begge dele er naturlige.'
   ];
-  const introIdx = Calculations.dayRotation(introTexts.length);
-  setText('rel-deep-intro', introTexts[introIdx]);
+  setText('rel-intro', introTexts[Calculations.dayRotation(introTexts.length)]);
 
-  // === 2. PERSONLIGGØRELSE: Relationer i din fase ===
-  const relIFasenEl = document.getElementById('rel-deep-relationer-i-fasen');
-  if (relIFasenEl && detail && detail.relationerIFasen) {
-    relIFasenEl.innerHTML = formatExpandable(detail.relationerIFasen, 60);
-  }
-
-  // === 3. EMOTIONEL BRO: Feeling box ===
-  const feelingTexts = {
-    VAND: 'M\u00e5ske m\u00e6rker du en s\u00e5rbarhed i dine relationer lige nu \u2014 en f\u00f8lsomhed der g\u00f8r det sv\u00e6rt at s\u00e6tte gr\u00e6nser, men som ogs\u00e5 \u00e5bner for dyb forbindelse.',
-    'TR\u00c6': 'Der er m\u00e5ske en utolmodighed i dig \u2014 en tr\u00e6ng til at ting skal vokse og bev\u00e6ge sig. Dine relationer m\u00e6rker den energi, og nogle trives med den mens andre bremser.',
-    ILD: 'Du br\u00e6nder m\u00e5ske for noget lige nu \u2014 og de mennesker omkring dig m\u00e6rker varmen. Nogen tr\u00e6kkes mod den, andre tr\u00e6kker sig. Begge reaktioner fort\u00e6ller dig noget.',
-    JORD: 'Der er en omsorg i dig der r\u00e6kker ud mod alle. M\u00e5ske giver du mere end du modtager lige nu \u2014 og dine relationer afspejler den ubalance.',
-    METAL: 'M\u00e5ske m\u00e6rker du et behov for at tr\u00e6kke dig lidt tilbage \u2014 ikke v\u00e6k fra dine relationer, men ind i din egen klarhed. Det er en styrke, ikke en afvisning.'
-  };
-  const feelingText = feelingTexts[phase.element] || feelingTexts.VAND;
-  setText('rel-deep-feeling-text', feelingText);
-
-  // === 4. PERSON-VÆLGER ===
+  // Person-v\u00e6lger
   const relations = Storage.getRelations();
   const useExample = !relations || relations.length === 0;
   const rels = useExample
@@ -2958,7 +2939,6 @@ function initDinRelation() {
   RelDeepState.people = rels;
   RelDeepState.targetDate = null;
 
-  // Check if a specific person was pre-selected
   let defaultIndex = 0;
   if (window._selectedRelPerson) {
     const idx = rels.findIndex(r => r.name === window._selectedRelPerson);
@@ -2967,19 +2947,18 @@ function initDinRelation() {
   }
   RelDeepState.selectedPerson = rels[defaultIndex] || null;
 
-  // Render person pills
-  const pillsEl = document.getElementById('rel-deep-pills');
+  const pillsEl = document.getElementById('rel-pills');
   if (pillsEl) {
     pillsEl.innerHTML = rels.map((r, i) =>
       `<span class="rel-deep-pill${i === defaultIndex ? ' active' : ''}" onclick="selectRelDeepPerson(${i}, this)">${r.name}</span>`
     ).join('');
   }
 
-  // Render smart date chips
+  // Dato-chips
   const now = new Date();
   const pad2 = n => String(n).padStart(2, '0');
   const toStr = d => d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate());
-  const chipContainer = document.getElementById('rel-deep-smart-chips');
+  const chipContainer = document.getElementById('rel-smart-chips');
   if (chipContainer) {
     const fiveAgo = new Date(now.getFullYear() - 5, now.getMonth(), now.getDate());
     const fiveAhead = new Date(now.getFullYear() + 5, now.getMonth(), now.getDate());
@@ -2993,31 +2972,8 @@ function initDinRelation() {
     ).join('');
   }
 
-  // Set date input
   const dateInput = document.getElementById('rel-deep-date');
   if (dateInput) dateInput.value = '';
-
-  // === 5. UDFORSK VIDERE cross-links ===
-  const exploreEl = document.getElementById('rel-deep-explore');
-  if (exploreEl) {
-    exploreEl.innerHTML = `
-      <div class="quick-action" onclick="Router.navigate('rel-tre-gen')">
-        <div class="quick-action-title">Tre generationer</div>
-        <div class="quick-action-desc">Se hvordan faserne flyder gennem generationerne</div>
-        <div class="quick-action-arrow" style="color:rgba(123,122,158,0.4)">&#8594;</div>
-      </div>
-      <div class="quick-action" onclick="Router.navigate('rel-epigenetik')">
-        <div class="quick-action-title">Epigenetik</div>
-        <div class="quick-action-desc">Hvad du b\u00e6rer med dig fra dine forf\u00e6dre</div>
-        <div class="quick-action-arrow" style="color:rgba(123,122,158,0.4)">&#8594;</div>
-      </div>
-      <div class="quick-action" onclick="Router.navigate('cir-dit-liv')">
-        <div class="quick-action-title">Dit dybe billede</div>
-        <div class="quick-action-desc">Udforsk din egen fase i dybden</div>
-        <div class="quick-action-arrow" style="color:rgba(123,122,158,0.4)">&#8594;</div>
-      </div>
-    `;
-  }
 
   buildRelationReading();
 }
@@ -3054,184 +3010,81 @@ function buildRelationReading() {
   const targetDate = RelDeepState.targetDate || new Date();
   const isMale = rel.gender === 'male';
 
-  // Calculate cycles for both at target date
   const userCycles = Calculations.allCycles(user.birthdate, targetDate);
   const userDom = Calculations.getWeightedDominant(userCycles);
   const theirCycles = cyclesAtDate(rel.birthdate, targetDate, isMale);
 
-  const userPhase = userCycles.lifePhase;
-  const theirPhase = theirCycles.lifePhase;
-  const userDetail = LIVSFASE_DETAIL[userPhase.phase];
-  const theirDetail = LIVSFASE_DETAIL[theirPhase.phase];
-  const userEl = userPhase.element;
-  const theirEl = theirPhase.element;
+  const userEl = userCycles.lifePhase.element;
+  const theirEl = theirCycles.lifePhase.element;
   const userElLabel = Calculations.ELEMENT_LABELS[userEl];
   const theirElLabel = Calculations.ELEMENT_LABELS[theirEl];
 
-  // Eyebrow
-  setText('rel-deep-other-eyebrow', rel.name);
-
-  // ---- USER PHASE ----
-  setText('rel-deep-user-phase', `Fase ${userPhase.phase} \u00b7 ${userElLabel}`);
-  const userIntroEl = document.getElementById('rel-deep-user-intro');
-  if (userIntroEl && userDetail) {
-    userIntroEl.innerHTML = formatExpandable(userDetail.introText, 40);
-  }
-
-  // ---- OTHER PHASE ----
-  setText('rel-deep-other-phase', `Fase ${theirPhase.phase} \u00b7 ${theirElLabel}`);
-  const otherIntroEl = document.getElementById('rel-deep-other-intro');
-  if (otherIntroEl && theirDetail) {
-    otherIntroEl.innerHTML = formatExpandable(theirDetail.introText, 40);
-  }
-
-  // ---- MEETING / TCM INTERACTION ----
+  // Meeting type (TCM interaction)
   const nourishing = { 'VAND': 'TR\u00c6', 'TR\u00c6': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
   let meetLabel, meetText;
 
   if (userEl === theirEl) {
     meetLabel = 'Dyb resonans';
-    meetText = `I deler ${userElLabel}-elementet. N\u00e5r begge er i det samme felt, forst\u00e5r I hinanden uden ord \u2014 og m\u00e6rker hinandens energi st\u00e6rkere end normalt.`;
+    meetText = `I deler ${userElLabel}-elementet. N\u00e5r begge er i det samme felt, forst\u00e5r I hinanden uden ord.`;
   } else if (nourishing[userEl] === theirEl) {
     meetLabel = `${userElLabel} n\u00e6rer ${theirElLabel}`;
-    meetText = `Dit ${userElLabel} n\u00e6rer ${rel.name}s ${theirElLabel}. Din energi b\u00e6rer den andens videre \u2014 m\u00e5ske uden du t\u00e6nker over det.`;
+    meetText = `Dit ${userElLabel} n\u00e6rer ${rel.name}s ${theirElLabel}. Din energi b\u00e6rer den andens videre.`;
   } else if (nourishing[theirEl] === userEl) {
     meetLabel = `${theirElLabel} n\u00e6rer ${userElLabel}`;
     meetText = `${rel.name}s ${theirElLabel} n\u00e6rer dit ${userElLabel}. Der er noget i den andens rytme der giver dig ro.`;
   } else {
     meetLabel = 'Kreativ sp\u00e6nding';
-    const key = userEl + '_' + theirEl;
-    const interaction = typeof ELEMENT_INTERACTIONS !== 'undefined' ? ELEMENT_INTERACTIONS[key] : null;
-    meetText = interaction
-      ? interaction.text.replace('{navn}', rel.name).replace('{pron}', isMale ? 'hans' : 'hendes')
-      : `${userElLabel} og ${theirElLabel} udfordrer hinanden. Det er kreativ friktion der kan skabe noget nyt.`;
+    meetText = `${userElLabel} og ${theirElLabel} udfordrer hinanden \u2014 kreativ friktion der kan skabe noget nyt.`;
   }
 
-  setText('rel-deep-meeting-type', meetLabel);
-  setText('rel-deep-meeting-text', meetText);
+  setText('rel-meeting-type', meetLabel);
+  setText('rel-meeting-text', meetText);
 
   // Climate
   const allElements = [userEl, theirEl, userCycles.season.element, theirCycles.season.element];
   const climate = analyzeClimate(allElements, userDom);
-  setText('rel-deep-climate-label', climate.label);
-  setText('rel-deep-climate-text', climate.text);
+  setText('rel-climate-label', climate.label);
+  setText('rel-climate-text', climate.text);
 
-  // ---- FEELINGS ----
-  const feelingsEl = document.getElementById('rel-deep-feelings');
-  if (feelingsEl) {
-    let html = '';
-    if (userDetail && userDetail.centralFoelelse) {
-      html += `<div class="dybde-krop-sind-card" style="border-color:rgba(123,122,158,0.10);margin-bottom:12px">`;
-      html += `<div class="dybde-krop-sind-label">Dig \u00b7 ${userDetail.centralFoelelse.title}</div>`;
-      html += `<div class="dybde-body">${formatExpandable(userDetail.centralFoelelse.tekst, 50)}</div></div>`;
-    }
-    if (theirDetail && theirDetail.centralFoelelse) {
-      html += `<div class="dybde-krop-sind-card" style="border-color:rgba(123,122,158,0.10)">`;
-      html += `<div class="dybde-krop-sind-label">${rel.name} \u00b7 ${theirDetail.centralFoelelse.title}</div>`;
-      html += `<div class="dybde-body">${formatExpandable(theirDetail.centralFoelelse.tekst, 50)}</div></div>`;
-    }
-    feelingsEl.innerHTML = html;
-  }
-
-  // ---- DENNE FASE I JER ----
-  const denneFaseEl = document.getElementById('rel-deep-denne-fase');
-  if (denneFaseEl) {
-    let html = '';
-    if (userDetail && userDetail.denneFaseIDig) {
-      html += `<div class="dybde-krop-sind-card" style="border-color:rgba(123,122,158,0.10);margin-bottom:12px">`;
-      html += `<div class="dybde-krop-sind-label">Dig i Fase ${userPhase.phase}</div>`;
-      html += `<div class="dybde-body">${formatExpandable(userDetail.denneFaseIDig, 50)}</div></div>`;
-    }
-    if (theirDetail && theirDetail.denneFaseIDig) {
-      html += `<div class="dybde-krop-sind-card" style="border-color:rgba(123,122,158,0.10)">`;
-      html += `<div class="dybde-krop-sind-label">${rel.name} i Fase ${theirPhase.phase}</div>`;
-      html += `<div class="dybde-body">${formatExpandable(theirDetail.denneFaseIDig, 50)}</div></div>`;
-    }
-    denneFaseEl.innerHTML = html;
-  }
-
-  // ---- KROP & SIND ----
-  const kropSindEl = document.getElementById('rel-deep-krop-sind');
-  if (kropSindEl) {
-    let html = '';
-    if (userDetail) {
-      html += `<div class="dybde-krop-sind-card" style="border-color:rgba(123,122,158,0.10);margin-bottom:12px">`;
-      html += `<div class="dybde-krop-sind-label">Din krop &amp; sind</div>`;
-      html += `<div class="dybde-body">${formatExpandable((userDetail.kropTekst || '') + '\n\n' + (userDetail.sindTekst || ''), 50)}</div></div>`;
-    }
-    if (theirDetail) {
-      html += `<div class="dybde-krop-sind-card" style="border-color:rgba(123,122,158,0.10)">`;
-      html += `<div class="dybde-krop-sind-label">${rel.name}s krop &amp; sind</div>`;
-      html += `<div class="dybde-body">${formatExpandable((theirDetail.kropTekst || '') + '\n\n' + (theirDetail.sindTekst || ''), 50)}</div></div>`;
-    }
-    kropSindEl.innerHTML = html;
-  }
-
-  // ---- TEMAER ----
-  const temaerEl = document.getElementById('rel-deep-temaer');
-  if (temaerEl) {
-    const allTemaer = [];
-    if (userDetail && userDetail.temaerNarrativer) {
-      userDetail.temaerNarrativer.forEach(t => allTemaer.push({ title: 'Dig: ' + t.title, tekst: t.tekst }));
-    }
-    if (theirDetail && theirDetail.temaerNarrativer) {
-      theirDetail.temaerNarrativer.forEach(t => allTemaer.push({ title: rel.name + ': ' + t.title, tekst: t.tekst }));
-    }
-    renderDybdeTemaer(temaerEl, allTemaer);
-  }
-
-  // ---- \u00d8VELSER ----
-  const oevelserEl = document.getElementById('rel-deep-oevelser');
-  if (oevelserEl) {
-    const allOev = [];
-    if (userDetail && userDetail.oevelser) {
-      userDetail.oevelser.forEach(ov => {
-        if (ov.type === 'par') allOev.unshift(ov);
-        else allOev.push({ type: ov.type, title: 'Dig: ' + ov.title, desc: ov.desc });
-      });
-    }
-    if (theirDetail && theirDetail.oevelser) {
-      theirDetail.oevelser.forEach(ov => {
-        if (ov.type === 'par') allOev.unshift(ov);
-        else allOev.push({ type: ov.type, title: rel.name + ': ' + ov.title, desc: ov.desc });
-      });
-    }
-    renderDybdeOevelser(oevelserEl, allOev.slice(0, 6));
-  }
-
-  // ---- SAMTALE\u00c5BNER ----
+  // Samtale\u00e5bner
   const samtale = typeof TO_RYTMER_SAMTALE !== 'undefined' ? TO_RYTMER_SAMTALE[userEl] : null;
   if (samtale) {
-    setText('rel-deep-samtale-text', '\u00ab\u2009' + samtale.spoerg + '\u2009\u00bb');
+    setText('rel-samtale', '\u00ab\u2009' + samtale.spoerg + '\u2009\u00bb');
   }
 
-  // ---- REFLEKSION ----
-  const allRefl = [];
-  if (userDetail && userDetail.ekstraRefleksioner) allRefl.push(...userDetail.ekstraRefleksioner);
-  if (theirDetail && theirDetail.ekstraRefleksioner) allRefl.push(...theirDetail.ekstraRefleksioner);
-  if (allRefl.length > 0) {
-    const ri = Calculations.dayRotation(allRefl.length);
-    setText('rel-deep-refleksion', allRefl[ri]);
+  // "Dyk dybere" links — each goes to cir-dit-liv or shows specific content
+  const linksEl = document.getElementById('rel-deep-links');
+  if (linksEl) {
+    const userPhaseNum = userCycles.lifePhase.phase;
+    const theirPhaseNum = theirCycles.lifePhase.phase;
+    linksEl.innerHTML = `
+      <div class="praksis-card" onclick="window._selectedPhase=${userPhaseNum};Router.navigate('livsfase-detail')">
+        <div>
+          <div class="pk-label">Dig \u00b7 Fase ${userPhaseNum} \u00b7 ${userElLabel}</div>
+          <div class="pk-name">Din fase i dybden</div>
+          <div class="pk-desc">Krop, sind, f\u00f8lelser, temaer, \u00f8velser og r\u00e5d for din fase.</div>
+        </div>
+        <div class="pk-arrow" style="color:rgba(123,122,158,0.4)">\u2192</div>
+      </div>
+      <div class="praksis-card" onclick="window._selectedPhase=${theirPhaseNum};Router.navigate('livsfase-detail')">
+        <div>
+          <div class="pk-label">${rel.name} \u00b7 Fase ${theirPhaseNum} \u00b7 ${theirElLabel}</div>
+          <div class="pk-name">${rel.name}s fase i dybden</div>
+          <div class="pk-desc">Krop, sind, f\u00f8lelser, temaer og hvad ${rel.name} m\u00e5ske m\u00e6rker.</div>
+        </div>
+        <div class="pk-arrow" style="color:rgba(123,122,158,0.4)">\u2192</div>
+      </div>
+      <div class="praksis-card" onclick="Router.navigate('cir-dit-liv')">
+        <div>
+          <div class="pk-label">Dit dybe billede</div>
+          <div class="pk-name">Alle fem cyklusser</div>
+          <div class="pk-desc">Se hele dit billede \u2014 livsfase, \u00e5rstid, m\u00e5ned, ugedag, organur.</div>
+        </div>
+        <div class="pk-arrow" style="color:rgba(123,122,158,0.4)">\u2192</div>
+      </div>
+    `;
   }
 
-  // ---- OVERGANGE ----
-  const overgangEl = document.getElementById('rel-deep-overgange');
-  if (overgangEl) {
-    let html = '';
-    if (userDetail && userDetail.overgangTekst) {
-      html += `<div class="dybde-krop-sind-card" style="border-color:rgba(123,122,158,0.10);margin-bottom:12px">`;
-      html += `<div class="dybde-krop-sind-label">Din overgang</div>`;
-      html += `<div class="dybde-body">${formatExpandable(userDetail.overgangTekst, 50)}</div></div>`;
-    }
-    if (theirDetail && theirDetail.overgangTekst) {
-      html += `<div class="dybde-krop-sind-card" style="border-color:rgba(123,122,158,0.10)">`;
-      html += `<div class="dybde-krop-sind-label">${rel.name}s overgang</div>`;
-      html += `<div class="dybde-body">${formatExpandable(theirDetail.overgangTekst, 50)}</div></div>`;
-    }
-    overgangEl.innerHTML = html;
-  }
-
-  // Scroll to top
   window.scrollTo({ top: 0 });
 }
 

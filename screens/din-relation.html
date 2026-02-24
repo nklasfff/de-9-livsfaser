@@ -1,149 +1,55 @@
-<!-- PRÆSENTATION: Isabelle byder velkommen -->
+<!-- VELKOMST -->
 <div class="dybde-section" style="text-align:center">
   <div class="eyebrow" style="color:#88839e">Dine relationer</div>
-  <div id="rel-deep-title" style="font-family:var(--font-serif);font-size:28px;color:var(--text-dark);margin:16px 0 8px"></div>
-  <div id="rel-deep-intro" style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.65;max-width:360px;margin:0 auto"></div>
+  <div id="rel-title" style="font-family:var(--font-serif);font-size:28px;color:var(--text-dark);margin:16px 0 8px"></div>
+  <div id="rel-intro" style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.65;max-width:340px;margin:0 auto"></div>
 </div>
 
-<!-- HERO-BILLEDE -->
-<div class="dybde-section" style="padding-top:8px;padding-bottom:0;text-align:center">
-  <div class="fig">
-    <img src="assets/images/rel-lige-nu-felt.png" alt="Jeres energifelt" style="max-width:300px;opacity:0.85">
-  </div>
-</div>
-
-<!-- PERSONLIGGØRELSE: Relationer i din fase -->
-<div class="dybde-section">
-  <div class="eyebrow" style="color:#88839e">Relationer i din fase</div>
-  <div id="rel-deep-relationer-i-fasen" class="dybde-body"></div>
-</div>
-
-<!-- EMOTIONEL BRO: Feeling box -->
-<div class="dybde-section" style="padding-top:0">
-  <div class="feeling-box" style="border-color:rgba(123,122,158,0.12)">
-    <div class="fb-label" id="rel-deep-feeling-label" style="color:#88839e">Det du m&aring;ske m&aelig;rker</div>
-    <div class="fb-text" id="rel-deep-feeling-text"></div>
-  </div>
-</div>
-
-<div class="dots" style="color:#b0a8c0">&middot; &middot; &middot;</div>
-
-<!-- VÆLG PERSON -->
-<div class="dybde-section" style="padding-bottom:0">
-  <div class="eyebrow" style="color:#88839e">Udforsk en relation</div>
-  <div id="rel-deep-pills" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0 6px"></div>
-</div>
-
-<!-- VÆLG TIDSPUNKT -->
-<div class="dybde-section" style="padding-top:8px;padding-bottom:0">
+<!-- VÆLG PERSON + TIDSPUNKT -->
+<div class="dybde-section" style="padding-top:12px;padding-bottom:0">
+  <div id="rel-pills" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 0 12px"></div>
   <div style="display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap">
     <span class="rel-deep-chip active" onclick="setRelDeepDate(null, this)">Nu</span>
     <input type="date" id="rel-deep-date" style="font-family:var(--font-sans);font-size:14px;color:var(--text-body);border:1px solid rgba(123,122,158,0.15);border-radius:10px;padding:6px 10px;background:var(--bg)" onchange="onRelDeepDateChange(this.value)">
   </div>
-  <div id="rel-deep-smart-chips" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px"></div>
+  <div id="rel-smart-chips" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px"></div>
 </div>
 
-<div class="dots" style="color:#b0a8c0">&middot; &middot; &middot;</div>
-
-<!-- DIG -->
+<!-- JERES MØDE — kort teaser -->
 <div class="dybde-section">
-  <div class="eyebrow" style="color:#88839e">Dig</div>
-  <div id="rel-deep-user-phase" style="font-family:var(--font-serif);font-size:20px;color:var(--text-dark);margin-bottom:6px"></div>
-  <div id="rel-deep-user-intro" class="dybde-body"></div>
+  <div id="rel-meeting-type" style="font-family:var(--font-serif);font-size:22px;font-style:italic;color:#7b7a9e;text-align:center;margin-bottom:6px"></div>
+  <div id="rel-meeting-text" style="font-family:var(--font-serif);font-size:15px;color:var(--text-body);line-height:1.6;text-align:center;max-width:360px;margin:0 auto"></div>
 </div>
 
-<!-- DEN ANDEN -->
-<div class="dybde-section">
-  <div class="eyebrow" style="color:#88839e" id="rel-deep-other-eyebrow">Din partner</div>
-  <div id="rel-deep-other-phase" style="font-family:var(--font-serif);font-size:20px;color:var(--text-dark);margin-bottom:6px"></div>
-  <div id="rel-deep-other-intro" class="dybde-body"></div>
+<!-- FIGUR -->
+<div class="fig" style="margin:0 auto">
+  <img src="assets/images/rel-lige-nu-felt.png" alt="Jeres energifelt" style="max-width:300px;opacity:0.85">
 </div>
 
-<div class="dots" style="color:#b0a8c0">&middot; &middot; &middot;</div>
-
-<!-- JERES MØDE -->
-<div class="dybde-section">
-  <div class="eyebrow" style="color:#88839e">Jeres m&oslash;de</div>
-  <div id="rel-deep-meeting-type" style="font-family:var(--font-serif);font-size:20px;font-style:italic;color:#7b7a9e;margin-bottom:6px"></div>
-  <div id="rel-deep-meeting-text" class="dybde-body"></div>
-  <div id="rel-deep-climate" style="margin-top:14px;padding:14px 18px;background:rgba(123,122,158,0.05);border:1px solid rgba(123,122,158,0.10);border-radius:var(--radius)">
-    <div id="rel-deep-climate-label" style="font-family:var(--font-sans);font-size:11px;color:#88839e;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px"></div>
-    <div id="rel-deep-climate-text" style="font-family:var(--font-sans);font-size:14.5px;color:var(--text-body);line-height:1.55;font-weight:300"></div>
-  </div>
-</div>
-
-<!-- FIGUR: Jeres møde -->
-<div class="dybde-section" style="padding-top:0;text-align:center">
-  <div class="fig">
-    <img src="assets/images/rel-jeres-moede.png" alt="Jeres m&oslash;de" style="max-width:300px;opacity:0.85">
+<!-- KLIMA -->
+<div class="dybde-section" style="padding-top:12px">
+  <div id="rel-climate" style="padding:14px 18px;background:rgba(123,122,158,0.05);border:1px solid rgba(123,122,158,0.10);border-radius:var(--radius)">
+    <div id="rel-climate-label" style="font-family:var(--font-sans);font-size:11px;color:#88839e;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px"></div>
+    <div id="rel-climate-text" style="font-family:var(--font-sans);font-size:14.5px;color:var(--text-body);line-height:1.55;font-weight:300"></div>
   </div>
 </div>
 
 <div class="dots" style="color:#b0a8c0">&middot; &middot; &middot;</div>
 
-<!-- JERES CENTRALE FØLELSER -->
+<!-- DYK DYBERE — links til sektioner -->
 <div class="dybde-section">
-  <div class="eyebrow" style="color:#88839e">Jeres centrale f&oslash;lelser</div>
-  <div id="rel-deep-feelings"></div>
+  <div class="eyebrow" style="color:#88839e">Dyk dybere</div>
+  <div id="rel-deep-links" style="display:flex;flex-direction:column;gap:8px"></div>
 </div>
 
 <div class="dots" style="color:#b0a8c0">&middot; &middot; &middot;</div>
 
-<!-- DENNE FASE I JER -->
-<div class="dybde-section">
-  <div class="eyebrow" style="color:#88839e">Denne fase i jer</div>
-  <div id="rel-deep-denne-fase"></div>
-</div>
-
-<div class="dots" style="color:#b0a8c0">&middot; &middot; &middot;</div>
-
-<!-- KROP & SIND -->
-<div class="dybde-section">
-  <div class="eyebrow" style="color:#88839e">Krop &amp; sind</div>
-  <div id="rel-deep-krop-sind"></div>
-</div>
-
-<div class="dots" style="color:#b0a8c0">&middot; &middot; &middot;</div>
-
-<!-- FASENS TEMAER -->
-<div class="dybde-section">
-  <div class="eyebrow" style="color:#88839e">Fasens temaer</div>
-  <div id="rel-deep-temaer"></div>
-</div>
-
-<div class="dots" style="color:#b0a8c0">&middot; &middot; &middot;</div>
-
-<!-- ØVELSER I KAN GØRE -->
-<div class="dybde-section">
-  <div class="eyebrow" style="color:#88839e">&Oslash;velser I kan g&oslash;re</div>
-  <div id="rel-deep-oevelser"></div>
-</div>
-
-<div class="dots" style="color:#b0a8c0">&middot; &middot; &middot;</div>
-
-<!-- SAMTALÅBNER -->
+<!-- SAMTALEÅBNER -->
 <div class="dybde-section">
   <div class="eyebrow" style="color:#88839e">Samtale&aring;bner</div>
-  <div id="rel-deep-samtale" style="padding:14px 18px;background:rgba(123,122,158,0.05);border:1px solid rgba(123,122,158,0.10);border-radius:var(--radius)">
-    <div id="rel-deep-samtale-text" style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:#7b7a9e;line-height:1.55"></div>
+  <div style="padding:14px 18px;background:rgba(123,122,158,0.05);border:1px solid rgba(123,122,158,0.10);border-radius:var(--radius)">
+    <div id="rel-samtale" style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:#7b7a9e;line-height:1.55"></div>
   </div>
-</div>
-
-<div class="dots" style="color:#b0a8c0">&middot; &middot; &middot;</div>
-
-<!-- REFLEKSION -->
-<div class="dybde-section">
-  <div class="eyebrow" style="color:#88839e">Refleksion</div>
-  <div id="rel-deep-refleksion" style="font-family:var(--font-serif);font-size:17px;font-style:italic;color:var(--text-dark);line-height:1.6;margin-bottom:14px"></div>
-  <a onclick="Router.navigate('rej-journal')" style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:#7b7a9e;opacity:0.7;cursor:pointer;text-decoration:none">Skriv i din journal &rarr;</a>
-</div>
-
-<div class="dots" style="color:#b0a8c0">&middot; &middot; &middot;</div>
-
-<!-- OVERGANGENE -->
-<div class="dybde-section" style="padding-bottom:12px">
-  <div class="eyebrow" style="color:#88839e">Overgangene</div>
-  <div id="rel-deep-overgange"></div>
 </div>
 
 <div class="dots" style="color:#b0a8c0">&middot; &middot; &middot;</div>
@@ -151,8 +57,11 @@
 <!-- UDFORSK VIDERE -->
 <div class="dybde-section" style="padding-bottom:32px">
   <div class="eyebrow" style="color:#88839e">Udforsk videre</div>
-  <div id="rel-deep-explore" style="display:flex;flex-direction:column;gap:8px"></div>
+  <div class="explore-links" style="justify-content:center">
+    <span class="explore-link" onclick="Router.navigate('rel-tre-gen')" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)">Tre generationer</span>
+    <span class="explore-link" onclick="Router.navigate('rel-epigenetik')" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)">Epigenetik</span>
+    <span class="explore-link" onclick="Router.navigate('cir-dit-liv')" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)">Dit dybe billede</span>
+  </div>
 </div>
 
 <div class="section-closer"><div class="lotus-fill"><img src="assets/images/lotus-adskiller.png" alt=""></div></div>
-<div class="back-to-top"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Tilbage til toppen &uarr;</a></div>
