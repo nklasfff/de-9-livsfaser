@@ -1,126 +1,86 @@
-<div class="section tone-rejse">
-  <div class="section-eyebrow">Min Rejse</div>
-  <div class="section-title">Din vej<br>gennem faserne</div>
-  <div class="section-sub">Tracking, m&oslash;nstre og den st&oslash;rre historie</div>
-  <div class="section-intro">Se tilbage p&aring; dine check-ins, opdag m&oslash;nstre i din energi, og f&oslash;lg din udvikling over tid. Her samler dine oplevelser sig til indsigt.</div>
+<!-- PRÆSENTATION -->
+<div class="dybde-section" style="text-align:center">
+  <div class="eyebrow" style="color:#8a96a9">Min rejse</div>
+  <div id="rej-title" style="font-family:var(--font-serif);font-size:28px;color:var(--text-dark);margin:16px 0 4px"></div>
+  <div id="rej-sub" style="font-family:var(--font-sans);font-size:13px;color:#8a96a9;letter-spacing:1px;margin-bottom:12px"></div>
+  <div id="rej-intro" style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.65;max-width:340px;margin:0 auto"></div>
+</div>
 
-  <div class="fig">
-    <img src="assets/images/min-rejse-ikigai.png" alt="Visdom" style="width:100%;max-width:320px;filter:grayscale(1) sepia(1) hue-rotate(185deg) saturate(0.8) brightness(0.92) contrast(1.05)">
+<!-- FIGUR — atmosf&aelig;risk -->
+<div class="fig" style="margin:24px auto 0">
+  <img src="assets/images/min-rejse-ikigai.png" alt="Din rejse" style="max-width:300px;filter:grayscale(1) sepia(1) hue-rotate(185deg) saturate(0.8) brightness(0.92) contrast(1.05)">
+</div>
+
+<!-- MILESTONE — kort kontekst -->
+<div class="dybde-section" style="padding-top:20px">
+  <div class="insight-box" style="background:rgba(138,150,169,0.05);border:1px solid rgba(138,150,169,0.10)">
+    <div class="insight-label" style="color:#8892a1" id="rej-milestone-label">Din fase lige nu</div>
+    <div class="insight-text" style="color:#8a96a9" id="rej-milestone-text"></div>
   </div>
+</div>
 
-  <!-- DET DER ER SVÆRT AT SE -->
+<!-- FEELING BOX — emotionel bro -->
+<div class="dybde-section" style="padding-top:0">
   <div class="feeling-box" style="border-color:rgba(138,150,169,0.08);background:linear-gradient(135deg,rgba(138,150,169,0.04),rgba(168,178,193,0.04))">
     <div class="feeling-label" style="color:#8892a1">Det der er sv&aelig;rt at se</div>
     <div class="feeling-text" style="color:#6e7d91">Det er n&aelig;sten umuligt at forst&aring; sin egen rejse mens man er midt i den. Du kan ikke se m&oslash;nsteret, n&aring;r du selv er en del af det. Men m&oslash;nsteret er der. Det viser sig i de &oslash;jeblikke hvor noget gentager sig &mdash; og i de &oslash;jeblikke hvor noget pludselig h&oslash;rer op.</div>
   </div>
-
-  <!-- MILESTONE -->
-  <div class="milestone-box" id="rej-milestone">
-    <div class="milestone-phase" id="rej-milestone-phase">Fase 9 &middot; Visdom</div>
-    <div class="milestone-years" id="rej-milestone-years">Du er i &aring;r 4 af denne fase</div>
-    <div class="milestone-bar"><div class="milestone-fill" style="width:57%" id="rej-milestone-fill"></div><div class="milestone-marker" style="left:57%" id="rej-milestone-marker"></div></div>
-    <div class="milestone-range"><span>56 &aring;r</span><span>63 &aring;r</span></div>
-    <div class="milestone-text" id="rej-milestone-text">Visdomsfasen fordyber sig. Vand-energien n&aelig;rer det du allerede ved &mdash; og slipper det du ikke l&aelig;ngere har brug for.</div>
-  </div>
-
-  <div class="featured feat-rejse" onclick="Router.navigate('rej-udvikling')">
-    <div class="featured-label">Din udvikling</div>
-    <div class="featured-text" id="rej-featured-text">12 check-ins denne m&aring;ned. Dit dominerende element er Vand &mdash; og et m&oslash;nster begynder at vise sig.</div>
-    <div class="featured-sub">Se dine m&oslash;nstre &rarr;</div>
-  </div>
-
-  <!-- STAT-BOKSE -->
-  <div class="stat-row" id="rej-stats">
-    <div class="stat-box">
-      <div class="stat-number">47</div>
-      <div class="stat-label-text">Check-ins</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-number">8</div>
-      <div class="stat-label-text">Refleksioner</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-number">3<span style="font-size:12px;font-style:normal;opacity:0.8">/5</span></div>
-      <div class="stat-label-text">Elementer</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-number">14d</div>
-      <div class="stat-label-text">Streak</div>
-    </div>
-  </div>
-
-  <!-- FIGUR — Diamanten -->
-  <div class="wave-timeline" style="background:rgba(138,150,169,0.03);border-color:rgba(138,150,169,0.07)">
-    <div class="wave-label" style="color:#8892a1">Din rejse har fire retninger</div>
-    <div class="fig">
-      <img src="assets/images/fire-retninger.png" alt="Fire retninger" style="width:100%;max-width:300px;display:block;margin:0 auto;border-radius:12px">
-    </div>
-    <div class="wave-caption" style="color:#8a96a9">Fire retninger. &Eacute;n rejse. Alt m&oslash;des i det &oslash;jeblik du st&aring;r i nu.</div>
-  </div>
-
-  <!-- EN OPDAGELSE -->
-  <div class="insight-box" style="background:rgba(138,150,169,0.05);border:1px solid rgba(138,150,169,0.10)">
-    <div class="insight-label" style="color:#8892a1">En opdagelse</div>
-    <div class="insight-text" style="color:#8a96a9" id="rej-opdagelse-text">De sidste 30 dage har Vand domineret dine check-ins. Det spejler din livsfase &mdash; du er i resonans med dig selv. Det er sj&aelig;ldent, og det er v&aelig;rd at m&aelig;rke.</div>
-  </div>
-
-  <div class="dots">&middot; &middot; &middot;</div>
-
-  <!-- GRUPPE 1: DIN DAGBOG -->
-  <div class="group-label" style="color:#8a96a9">Din dagbog</div>
-  <div class="card" onclick="Router.navigate('rej-udvikling')"><div class="card-row"><div><div class="card-label">Min udvikling</div><div class="card-title">Energi, stemning, balance</div><div class="card-desc">Grafer, statistik og tidslinje over dine check-ins. Se m&oslash;nstre i din energi &mdash; og opdag hvad der gentager sig.</div></div><div class="card-arrow">&rarr;</div></div></div>
-  <div class="card" onclick="Router.navigate('rej-journal')"><div class="card-row"><div><div class="card-label">Min journal</div><div class="card-title">Et stille rum til dine tanker</div><div class="card-desc">Skriv frit, eller brug dagens sp&oslash;rgsm&aring;l som afs&aelig;t. Ingen regler &mdash; bare et sted at lande.</div></div><div class="card-arrow">&rarr;</div></div></div>
-
-  <!-- DAGENS CHECK-IN -->
-  <div class="quick-action" style="background:linear-gradient(135deg,rgba(138,150,169,0.06),rgba(138,150,169,0.02));border-color:rgba(138,150,169,0.10)">
-    <div class="quick-action-label" style="color:#8892a1">Dagens check-in</div>
-    <div class="quick-action-title" style="color:#8a96a9">Hvordan f&oslash;les din energi lige nu?</div>
-    <div class="quick-action-desc" style="color:#777">Et minut. Fem valg. Ingen forkerte svar. Din stemning i dag bliver en del af dit m&oslash;nster i morgen.</div>
-    <div class="quick-action-btn" style="border-color:rgba(138,150,169,0.25);color:#8a96a9">Registr&eacute;r &rarr;</div>
-  </div>
-
-  <div class="dots">&middot; &middot; &middot;</div>
-
-  <!-- GRUPPE 2: DIN SAMLING -->
-  <div class="group-label" style="color:#8a96a9">Din samling</div>
-  <div class="card" onclick="Router.navigate('rej-favoritter')"><div class="card-row"><div><div class="card-label">Mine favoritter</div><div class="card-title">Det du har gemt</div><div class="card-desc">&Oslash;velser, indsigter og sider du vil vende tilbage til. Dit personlige bibliotek.</div></div><div class="card-arrow">&rarr;</div></div></div>
-  <div class="card" onclick="Router.navigate('rej-opdagelser')"><div class="card-row"><div><div class="card-label">Mine opdagelser</div><div class="card-title">N&aring;r noget falder p&aring; plads</div><div class="card-desc">De &oslash;jeblikke hvor noget pludselig gav mening. Saml dine aha-oplevelser &mdash; de er v&aelig;rd at vende tilbage til.</div></div><div class="card-arrow">&rarr;</div></div></div>
-
-  <!-- TIME-SHIFT — tidsdynamik -->
-  <div class="time-shift" id="rej-time-shift">
-    <div class="time-shift-item" style="background:rgba(138,150,169,0.04);border-color:rgba(138,150,169,0.08)">
-      <div class="time-shift-when" style="color:#8892a1">N&aelig;ste faseovergang</div>
-      <div class="time-shift-what" style="color:#8a96a9">Om 3 &aring;r &middot; Fase 9 slutter</div>
-    </div>
-    <div class="time-shift-item" style="background:rgba(138,150,169,0.04);border-color:rgba(138,150,169,0.08)">
-      <div class="time-shift-when" style="color:#8892a1">Det nye element</div>
-      <div class="time-shift-what" style="color:#8a96a9">Vand &rarr; en ny cyklus begynder</div>
-    </div>
-  </div>
-
-  <div class="dots">&middot; &middot; &middot;</div>
-
-  <!-- GRUPPE 3: VIDEN -->
-  <div class="group-label" style="color:#8a96a9">Viden</div>
-  <div class="card" onclick="Router.navigate('rej-alle-faser')"><div class="card-row"><div><div class="card-label">Alle ni faser</div><div class="card-title">Fra f&oslash;dsel til visdom</div><div class="card-desc">Se alle ni livsfaser side om side. Find din, og forst&aring; dem der kom f&oslash;r &mdash; og dem der venter.</div></div><div class="card-arrow">&rarr;</div></div></div>
-  <div class="card" onclick="Router.navigate('rej-baggrund')"><div class="card-row"><div><div class="card-label">Baggrundsviden</div><div class="card-title">Om bogen og systemet</div><div class="card-desc">De fem elementer, de ni faser, og de traditioner der b&aelig;rer det hele. Anishinaabe, keltisk, vedisk, kinesisk.</div></div><div class="card-arrow">&rarr;</div></div></div>
-
-  <!-- PULL-QUOTE — Isabelle om rejsen -->
-  <div class="pull-quote">
-    <div class="pull-quote-text" style="color:#8a96a9">&laquo;&thinsp;Du beh&oslash;ver ikke forst&aring; hele din rejse. Bare det n&aelig;ste skridt. Resten viser sig, n&aring;r du er klar.&thinsp;&raquo;</div>
-    <div class="pull-quote-attr">&mdash; Isabelle</div>
-  </div>
-
-  <!-- KRYDSLINKS -->
-  <div class="cross-links">
-    <div class="cross-links-label">Udforsk ogs&aring;</div>
-    <div class="cross-links-row">
-      <span class="cross-link" style="border-color:rgba(138,150,169,0.12);color:#8892a1" onclick="Router.navigate('cyklusser')">Mine Cyklusser</span>
-      <span class="cross-link" style="border-color:rgba(138,150,169,0.12);color:#8892a1" onclick="Router.navigate('relationer')">Mine Relationer</span>
-      <span class="cross-link" style="border-color:rgba(138,150,169,0.12);color:#8892a1" onclick="Router.navigate('praksis')">Min Praksis</span>
-    </div>
-  </div>
-
-  <div class="section-closer"><div class="lotus-fill"><img src="assets/images/lotus-adskiller.png" alt=""></div></div>
-  <div class="back-to-top"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Tilbage til toppen &uarr;</a></div>
 </div>
+
+<div class="dots" style="color:#a3b0c0">&middot; &middot; &middot;</div>
+
+<!-- FEATURED — Din udvikling -->
+<div class="dybde-section">
+  <div class="quick-action" style="background:linear-gradient(135deg,rgba(138,150,169,0.06),rgba(138,150,169,0.02));border-color:rgba(138,150,169,0.10);cursor:pointer" onclick="Router.navigate('rej-udvikling')">
+    <div class="quick-action-label" style="color:#8892a1">Din udvikling</div>
+    <div class="quick-action-title" style="color:#8a96a9" id="rej-featured-title"></div>
+    <div class="quick-action-desc" style="color:#777" id="rej-featured-desc">Se m&oslash;nstre i din energi og opdag hvad der gentager sig.</div>
+    <div class="quick-action-btn" style="border-color:rgba(138,150,169,0.25);color:#8a96a9">Se dine m&oslash;nstre &rarr;</div>
+  </div>
+</div>
+
+<div class="dots" style="color:#a3b0c0">&middot; &middot; &middot;</div>
+
+<!-- REJSE-KORT med &rarr; pile -->
+<div class="dybde-section">
+  <div id="rej-cards"></div>
+</div>
+
+<div class="dots" style="color:#a3b0c0">&middot; &middot; &middot;</div>
+
+<!-- PULL QUOTE -->
+<div class="pull-quote">
+  <div class="pull-quote-text" style="color:#8a96a9">&laquo;&thinsp;Du beh&oslash;ver ikke forst&aring; hele din rejse. Bare det n&aelig;ste skridt. Resten viser sig, n&aring;r du er klar.&thinsp;&raquo;</div>
+  <div class="pull-quote-attr">&mdash; Isabelle</div>
+</div>
+
+<!-- FIGUR 2 — Lag p&aring; lag -->
+<div class="dybde-section" style="padding-top:0">
+  <div style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:var(--radius);padding:20px;text-align:center">
+    <div style="font-family:var(--font-sans);font-size:11px;color:#8892a1;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">Lag p&aring; lag</div>
+    <div class="fig">
+      <img src="assets/images/journal-cirkler.png" alt="Lag p&aring; lag" style="max-width:280px">
+    </div>
+    <div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:#8a96a9;margin-top:10px;line-height:1.5">Rejsen er ikke en linje. Den er lag p&aring; lag af oplevelser der langsomt giver mening.</div>
+  </div>
+</div>
+
+<div class="dots" style="color:#a3b0c0">&middot; &middot; &middot;</div>
+
+<!-- REFLEKSION -->
+<div class="dybde-section">
+  <div class="eyebrow" style="color:#8a96a9">Refleksion</div>
+  <div style="padding:14px 18px;background:rgba(138,150,169,0.05);border:1px solid rgba(138,150,169,0.10);border-radius:var(--radius)">
+    <div id="rej-refleksion" style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:#8a96a9;line-height:1.55"></div>
+  </div>
+</div>
+
+<div class="dots" style="color:#a3b0c0">&middot; &middot; &middot;</div>
+
+<!-- UDFORSK VIDERE -->
+<div class="dybde-section" style="padding-bottom:32px">
+  <div class="eyebrow" style="color:#8a96a9">Udforsk videre</div>
+  <div id="rej-explore-links" class="explore-links" style="justify-content:center"></div>
+</div>
+
+<div class="section-closer"><div class="lotus-fill"><img src="assets/images/lotus-adskiller.png" alt=""></div></div>
