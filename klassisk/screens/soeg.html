@@ -1,0 +1,147 @@
+<div class="s">
+  <div class="eyebrow">Søg &middot; Udforsk</div>
+  <div class="title">Find det du leder efter</div>
+  <div class="body-text">Øvelser, følelser, faser, elementer &mdash; alt det du kan udforske i appen, samlet ét sted.</div>
+
+  <!-- SØGEFELT -->
+  <div class="soeg-field">
+    <div class="soeg-icon">&#x1F50D;</div>
+    <input type="text" class="soeg-input" id="soeg-input" placeholder="Søg i øvelser, følelser, faser&hellip;">
+  </div>
+
+  <!-- POPULÆRT LIGE NU -->
+  <div class="soeg-group" id="soeg-popular">
+    <div class="soeg-group-label">Populært lige nu</div>
+    <div class="soeg-tags" id="soeg-popular-tags">
+      <span class="soeg-tag soeg-tag--hot" onclick="Router.navigate('pra-foelelser')">Vrede</span>
+      <span class="soeg-tag soeg-tag--hot" onclick="Router.navigate('pra-foelelser')">Bekymring</span>
+      <span class="soeg-tag" onclick="Router.navigate('cyk-ni-faser')">Overgangsalder</span>
+      <span class="soeg-tag" onclick="Router.navigate('pra-foelelser')">Frygt</span>
+      <span class="soeg-tag" onclick="Router.navigate('pra-foelelser')">Sorg</span>
+      <span class="soeg-tag" onclick="Router.navigate('pra-foelelser')">Glæde</span>
+    </div>
+  </div>
+
+  <!-- TILPASSET DIG -->
+  <div class="soeg-group" id="soeg-personal">
+    <div class="soeg-group-label">Tilpasset dig</div>
+    <div class="soeg-tags" id="soeg-personal-tags">
+      <span class="soeg-tag soeg-tag--hot" onclick="Router.navigate('cyk-ni-faser')">Fase 9</span>
+      <span class="soeg-tag" onclick="Router.navigate('pra-yin-yoga')">Vinterøvelser</span>
+      <span class="soeg-tag" onclick="Router.navigate('pra-yin-yoga')">Yin Yoga</span>
+      <span class="soeg-tag" onclick="Router.navigate('cyk-kontrol')">Vand-element</span>
+      <span class="soeg-tag" onclick="Router.navigate('pra-kost')">Vand-kost</span>
+    </div>
+  </div>
+</div>
+
+<div class="dots">&middot; &middot; &middot;</div>
+
+<!-- SØGERESULTATER (skjult som default) -->
+<div class="s" id="soeg-results" style="display:none">
+  <div class="soeg-cats-label">Resultater</div>
+  <div id="soeg-results-list"></div>
+</div>
+
+<div class="s">
+  <div class="soeg-cats-label">Kategorier</div>
+
+  <div class="soeg-cat" onclick="Router.navigate('pra-yin-yoga')">
+    <div class="soeg-cat-icon">&#x262F;</div>
+    <div class="soeg-cat-body">
+      <div class="soeg-cat-title">Øvelser</div>
+      <div class="soeg-cat-desc">Yin yoga, åndedræt, EFT-tapping, meditation og meridianstrygning &mdash; tilpasset det element dine cyklusser kalder på.</div>
+    </div>
+  </div>
+
+  <div class="soeg-cat" onclick="Router.navigate('pra-foelelser')">
+    <div class="soeg-cat-icon">&#x2661;</div>
+    <div class="soeg-cat-body">
+      <div class="soeg-cat-title">Følelser</div>
+      <div class="soeg-cat-desc">Vrede, frygt, bekymring, sorg og glæde &mdash; hver følelse hører til et element. Forstå hvad din krop prøver at fortælle dig.</div>
+    </div>
+  </div>
+
+  <div class="soeg-cat" onclick="Router.navigate('cyk-ni-faser')">
+    <div class="soeg-cat-icon">&#x25D0;</div>
+    <div class="soeg-cat-body">
+      <div class="soeg-cat-title">Livsfaser</div>
+      <div class="soeg-cat-desc">Ni syv-års cyklusser fra fødsel til visdom. Hver fase bærer sit eget element og sin egen energi.</div>
+    </div>
+  </div>
+
+  <div class="soeg-cat" onclick="Router.navigate('cyk-kontrol')">
+    <div class="soeg-cat-icon">&#x25B3;</div>
+    <div class="soeg-cat-body">
+      <div class="soeg-cat-title">Elementer</div>
+      <div class="soeg-cat-desc">Vand, Træ, Ild, Jord og Metal &mdash; de fem kræfter der styrer alt fra årstider til organer. Lær dem at kende.</div>
+    </div>
+  </div>
+
+  <div class="soeg-cat" onclick="Router.navigate('relationer')">
+    <div class="soeg-cat-icon">&#x22BB;</div>
+    <div class="soeg-cat-body">
+      <div class="soeg-cat-title">Relationer</div>
+      <div class="soeg-cat-desc">Når to mennesker mødes, mødes to cyklus-systemer. Se hvordan jeres livsfaser, elementer og energier interagerer.</div>
+    </div>
+  </div>
+
+  <div class="soeg-cat" onclick="Router.navigate('pra-kost')">
+    <div class="soeg-cat-icon">&#x274A;</div>
+    <div class="soeg-cat-body">
+      <div class="soeg-cat-title">Kost &amp; Næring</div>
+      <div class="soeg-cat-desc">Mad er medicin &mdash; det vidste kinesisk medicin for tusind år siden. Find fødevarer, urter og tilberedning tilpasset dit element.</div>
+    </div>
+  </div>
+
+  <div class="soeg-cat" onclick="Router.navigate('vinduer')">
+    <div class="soeg-cat-icon">&#x25F7;</div>
+    <div class="soeg-cat-body">
+      <div class="soeg-cat-title">Tidsrejse</div>
+      <div class="soeg-cat-desc">Rejse i tid &mdash; bagud for at forstå, fremad for at forberede. Se hvilke cyklusser der var aktive ved vigtige tidspunkter.</div>
+    </div>
+  </div>
+
+  <div class="soeg-cat" onclick="Router.navigate('cyk-overgange')">
+    <div class="soeg-cat-icon">&#x2312;</div>
+    <div class="soeg-cat-body">
+      <div class="soeg-cat-title">Kroppens overgange</div>
+      <div class="soeg-cat-desc">Pubertet, graviditet, overgangsalder &mdash; de store vendepunkter, hvor ét element afløser et andet.</div>
+    </div>
+  </div>
+
+  <div class="soeg-cat" onclick="Router.navigate('rejse')">
+    <div class="soeg-cat-icon">&#x27CB;</div>
+    <div class="soeg-cat-body">
+      <div class="soeg-cat-title">Tracking &amp; Mønstre</div>
+      <div class="soeg-cat-desc">Over tid vokser din egen visdom. Registrér din energi, dine mønstre og dine indsigter &mdash; og se dem i sammenhæng.</div>
+    </div>
+  </div>
+
+  <div class="soeg-cat" onclick="Router.navigate('vinduer')">
+    <div class="soeg-cat-icon">&#x2299;</div>
+    <div class="soeg-cat-body">
+      <div class="soeg-cat-title">Epigenetik &amp; Arv</div>
+      <div class="soeg-cat-desc">Din mors livsfase da hun fødte dig påvirkede dit udgangspunkt. Udforsk den forskning der viser, hvordan cyklusser nedarves.</div>
+    </div>
+  </div>
+
+  <div class="soeg-cat" onclick="Router.navigate('om-isabelle')">
+    <div class="soeg-cat-icon">&#x25A4;</div>
+    <div class="soeg-cat-body">
+      <div class="soeg-cat-title">Baggrundsviden</div>
+      <div class="soeg-cat-desc">Ni forskellige kulturer har opdaget det samme: livet bevæger sig i cyklusser. Fra kinesisk medicin til vedisk filosofi.</div>
+    </div>
+  </div>
+
+  <div class="soeg-cat" onclick="Router.navigate('rejse')">
+    <div class="soeg-cat-icon">&#x2726;</div>
+    <div class="soeg-cat-body">
+      <div class="soeg-cat-title">Kollektiv visdom</div>
+      <div class="soeg-cat-desc">Hvad sker der, når mange kvinder samler deres erfaringer? Anonyme mønstre og fælles indsigter der vokser over tid.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-closer"><div class="lotus-fill"><img src="assets/images/lotus-adskiller.png" alt=""></div></div>
+<div class="back-to-top"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Tilbage til toppen &uarr;</a></div>

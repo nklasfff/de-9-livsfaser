@@ -1,0 +1,70 @@
+<div class="section tone-relationer">
+  <div class="section-eyebrow">Mine Relationer</div>
+  <div class="section-title">De b&aring;nd<br>der b&aelig;rer dig</div>
+  <div class="section-sub">Se hvordan jeres cyklusser m&oslash;des</div>
+  <div class="section-intro">De mennesker du deler livet med b&aelig;rer deres egne cyklusser og faser. Her kan du m&aelig;rke hvordan jeres energier m&oslash;des, n&aelig;rer hinanden og udfordrer hinanden.</div>
+
+  <div class="fig">
+    <img src="assets/images/relationer_blad_liberation_HQ.png" alt="Relationer" style="width:100%;max-width:200px;mix-blend-mode:multiply;filter:saturate(0.7)">
+  </div>
+
+  <!-- PROFIL-ROW (dynamisk) -->
+  <div id="rel-profil-row" class="profil-row"></div>
+
+  <!-- LIVE PULS — dynamisk -->
+  <div id="rel-live-pulse"></div>
+
+  <!-- NÆSTE SKIFT — dynamisk -->
+  <div id="rel-time-shift" class="time-shift"></div>
+
+  <div class="dots">&middot; &middot; &middot;</div>
+
+  <!-- GRUPPE 1: LIGE NU -->
+  <div class="group-label" style="color:#7b7a9e">Lige nu</div>
+  <div class="card" onclick="Router.navigate('rel-lige-nu')"><div class="card-row"><div><div class="card-label">Relationer lige nu</div><div class="card-title">Hvem er t&aelig;t p&aring; dig?</div><div class="card-desc">Se hvem der er i dit liv, og hvad der er aktivt mellem jer. Jeres elementer m&oslash;des &mdash; nogle dage let, andre dage tungt.</div></div><div class="card-arrow">&rarr;</div></div></div>
+
+  <!-- SAMTALEÅBNER (dynamisk) -->
+  <div id="rel-samtale-box"></div>
+
+  <div class="dots">&middot; &middot; &middot;</div>
+
+  <!-- GRUPPE 2: GÅ I DYBDEN -->
+  <div class="group-label" style="color:#7b7a9e">G&aring; i dybden</div>
+  <div class="card" onclick="Router.navigate('rel-to-rytmer')"><div class="card-row"><div><div class="card-label">To rytmer</div><div class="card-title">Hendes syv &aring;r, hans otte</div><div class="card-desc">Kvinder f&oslash;lger en syv-&aring;rs cyklus, m&aelig;nd en otte-&aring;rs. Se hvor I m&oslash;des, og hvor jeres faser glider fra hinanden.</div></div><div class="card-arrow">&rarr;</div></div></div>
+  <div class="card" onclick="Router.navigate('rel-tre-gen')"><div class="card-row"><div><div class="card-label">Tre generationer</div><div class="card-title">Mor &middot; Dig &middot; Barn</div><div class="card-desc">Tre livsfaser der spejler og udfordrer hinanden. Arv, frihed og fornyelse flettes sammen p&aring; tv&aelig;rs af generationer.</div></div><div class="card-arrow">&rarr;</div></div></div>
+  <div class="card" onclick="Router.navigate('rel-konstellation')"><div class="card-row"><div><div class="card-label">Jeres konstellation</div><div class="card-title">N&aring;r flere energier m&oslash;des</div><div class="card-desc">V&aelig;lg 2&ndash;4 mennesker og se hvad der sker n&aring;r jeres elementer m&oslash;des. Gruppens felt, sp&aelig;ndinger og resonanser &mdash; samlet.</div></div><div class="card-arrow">&rarr;</div></div></div>
+
+  <!-- FÆLLES HANDLING (dynamisk) -->
+  <div id="rel-faelles-box"></div>
+
+  <div class="dots">&middot; &middot; &middot;</div>
+
+  <!-- GRUPPE 3: OVER TID -->
+  <div class="group-label" style="color:#7b7a9e">Over tid</div>
+  <div class="card" onclick="Router.navigate('rel-jeres-energi')"><div class="card-row"><div><div class="card-label">Jeres energi</div><div class="card-title">V&aelig;lg en dato, se et m&oslash;de</div><div class="card-desc">Hvad var aktivt mellem jer da I m&oslash;dtes? Eller n&aring;r barnet fylder 14? V&aelig;lg en dato og se hvad der l&aring; under overfladen.</div></div><div class="card-arrow">&rarr;</div></div></div>
+  <div class="card" onclick="Router.navigate('rel-epigenetik')"><div class="card-row"><div><div class="card-label">Epigenetik &amp; Arv</div><div class="card-title">Det du b&aelig;rer med dig</div><div class="card-desc">Hvad blev givet videre fra generationer f&oslash;r, og hvad kan du selv v&aelig;lge at forvandle?</div></div><div class="card-arrow">&rarr;</div></div></div>
+
+  <!-- PULL-QUOTE — Isabelle om relationer -->
+  <div class="pull-quote">
+    <div class="pull-quote-text" style="color:#8a85a0">&laquo;&thinsp;De mennesker der udfordrer dig mest, er ofte dem der b&aelig;rer den energi du selv har brug for at m&oslash;de.&thinsp;&raquo;</div>
+    <div class="pull-quote-attr">&mdash; Isabelle</div>
+  </div>
+
+  <!-- FIGUR — Jeres møde (dynamisk) -->
+  <div id="rel-jeres-moede-wrap"></div>
+
+  <div class="dots">&middot; &middot; &middot;</div>
+
+  <!-- KRYDSLINKS -->
+  <div class="cross-links">
+    <div class="cross-links-label">Udforsk ogs&aring;</div>
+    <div class="cross-links-row">
+      <span class="cross-link" style="border-color:rgba(123,122,158,0.12);color:#88839e" onclick="Router.navigate('cyklusser')">Mine Cyklusser</span>
+      <span class="cross-link" style="border-color:rgba(123,122,158,0.12);color:#88839e" onclick="Router.navigate('praksis')">Min Praksis</span>
+      <span class="cross-link" style="border-color:rgba(123,122,158,0.12);color:#88839e" onclick="Router.navigate('rejse')">Min Rejse</span>
+    </div>
+  </div>
+
+  <div class="section-closer"><div class="lotus-fill"><img src="assets/images/lotus-adskiller.png" alt=""></div></div>
+  <div class="back-to-top"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Tilbage til toppen &uarr;</a></div>
+</div>

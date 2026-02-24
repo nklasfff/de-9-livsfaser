@@ -1,0 +1,117 @@
+<div class="section tone-vinduer">
+  <div class="section-eyebrow">Mine Vinduer</div>
+  <div class="section-title">Rejsen<br>gennem tid</div>
+  <div class="section-sub">Fortid &middot; Nutid &middot; Fremtid</div>
+  <div class="section-intro">Dit liv er ikke bare her og nu. Hvert &oslash;jeblik b&aelig;rer aftryk af de cyklusser der var aktive &mdash; og foran dig venter nye m&oslash;nstre. Mine Vinduer er dit tidsrejse-v&aelig;rkt&oslash;j.</div>
+
+  <div style="text-align:center;margin:0 auto 12px">
+    <img src="assets/images/vinduer-tid-lilla.png" alt="Tidsvinduet" style="width:100%;height:auto">
+  </div>
+
+  <!-- DET DER IKKE HAR ET SPROG ENDNU -->
+  <div class="feeling-box" style="border-color:rgba(107,95,123,0.08);background:linear-gradient(135deg,rgba(107,95,123,0.04),rgba(139,125,155,0.04))">
+    <div class="feeling-label" style="color:#a89bb3">Det der ikke har et sprog endnu</div>
+    <div class="feeling-text" style="color:#6e5f7a">Nogle &aring;r b&aelig;rer vi med os uden helt at vide hvorf&aring;r. En periode der &aelig;ndrede alt. En dato der stadig g&oslash;r ondt. M&aring;ske handler det ikke om at huske bedre &mdash; men om at forst&aring; hvad der var p&aring; spil dengang. Dine cyklusser kan vise dig det.</div>
+  </div>
+
+  <div class="motor-box" style="background:rgba(107,95,123,0.05);border:1px solid rgba(107,95,123,0.10)">
+    <div class="motor-label" style="color:#a89bb3">Hvad er Mine Vinduer?</div>
+    <div class="motor-text" style="color:#6B5F7B">V&aelig;lg en dato &mdash; fortid eller fremtid &mdash; og se hvad der var aktivt i dine cyklusser. Forst&aring; hvem du var, hvem du er, og hvem du er p&aring; vej til at blive.</div>
+  </div>
+
+  <div class="featured feat-vinduer">
+    <div class="featured-label">Tidsrejsen</div>
+    <div class="featured-text" id="vin-featured-text">Skriv en dato &mdash; se hvem du var. Dine fem cyklusser afsl&oslash;rer hvad der var p&aring; spil dengang, og hvad der venter forude.</div>
+    <div class="featured-sub">V&aelig;lg en dato herunder &darr;</div>
+  </div>
+
+  <!-- INTERACTIVE PREVIEW — dato FØRST, person SEKUNDÆR -->
+  <div class="date-preview" id="vin-date-preview">
+    <div class="date-preview-label">V&aelig;lg en dato &mdash; se dine cyklusser</div>
+    <div class="date-chips" id="vin-date-chips">
+      <span class="date-chip">Da du var 14</span>
+      <span class="date-chip">Da du var 21</span>
+      <span class="date-chip">Om 5 &aring;r</span>
+      <span class="date-chip">N&aelig;ste jul</span>
+    </div>
+    <div style="margin:12px 0 6px">
+      <input type="date" id="vinduer-date" style="width:100%;padding:10px 12px;border:1px solid rgba(107,95,123,0.15);border-radius:10px;font-family:sans-serif;font-size:15px;color:#6B5F7B;background:rgba(107,95,123,0.03);outline:none">
+    </div>
+    <div class="quick-action-btn" style="border-color:rgba(107,95,123,0.25);color:#6B5F7B;cursor:pointer;text-align:center" id="vinduer-btn">Se dine cyklusser &rarr;</div>
+    <div id="vinduer-result" style="display:none;margin-top:12px;padding:14px;background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.10);border-radius:14px"></div>
+    <div class="date-preview-hint">V&aelig;lg en dato og tryk &mdash; s&aring; viser vi din livsfase, dit element-klima, hvad kroppen og sindet bar, og hvad der kunne have hjulpet</div>
+
+    <!-- Person-valg — sekundært, under resultatet -->
+    <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(107,95,123,0.08)">
+      <div style="font-size:12px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Tilf&oslash;j en person (valgfrit)</div>
+      <div class="person-pills" id="vin-person-pills"></div>
+    </div>
+  </div>
+
+  <div class="dots">&middot; &middot; &middot;</div>
+
+  <!-- FIGUR — Tidsspiralen -->
+  <div class="wave-timeline" style="background:rgba(107,95,123,0.03);border-color:rgba(107,95,123,0.07)">
+    <div class="wave-label" style="color:#a89bb3">Tiden bev&aelig;ger sig i spiraler</div>
+    <div class="fig">
+      <img src="assets/images/vinduer-tidsspiral.png" alt="Tidsspiralen" style="max-width:300px">
+    </div>
+    <div class="wave-caption" style="color:#8B7D9B">Hvert &oslash;jeblik i spiralen b&aelig;rer sine cyklusser. V&aelig;lg et punkt &mdash; og se hvad der var p&aring; spil.</div>
+  </div>
+
+  <div class="group-label" style="color:#6B5F7B">Tre m&aring;der at rejse p&aring;</div>
+  <div class="scenario" style="background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.08)"><div class="scenario-label" style="color:#a89bb3">Dig alene</div><div class="scenario-title" style="color:#6B5F7B">Rejse i din egen tid</div><div class="scenario-text">V&aelig;lg en dato og se hvilken livsfase, &aring;rstid og cyklus der var aktiv. Forst&aring; hvad der pr&aelig;gede dig &mdash; eller forbered det der kommer.</div></div>
+  <div class="scenario" style="background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.08)"><div class="scenario-label" style="color:#a89bb3">Et vigtigt &oslash;jeblik</div><div class="scenario-title" style="color:#6B5F7B">Forst&aring; hvad der skete</div><div class="scenario-text">En f&oslash;dsel, et brud, en ny begyndelse. V&aelig;lg datoen og se hvilke kr&aelig;fter der var p&aring; spil. M&aring;ske giver det mening nu.</div></div>
+  <div class="scenario" style="background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.08)"><div class="scenario-label" style="color:#a89bb3">Dig og &eacute;n anden</div><div class="scenario-title" style="color:#6B5F7B">Se jeres energier m&oslash;des</div><div class="scenario-text">Tilf&oslash;j en person ovenfor &mdash; og se hvad der var aktivt mellem jer p&aring; en bestemt dato. Elementerne afsl&oslash;rer hvad der l&aring; under overfladen.</div></div>
+
+  <div class="dots">&middot; &middot; &middot;</div>
+
+  <!-- DYK DYBERE -->
+  <div class="group-label" style="color:#6B5F7B">Dyk dybere</div>
+
+  <div class="vinduer-card" onclick="Router.navigate('vin-tidslinje')">
+    <div class="vinduer-body">
+      <div class="vinduer-label">Underside</div>
+      <div class="vinduer-title">Mit Livs Tidslinje</div>
+      <div class="vinduer-text">Se hele dit liv som en visuel rejse &mdash; fase for fase, element for element. Fra f&oslash;dsel til nu, og videre frem. Forst&aring; den r&oslash;de tr&aring;d i din historie.</div>
+    </div>
+    <div class="vinduer-footer">
+      <span class="vinduer-footer-text">&Aring;bn tidslinjen</span>
+      <span class="vinduer-footer-arrow">&rarr;</span>
+    </div>
+  </div>
+
+  <div class="vinduer-card" onclick="Router.navigate('vin-oejeblikke')">
+    <div class="vinduer-body">
+      <div class="vinduer-label">Underside</div>
+      <div class="vinduer-title">Vigtige &Oslash;jeblikke</div>
+      <div class="vinduer-text">Gem de datoer der betyder noget &mdash; en f&oslash;dsel, et vendepunkt, en ny begyndelse. Se hvilke cyklusser der var aktive, og forst&aring; hvad der var p&aring; spil.</div>
+    </div>
+    <div class="vinduer-footer">
+      <span class="vinduer-footer-text">Se dine &oslash;jeblikke</span>
+      <span class="vinduer-footer-arrow">&rarr;</span>
+    </div>
+  </div>
+
+  <!-- TIME-SHIFT — dynamisk udfyldt -->
+  <div class="time-shift" id="vin-time-shift"></div>
+
+  <!-- PULL-QUOTE — Isabelle om tid -->
+  <div class="pull-quote">
+    <div class="pull-quote-text" style="color:#8B7D9B">&laquo;&thinsp;Tiden er ikke en linje. Den er en spiral &mdash; og de steder der g&oslash;r ondt, er de steder der vil forst&aring;s.&thinsp;&raquo;</div>
+    <div class="pull-quote-attr">&mdash; Isabelle</div>
+  </div>
+
+  <!-- KRYDSLINKS -->
+  <div class="cross-links">
+    <div class="cross-links-label">Udforsk ogs&aring;</div>
+    <div class="cross-links-row">
+      <span class="cross-link" style="border-color:rgba(107,95,123,0.12);color:#a89bb3" onclick="Router.navigate('cyklusser')">Mine Cyklusser</span>
+      <span class="cross-link" style="border-color:rgba(107,95,123,0.12);color:#a89bb3" onclick="Router.navigate('relationer')">Mine Relationer</span>
+      <span class="cross-link" style="border-color:rgba(107,95,123,0.12);color:#a89bb3" onclick="Router.navigate('rejse')">Min Rejse</span>
+    </div>
+  </div>
+
+  <div class="section-closer"><div class="lotus-fill"><img src="assets/images/lotus-adskiller.png" alt=""></div></div>
+  <div class="back-to-top"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Tilbage til toppen &uarr;</a></div>
+</div>

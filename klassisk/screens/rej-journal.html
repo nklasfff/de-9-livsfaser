@@ -1,0 +1,137 @@
+<div class="section tone-rejse">
+  <div class="section-eyebrow">Min Rejse &middot; Dagbog</div>
+  <div class="section-title">Min journal</div>
+  <div class="section-sub">Et stille rum<br>til dine tanker</div>
+  <div class="section-intro">Dine tanker, check-ins og refleksioner &mdash; forbundet med dine cyklusser. Over tid bliver journalen et stille vidne til din rejse, dine m&oslash;nstre og din udvikling. Ord ved ofte mere end tanken &mdash; de afsl&oslash;rer hvad kroppen allerede vidste.</div>
+
+  <!-- FIGUR: SIDER DER FOLDER SIG UD -- lagvise cirkelsegmenter -->
+  <div class="wave-timeline" style="background:rgba(138,150,169,0.03);border-color:rgba(138,150,169,0.07)">
+    <div class="wave-label" style="color:#8892a1">Lag p&aring; lag &middot; tanke p&aring; tanke</div>
+    <div class="fig">
+      <img src="assets/images/journal-cirkler.png" alt="Koncentriske cirkler: Lige Nu i centrum, omgivet af lag af tid" style="max-width:300px">
+    </div>
+    <div class="wave-caption" style="color:#8a96a9">Hvert ord du skriver l&aelig;gger sig som et nyt lag. Over tid bliver lagene til et m&oslash;nster &mdash; din egen historie, set indefra.</div>
+  </div>
+
+  <!-- FEELING-BOX -->
+  <div class="feeling-box" style="border-color:rgba(138,150,169,0.08);background:linear-gradient(135deg,rgba(138,150,169,0.04),rgba(168,178,193,0.04))">
+    <div class="feeling-label" style="color:#8892a1">At skrive er at lytte</div>
+    <div class="feeling-text" style="color:#6e7d91">Journalen er ikke en dagbog i traditionel forstand. Den er et sted hvor du kan m&aelig;rke efter &mdash; med ord eller uden. Nogle dage skriver du en hel side. Andre dage er det nok at &aring;bne rummet og lukke det igen. Begge dele t&aelig;ller.</div>
+  </div>
+
+  <div class="featured feat-rejse"><div class="featured-label">8 refleksioner &middot; Fase 9</div><div class="featured-text">Dine ord samler sig. Temaer gentager sig p&aring; tv&aelig;rs af m&aring;neder &mdash; stilhed, dybde, at give slip. Din journal ved noget, du endnu ikke har sat ord p&aring;.</div><div class="featured-sub">L&aelig;s dine seneste refleksioner &rarr;</div></div>
+
+  <div class="dots">&middot; &middot; &middot;</div>
+
+  <!-- DAGENS REFLEKSION -->
+  <div class="group-label" style="color:#8a96a9">Dagens refleksion</div>
+
+  <div style="background:linear-gradient(135deg,rgba(138,150,169,0.06),rgba(138,150,169,0.02));border:1px solid rgba(138,150,169,0.10);border-radius:14px;padding:20px 16px;margin:0 0 12px">
+    <div style="font-family:sans-serif;font-size:12px;color:#8892a1;letter-spacing:1.5px;font-weight:400;text-transform:uppercase;text-align:center;margin-bottom:10px">Dagens refleksion</div>
+    <div style="font-family:Georgia,serif;font-size:17px;color:#8a96a9;text-align:center;font-style:italic;line-height:1.5;margin-bottom:10px">Hvad giver dig ro for tiden?</div>
+    <div style="font-family:sans-serif;font-size:13px;color:#8d95a1;text-align:center;letter-spacing:0.5px">Fase 9 &middot; Vinter &middot; Vand</div>
+  </div>
+
+  <!-- Tekstfelt -->
+  <div style="background:#fff;border:1px solid rgba(138,150,169,0.10);border-radius:14px;padding:14px;margin:0 0 12px">
+    <textarea id="journal-note" placeholder="Skriv her — eller lad det hvile…" style="width:100%;border:none;outline:none;font-family:Georgia,serif;font-size:15px;color:#555;font-style:italic;min-height:80px;line-height:1.7;resize:vertical;background:transparent"></textarea>
+  </div>
+
+  <!-- Gem-knap -->
+  <div style="text-align:center;margin:0 0 16px">
+    <div id="journal-save-btn" onclick="saveJournal()" style="display:inline-block;padding:10px 28px;border-radius:20px;font-family:sans-serif;font-size:15px;font-weight:500;color:#8a96a9;border:1px solid rgba(138,150,169,0.25);letter-spacing:0.5px;cursor:pointer">Gem refleksion</div>
+  </div>
+
+  <div class="dots">&middot; &middot; &middot;</div>
+
+  <!-- TIDLIGERE REFLEKSIONER -->
+  <div class="group-label" style="color:#8a96a9">Tidligere refleksioner</div>
+  <div style="font-family:Georgia,serif;font-size:15px;color:#6e7d91;text-align:center;margin:-4px 0 12px;font-style:italic;line-height:1.6">Dine tanker samler sig her som blade p&aring; en sti.<br>N&aring;r du l&aelig;ser dem igen, kan du m&aring;ske se hvad der var p&aring; vej &mdash;<br>f&oslash;r du selv vidste det.</div>
+
+  <!-- Filter-chips -->
+  <div id="journal-filter-chips" style="display:flex;gap:8px;justify-content:center;margin:0 0 16px">
+    <div onclick="setJournalFilter('recent',this)" style="padding:6px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;font-weight:500;letter-spacing:0.5px;background:rgba(138,150,169,0.12);color:#8a96a9;cursor:pointer">Seneste</div>
+    <div onclick="setJournalFilter('month',this)" style="padding:6px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;font-weight:400;letter-spacing:0.5px;background:rgba(138,150,169,0.04);color:#8d95a1;border:1px solid rgba(138,150,169,0.08);cursor:pointer">Denne m&aring;ned</div>
+    <div onclick="setJournalFilter('all',this)" style="padding:6px 14px;border-radius:20px;font-family:sans-serif;font-size:14px;font-weight:400;letter-spacing:0.5px;background:rgba(138,150,169,0.04);color:#8d95a1;border:1px solid rgba(138,150,169,0.08);cursor:pointer">Alle</div>
+  </div>
+
+  <!-- JOURNAL ENTRIES AREA -->
+  <div id="journal-entries">
+    <!-- Journal-indl&aelig;g 1 -->
+    <div style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:16px;margin:0 0 10px">
+      <div style="font-family:sans-serif;font-size:12px;color:#8892a1;letter-spacing:1.5px;font-weight:400;text-transform:uppercase;margin-bottom:6px">14. Februar 2026</div>
+      <div style="font-family:Georgia,serif;font-size:15px;color:#8a96a9;font-style:italic;margin-bottom:8px">Hvad giver dig ro for tiden?</div>
+      <div style="font-family:sans-serif;font-size:15px;color:#6e7d91;line-height:1.6;margin-bottom:10px">At g&aring; ture i m&oslash;rket om aftenen. Der er noget ved vinteren der passer til min rytme lige nu. Jeg beh&oslash;ver ikke s&aring; mange ord.</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span style="padding:3px 10px;border-radius:12px;font-family:sans-serif;font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">Fase 9</span>
+        <span style="padding:3px 10px;border-radius:12px;font-family:sans-serif;font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">Vinter</span>
+        <span style="padding:3px 10px;border-radius:12px;font-family:sans-serif;font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">Vand</span>
+      </div>
+    </div>
+
+    <!-- Journal-indl&aelig;g 2 -->
+    <div style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:16px;margin:0 0 10px">
+      <div style="font-family:sans-serif;font-size:12px;color:#8892a1;letter-spacing:1.5px;font-weight:400;text-transform:uppercase;margin-bottom:6px">10. Februar 2026</div>
+      <div style="font-family:Georgia,serif;font-size:15px;color:#8a96a9;font-style:italic;margin-bottom:8px">Hvad overrasker dig ved denne livsfase?</div>
+      <div style="font-family:sans-serif;font-size:15px;color:#6e7d91;line-height:1.6;margin-bottom:10px">At jeg kan m&aelig;rke min mors erfaringer i min egen krop. Som om hendes overgangsalder p&aring; en m&aring;de forbereder mig. Vi taler mere &aring;bent om det nu.</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span style="padding:3px 10px;border-radius:12px;font-family:sans-serif;font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">Fase 9</span>
+        <span style="padding:3px 10px;border-radius:12px;font-family:sans-serif;font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">Jord</span>
+        <span style="padding:3px 10px;border-radius:12px;font-family:sans-serif;font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">Relationer</span>
+      </div>
+    </div>
+
+    <!-- Journal-indl&aelig;g 3 -->
+    <div style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:16px;margin:0 0 10px">
+      <div style="font-family:sans-serif;font-size:12px;color:#8892a1;letter-spacing:1.5px;font-weight:400;text-transform:uppercase;margin-bottom:6px">5. Februar 2026</div>
+      <div style="font-family:Georgia,serif;font-size:15px;color:#8a96a9;font-style:italic;margin-bottom:8px">Dagens check-in &mdash; hvordan f&oslash;les din energi?</div>
+      <div style="font-family:sans-serif;font-size:15px;color:#6e7d91;line-height:1.6;margin-bottom:10px">Lav men stabil. Ikke tr&aelig;t, men stille. Har lyst til varm suppe og tidlig sengetid.</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span style="padding:3px 10px;border-radius:12px;font-family:sans-serif;font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">Check-in</span>
+        <span style="padding:3px 10px;border-radius:12px;font-family:sans-serif;font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">Vand</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="dots">&middot; &middot; &middot;</div>
+
+  <!-- M&Oslash;NSTER I DIN JOURNAL -->
+  <div class="group-label" style="color:#8a96a9">M&oslash;nster i din journal</div>
+  <div style="font-family:Georgia,serif;font-size:15px;color:#6e7d91;text-align:center;margin:-4px 0 12px;font-style:italic;line-height:1.6">N&aring;r du l&aelig;ser dine refleksioner over tid, tr&aelig;der m&oslash;nstre frem<br>som du ikke kunne se indefra. Ordene ved ofte mere end tanken.</div>
+
+  <div class="insight-box" style="background:rgba(138,150,169,0.05);border:1px solid rgba(138,150,169,0.10)">
+    <div class="insight-label" style="color:#8892a1">M&oslash;nster i din journal</div>
+    <div class="insight-text" style="color:#8a96a9">Du skriver mest om ro og stilhed i vinterm&aring;nederne. Dine refleksioner om relationer kommer oftest i Jord-perioder. Krop og natur g&aring;r igen som temaer &mdash; m&aring;ske er der en forbindelse mellem det fysiske og det indre liv der viser sig tydeligere nu.</div>
+  </div>
+
+  <!-- TIDSPERSPEKTIV -->
+  <div class="time-shift">
+    <div class="time-shift-item" style="background:rgba(138,150,169,0.04);border-color:rgba(138,150,169,0.08)">
+      <div class="time-shift-when" style="color:#8892a1">Over tid</div>
+      <div class="time-shift-what" style="color:#8a96a9">Dine tidligste indl&aelig;g handler om afstemning og ro. De nyeste er dybere &mdash; mere kropslige, mere &aelig;rlige. Det er rejsen, set i ord.</div>
+    </div>
+    <div class="time-shift-item" style="background:rgba(138,150,169,0.04);border-color:rgba(138,150,169,0.08)">
+      <div class="time-shift-when" style="color:#8892a1">Vinteren i din journal</div>
+      <div class="time-shift-what" style="color:#8a96a9">Vinterens refleksioner har en anden tone end sommerens. Langsommere ord, kortere s&aelig;tninger. Det er ikke tristhed &mdash; det er dybde.</div>
+    </div>
+  </div>
+
+  <!-- PULL-QUOTE -->
+  <div class="pull-quote">
+    <div class="pull-quote-text" style="color:#8a96a9">&laquo;&thinsp;Skriv ikke for at huske. Skriv for at forst&aring;. Ordene ved ofte mere end den der skriver dem.&thinsp;&raquo;</div>
+    <div class="pull-quote-attr">&mdash; Isabelle</div>
+  </div>
+
+  <!-- CROSS-LINKS -->
+  <div class="cross-links">
+    <div class="cross-links-label">Udforsk ogs&aring;</div>
+    <div class="cross-links-row">
+      <span class="cross-link" style="border-color:rgba(138,150,169,0.12);color:#8892a1" onclick="Router.navigate('rejse')">Min Rejse</span>
+      <span class="cross-link" style="border-color:rgba(138,150,169,0.12);color:#8892a1" onclick="Router.navigate('rej-udvikling')">Min Udvikling</span>
+      <span class="cross-link" style="border-color:rgba(138,150,169,0.12);color:#8892a1" onclick="Router.navigate('pra-refleksion')">Refleksion</span>
+    </div>
+  </div>
+
+  <div class="section-closer"><div class="lotus-fill"><img src="assets/images/lotus-adskiller.png" alt=""></div></div>
+  <div class="back-to-top"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Tilbage til toppen &uarr;</a></div>
+</div>
