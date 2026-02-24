@@ -3015,43 +3015,22 @@ function buildRelationReading() {
   const userDetail = LIVSFASE_DETAIL[userPhaseNum];
   const theirDetail = LIVSFASE_DETAIL[theirPhaseNum];
 
-  // Titel + intro er konceptuelle og sat i initDinRelation()
-  // Her viser vi kun personspecifikt indhold nedenfor
-
-  // (title/intro removed — conceptual presentation stays constant)
-
-  // ── 2. JERES M\u00d8DE — TCM interaktion med dybde ──
+  // ── 1. KLIMA — foerste personspecifikke sektion ──
   const nourishing = { 'VAND': 'TR\u00c6', 'TR\u00c6': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
-  const controlling = { 'VAND': 'ILD', 'TR\u00c6': 'JORD', 'ILD': 'METAL', 'JORD': 'VAND', 'METAL': 'TR\u00c6' };
-  let meetLabel, meetText;
-
-  if (userEl === theirEl) {
-    meetLabel = 'Dyb resonans \u00b7 ' + userElLabel;
-    meetText = 'I deler ' + userElLabel + '-elementet. N\u00e5r to mennesker befinder sig i det samme felt, opst\u00e5r en genkendelse der g\u00e5r dybere end ord. I forst\u00e5r hinandens rytme, m\u00e6rker de samme \u00e5rstider indeni.';
-  } else if (nourishing[userEl] === theirEl) {
-    meetLabel = userElLabel + ' n\u00e6rer ' + theirElLabel;
-    meetText = 'Dit ' + userElLabel + '-element n\u00e6rer ' + rel.name + 's ' + theirElLabel + '. I den kinesiske medicin er det en naturlig str\u00f8m \u2014 din energi b\u00e6rer den andens videre, som vand n\u00e6rer tr\u00e6ets r\u00f8dder. M\u00e6rk efter, om du ogs\u00e5 f\u00e5r fyldt op.';
-  } else if (nourishing[theirEl] === userEl) {
-    meetLabel = theirElLabel + ' n\u00e6rer ' + userElLabel;
-    meetText = rel.name + 's ' + theirElLabel + ' n\u00e6rer dit ' + userElLabel + '. Der er noget i den andens rytme, der giver dig ro og n\u00e6ring. I den kinesiske medicin er det en gave \u2014 at have nogen t\u00e6t p\u00e5, hvis energi underst\u00f8tter din.';
-  } else if (controlling[userEl] === theirEl || controlling[theirEl] === userEl) {
-    meetLabel = 'Kreativ sp\u00e6nding';
-    meetText = userElLabel + ' og ' + theirElLabel + ' udfordrer hinanden i femelementcyklusen. Det er ikke konflikt \u2014 det er to kr\u00e6fter der forhandler. Den sp\u00e6nding kan f\u00f8les kr\u00e6vende, men den rummer ogs\u00e5 mulighed for \u00e6gte v\u00e6kst.';
-  } else {
-    meetLabel = userElLabel + ' m\u00f8der ' + theirElLabel;
-    meetText = 'To forskellige energier der ber\u00f8rer hinanden. ' + userElLabel + ' og ' + theirElLabel + ' har ikke en direkte forbindelse i femelementcyklusen, men netop det skaber et rum, hvor I kan bringe noget nyt til hinanden.';
-  }
-
-  setText('rel-meeting-type', meetLabel);
-  setText('rel-meeting-text', meetText);
-
-  // ── 3. KLIMA ──
   const allElements = [userEl, theirEl, userCycles.season.element, theirCycles.season.element];
   const climate = analyzeClimate(allElements, userDom);
-  setText('rel-climate-label', 'Jeres indre klima \u00b7 ' + climate.label);
+
+  // Klima-label inkluderer personernes navne og TCM-dynamik
+  let tcmType = '';
+  if (userEl === theirEl) tcmType = 'Dyb resonans';
+  else if (nourishing[userEl] === theirEl) tcmType = userElLabel + ' n\u00e6rer ' + theirElLabel;
+  else if (nourishing[theirEl] === userEl) tcmType = theirElLabel + ' n\u00e6rer ' + userElLabel;
+  else tcmType = 'Kreativ sp\u00e6nding';
+
+  setText('rel-climate-label', 'Dig og ' + rel.name + ' \u00b7 ' + tcmType);
   setText('rel-climate-text', climate.text);
 
-  // ── 4. DYK DYBERE — inline expandable bogtekst ──
+  // ── 2. DYK DYBERE — inline expandable bogtekst ──
   const linksEl = document.getElementById('rel-deep-links');
   if (linksEl) {
     let html = '';
@@ -3090,16 +3069,10 @@ function buildRelationReading() {
       html += '</div>';
     }
 
-    // d) Navigationslinks (sekund\u00e6re — g\u00e5 endnu dybere)
-    html += '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">';
-    html += '<span class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)" onclick="Router.navigate(\'cir-dit-liv\')">Dit dybe billede \u2192</span>';
-    html += '<span class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)" onclick="window._selectedPhase=' + theirPhaseNum + ';Router.navigate(\'livsfase-detail\')">' + rel.name + 's fase i dybden \u2192</span>';
-    html += '</div>';
-
     linksEl.innerHTML = html;
   }
 
-  // ── 5. SAMTALE\u00c5BNER — alle tre felter ──
+  // ── 3. SAMTALE\u00c5BNER — alle tre felter ──
   const samtale = typeof TO_RYTMER_SAMTALE !== 'undefined' ? TO_RYTMER_SAMTALE[userEl] : null;
   const samtaleEl = document.getElementById('rel-samtale');
   if (samtaleEl && samtale) {
@@ -3117,6 +3090,17 @@ function buildRelationReading() {
     sHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:#7b7a9e;line-height:1.55">\u00ab\u2009' + samtale.sammen + '\u2009\u00bb</div>';
     sHtml += '</div>';
     samtaleEl.innerHTML = sHtml;
+  }
+
+  // ── 4. UDFORSK VIDERE — intelligente links (unikt indhold per person) ──
+  const exploreEl = document.getElementById('rel-explore-links');
+  if (exploreEl) {
+    let eHtml = '';
+    eHtml += '<span class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)" onclick="window._selectedPhase=' + userPhaseNum + ';Router.navigate(\'livsfase-detail\')">Din fase i dybden \u2192</span>';
+    eHtml += '<span class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)" onclick="window._selectedPhase=' + theirPhaseNum + ';Router.navigate(\'livsfase-detail\')">' + rel.name + 's fase \u2192</span>';
+    eHtml += '<span class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)" onclick="Router.navigate(\'rel-tre-gen\')">Tre generationer \u2192</span>';
+    eHtml += '<span class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)" onclick="Router.navigate(\'cir-dit-liv\')">Dit dybe billede \u2192</span>';
+    exploreEl.innerHTML = eHtml;
   }
 
   window.scrollTo({ top: 0 });
