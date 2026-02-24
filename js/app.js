@@ -2769,6 +2769,279 @@ function initVinOejeblikke() {
 }
 
 /* ============================================================
+   DIN RELATION — Deep relation reading (Fase 3)
+   ============================================================ */
+
+const RelDeepState = {
+  selectedPerson: null,
+  targetDate: null,
+  people: []
+};
+
+function initDinRelation() {
+  const data = getUserCycles();
+  if (!data) return;
+
+  const relations = Storage.getRelations();
+  const useExample = !relations || relations.length === 0;
+  const rels = useExample
+    ? [
+        { name: 'Partner', birthdate: '1983-04-15', gender: 'male', type: 'partner' },
+        { name: 'Mor', birthdate: '1958-03-22', gender: 'female', type: 'mor' }
+      ]
+    : relations;
+
+  RelDeepState.people = rels;
+  RelDeepState.targetDate = null;
+  RelDeepState.selectedPerson = rels[0] || null;
+
+  // Render person pills
+  const pillsEl = document.getElementById('rel-deep-pills');
+  if (pillsEl) {
+    pillsEl.innerHTML = rels.map((r, i) =>
+      `<span class="rel-deep-pill${i === 0 ? ' active' : ''}" onclick="selectRelDeepPerson(${i}, this)">${r.name}</span>`
+    ).join('');
+  }
+
+  // Render smart date chips
+  const now = new Date();
+  const pad2 = n => String(n).padStart(2, '0');
+  const toStr = d => d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate());
+  const chipContainer = document.getElementById('rel-deep-smart-chips');
+  if (chipContainer) {
+    const fiveAgo = new Date(now.getFullYear() - 5, now.getMonth(), now.getDate());
+    const fiveAhead = new Date(now.getFullYear() + 5, now.getMonth(), now.getDate());
+    const tenAhead = new Date(now.getFullYear() + 10, now.getMonth(), now.getDate());
+    chipContainer.innerHTML = [
+      { label: 'For 5 \u00e5r siden', date: toStr(fiveAgo) },
+      { label: 'Om 5 \u00e5r', date: toStr(fiveAhead) },
+      { label: 'Om 10 \u00e5r', date: toStr(tenAhead) }
+    ].map(c =>
+      `<span class="rel-deep-chip" onclick="setRelDeepDate('${c.date}', this)">${c.label}</span>`
+    ).join('');
+  }
+
+  // Set date input
+  const dateInput = document.getElementById('rel-deep-date');
+  if (dateInput) dateInput.value = '';
+
+  buildRelationReading();
+}
+
+function selectRelDeepPerson(index, el) {
+  RelDeepState.selectedPerson = RelDeepState.people[index] || null;
+  document.querySelectorAll('.rel-deep-pill').forEach(p => p.classList.remove('active'));
+  if (el) el.classList.add('active');
+  buildRelationReading();
+}
+
+function setRelDeepDate(dateStr, chipEl) {
+  RelDeepState.targetDate = dateStr ? new Date(dateStr) : null;
+  document.querySelectorAll('.rel-deep-chip').forEach(c => c.classList.remove('active'));
+  if (chipEl) chipEl.classList.add('active');
+  const dateInput = document.getElementById('rel-deep-date');
+  if (dateInput && !dateStr) dateInput.value = '';
+  buildRelationReading();
+}
+
+function onRelDeepDateChange(val) {
+  if (!val) return;
+  RelDeepState.targetDate = new Date(val);
+  document.querySelectorAll('.rel-deep-chip').forEach(c => c.classList.remove('active'));
+  buildRelationReading();
+}
+
+function buildRelationReading() {
+  const user = Storage.getUser();
+  if (!user || !user.birthdate) return;
+  const rel = RelDeepState.selectedPerson;
+  if (!rel || !rel.birthdate) return;
+
+  const targetDate = RelDeepState.targetDate || new Date();
+  const isMale = rel.gender === 'male';
+
+  // Calculate cycles for both at target date
+  const userCycles = Calculations.allCycles(user.birthdate, targetDate);
+  const userDom = Calculations.getWeightedDominant(userCycles);
+  const theirCycles = cyclesAtDate(rel.birthdate, targetDate, isMale);
+
+  const userPhase = userCycles.lifePhase;
+  const theirPhase = theirCycles.lifePhase;
+  const userDetail = LIVSFASE_DETAIL[userPhase.phase];
+  const theirDetail = LIVSFASE_DETAIL[theirPhase.phase];
+  const userEl = userPhase.element;
+  const theirEl = theirPhase.element;
+  const userElLabel = Calculations.ELEMENT_LABELS[userEl];
+  const theirElLabel = Calculations.ELEMENT_LABELS[theirEl];
+
+  // Eyebrow
+  setText('rel-deep-other-eyebrow', rel.name);
+
+  // ---- USER PHASE ----
+  setText('rel-deep-user-phase', `Fase ${userPhase.phase} \u00b7 ${userElLabel}`);
+  const userIntroEl = document.getElementById('rel-deep-user-intro');
+  if (userIntroEl && userDetail) {
+    userIntroEl.innerHTML = formatExpandable(userDetail.introText, 40);
+  }
+
+  // ---- OTHER PHASE ----
+  setText('rel-deep-other-phase', `Fase ${theirPhase.phase} \u00b7 ${theirElLabel}`);
+  const otherIntroEl = document.getElementById('rel-deep-other-intro');
+  if (otherIntroEl && theirDetail) {
+    otherIntroEl.innerHTML = formatExpandable(theirDetail.introText, 40);
+  }
+
+  // ---- MEETING / TCM INTERACTION ----
+  const nourishing = { 'VAND': 'TR\u00c6', 'TR\u00c6': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
+  let meetLabel, meetText;
+
+  if (userEl === theirEl) {
+    meetLabel = 'Dyb resonans';
+    meetText = `I deler ${userElLabel}-elementet. N\u00e5r begge er i det samme felt, forst\u00e5r I hinanden uden ord \u2014 og m\u00e6rker hinandens energi st\u00e6rkere end normalt.`;
+  } else if (nourishing[userEl] === theirEl) {
+    meetLabel = `${userElLabel} n\u00e6rer ${theirElLabel}`;
+    meetText = `Dit ${userElLabel} n\u00e6rer ${rel.name}s ${theirElLabel}. Din energi b\u00e6rer den andens videre \u2014 m\u00e5ske uden du t\u00e6nker over det.`;
+  } else if (nourishing[theirEl] === userEl) {
+    meetLabel = `${theirElLabel} n\u00e6rer ${userElLabel}`;
+    meetText = `${rel.name}s ${theirElLabel} n\u00e6rer dit ${userElLabel}. Der er noget i den andens rytme der giver dig ro.`;
+  } else {
+    meetLabel = 'Kreativ sp\u00e6nding';
+    const key = userEl + '_' + theirEl;
+    const interaction = typeof ELEMENT_INTERACTIONS !== 'undefined' ? ELEMENT_INTERACTIONS[key] : null;
+    meetText = interaction
+      ? interaction.text.replace('{navn}', rel.name).replace('{pron}', isMale ? 'hans' : 'hendes')
+      : `${userElLabel} og ${theirElLabel} udfordrer hinanden. Det er kreativ friktion der kan skabe noget nyt.`;
+  }
+
+  setText('rel-deep-meeting-type', meetLabel);
+  setText('rel-deep-meeting-text', meetText);
+
+  // Climate
+  const allElements = [userEl, theirEl, userCycles.season.element, theirCycles.season.element];
+  const climate = analyzeClimate(allElements, userDom);
+  setText('rel-deep-climate-label', climate.label);
+  setText('rel-deep-climate-text', climate.text);
+
+  // ---- FEELINGS ----
+  const feelingsEl = document.getElementById('rel-deep-feelings');
+  if (feelingsEl) {
+    let html = '';
+    if (userDetail && userDetail.centralFoelelse) {
+      html += `<div class="dybde-krop-sind-card" style="border-color:rgba(123,122,158,0.10);margin-bottom:12px">`;
+      html += `<div class="dybde-krop-sind-label">Dig \u00b7 ${userDetail.centralFoelelse.title}</div>`;
+      html += `<div class="dybde-body">${formatExpandable(userDetail.centralFoelelse.tekst, 50)}</div></div>`;
+    }
+    if (theirDetail && theirDetail.centralFoelelse) {
+      html += `<div class="dybde-krop-sind-card" style="border-color:rgba(123,122,158,0.10)">`;
+      html += `<div class="dybde-krop-sind-label">${rel.name} \u00b7 ${theirDetail.centralFoelelse.title}</div>`;
+      html += `<div class="dybde-body">${formatExpandable(theirDetail.centralFoelelse.tekst, 50)}</div></div>`;
+    }
+    feelingsEl.innerHTML = html;
+  }
+
+  // ---- DENNE FASE I JER ----
+  const denneFaseEl = document.getElementById('rel-deep-denne-fase');
+  if (denneFaseEl) {
+    let html = '';
+    if (userDetail && userDetail.denneFaseIDig) {
+      html += `<div class="dybde-krop-sind-card" style="border-color:rgba(123,122,158,0.10);margin-bottom:12px">`;
+      html += `<div class="dybde-krop-sind-label">Dig i Fase ${userPhase.phase}</div>`;
+      html += `<div class="dybde-body">${formatExpandable(userDetail.denneFaseIDig, 50)}</div></div>`;
+    }
+    if (theirDetail && theirDetail.denneFaseIDig) {
+      html += `<div class="dybde-krop-sind-card" style="border-color:rgba(123,122,158,0.10)">`;
+      html += `<div class="dybde-krop-sind-label">${rel.name} i Fase ${theirPhase.phase}</div>`;
+      html += `<div class="dybde-body">${formatExpandable(theirDetail.denneFaseIDig, 50)}</div></div>`;
+    }
+    denneFaseEl.innerHTML = html;
+  }
+
+  // ---- KROP & SIND ----
+  const kropSindEl = document.getElementById('rel-deep-krop-sind');
+  if (kropSindEl) {
+    let html = '';
+    if (userDetail) {
+      html += `<div class="dybde-krop-sind-card" style="border-color:rgba(123,122,158,0.10);margin-bottom:12px">`;
+      html += `<div class="dybde-krop-sind-label">Din krop &amp; sind</div>`;
+      html += `<div class="dybde-body">${formatExpandable((userDetail.kropTekst || '') + '\n\n' + (userDetail.sindTekst || ''), 50)}</div></div>`;
+    }
+    if (theirDetail) {
+      html += `<div class="dybde-krop-sind-card" style="border-color:rgba(123,122,158,0.10)">`;
+      html += `<div class="dybde-krop-sind-label">${rel.name}s krop &amp; sind</div>`;
+      html += `<div class="dybde-body">${formatExpandable((theirDetail.kropTekst || '') + '\n\n' + (theirDetail.sindTekst || ''), 50)}</div></div>`;
+    }
+    kropSindEl.innerHTML = html;
+  }
+
+  // ---- TEMAER ----
+  const temaerEl = document.getElementById('rel-deep-temaer');
+  if (temaerEl) {
+    const allTemaer = [];
+    if (userDetail && userDetail.temaerNarrativer) {
+      userDetail.temaerNarrativer.forEach(t => allTemaer.push({ title: 'Dig: ' + t.title, tekst: t.tekst }));
+    }
+    if (theirDetail && theirDetail.temaerNarrativer) {
+      theirDetail.temaerNarrativer.forEach(t => allTemaer.push({ title: rel.name + ': ' + t.title, tekst: t.tekst }));
+    }
+    renderDybdeTemaer(temaerEl, allTemaer);
+  }
+
+  // ---- \u00d8VELSER ----
+  const oevelserEl = document.getElementById('rel-deep-oevelser');
+  if (oevelserEl) {
+    const allOev = [];
+    if (userDetail && userDetail.oevelser) {
+      userDetail.oevelser.forEach(ov => {
+        if (ov.type === 'par') allOev.unshift(ov);
+        else allOev.push({ type: ov.type, title: 'Dig: ' + ov.title, desc: ov.desc });
+      });
+    }
+    if (theirDetail && theirDetail.oevelser) {
+      theirDetail.oevelser.forEach(ov => {
+        if (ov.type === 'par') allOev.unshift(ov);
+        else allOev.push({ type: ov.type, title: rel.name + ': ' + ov.title, desc: ov.desc });
+      });
+    }
+    renderDybdeOevelser(oevelserEl, allOev.slice(0, 6));
+  }
+
+  // ---- SAMTALE\u00c5BNER ----
+  const samtale = typeof TO_RYTMER_SAMTALE !== 'undefined' ? TO_RYTMER_SAMTALE[userEl] : null;
+  if (samtale) {
+    setText('rel-deep-samtale-text', '\u00ab\u2009' + samtale.spoerg + '\u2009\u00bb');
+  }
+
+  // ---- REFLEKSION ----
+  const allRefl = [];
+  if (userDetail && userDetail.ekstraRefleksioner) allRefl.push(...userDetail.ekstraRefleksioner);
+  if (theirDetail && theirDetail.ekstraRefleksioner) allRefl.push(...theirDetail.ekstraRefleksioner);
+  if (allRefl.length > 0) {
+    const ri = Calculations.dayRotation(allRefl.length);
+    setText('rel-deep-refleksion', allRefl[ri]);
+  }
+
+  // ---- OVERGANGE ----
+  const overgangEl = document.getElementById('rel-deep-overgange');
+  if (overgangEl) {
+    let html = '';
+    if (userDetail && userDetail.overgangTekst) {
+      html += `<div class="dybde-krop-sind-card" style="border-color:rgba(123,122,158,0.10);margin-bottom:12px">`;
+      html += `<div class="dybde-krop-sind-label">Din overgang</div>`;
+      html += `<div class="dybde-body">${formatExpandable(userDetail.overgangTekst, 50)}</div></div>`;
+    }
+    if (theirDetail && theirDetail.overgangTekst) {
+      html += `<div class="dybde-krop-sind-card" style="border-color:rgba(123,122,158,0.10)">`;
+      html += `<div class="dybde-krop-sind-label">${rel.name}s overgang</div>`;
+      html += `<div class="dybde-body">${formatExpandable(theirDetail.overgangTekst, 50)}</div></div>`;
+    }
+    overgangEl.innerHTML = html;
+  }
+
+  // Scroll to top
+  window.scrollTo({ top: 0 });
+}
+
+/* ============================================================
    NIVEAU 2 — Relationer undersider
    ============================================================ */
 

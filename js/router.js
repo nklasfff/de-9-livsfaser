@@ -40,6 +40,7 @@ const Router = {
     'livsfase-detail':   { file: 'screens/livsfase-detail.html',   niveau: 2,  parent: 'cyk-ni-faser', tone: 'cyklusser',  init: 'initLivsfaseDetail' },
 
     // Niveau 2 — Relationer undersider
+    'din-relation':      { file: 'screens/din-relation.html',      niveau: 1,  parent: 'forside',     tone: 'relationer',  init: 'initDinRelation' },
     'rel-lige-nu':       { file: 'screens/rel-lige-nu.html',       niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelLigeNu' },
     'rel-to-rytmer':     { file: 'screens/rel-to-rytmer.html',     niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelToRytmer' },
     'rel-tre-gen':       { file: 'screens/rel-tre-gen.html',       niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelTreGen' },
