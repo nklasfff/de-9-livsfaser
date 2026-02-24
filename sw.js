@@ -1,4 +1,4 @@
-const CACHE_NAME = 'livsfaser-v100';
+const CACHE_NAME = 'livsfaser-v101';
 const urlsToCache = [
   './',
   './index.html',
@@ -50,6 +50,7 @@ const urlsToCache = [
   './screens/cyklusser.html',
   './screens/relationer.html',
   './screens/praksis.html',
+  './screens/din-praksis.html',
   './screens/rejse.html',
   './screens/vinduer.html',
   // Screens — Cirkel-detaljer (0B-0G)

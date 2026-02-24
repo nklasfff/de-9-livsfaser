@@ -149,21 +149,21 @@ function toggleCheckinSupport() {
 
   let recsHTML = '';
   if (yoga) {
-    recsHTML += `<div class="ci-rec" onclick="Router.navigate('praksis')" style="margin-bottom:8px">
+    recsHTML += `<div class="ci-rec" onclick="Router.navigate('din-praksis')" style="margin-bottom:8px">
       <div class="ci-rec-label">Yin Yoga \u00b7 ${elLabel}</div>
       <div class="ci-rec-title">${yoga.pose.split('(')[0].trim()}</div>
       <div class="ci-rec-desc">${yoga.desc}</div>
     </div>`;
   }
   if (mStryg) {
-    recsHTML += `<div class="ci-rec" onclick="Router.navigate('praksis')" style="margin-bottom:8px">
+    recsHTML += `<div class="ci-rec" onclick="Router.navigate('din-praksis')" style="margin-bottom:8px">
       <div class="ci-rec-label">Meridianstrygning \u00b7 ${elLabel}</div>
       <div class="ci-rec-title">${mStryg.meridian}</div>
       <div class="ci-rec-desc">${mStryg.desc}</div>
     </div>`;
   }
   if (food) {
-    recsHTML += `<div class="ci-rec" onclick="Router.navigate('praksis')" style="margin-bottom:8px">
+    recsHTML += `<div class="ci-rec" onclick="Router.navigate('din-praksis')" style="margin-bottom:8px">
       <div class="ci-rec-label">Næring · ${elLabel}</div>
       <div class="ci-rec-title">${food.item}</div>
       <div class="ci-rec-desc">${food.desc}</div>
@@ -1277,6 +1277,132 @@ function initRelationer() {
   }
 }
 
+/* ---- Din Praksis (konsolideret) ---- */
+function initDinPraksis() {
+  const data = getUserCycles();
+  if (!data) return;
+  const { cycles, dominant } = data;
+  const phase = cycles.lifePhase;
+  const domEl = dominant.element;
+  const elLabel = Calculations.ELEMENT_LABELS[domEl];
+  const phaseNum = phase.phase;
+
+  // HERO
+  setText('prak-deep-fase-label', `Fase ${phaseNum} \u00b7 ${phase.name} \u00b7 ${elLabel}`);
+
+  // Element-specific intro text
+  const introMap = {
+    'VAND': 'Vand-elementet kalder p\u00e5 stilhed og dybde. Din krop beder om langsom bevægelse, varme og n\u00e6rende f\u00f8de der styrker nyreessensen.',
+    'TR\u00c6': 'Tr\u00e6-elementet s\u00f8ger bevægelse og retning. Din krop beder om flow, udstrækning og f\u00f8de der støtter leverens frie energi.',
+    'ILD': 'Ild-elementet \u00f8nsker forbindelse og gl\u00e6de. Din krop beder om hjerteåbnende bevægelser, varme og let, n\u00e6rende f\u00f8de.',
+    'JORD': 'Jord-elementet kalder p\u00e5 stabilitet og omsorg. Din krop beder om rodfæstende bevægelser, tryghed og varm, mættende f\u00f8de.',
+    'METAL': 'Metal-elementet søger klarhed og lethed. Din krop beder om åbne brystbevægelser, dyb ud\u00e5nding og ren, enkel f\u00f8de.'
+  };
+  setText('prak-deep-intro', introMap[domEl] || '');
+
+  // YIN YOGA — from YIN_YOGA_FULL
+  const yogaContainer = document.getElementById('prak-deep-yoga');
+  if (yogaContainer && typeof YIN_YOGA_FULL !== 'undefined' && YIN_YOGA_FULL[domEl]) {
+    yogaContainer.innerHTML = YIN_YOGA_FULL[domEl].map(y => `
+      <div class="dybde-tema-card" onclick="toggleDybdeTema(this)">
+        <div class="dybde-tema-header">
+          <div class="dybde-tema-title">${y.pose}</div>
+          <div class="dybde-tema-arrow">\u2193</div>
+        </div>
+        <div class="dybde-tema-body">
+          <p style="margin:0 0 8px">${y.desc}</p>
+          <p style="margin:0;font-size:13px;color:#7a908b">${y.tid} \u00b7 ${y.meridian}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // MERIDIANSTRYGNING — from MERIDIAN_STRYGNINGER
+  const meridianContainer = document.getElementById('prak-deep-meridian');
+  if (meridianContainer && typeof MERIDIAN_STRYGNINGER !== 'undefined' && MERIDIAN_STRYGNINGER[domEl]) {
+    meridianContainer.innerHTML = MERIDIAN_STRYGNINGER[domEl].map(m => `
+      <div class="dybde-tema-card" onclick="toggleDybdeTema(this)">
+        <div class="dybde-tema-header">
+          <div class="dybde-tema-title">${m.meridian}</div>
+          <div class="dybde-tema-arrow">\u2193</div>
+        </div>
+        <div class="dybde-tema-body">
+          <p style="margin:0 0 6px;font-size:13px;color:#7a908b">${m.organ} \u00b7 Retning: ${m.retning}</p>
+          <p style="margin:0 0 10px">${m.desc}</p>
+          ${m.vejledning ? '<p style="margin:0;font-size:14px;color:var(--text-body);line-height:1.55;font-style:italic">' + m.vejledning + '</p>' : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // \u00c5NDEDR\u00c6TTET — element-specific meditation text
+  const breathMap = {
+    'VAND': 'Vand \u00e5nder langsomt. Forestil dig b\u00f8lgernes rytme \u2014 ind\u00e5nding som tidevand der stiger, ud\u00e5nding som vand der trækker sig tilbage. Lad pusten synke helt ned i underlivet.',
+    'TR\u00c6': 'Tr\u00e6 \u00e5nder frit. Forestil dig en stamme der vokser opad med ind\u00e5ndingen og spreder sine grene med ud\u00e5ndingen. Lad pusten bevæge sig opad gennem kroppen.',
+    'ILD': 'Ild \u00e5nder varmt. M\u00e6rk varmen i brystet med ind\u00e5ndingen. Ud\u00e5nd som en blid flamme der lyser op. Lad hjertet \u00e5bne sig med hver ud\u00e5nding.',
+    'JORD': 'Jord \u00e5nder stabilt. Forestil dig at du \u00e5nder ned i maven, ned i jorden. Ud\u00e5ndingen er som r\u00f8dder der breder sig. Lad pusten forankre dig.',
+    'METAL': 'Metal \u00e5nder klart. Ind\u00e5nd som et blankt spejl der opfanger lyset. Ud\u00e5nd langsomt og fuldst\u00e6ndigt \u2014 slip alt det overfl\u00f8dige. Lad ud\u00e5ndingen v\u00e6re længst.'
+  };
+  setText('prak-deep-breath-text', breathMap[domEl] || '');
+
+  // Init breathing animation
+  if (typeof initBreathBoxes === 'function') {
+    initBreathBoxes();
+  }
+
+  // DIN CENTRALE F\u00d8LELSE — TCM element-to-emotion mapping
+  const feelMap = {
+    'VAND': { feeling: 'Frygt \u2014 og visdom', text: 'Vandets f\u00f8lelse er frygt. N\u00e5r vandet er i balance, bliver frygten til visdom \u2014 en dyb, intuitiv fornemmelse af hvad der er rigtigt. N\u00e5r vandet er i ubalance, kan frygten l\u00e5se kroppen fast.', eft: 'Selvom jeg m\u00e6rker denne frygt i min krop, accepterer jeg mig selv fuldst\u00e6ndigt og dybt.' },
+    'TR\u00c6': { feeling: 'Vrede \u2014 og beslutsomhed', text: 'Tr\u00e6ets f\u00f8lelse er vrede. N\u00e5r tr\u00e6et er i balance, bliver vreden til beslutsomhed og handlekraft. N\u00e5r tr\u00e6et er i ubalance, kan vreden blive destruktiv eller blive til frustration der v\u00e6lter indad.', eft: 'Selvom jeg m\u00e6rker denne vrede og frustration, accepterer jeg mig selv fuldst\u00e6ndigt og dybt.' },
+    'ILD': { feeling: 'Gl\u00e6de \u2014 og overv\u00e6ldelse', text: 'Ildens f\u00f8lelse er gl\u00e6de. N\u00e5r ilden er i balance, str\u00e5ler gl\u00e6den naturligt ud og skaber forbindelse. N\u00e5r ilden er i ubalance, kan gl\u00e6den tippe over i mani, rastl\u00f8shed eller en tomhed n\u00e5r flammen br\u00e6nder ud.', eft: 'Selvom jeg f\u00f8ler mig overv\u00e6ldet og min ild flakker, accepterer jeg mig selv fuldst\u00e6ndigt og dybt.' },
+    'JORD': { feeling: 'Bekymring \u2014 og omsorg', text: 'Jordens f\u00f8lelse er bekymring. N\u00e5r jorden er i balance, bliver bekymringen til \u00e6gte omsorg \u2014 en moderlig varme der n\u00e6rer uden at kv\u00e6le. N\u00e5r jorden er i ubalance, graver tankerne sig fast i cirkler.', eft: 'Selvom mine tanker k\u00f8rer i ring og jeg bekymrer mig, accepterer jeg mig selv fuldst\u00e6ndigt og dybt.' },
+    'METAL': { feeling: 'Sorg \u2014 og klarhed', text: 'Metallets f\u00f8lelse er sorg. N\u00e5r metallet er i balance, bliver sorgen til en klar fornemmelse af hvad der virkelig betyder noget. N\u00e5r metallet er i ubalance, kan sorgen blive til isolation eller en manglende evne til at slippe.', eft: 'Selvom jeg b\u00e6rer p\u00e5 denne sorg og dette tab, accepterer jeg mig selv fuldst\u00e6ndigt og dybt.' }
+  };
+  const feel = feelMap[domEl];
+  if (feel) {
+    setText('prak-deep-feeling-title', feel.feeling);
+    setHTML('prak-deep-feeling-text', formatExpandable(feel.text, 30));
+    setText('prak-deep-eft-text', '\u201c' + feel.eft + '\u201d');
+  }
+
+  // N\u00c6RING — from INSIGHT_FOOD
+  const foodContainer = document.getElementById('prak-deep-food');
+  if (foodContainer && typeof INSIGHT_FOOD !== 'undefined' && INSIGHT_FOOD[domEl]) {
+    foodContainer.innerHTML = INSIGHT_FOOD[domEl].map(f => `
+      <div style="padding:12px 0;border-bottom:1px solid rgba(122,144,139,0.08)">
+        <div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark);margin-bottom:4px">${f.item}</div>
+        <div style="font-family:var(--font-sans);font-size:14px;color:var(--text-body);font-weight:300;line-height:1.5">${f.desc}</div>
+      </div>
+    `).join('');
+  }
+
+  // REFLEKSION — from REFLEKSION_DATA (phase-specific, with save)
+  const reflContainer = document.getElementById('prak-deep-refleksion');
+  const questions = typeof REFLEKSION_DATA !== 'undefined' ? REFLEKSION_DATA[phaseNum] : null;
+  if (reflContainer && questions) {
+    reflContainer.innerHTML = questions.map((q, i) => `
+      <div class="card prak-deep-refl-card" style="cursor:pointer"><div class="card-row"><div>
+        <div class="card-label" style="color:#7a908b">Sp\u00f8rgsm\u00e5l ${i + 1}</div>
+        <div class="card-title">${q}</div>
+        <div class="card-desc">Tryk for at skrive</div>
+      </div><div class="card-arrow" style="color:rgba(122,144,139,0.4)">\u2192</div></div></div>
+    `).join('');
+
+    // Bind click handlers for reflection write
+    reflContainer.querySelectorAll('.prak-deep-refl-card').forEach((card, i) => {
+      if (card._bound) return;
+      card._bound = true;
+      card.addEventListener('click', () => toggleRefleksionWrite(card, i));
+    });
+  }
+
+  // FASENS R\u00c5D — from LIVSFASE_DETAIL
+  const detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[phaseNum] : null;
+  if (detail && detail.fasensRaad) {
+    renderDybdeRaad(document.getElementById('prak-deep-raad'), detail.fasensRaad);
+  }
+}
+
 /* ---- Praksis (Section 3) ---- */
 function initPraksis() {
   const data = getUserCycles();
@@ -2161,9 +2287,9 @@ function initLivsfaseDetail() {
       `).join('');
     } else {
       praksisEl.innerHTML = `
-        <div class="praksis-card" onclick="Router.navigate('praksis')"><div><div class="pk-label">\u00d8velse \u00b7 ${elLabel}</div><div class="pk-name">${detail.oevelse.title}</div><div class="pk-desc">${detail.oevelse.desc}</div></div><div class="pk-arrow">\u2192</div></div>
-        <div class="praksis-card" onclick="Router.navigate('praksis')"><div><div class="pk-label">N\u00e6ring \u00b7 ${elLabel}</div><div class="pk-name">${detail.kost.title}</div><div class="pk-desc">${detail.kost.desc}</div></div><div class="pk-arrow">\u2192</div></div>
-        <div class="praksis-card" onclick="Router.navigate('praksis')"><div><div class="pk-label">Meridianstrygning \u00b7 ${elLabel}</div><div class="pk-name">${detail.meridianStrygning.title}</div><div class="pk-desc">${detail.meridianStrygning.desc}</div></div><div class="pk-arrow">\u2192</div></div>
+        <div class="praksis-card" onclick="Router.navigate('din-praksis')"><div><div class="pk-label">\u00d8velse \u00b7 ${elLabel}</div><div class="pk-name">${detail.oevelse.title}</div><div class="pk-desc">${detail.oevelse.desc}</div></div><div class="pk-arrow">\u2192</div></div>
+        <div class="praksis-card" onclick="Router.navigate('din-praksis')"><div><div class="pk-label">N\u00e6ring \u00b7 ${elLabel}</div><div class="pk-name">${detail.kost.title}</div><div class="pk-desc">${detail.kost.desc}</div></div><div class="pk-arrow">\u2192</div></div>
+        <div class="praksis-card" onclick="Router.navigate('din-praksis')"><div><div class="pk-label">Meridianstrygning \u00b7 ${elLabel}</div><div class="pk-name">${detail.meridianStrygning.title}</div><div class="pk-desc">${detail.meridianStrygning.desc}</div></div><div class="pk-arrow">\u2192</div></div>
       `;
     }
   }

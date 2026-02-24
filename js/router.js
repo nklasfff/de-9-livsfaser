@@ -48,7 +48,10 @@ const Router = {
     'rel-epigenetik':    { file: 'screens/rel-epigenetik.html',    niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelEpigenetik' },
     'rel-konstellation': { file: 'screens/rel-konstellation.html', niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelKonstellation' },
 
-    // Niveau 2 — Praksis undersider
+    // Din Praksis (konsolideret)
+    'din-praksis':       { file: 'screens/din-praksis.html',       niveau: 1,  parent: 'forside',     tone: 'praksis',     init: 'initDinPraksis' },
+
+    // Niveau 2 — Praksis undersider (legacy)
     'pra-yin-yoga':      { file: 'screens/pra-yin-yoga.html',      niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraYinYoga' },
     'pra-eft':           { file: 'screens/pra-eft.html',           niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraEft' },
     'pra-foelelser':     { file: 'screens/pra-foelelser.html',     niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraFoelelser' },
