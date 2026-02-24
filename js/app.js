@@ -149,21 +149,21 @@ function toggleCheckinSupport() {
 
   let recsHTML = '';
   if (yoga) {
-    recsHTML += `<div class="ci-rec" onclick="Router.navigate('pra-yin-yoga')" style="margin-bottom:8px">
+    recsHTML += `<div class="ci-rec" onclick="Router.navigate('praksis')" style="margin-bottom:8px">
       <div class="ci-rec-label">Yin Yoga \u00b7 ${elLabel}</div>
       <div class="ci-rec-title">${yoga.pose.split('(')[0].trim()}</div>
       <div class="ci-rec-desc">${yoga.desc}</div>
     </div>`;
   }
   if (mStryg) {
-    recsHTML += `<div class="ci-rec" onclick="Router.navigate('pra-healing')" style="margin-bottom:8px">
+    recsHTML += `<div class="ci-rec" onclick="Router.navigate('praksis')" style="margin-bottom:8px">
       <div class="ci-rec-label">Meridianstrygning \u00b7 ${elLabel}</div>
       <div class="ci-rec-title">${mStryg.meridian}</div>
       <div class="ci-rec-desc">${mStryg.desc}</div>
     </div>`;
   }
   if (food) {
-    recsHTML += `<div class="ci-rec" onclick="Router.navigate('pra-kost')" style="margin-bottom:8px">
+    recsHTML += `<div class="ci-rec" onclick="Router.navigate('praksis')" style="margin-bottom:8px">
       <div class="ci-rec-label">Næring · ${elLabel}</div>
       <div class="ci-rec-title">${food.item}</div>
       <div class="ci-rec-desc">${food.desc}</div>
@@ -792,11 +792,11 @@ function initForside() {
   const cykContainer = document.getElementById('forside-cyklusser');
   if (cykContainer) {
     const rows = [
-      { label: 'Livsfase', value: `Fase ${phase.phase} \u00b7 ${elLabel(phase.element)}`, route: 'cir-livsfase' },
-      { label: '\u00c5rstid', value: `${cycles.season.season} \u00b7 ${elLabel(cycles.season.element)}`, route: 'cir-aarstid' },
-      { label: 'M\u00e5ned', value: `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} \u00b7 ${elLabel(cycles.monthCycle.element)}`, route: 'cir-maaned' },
-      { label: 'Ugedag', value: `${cycles.weekday.day} \u00b7 ${elLabel(cycles.weekday.element)}`, route: 'cir-ugedag' },
-      { label: 'Organur', value: `${cycles.organ.hours} \u00b7 ${cycles.organ.organ}`, route: 'cir-organur' }
+      { label: 'Livsfase', value: `Fase ${phase.phase} \u00b7 ${elLabel(phase.element)}`, route: 'cir-dit-liv' },
+      { label: '\u00c5rstid', value: `${cycles.season.season} \u00b7 ${elLabel(cycles.season.element)}`, route: 'cir-dit-liv' },
+      { label: 'M\u00e5ned', value: `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} \u00b7 ${elLabel(cycles.monthCycle.element)}`, route: 'cir-dit-liv' },
+      { label: 'Ugedag', value: `${cycles.weekday.day} \u00b7 ${elLabel(cycles.weekday.element)}`, route: 'cir-dit-liv' },
+      { label: 'Organur', value: `${cycles.organ.hours} \u00b7 ${cycles.organ.organ}`, route: 'cir-dit-liv' }
     ];
     cykContainer.innerHTML = rows.map(r =>
       `<div class="forside-cyk-row" onclick="Router.navigate('${r.route}')">` +
@@ -2161,9 +2161,9 @@ function initLivsfaseDetail() {
       `).join('');
     } else {
       praksisEl.innerHTML = `
-        <div class="praksis-card" onclick="Router.navigate('pra-yin-yoga')"><div><div class="pk-label">\u00d8velse \u00b7 ${elLabel}</div><div class="pk-name">${detail.oevelse.title}</div><div class="pk-desc">${detail.oevelse.desc}</div></div><div class="pk-arrow">\u2192</div></div>
-        <div class="praksis-card" onclick="Router.navigate('pra-kost')"><div><div class="pk-label">N\u00e6ring \u00b7 ${elLabel}</div><div class="pk-name">${detail.kost.title}</div><div class="pk-desc">${detail.kost.desc}</div></div><div class="pk-arrow">\u2192</div></div>
-        <div class="praksis-card" onclick="Router.navigate('pra-healing')"><div><div class="pk-label">Meridianstrygning \u00b7 ${elLabel}</div><div class="pk-name">${detail.meridianStrygning.title}</div><div class="pk-desc">${detail.meridianStrygning.desc}</div></div><div class="pk-arrow">\u2192</div></div>
+        <div class="praksis-card" onclick="Router.navigate('praksis')"><div><div class="pk-label">\u00d8velse \u00b7 ${elLabel}</div><div class="pk-name">${detail.oevelse.title}</div><div class="pk-desc">${detail.oevelse.desc}</div></div><div class="pk-arrow">\u2192</div></div>
+        <div class="praksis-card" onclick="Router.navigate('praksis')"><div><div class="pk-label">N\u00e6ring \u00b7 ${elLabel}</div><div class="pk-name">${detail.kost.title}</div><div class="pk-desc">${detail.kost.desc}</div></div><div class="pk-arrow">\u2192</div></div>
+        <div class="praksis-card" onclick="Router.navigate('praksis')"><div><div class="pk-label">Meridianstrygning \u00b7 ${elLabel}</div><div class="pk-name">${detail.meridianStrygning.title}</div><div class="pk-desc">${detail.meridianStrygning.desc}</div></div><div class="pk-arrow">\u2192</div></div>
       `;
     }
   }

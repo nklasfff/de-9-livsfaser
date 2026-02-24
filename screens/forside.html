@@ -26,10 +26,10 @@
 <!-- DIN KROP NU — 4 praksis-kort -->
 <div class="s" style="padding-top:20px;padding-bottom:20px">
   <div class="eyebrow">Din krop nu</div>
-  <div class="praksis-card" onclick="Router.navigate('pra-yin-yoga')"><div><div class="pk-label">Yin Yoga &middot; Vand</div><div class="pk-name">Butterfly</div><div class="pk-desc">&Aring;bner hofterne og stimulerer nyremeridianen. 3&ndash;5 min.</div></div><div class="pk-arrow">&rarr;</div></div>
-  <div class="praksis-card" onclick="Router.navigate('pra-healing')"><div><div class="pk-label">Meridianstrygning &middot; Vand</div><div class="pk-name">Nyrernes meridian</div><div class="pk-desc">Fra fodens underside opad langs indersiden af benet.</div></div><div class="pk-arrow">&rarr;</div></div>
-  <div class="praksis-card" onclick="Router.navigate('pra-mindfulness')"><div><div class="pk-label">Mindfulness &middot; Vand</div><div class="pk-name">B&oslash;lgernes rytme</div><div class="pk-desc">Ind&aring;nd 4s, hold 4s, ud&aring;nd 6s. M&aelig;rk dybden.</div></div><div class="pk-arrow">&rarr;</div></div>
-  <div class="praksis-card" onclick="Router.navigate('pra-kost')"><div><div class="pk-label">N&aelig;ring &middot; Vand</div><div class="pk-name">Sort sesam &amp; valn&oslash;dder</div><div class="pk-desc">N&aelig;rer nyreessensen og styrker livskraften.</div></div><div class="pk-arrow">&rarr;</div></div>
+  <div class="praksis-card" onclick="Router.navigate('praksis')"><div><div class="pk-label">Yin Yoga &middot; Vand</div><div class="pk-name">Butterfly</div><div class="pk-desc">&Aring;bner hofterne og stimulerer nyremeridianen. 3&ndash;5 min.</div></div><div class="pk-arrow">&rarr;</div></div>
+  <div class="praksis-card" onclick="Router.navigate('praksis')"><div><div class="pk-label">Meridianstrygning &middot; Vand</div><div class="pk-name">Nyrernes meridian</div><div class="pk-desc">Fra fodens underside opad langs indersiden af benet.</div></div><div class="pk-arrow">&rarr;</div></div>
+  <div class="praksis-card" onclick="Router.navigate('praksis')"><div><div class="pk-label">Mindfulness &middot; Vand</div><div class="pk-name">B&oslash;lgernes rytme</div><div class="pk-desc">Ind&aring;nd 4s, hold 4s, ud&aring;nd 6s. M&aelig;rk dybden.</div></div><div class="pk-arrow">&rarr;</div></div>
+  <div class="praksis-card" onclick="Router.navigate('praksis')"><div><div class="pk-label">N&aelig;ring &middot; Vand</div><div class="pk-name">Sort sesam &amp; valn&oslash;dder</div><div class="pk-desc">N&aelig;rer nyreessensen og styrker livskraften.</div></div><div class="pk-arrow">&rarr;</div></div>
 </div>
 
 <!-- RELATION -->
@@ -68,18 +68,18 @@
   <div class="eyebrow">Udforsk</div>
   <div id="forside-explore" style="display:flex;flex-direction:column;gap:14px">
 
-    <!-- Cyklusser -->
+    <!-- Dit liv -->
     <div class="explore-group">
-      <div class="explore-heading" onclick="Router.navigate('cyklusser')" style="color:#6c82a9">Mine Cyklusser <span style="opacity:0.4">&rarr;</span></div>
+      <div class="explore-heading" style="color:#6c82a9">Dit liv</div>
       <div class="explore-links">
-        <span class="explore-link" onclick="Router.navigate('cyk-ni-faser')" style="color:#6c82a9;border-color:rgba(108,130,169,0.15)">De ni faser</span>
-        <span class="explore-link" onclick="Router.navigate('cyk-fire-uger')" style="color:#6c82a9;border-color:rgba(108,130,169,0.15)">Fire uger</span>
+        <span class="explore-link" onclick="Router.navigate('cir-dit-liv')" style="color:#6c82a9;border-color:rgba(108,130,169,0.15)">Dit Dybe Billede</span>
+        <span class="explore-link" onclick="Router.navigate('cyk-ni-faser')" style="color:#6c82a9;border-color:rgba(108,130,169,0.15)">De Ni Faser</span>
       </div>
     </div>
 
     <!-- Relationer -->
     <div class="explore-group">
-      <div class="explore-heading" onclick="Router.navigate('relationer')" style="color:#7b7a9e">Mine Relationer <span style="opacity:0.4">&rarr;</span></div>
+      <div class="explore-heading" style="color:#7b7a9e">Relationer</div>
       <div class="explore-links">
         <span class="explore-link" onclick="Router.navigate('din-relation')" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)">Din Relation</span>
         <span class="explore-link" onclick="Router.navigate('rel-konstellation')" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)">Konstellation</span>
@@ -88,30 +88,26 @@
 
     <!-- Praksis -->
     <div class="explore-group">
-      <div class="explore-heading" onclick="Router.navigate('praksis')" style="color:#7a908b">Min Praksis <span style="opacity:0.4">&rarr;</span></div>
+      <div class="explore-heading" style="color:#7a908b">Praksis</div>
       <div class="explore-links">
-        <span class="explore-link" onclick="Router.navigate('pra-yin-yoga')" style="color:#7a908b;border-color:rgba(122,144,139,0.15)">Yin Yoga</span>
-        <span class="explore-link" onclick="Router.navigate('pra-mindfulness')" style="color:#7a908b;border-color:rgba(122,144,139,0.15)">Mindfulness</span>
-        <span class="explore-link" onclick="Router.navigate('pra-refleksion')" style="color:#7a908b;border-color:rgba(122,144,139,0.15)">Refleksion</span>
+        <span class="explore-link" onclick="Router.navigate('praksis')" style="color:#7a908b;border-color:rgba(122,144,139,0.15)">Din Praksis</span>
       </div>
     </div>
 
     <!-- Rejse -->
     <div class="explore-group">
-      <div class="explore-heading" onclick="Router.navigate('rejse')" style="color:#8a96a9">Min Rejse <span style="opacity:0.4">&rarr;</span></div>
+      <div class="explore-heading" style="color:#8a96a9">Rejse</div>
       <div class="explore-links">
-        <span class="explore-link" onclick="Router.navigate('rej-udvikling')" style="color:#8a96a9;border-color:rgba(138,150,169,0.15)">Udvikling</span>
-        <span class="explore-link" onclick="Router.navigate('rej-journal')" style="color:#8a96a9;border-color:rgba(138,150,169,0.15)">Journal</span>
-        <span class="explore-link" onclick="Router.navigate('rej-alle-faser')" style="color:#8a96a9;border-color:rgba(138,150,169,0.15)">Alle faser</span>
+        <span class="explore-link" onclick="Router.navigate('rejse')" style="color:#8a96a9;border-color:rgba(138,150,169,0.15)">Min Rejse</span>
+        <span class="explore-link" onclick="Router.navigate('rej-alle-faser')" style="color:#8a96a9;border-color:rgba(138,150,169,0.15)">Alle Faser</span>
       </div>
     </div>
 
-    <!-- Vinduer -->
+    <!-- Tid -->
     <div class="explore-group">
-      <div class="explore-heading" onclick="Router.navigate('vinduer')" style="color:#6B5F7B">Mine Vinduer <span style="opacity:0.4">&rarr;</span></div>
+      <div class="explore-heading" style="color:#6B5F7B">Tid</div>
       <div class="explore-links">
-        <span class="explore-link" onclick="Router.navigate('vin-tidslinje')" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)">Tidslinje</span>
-        <span class="explore-link" onclick="Router.navigate('vin-oejeblikke')" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)">&Oslash;jeblikke</span>
+        <span class="explore-link" onclick="Router.navigate('vinduer')" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)">Tidsrejse</span>
       </div>
     </div>
 
