@@ -2912,7 +2912,40 @@ function navigateToRelation(personName) {
 function initDinRelation() {
   const data = getUserCycles();
   if (!data) return;
+  const { cycles, dominant } = data;
+  const phase = cycles.lifePhase;
+  const phaseNum = phase.phase;
+  const detail = LIVSFASE_DETAIL[phaseNum];
+  const elLabel = Calculations.ELEMENT_LABELS[phase.element] || phase.element;
 
+  // === 1. PRÆSENTATION ===
+  setText('rel-deep-title', 'Fase ' + phaseNum + ' \u00b7 ' + elLabel);
+  const introTexts = [
+    'Ingen relation eksisterer i et vakuum. Hver forbindelse b\u00e6rer begge menneskers rytme \u2014 og n\u00e5r rytmerne m\u00f8des, opst\u00e5r noget nyt.',
+    'De mennesker du har t\u00e6ttest p\u00e5 dig, m\u00e6rker din fase lige s\u00e5 tydeligt som du m\u00e6rker deres. Her kan du udforske hvad der sker i m\u00f8det.',
+    'Relationer forandrer sig med faserne. Det der f\u00f8ltes let for et \u00e5r siden, kan f\u00f8les tungt nu \u2014 eller omvendt. Begge dele er naturlige.'
+  ];
+  const introIdx = Calculations.dayRotation(introTexts.length);
+  setText('rel-deep-intro', introTexts[introIdx]);
+
+  // === 2. PERSONLIGGØRELSE: Relationer i din fase ===
+  const relIFasenEl = document.getElementById('rel-deep-relationer-i-fasen');
+  if (relIFasenEl && detail && detail.relationerIFasen) {
+    relIFasenEl.innerHTML = formatExpandable(detail.relationerIFasen, 60);
+  }
+
+  // === 3. EMOTIONEL BRO: Feeling box ===
+  const feelingTexts = {
+    VAND: 'M\u00e5ske m\u00e6rker du en s\u00e5rbarhed i dine relationer lige nu \u2014 en f\u00f8lsomhed der g\u00f8r det sv\u00e6rt at s\u00e6tte gr\u00e6nser, men som ogs\u00e5 \u00e5bner for dyb forbindelse.',
+    'TR\u00c6': 'Der er m\u00e5ske en utolmodighed i dig \u2014 en tr\u00e6ng til at ting skal vokse og bev\u00e6ge sig. Dine relationer m\u00e6rker den energi, og nogle trives med den mens andre bremser.',
+    ILD: 'Du br\u00e6nder m\u00e5ske for noget lige nu \u2014 og de mennesker omkring dig m\u00e6rker varmen. Nogen tr\u00e6kkes mod den, andre tr\u00e6kker sig. Begge reaktioner fort\u00e6ller dig noget.',
+    JORD: 'Der er en omsorg i dig der r\u00e6kker ud mod alle. M\u00e5ske giver du mere end du modtager lige nu \u2014 og dine relationer afspejler den ubalance.',
+    METAL: 'M\u00e5ske m\u00e6rker du et behov for at tr\u00e6kke dig lidt tilbage \u2014 ikke v\u00e6k fra dine relationer, men ind i din egen klarhed. Det er en styrke, ikke en afvisning.'
+  };
+  const feelingText = feelingTexts[phase.element] || feelingTexts.VAND;
+  setText('rel-deep-feeling-text', feelingText);
+
+  // === 4. PERSON-VÆLGER ===
   const relations = Storage.getRelations();
   const useExample = !relations || relations.length === 0;
   const rels = useExample
@@ -2925,12 +2958,12 @@ function initDinRelation() {
   RelDeepState.people = rels;
   RelDeepState.targetDate = null;
 
-  // Check if a specific person was pre-selected (e.g. from relationer pulse cards)
+  // Check if a specific person was pre-selected
   let defaultIndex = 0;
   if (window._selectedRelPerson) {
     const idx = rels.findIndex(r => r.name === window._selectedRelPerson);
     if (idx >= 0) defaultIndex = idx;
-    window._selectedRelPerson = null;  // Clear after use
+    window._selectedRelPerson = null;
   }
   RelDeepState.selectedPerson = rels[defaultIndex] || null;
 
@@ -2963,6 +2996,28 @@ function initDinRelation() {
   // Set date input
   const dateInput = document.getElementById('rel-deep-date');
   if (dateInput) dateInput.value = '';
+
+  // === 5. UDFORSK VIDERE cross-links ===
+  const exploreEl = document.getElementById('rel-deep-explore');
+  if (exploreEl) {
+    exploreEl.innerHTML = `
+      <div class="quick-action" onclick="Router.navigate('rel-tre-gen')">
+        <div class="quick-action-title">Tre generationer</div>
+        <div class="quick-action-desc">Se hvordan faserne flyder gennem generationerne</div>
+        <div class="quick-action-arrow" style="color:rgba(123,122,158,0.4)">&#8594;</div>
+      </div>
+      <div class="quick-action" onclick="Router.navigate('rel-epigenetik')">
+        <div class="quick-action-title">Epigenetik</div>
+        <div class="quick-action-desc">Hvad du b\u00e6rer med dig fra dine forf\u00e6dre</div>
+        <div class="quick-action-arrow" style="color:rgba(123,122,158,0.4)">&#8594;</div>
+      </div>
+      <div class="quick-action" onclick="Router.navigate('cir-dit-liv')">
+        <div class="quick-action-title">Dit dybe billede</div>
+        <div class="quick-action-desc">Udforsk din egen fase i dybden</div>
+        <div class="quick-action-arrow" style="color:rgba(123,122,158,0.4)">&#8594;</div>
+      </div>
+    `;
+  }
 
   buildRelationReading();
 }
