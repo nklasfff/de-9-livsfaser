@@ -1279,6 +1279,51 @@ function initRelationer() {
 
 /* ---- Din Praksis (luftig hub — præsenterer konceptet, kort fører videre) ---- */
 function initDinPraksis() {
+  // ── 1. PRÆSENTATION — vises ALTID, uanset brugerdata ──
+  setText('prak-title', 'Hvad kroppen beder om');
+  setText('prak-sub', 'Tilpasset dit element \u2014 hver dag');
+  setText('prak-intro', '\u00d8velser, kost, meridianstrygninger og refleksion. Alt er valgt ud fra det element der dominerer dit liv lige nu. V\u00e6lg det der kalder \u2014 eller lad v\u00e6re.');
+
+  // ── STATISKE KORT — vises ALTID ──
+  var cardsEl = document.getElementById('prak-cards');
+  if (cardsEl) {
+    var html = '';
+    html += '<div class="group-label" style="color:#7a908b">Krop</div>';
+    html += buildPrakCard('Yin Yoga', 'Stille stillinger', 'Stille stillinger der \u00e5bner meridianer og frigiver sp\u00e6ndinger. Tilpasset dit element.', 'pra-yin-yoga');
+    html += buildPrakCard('Meridianstrygning', 'Energiens vej', 'Strygninger langs meridianerne der samler og bev\u00e6ger energien i dit element.', 'pra-healing');
+    html += '<div class="group-label" style="color:#7a908b;margin-top:24px">Sind</div>';
+    html += buildPrakCard('F\u00f8lelsernes Hjul', 'Hvad m\u00e6rker du?', 'Fem elementer, fem f\u00f8lelsesfelter. Find det der resonerer og forst\u00e5 hvad kroppen fort\u00e6ller dig.', 'pra-foelelser');
+    html += buildPrakCard('Mindfulness', 'N\u00e6rv\u00e6r og stilhed', 'Korte \u00f8velser i n\u00e6rv\u00e6r tilpasset den energi der dominerer dig lige nu.', 'pra-mindfulness');
+    html += buildPrakCard('Refleksion', 'Tre sp\u00f8rgsm\u00e5l til din fase', 'Skriv, m\u00e6rk efter, og lad tankerne lande i deres eget tempo.', 'pra-refleksion');
+    html += '<div class="group-label" style="color:#7a908b;margin-top:24px">N\u00e6ring</div>';
+    html += buildPrakCard('Kost & Urter', 'Det der n\u00e6rer dit element', 'De retter og urter der passer til dit element og din fase lige nu.', 'pra-kost');
+    cardsEl.innerHTML = html;
+  }
+
+  // ── STATISKE EXPLORE LINKS — vises ALTID ──
+  var exploreEl = document.getElementById('prak-explore-links');
+  if (exploreEl) {
+    var eHtml = '';
+    eHtml += '<span class="explore-link" style="color:#7a908b;border-color:rgba(122,144,139,0.15)" onclick="Router.navigate(\'cir-dit-liv\')">Dit dybe billede \u2192</span>';
+    eHtml += '<span class="explore-link" style="color:#7a908b;border-color:rgba(122,144,139,0.15)" onclick="Router.navigate(\'cyk-ni-faser\')">De ni faser \u2192</span>';
+    eHtml += '<span class="explore-link" style="color:#7a908b;border-color:rgba(122,144,139,0.15)" onclick="Router.navigate(\'din-relation\')">Dine relationer \u2192</span>';
+    eHtml += '<span class="explore-link" style="color:#7a908b;border-color:rgba(122,144,139,0.15)" onclick="Router.navigate(\'rejse\')">Min rejse \u2192</span>';
+    exploreEl.innerHTML = eHtml;
+  }
+
+  // ── STATISK ÅNDEDRÆT ──
+  setText('prak-breath-text', 'Langsomt og dybt. Ind\u00e5nd ro, ud\u00e5nd sp\u00e6nding.');
+  if (typeof initBreathBoxes === 'function') {
+    setTimeout(function() { initBreathBoxes(); }, 100);
+  }
+
+  // ── STATISK FEELING BOX fallback ──
+  setText('prak-feeling-text', 'Kroppen taler sit eget sprog. Nogle gange som smerte, andre gange som l\u00e6ngsel. Praksis er at lytte \u2014 uden at skulle \u00e6ndre noget.');
+
+  // ── STATISK REFLEKSION fallback ──
+  setText('prak-refleksion', '\u00ab\u2009Hvad beder din krop om lige nu?\u2009\u00bb');
+
+  // ── BRUGERDATA — beriger med personligt indhold ──
   const data = getUserCycles();
   if (!data) return;
   const { cycles, dominant } = data;
@@ -1288,12 +1333,7 @@ function initDinPraksis() {
   const phaseNum = phase.phase;
   const detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[phaseNum] : null;
 
-  // ── 1. PRÆSENTATION — konceptuel, Isabelles stemme ──
-  setText('prak-title', 'Hvad kroppen beder om');
-  setText('prak-sub', 'Tilpasset dit element \u2014 hver dag');
-  setText('prak-intro', '\u00d8velser, kost, meridianstrygninger og refleksion. Alt er valgt ud fra det element der dominerer dit liv lige nu. V\u00e6lg det der kalder \u2014 eller lad v\u00e6re.');
-
-  // ── 2. INSIGHT — kort kontekst ──
+  // ── INSIGHT — personlig kontekst ──
   var insightMap = {
     'VAND': 'Vand dominerer lige nu. Din krop beder om stilhed, dybde og n\u00e6ring nedefra.',
     'TR\u00c6': 'Tr\u00e6 dominerer lige nu. Din krop beder om bev\u00e6gelse, v\u00e6kst og frisk luft.',
@@ -1304,7 +1344,7 @@ function initDinPraksis() {
   setText('prak-insight-label', 'Dagens element \u00b7 ' + elLabel);
   setText('prak-insight-text', insightMap[domEl] || '');
 
-  // ── 3. FEELING BOX — emotionel bro fra bogen ──
+  // ── FEELING BOX — personlig emotionel bro ──
   var feelingMap = {
     'VAND': 'N\u00e5r Vand dominerer, m\u00e6rker du det m\u00e5ske som tr\u00e6thed der ikke forsvinder med s\u00f8vn. Eller som en l\u00e6nden der er \u00f8m, en bl\u00e6re der presser, en uro i knoglerne. Kroppen beder ikke om mere. Den beder om dybere.',
     'TR\u00c6': 'N\u00e5r Tr\u00e6 dominerer, m\u00e6rker du det m\u00e5ske som en rastl\u00f8shed i kroppen. En trang til at komme videre, str\u00e6kke dig, bryde fri. Kroppen beder om retning \u2014 ikke om stilstand.',
@@ -1314,7 +1354,7 @@ function initDinPraksis() {
   };
   setText('prak-feeling-text', feelingMap[domEl] || '');
 
-  // ── 4. FEATURED — \u00e9n anbefalet praksis for i dag ──
+  // ── FEATURED — personlig anbefaling ──
   var featuredEl = document.getElementById('prak-featured');
   if (featuredEl) {
     var yoga = typeof YIN_YOGA_FULL !== 'undefined' && YIN_YOGA_FULL[domEl] ? YIN_YOGA_FULL[domEl][0] : null;
@@ -1326,31 +1366,23 @@ function initDinPraksis() {
     }
   }
 
-  // ── 5. PRAKSIS-KORT — grupperede veje ind (fører til dybe sider) ──
-  var cardsEl = document.getElementById('prak-cards');
+  // ── KORT — berig med element-labels ──
   if (cardsEl) {
     var meridian = typeof MERIDIAN_STRYGNINGER !== 'undefined' && MERIDIAN_STRYGNINGER[domEl] ? MERIDIAN_STRYGNINGER[domEl][0] : null;
-
     var html = '';
-    // Krop
     html += '<div class="group-label" style="color:#7a908b">Krop</div>';
     html += buildPrakCard('Yin Yoga \u00b7 ' + elLabel, yoga ? yoga.pose : 'Stille stillinger', 'Stille stillinger der \u00e5bner meridianer og frigiver sp\u00e6ndinger. Tilpasset dit element.', 'pra-yin-yoga');
-    html += buildPrakCard('Meridianstrygning \u00b7 ' + elLabel, meridian ? meridian.meridian : 'Energiens vej', 'Strygninger langs meridianerne der samler og bevæger energien i dit element.', 'pra-healing');
-
-    // Sind
+    html += buildPrakCard('Meridianstrygning \u00b7 ' + elLabel, meridian ? meridian.meridian : 'Energiens vej', 'Strygninger langs meridianerne der samler og bev\u00e6ger energien i dit element.', 'pra-healing');
     html += '<div class="group-label" style="color:#7a908b;margin-top:24px">Sind</div>';
     html += buildPrakCard('F\u00f8lelsernes Hjul', 'Hvad m\u00e6rker du?', 'Fem elementer, fem f\u00f8lelsesfelter. Find det der resonerer og forst\u00e5 hvad kroppen fort\u00e6ller dig.', 'pra-foelelser');
     html += buildPrakCard('Mindfulness \u00b7 ' + elLabel, 'N\u00e6rv\u00e6r og stilhed', 'Korte \u00f8velser i n\u00e6rv\u00e6r tilpasset den energi der dominerer dig lige nu.', 'pra-mindfulness');
     html += buildPrakCard('Refleksion', 'Tre sp\u00f8rgsm\u00e5l til din fase', 'Skriv, m\u00e6rk efter, og lad tankerne lande i deres eget tempo.', 'pra-refleksion');
-
-    // N\u00e6ring
     html += '<div class="group-label" style="color:#7a908b;margin-top:24px">N\u00e6ring</div>';
     html += buildPrakCard('Kost & Urter \u00b7 ' + elLabel, 'Det der n\u00e6rer dit element', 'De retter og urter der passer til dit element og din fase lige nu.', 'pra-kost');
-
     cardsEl.innerHTML = html;
   }
 
-  // ── 6. \u00c5NDEDR\u00c6T ──
+  // ── ÅNDEDRÆT — personlig ──
   var breathTextMap = {
     'VAND': 'Vandets \u00e5ndedr\u00e6t. Langsomt og dybt \u2014 som b\u00f8lger der tr\u00e6kker sig tilbage.',
     'TR\u00c6': 'Tr\u00e6ets \u00e5ndedr\u00e6t. Frit og opadg\u00e5ende \u2014 som en stamme der vokser mod lyset.',
@@ -1359,19 +1391,15 @@ function initDinPraksis() {
     'METAL': 'Metallets \u00e5ndedr\u00e6t. Klart og fuldst\u00e6ndigt \u2014 som et spejl der renses.'
   };
   setText('prak-breath-text', breathTextMap[domEl] || '');
-  if (typeof initBreathBoxes === 'function') {
-    setTimeout(function() { initBreathBoxes(); }, 100);
-  }
 
-  // ── 7. REFLEKSION — dagligt roteret sp\u00f8rgsm\u00e5l ──
+  // ── REFLEKSION — personlig ──
   var questions = typeof REFLEKSION_DATA !== 'undefined' ? REFLEKSION_DATA[phaseNum] : null;
   if (questions && questions.length) {
     var qi = Calculations.dayRotation(questions.length);
     setText('prak-refleksion', '\u00ab\u2009' + questions[qi] + '\u2009\u00bb');
   }
 
-  // ── 8. UDFORSK VIDERE — 4 intelligente, unikke links ──
-  var exploreEl = document.getElementById('prak-explore-links');
+  // ── EXPLORE — berig med fase-link ──
   if (exploreEl) {
     var eHtml = '';
     eHtml += '<span class="explore-link" style="color:#7a908b;border-color:rgba(122,144,139,0.15)" onclick="Router.navigate(\'cir-dit-liv\')">Dit dybe billede \u2192</span>';
@@ -1540,59 +1568,33 @@ function initPraksis() {
 /* ---- Rejse (Section 4) ---- */
 /* ---- Min Rejse (luftig hub — præsenterer konceptet, kort fører videre) ---- */
 function initRejse() {
-  const data = getUserCycles();
-  if (!data) return;
-  const { cycles, dominant } = data;
-  const phase = cycles.lifePhase;
-  const phaseNum = phase.phase;
-  const elLabel = Calculations.ELEMENT_LABELS[phase.element];
-  const detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[phaseNum] : null;
-
-  // ── 1. PRÆSENTATION ──
+  // ── 1. PRÆSENTATION — vises ALTID ──
   setText('rej-title', 'Din vej gennem faserne');
   setText('rej-sub', 'Tracking, m\u00f8nstre og den st\u00f8rre historie');
   setText('rej-intro', 'Se tilbage p\u00e5 dine check-ins, opdag m\u00f8nstre i din energi, og f\u00f8lg din udvikling over tid. Her samler dine oplevelser sig til indsigt.');
 
-  // ── 2. MILESTONE — kort kontekst ──
-  var age = cycles.age;
-  var yearInPhase = age - phase.startAge;
-  setText('rej-milestone-label', 'Fase ' + phaseNum + ' \u00b7 ' + phase.name + ' \u00b7 ' + elLabel);
-  var milestoneText = 'Du er i \u00e5r ' + yearInPhase + ' af denne fase.';
-  if (detail) milestoneText += ' ' + detail.introText.split('.').slice(0, 2).join('.') + '.';
-  setText('rej-milestone-text', milestoneText);
-
-  // ── 3. FEATURED — din udvikling ──
+  // ── STATISK FEATURED ──
   var checkins = [];
   try { checkins = JSON.parse(localStorage.getItem('livsfaser_checkins') || '[]'); } catch(e) {}
   var count = checkins.length;
   setText('rej-featured-title', count > 0 ? count + ' check-ins registreret' : 'Start din daglige tracking');
 
-  // ── 4. REJSE-KORT — grupperede veje ind ──
+  // ── STATISKE KORT — vises ALTID ──
   var cardsEl = document.getElementById('rej-cards');
   if (cardsEl) {
     var html = '';
     html += '<div class="group-label" style="color:#8a96a9">Din dagbog</div>';
     html += buildRejCard('Min udvikling', 'Energi, stemning, balance', 'Grafer, statistik og tidslinje over dine check-ins. Se m\u00f8nstre i din energi.', 'rej-udvikling');
     html += buildRejCard('Min journal', 'Et stille rum til dine tanker', 'Skriv frit, eller brug dagens sp\u00f8rgsm\u00e5l som afs\u00e6t. Ingen regler \u2014 bare et sted at lande.', 'rej-journal');
-
     html += '<div class="group-label" style="color:#8a96a9;margin-top:24px">Din samling</div>';
     html += buildRejCard('Mine opdagelser', 'N\u00e5r noget falder p\u00e5 plads', 'De \u00f8jeblikke hvor noget pludselig gav mening. Saml dine aha-oplevelser.', 'rej-opdagelser');
-
     html += '<div class="group-label" style="color:#8a96a9;margin-top:24px">Viden</div>';
     html += buildRejCard('Alle ni faser', 'Fra f\u00f8dsel til visdom', 'Se alle ni livsfaser side om side. Find din, og forst\u00e5 dem der kom f\u00f8r.', 'rej-alle-faser');
     html += buildRejCard('Baggrundsviden', 'Traditioner og forskning', 'De fem elementer, de ni faser, og de traditioner der b\u00e6rer det hele.', 'rej-baggrund');
-
     cardsEl.innerHTML = html;
   }
 
-  // ── 5. REFLEKSION ──
-  var questions = typeof REFLEKSION_DATA !== 'undefined' ? REFLEKSION_DATA[phaseNum] : null;
-  if (questions && questions.length) {
-    var qi = Calculations.dayRotation(questions.length);
-    setText('rej-refleksion', '\u00ab\u2009' + questions[qi] + '\u2009\u00bb');
-  }
-
-  // ── 6. UDFORSK VIDERE — 4 intelligente, unikke links ──
+  // ── STATISKE EXPLORE LINKS — vises ALTID ──
   var exploreEl = document.getElementById('rej-explore-links');
   if (exploreEl) {
     var eHtml = '';
@@ -1601,6 +1603,37 @@ function initRejse() {
     eHtml += '<span class="explore-link" style="color:#8a96a9;border-color:rgba(138,150,169,0.15)" onclick="Router.navigate(\'din-relation\')">Dine relationer \u2192</span>';
     eHtml += '<span class="explore-link" style="color:#8a96a9;border-color:rgba(138,150,169,0.15)" onclick="Router.navigate(\'vinduer\')">Tidsrejse \u2192</span>';
     exploreEl.innerHTML = eHtml;
+  }
+
+  // ── STATISK REFLEKSION fallback ──
+  setText('rej-refleksion', '\u00ab\u2009Hvad er du p\u00e5 vej mod?\u2009\u00bb');
+
+  // ── STATISK MILESTONE fallback ──
+  setText('rej-milestone-label', 'Din rejse');
+  setText('rej-milestone-text', 'Tilf\u00f8j din f\u00f8dselsdato i indstillinger for at se din personlige fase.');
+
+  // ── BRUGERDATA — beriger med personligt indhold ──
+  const data = getUserCycles();
+  if (!data) return;
+  const { cycles, dominant } = data;
+  const phase = cycles.lifePhase;
+  const phaseNum = phase.phase;
+  const elLabel = Calculations.ELEMENT_LABELS[phase.element];
+  const detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[phaseNum] : null;
+
+  // ── MILESTONE — personlig ──
+  var age = cycles.age;
+  var yearInPhase = age - phase.startAge;
+  setText('rej-milestone-label', 'Fase ' + phaseNum + ' \u00b7 ' + phase.name + ' \u00b7 ' + elLabel);
+  var milestoneText = 'Du er i \u00e5r ' + yearInPhase + ' af denne fase.';
+  if (detail) milestoneText += ' ' + detail.introText.split('.').slice(0, 2).join('.') + '.';
+  setText('rej-milestone-text', milestoneText);
+
+  // ── REFLEKSION — personlig ──
+  var questions = typeof REFLEKSION_DATA !== 'undefined' ? REFLEKSION_DATA[phaseNum] : null;
+  if (questions && questions.length) {
+    var qi = Calculations.dayRotation(questions.length);
+    setText('rej-refleksion', '\u00ab\u2009' + questions[qi] + '\u2009\u00bb');
   }
 }
 
@@ -1638,16 +1671,53 @@ function cyclesAtDate(birthdate, targetDate, isMale) {
 
 /* ---- Vinduer/Tidsrejse (luftig hub + dato-motor) ---- */
 function initVinduer() {
-  const user = Storage.getUser();
-  if (!user || !user.birthdate) return;
-  const relations = Storage.getRelations();
-
-  // ── PRÆSENTATION ──
+  // ── PRÆSENTATION — vises ALTID ──
   setText('vin-title', 'Rejsen gennem tid');
   setText('vin-sub', 'Fortid \u00b7 Nutid \u00b7 Fremtid');
   setText('vin-intro', 'Dit liv er ikke bare her og nu. Hvert \u00f8jeblik b\u00e6rer aftryk af de cyklusser der var aktive. V\u00e6lg en dato \u2014 og se hvad der var p\u00e5 spil.');
 
-  // ── INSIGHT — kort kontekst ──
+  // ── STATISK INSIGHT fallback ──
+  setText('vin-insight-label', 'Tidsrejse');
+  setText('vin-insight-text', 'Tilf\u00f8j din f\u00f8dselsdato i indstillinger for at se dine personlige cyklusser.');
+
+  // ── STATISKE KORT — vises ALTID ──
+  var cardsEl = document.getElementById('vin-cards');
+  if (cardsEl) {
+    var cHtml = '';
+    cHtml += '<div class="group-label" style="color:#6B5F7B">Dyk dybere</div>';
+    cHtml += '<div class="card" onclick="Router.navigate(\'vin-tidslinje\')" style="cursor:pointer"><div class="card-row"><div>' +
+      '<div class="card-label" style="color:#8B7D9B">Mit livs tidslinje</div>' +
+      '<div class="card-title">Se hele dit liv som en bue</div>' +
+      '<div class="card-desc">Fase for fase, element for element. Fra f\u00f8dsel til nu, og videre frem.</div>' +
+      '</div><div class="card-arrow" style="color:#8B7D9B">\u2192</div></div></div>';
+    cHtml += '<div class="card" onclick="Router.navigate(\'vin-oejeblikke\')" style="cursor:pointer"><div class="card-row"><div>' +
+      '<div class="card-label" style="color:#8B7D9B">Vigtige \u00f8jeblikke</div>' +
+      '<div class="card-title">Gem de datoer der betyder noget</div>' +
+      '<div class="card-desc">En f\u00f8dsel, et vendepunkt, en ny begyndelse. Se hvilke cyklusser der var aktive.</div>' +
+      '</div><div class="card-arrow" style="color:#8B7D9B">\u2192</div></div></div>';
+    cardsEl.innerHTML = cHtml;
+  }
+
+  // ── STATISK REFLEKSION fallback ──
+  setText('vin-refleksion', '\u00ab\u2009Hvilket \u00f8jeblik i dit liv ville du gerne forst\u00e5 bedre?\u2009\u00bb');
+
+  // ── STATISKE EXPLORE LINKS — vises ALTID ──
+  var exploreEl = document.getElementById('vin-explore-links');
+  if (exploreEl) {
+    var eHtml = '';
+    eHtml += '<span class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)" onclick="Router.navigate(\'cir-dit-liv\')">Dit dybe billede \u2192</span>';
+    eHtml += '<span class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)" onclick="Router.navigate(\'din-praksis\')">Din praksis \u2192</span>';
+    eHtml += '<span class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)" onclick="Router.navigate(\'din-relation\')">Dine relationer \u2192</span>';
+    eHtml += '<span class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)" onclick="Router.navigate(\'rejse\')">Min rejse \u2192</span>';
+    exploreEl.innerHTML = eHtml;
+  }
+
+  // ── BRUGERDATA — stop her hvis ingen data ──
+  const user = Storage.getUser();
+  if (!user || !user.birthdate) return;
+  const relations = Storage.getRelations();
+
+  // ── INSIGHT — personlig kontekst ──
   var userAge = Calculations.calculateAge(user.birthdate);
   var currentPhase = Calculations.calculateLifePhase(userAge);
   var nextPhaseAge = currentPhase ? currentPhase.endAge : null;
@@ -1979,41 +2049,12 @@ function initVinduer() {
     setTimeout(() => btn.click(), 150);
   }
 
-  // ── KORT — veje videre ──
-  var cardsEl = document.getElementById('vin-cards');
-  if (cardsEl) {
-    var cHtml = '';
-    cHtml += '<div class="group-label" style="color:#6B5F7B">Dyk dybere</div>';
-    cHtml += '<div class="card" onclick="Router.navigate(\'vin-tidslinje\')" style="cursor:pointer"><div class="card-row"><div>' +
-      '<div class="card-label" style="color:#8B7D9B">Mit livs tidslinje</div>' +
-      '<div class="card-title">Se hele dit liv som en bue</div>' +
-      '<div class="card-desc">Fase for fase, element for element. Fra f\u00f8dsel til nu, og videre frem.</div>' +
-      '</div><div class="card-arrow" style="color:#8B7D9B">\u2192</div></div></div>';
-    cHtml += '<div class="card" onclick="Router.navigate(\'vin-oejeblikke\')" style="cursor:pointer"><div class="card-row"><div>' +
-      '<div class="card-label" style="color:#8B7D9B">Vigtige \u00f8jeblikke</div>' +
-      '<div class="card-title">Gem de datoer der betyder noget</div>' +
-      '<div class="card-desc">En f\u00f8dsel, et vendepunkt, en ny begyndelse. Se hvilke cyklusser der var aktive.</div>' +
-      '</div><div class="card-arrow" style="color:#8B7D9B">\u2192</div></div></div>';
-    cardsEl.innerHTML = cHtml;
-  }
-
-  // ── REFLEKSION ──
+  // ── REFLEKSION — personlig ──
   var phaseNum = currentPhase ? currentPhase.phase : 7;
   var questions = typeof REFLEKSION_DATA !== 'undefined' ? REFLEKSION_DATA[phaseNum] : null;
   if (questions && questions.length) {
     var qi = Calculations.dayRotation(questions.length);
     setText('vin-refleksion', '\u00ab\u2009' + questions[qi] + '\u2009\u00bb');
-  }
-
-  // ── UDFORSK VIDERE ──
-  var exploreEl = document.getElementById('vin-explore-links');
-  if (exploreEl) {
-    var eHtml = '';
-    eHtml += '<span class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)" onclick="Router.navigate(\'cir-dit-liv\')">Dit dybe billede \u2192</span>';
-    eHtml += '<span class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)" onclick="Router.navigate(\'din-praksis\')">Din praksis \u2192</span>';
-    eHtml += '<span class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)" onclick="Router.navigate(\'din-relation\')">Dine relationer \u2192</span>';
-    eHtml += '<span class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)" onclick="Router.navigate(\'rejse\')">Min rejse \u2192</span>';
-    exploreEl.innerHTML = eHtml;
   }
 }
 
