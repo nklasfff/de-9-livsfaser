@@ -2913,18 +2913,10 @@ function initDinRelation() {
   const data = getUserCycles();
   if (!data) return;
   const { cycles, dominant } = data;
-  const phase = cycles.lifePhase;
-  const phaseNum = phase.phase;
-  const elLabel = Calculations.ELEMENT_LABELS[phase.element] || phase.element;
 
-  // Titel + intro
-  setText('rel-title', 'Fase ' + phaseNum + ' \u00b7 ' + elLabel);
-  const introTexts = [
-    'Ingen relation eksisterer i et vakuum. Hver forbindelse b\u00e6rer begge menneskers rytme \u2014 og n\u00e5r rytmerne m\u00f8des, opst\u00e5r noget nyt.',
-    'De mennesker du har t\u00e6ttest p\u00e5 dig, m\u00e6rker din fase lige s\u00e5 tydeligt som du m\u00e6rker deres. Her kan du udforske hvad der sker i m\u00f8det.',
-    'Relationer forandrer sig med faserne. Det der f\u00f8ltes let for et \u00e5r siden, kan f\u00f8les tungt nu \u2014 eller omvendt. Begge dele er naturlige.'
-  ];
-  setText('rel-intro', introTexts[Calculations.dayRotation(introTexts.length)]);
+  // PR\u00c6SENTATION — konceptuel, Isabelles stemme (IKKE personspecifik)
+  setText('rel-title', 'N\u00e5r livsfaser m\u00f8des');
+  setText('rel-intro', 'Hvert menneske du m\u00f8der, b\u00e6rer sin egen rytme \u2014 formet af alder, fase og element. N\u00e5r jeres rytmer m\u00f8des, opst\u00e5r noget nyt. Her kan du udforske, hvad der sker i m\u00f8det.');
 
   // Person-v\u00e6lger
   const relations = Storage.getRelations();
@@ -3014,75 +3006,117 @@ function buildRelationReading() {
   const userDom = Calculations.getWeightedDominant(userCycles);
   const theirCycles = cyclesAtDate(rel.birthdate, targetDate, isMale);
 
+  const userPhaseNum = userCycles.lifePhase.phase;
+  const theirPhaseNum = theirCycles.lifePhase.phase;
   const userEl = userCycles.lifePhase.element;
   const theirEl = theirCycles.lifePhase.element;
   const userElLabel = Calculations.ELEMENT_LABELS[userEl];
   const theirElLabel = Calculations.ELEMENT_LABELS[theirEl];
+  const userDetail = LIVSFASE_DETAIL[userPhaseNum];
+  const theirDetail = LIVSFASE_DETAIL[theirPhaseNum];
 
-  // Meeting type (TCM interaction)
+  // Titel + intro er konceptuelle og sat i initDinRelation()
+  // Her viser vi kun personspecifikt indhold nedenfor
+
+  // (title/intro removed — conceptual presentation stays constant)
+
+  // ── 2. JERES M\u00d8DE — TCM interaktion med dybde ──
   const nourishing = { 'VAND': 'TR\u00c6', 'TR\u00c6': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
+  const controlling = { 'VAND': 'ILD', 'TR\u00c6': 'JORD', 'ILD': 'METAL', 'JORD': 'VAND', 'METAL': 'TR\u00c6' };
   let meetLabel, meetText;
 
   if (userEl === theirEl) {
-    meetLabel = 'Dyb resonans';
-    meetText = `I deler ${userElLabel}-elementet. N\u00e5r begge er i det samme felt, forst\u00e5r I hinanden uden ord.`;
+    meetLabel = 'Dyb resonans \u00b7 ' + userElLabel;
+    meetText = 'I deler ' + userElLabel + '-elementet. N\u00e5r to mennesker befinder sig i det samme felt, opst\u00e5r en genkendelse der g\u00e5r dybere end ord. I forst\u00e5r hinandens rytme, m\u00e6rker de samme \u00e5rstider indeni.';
   } else if (nourishing[userEl] === theirEl) {
-    meetLabel = `${userElLabel} n\u00e6rer ${theirElLabel}`;
-    meetText = `Dit ${userElLabel} n\u00e6rer ${rel.name}s ${theirElLabel}. Din energi b\u00e6rer den andens videre.`;
+    meetLabel = userElLabel + ' n\u00e6rer ' + theirElLabel;
+    meetText = 'Dit ' + userElLabel + '-element n\u00e6rer ' + rel.name + 's ' + theirElLabel + '. I den kinesiske medicin er det en naturlig str\u00f8m \u2014 din energi b\u00e6rer den andens videre, som vand n\u00e6rer tr\u00e6ets r\u00f8dder. M\u00e6rk efter, om du ogs\u00e5 f\u00e5r fyldt op.';
   } else if (nourishing[theirEl] === userEl) {
-    meetLabel = `${theirElLabel} n\u00e6rer ${userElLabel}`;
-    meetText = `${rel.name}s ${theirElLabel} n\u00e6rer dit ${userElLabel}. Der er noget i den andens rytme der giver dig ro.`;
-  } else {
+    meetLabel = theirElLabel + ' n\u00e6rer ' + userElLabel;
+    meetText = rel.name + 's ' + theirElLabel + ' n\u00e6rer dit ' + userElLabel + '. Der er noget i den andens rytme, der giver dig ro og n\u00e6ring. I den kinesiske medicin er det en gave \u2014 at have nogen t\u00e6t p\u00e5, hvis energi underst\u00f8tter din.';
+  } else if (controlling[userEl] === theirEl || controlling[theirEl] === userEl) {
     meetLabel = 'Kreativ sp\u00e6nding';
-    meetText = `${userElLabel} og ${theirElLabel} udfordrer hinanden \u2014 kreativ friktion der kan skabe noget nyt.`;
+    meetText = userElLabel + ' og ' + theirElLabel + ' udfordrer hinanden i femelementcyklusen. Det er ikke konflikt \u2014 det er to kr\u00e6fter der forhandler. Den sp\u00e6nding kan f\u00f8les kr\u00e6vende, men den rummer ogs\u00e5 mulighed for \u00e6gte v\u00e6kst.';
+  } else {
+    meetLabel = userElLabel + ' m\u00f8der ' + theirElLabel;
+    meetText = 'To forskellige energier der ber\u00f8rer hinanden. ' + userElLabel + ' og ' + theirElLabel + ' har ikke en direkte forbindelse i femelementcyklusen, men netop det skaber et rum, hvor I kan bringe noget nyt til hinanden.';
   }
 
   setText('rel-meeting-type', meetLabel);
   setText('rel-meeting-text', meetText);
 
-  // Climate
+  // ── 3. KLIMA ──
   const allElements = [userEl, theirEl, userCycles.season.element, theirCycles.season.element];
   const climate = analyzeClimate(allElements, userDom);
-  setText('rel-climate-label', climate.label);
+  setText('rel-climate-label', 'Jeres indre klima \u00b7 ' + climate.label);
   setText('rel-climate-text', climate.text);
 
-  // Samtale\u00e5bner
-  const samtale = typeof TO_RYTMER_SAMTALE !== 'undefined' ? TO_RYTMER_SAMTALE[userEl] : null;
-  if (samtale) {
-    setText('rel-samtale', '\u00ab\u2009' + samtale.spoerg + '\u2009\u00bb');
-  }
-
-  // "Dyk dybere" links — each goes to cir-dit-liv or shows specific content
+  // ── 4. DYK DYBERE — inline expandable bogtekst ──
   const linksEl = document.getElementById('rel-deep-links');
   if (linksEl) {
-    const userPhaseNum = userCycles.lifePhase.phase;
-    const theirPhaseNum = theirCycles.lifePhase.phase;
-    linksEl.innerHTML = `
-      <div class="praksis-card" onclick="window._selectedPhase=${userPhaseNum};Router.navigate('livsfase-detail')">
-        <div>
-          <div class="pk-label">Dig \u00b7 Fase ${userPhaseNum} \u00b7 ${userElLabel}</div>
-          <div class="pk-name">Din fase i dybden</div>
-          <div class="pk-desc">Krop, sind, f\u00f8lelser, temaer, \u00f8velser og r\u00e5d for din fase.</div>
-        </div>
-        <div class="pk-arrow" style="color:rgba(123,122,158,0.4)">\u2192</div>
-      </div>
-      <div class="praksis-card" onclick="window._selectedPhase=${theirPhaseNum};Router.navigate('livsfase-detail')">
-        <div>
-          <div class="pk-label">${rel.name} \u00b7 Fase ${theirPhaseNum} \u00b7 ${theirElLabel}</div>
-          <div class="pk-name">${rel.name}s fase i dybden</div>
-          <div class="pk-desc">Krop, sind, f\u00f8lelser, temaer og hvad ${rel.name} m\u00e5ske m\u00e6rker.</div>
-        </div>
-        <div class="pk-arrow" style="color:rgba(123,122,158,0.4)">\u2192</div>
-      </div>
-      <div class="praksis-card" onclick="Router.navigate('cir-dit-liv')">
-        <div>
-          <div class="pk-label">Dit dybe billede</div>
-          <div class="pk-name">Alle fem cyklusser</div>
-          <div class="pk-desc">Se hele dit billede \u2014 livsfase, \u00e5rstid, m\u00e5ned, ugedag, organur.</div>
-        </div>
-        <div class="pk-arrow" style="color:rgba(123,122,158,0.4)">\u2192</div>
-      </div>
-    `;
+    let html = '';
+
+    // a) Relationer i din fase — bogens dybe tekst
+    if (userDetail && userDetail.relationerIFasen) {
+      html += '<div style="padding:14px 18px;background:rgba(123,122,158,0.04);border:1px solid rgba(123,122,158,0.08);border-radius:var(--radius);margin-bottom:8px">';
+      html += '<div style="font-family:var(--font-sans);font-size:11px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Relationer i din fase</div>';
+      html += '<div class="dybde-body">' + formatExpandable(userDetail.relationerIFasen, 50) + '</div>';
+      html += '</div>';
+    }
+
+    // b) Partnerens fase — introText + denneFaseIDig
+    if (theirDetail) {
+      html += '<div style="padding:14px 18px;background:rgba(123,122,158,0.04);border:1px solid rgba(123,122,158,0.08);border-radius:var(--radius);margin-bottom:8px">';
+      html += '<div style="font-family:var(--font-sans);font-size:11px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">' + rel.name + ' \u00b7 Fase ' + theirPhaseNum + ' \u00b7 ' + theirElLabel + '</div>';
+      html += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6;margin-bottom:8px">' + theirDetail.introText + '</div>';
+      if (theirDetail.denneFaseIDig) {
+        html += '<div class="dybde-body">' + formatExpandable(theirDetail.denneFaseIDig, 50) + '</div>';
+      }
+      html += '</div>';
+    }
+
+    // c) Jeres centrale f\u00f8lelser
+    if (userDetail && userDetail.centralFoelelse && theirDetail && theirDetail.centralFoelelse) {
+      html += '<div style="padding:14px 18px;background:rgba(123,122,158,0.04);border:1px solid rgba(123,122,158,0.08);border-radius:var(--radius);margin-bottom:8px">';
+      html += '<div style="font-family:var(--font-sans);font-size:11px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Jeres centrale f\u00f8lelser</div>';
+      html += '<div style="margin-bottom:12px">';
+      html += '<div style="font-family:var(--font-serif);font-size:17px;font-style:italic;color:var(--text-dark);margin-bottom:4px">Dig: ' + userDetail.centralFoelelse.title + '</div>';
+      html += '<div class="dybde-body">' + formatExpandable(userDetail.centralFoelelse.tekst, 40) + '</div>';
+      html += '</div>';
+      html += '<div>';
+      html += '<div style="font-family:var(--font-serif);font-size:17px;font-style:italic;color:var(--text-dark);margin-bottom:4px">' + rel.name + ': ' + theirDetail.centralFoelelse.title + '</div>';
+      html += '<div class="dybde-body">' + formatExpandable(theirDetail.centralFoelelse.tekst, 40) + '</div>';
+      html += '</div>';
+      html += '</div>';
+    }
+
+    // d) Navigationslinks (sekund\u00e6re — g\u00e5 endnu dybere)
+    html += '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">';
+    html += '<span class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)" onclick="Router.navigate(\'cir-dit-liv\')">Dit dybe billede \u2192</span>';
+    html += '<span class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)" onclick="window._selectedPhase=' + theirPhaseNum + ';Router.navigate(\'livsfase-detail\')">' + rel.name + 's fase i dybden \u2192</span>';
+    html += '</div>';
+
+    linksEl.innerHTML = html;
+  }
+
+  // ── 5. SAMTALE\u00c5BNER — alle tre felter ──
+  const samtale = typeof TO_RYTMER_SAMTALE !== 'undefined' ? TO_RYTMER_SAMTALE[userEl] : null;
+  const samtaleEl = document.getElementById('rel-samtale');
+  if (samtaleEl && samtale) {
+    let sHtml = '';
+    sHtml += '<div style="margin-bottom:12px">';
+    sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Sp\u00f8rg</div>';
+    sHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:#7b7a9e;line-height:1.55">\u00ab\u2009' + samtale.spoerg + '\u2009\u00bb</div>';
+    sHtml += '</div>';
+    sHtml += '<div style="margin-bottom:12px">';
+    sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Sig</div>';
+    sHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:#7b7a9e;line-height:1.55">\u00ab\u2009' + samtale.sig + '\u2009\u00bb</div>';
+    sHtml += '</div>';
+    sHtml += '<div>';
+    sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Sammen</div>';
+    sHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:#7b7a9e;line-height:1.55">\u00ab\u2009' + samtale.sammen + '\u2009\u00bb</div>';
+    sHtml += '</div>';
+    samtaleEl.innerHTML = sHtml;
   }
 
   window.scrollTo({ top: 0 });
