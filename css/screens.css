@@ -138,6 +138,31 @@
 .forside-card .card-sub { font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); font-weight: 300; line-height: 1.5; }
 .forside-card .card-link { display: block; text-align: center; font-family: var(--font-serif); font-size: 15px; font-style: italic; color: var(--neutral); margin-top: 12px; opacity: 0.8; text-decoration: none; }
 
+/* 5 cyklusser mini-oversigt rows */
+.forside-cyk-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 11px 16px; margin-bottom: 1px; cursor: pointer;
+  border-radius: 10px; transition: background 0.15s;
+}
+.forside-cyk-row:active { background: rgba(108,130,169,0.06); }
+.forside-cyk-label {
+  font-family: var(--font-sans); font-size: 13px; color: var(--text-light);
+  font-weight: 400; letter-spacing: 0.3px;
+}
+.forside-cyk-value {
+  font-family: var(--font-serif); font-size: 14px; font-style: italic;
+  color: var(--text-body); text-align: right;
+}
+
+/* Udforsk section nav cards */
+.forside-explore-card {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 18px; border-radius: var(--radius); cursor: pointer;
+  font-family: var(--font-sans); font-size: 15px; font-weight: 400;
+  transition: opacity 0.15s;
+}
+.forside-explore-card:active { opacity: 0.7; }
+
 .praksis-card {
   background: white; border: 1px solid var(--border-subtle); border-radius: var(--radius);
   padding: 14px 16px; margin-bottom: 9px; box-shadow: var(--shadow-card-sm);

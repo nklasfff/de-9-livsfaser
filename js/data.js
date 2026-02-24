@@ -17,7 +17,7 @@ const LIVSFASE_DETAIL = {
     sindTekst: 'Sindet er \u00e5bent som en stille s\u00f8. Barnet lever i nuet uden fortid eller fremtid. Fantasien er virkelig, dr\u00f8mmene er levende. Emotionelt handler alt om sikkerhed \u2014 at blive set, holdt, tr\u00f8stet. Her grundl\u00e6gges evnen til at m\u00e6rke sig selv.',
     oevelse: { title: 'Butterfly (Yin Yoga)', desc: '\u00c5bner hofterne og stimulerer nyremeridianen. Velegnet til at finde indre ro.' },
     kost: { title: 'Sort sesam og valn\u00f8dder', desc: 'N\u00e6rer nyreessensen og styrker livskraften. Varme supper med tang og b\u00f8nner.' },
-    healingLyd: { title: 'Nyrelyd: Chuiii', desc: 'En lang, bl\u00f8d ud\u00e5nding med lyden "chuiii" \u2014 frig\u00f8r frygt og n\u00e6rer vandets energi.' },
+    meridianStrygning: { title: 'Nyrernes meridian', desc: 'Fra fodens underside opad langs indersiden af benet. Samler livets erfaring op fra jorden.' },
     refleksioner: ['Hvad f\u00f8ler du dig tryg ved i dit liv lige nu?', 'Hvorn\u00e5r m\u00e6rkede du sidst en dyb ro i kroppen?', 'Hvad ville det betyde at give slip p\u00e5 en frygt?'],
     elementInfo: { energi: 'Kulde, stilhed, opbygning', sanseorgan: '\u00d8rer', kropsvaev: 'Knogler', farve: 'Sort / m\u00f8rkebl\u00e5' },
     fasensRaad: [
@@ -93,7 +93,7 @@ const LIVSFASE_DETAIL = {
     sindTekst: 'Sindet er en eksplosion af fantasi. Barnet begynder at forst\u00e5 forskellen mellem sig selv og andre. Leg er ikke tidsfordriv \u2014 det er den vigtigste m\u00e5de at forst\u00e5 verden p\u00e5. Emotionelt vokser evnen til empati, men ogs\u00e5 frustrationen over begr\u00e6nsninger.',
     oevelse: { title: 'Caterpillar (Yin Yoga)', desc: 'Dyb foroverb\u00f8jning der beroer nervesystemet og n\u00e6rer nyrerne.' },
     kost: { title: 'Varme supper med tang', desc: 'Tang er rig p\u00e5 mineraler der st\u00f8tter nyrernes udvikling. Sorte b\u00f8nner og ris.' },
-    healingLyd: { title: 'Nyrelyd: Chuiii', desc: 'Samme vandlyd som fase 1 \u2014 styrker den grundl\u00e6ggende livskraft.' },
+    meridianStrygning: { title: 'Leverens meridian', desc: 'Fra storet\u00e5en op ad benets inderside til ribbenene. Som saft der stiger i et tr\u00e6.' },
     refleksioner: ['Hvad g\u00f8r dig nysgerrig i dit liv lige nu?', 'Hvor i dit liv kunne du tillade dig at lege mere?', 'Hvad ville du udforske, hvis du ikke var bange?'],
     elementInfo: { energi: 'Fra opbygning til v\u00e6kst', sanseorgan: '\u00d8rer \u2192 \u00d8jne', kropsvaev: 'Knogler \u2192 Sener', farve: 'M\u00f8rkebl\u00e5 \u2192 Gr\u00f8n' },
     fasensRaad: [
@@ -169,7 +169,7 @@ const LIVSFASE_DETAIL = {
     sindTekst: 'Sindet s\u00f8ger desperat efter svar p\u00e5 sp\u00f8rgsm\u00e5let: hvem er jeg? F\u00f8lelserne er intense og skiftende. Vrede er en naturlig del \u2014 den er tr\u00e6ets kraft der s\u00f8ger retning. Den unge kvinde begynder at se verden med egne \u00f8jne, og det kan v\u00e6re b\u00e5de befriende og skr\u00e6mmende.',
     oevelse: { title: 'Dragefly (Yin Yoga)', desc: '\u00c5bner inderl\u00e5r og stimulerer levermeridianen. Frig\u00f8r stagneret energi.' },
     kost: { title: 'Gr\u00f8nne bladgr\u00f8ntsager', desc: 'Lever elsker gr\u00f8nt. Spirende korn, artiskokker, citronsaft om morgenen.' },
-    healingLyd: { title: 'Leverlyd: Shhhhh', desc: 'En lang "shhh"-ud\u00e5nding med let \u00e5ben mund \u2014 frig\u00f8r vrede og giver plads til kreativitet.' },
+    meridianStrygning: { title: 'Galdebl\u00e6rens meridian', desc: 'Fra tindingerne ned langs kroppens sider til f\u00f8dderne. L\u00f8sner fastl\u00e5sthed og skaber handlekraft.' },
     refleksioner: ['Hvilke dele af dig selv opdagede du i teenage\u00e5rene?', 'Hvad \u00f8nsker du stadig at forvandle i dit liv?', 'Hvor m\u00e6rker du tr\u00e6ets drivkraft \u2014 behovet for at vokse \u2014 lige nu?'],
     elementInfo: { energi: 'V\u00e6kst, gennembrud, retning', sanseorgan: '\u00d8jne', kropsvaev: 'Sener', farve: 'Gr\u00f8n' },
     fasensRaad: [
@@ -244,7 +244,7 @@ const LIVSFASE_DETAIL = {
     sindTekst: 'Sindet er fokuseret og ambiti\u00f8st. Der er mod til at tage chancer, starte uddannelser, flytte, forelske sig. Identiteten tager form \u2014 ikke l\u00e6ngere s\u00f8gende men handlende. Skyggesiden er stress og f\u00f8lelsen af aldrig at v\u00e6re nok. Tr\u00e6ets energi kan blive til pres.',
     oevelse: { title: 'Twisted Roots (Yin Yoga)', desc: 'Drejning der stimulerer lever og galdebl\u00e6re. Skaber flow og l\u00f8sner stagnation.' },
     kost: { title: 'Spirende korn og artiskokker', desc: 'For\u00e5rets mad der matcher tr\u00e6ets energi. Fermenterede gr\u00f8ntsager, eddike, citronsaft.' },
-    healingLyd: { title: 'Leverlyd: Shhhhh', desc: 'Samme befriende lyd som fase 3 \u2014 slip frustration og find retning.' },
+    meridianStrygning: { title: 'Hjertets meridian', desc: 'Fra armhulen ned ad armens inderside til lillefingeren. \u00c5bner evnen til gl\u00e6de og forbindelse.' },
     refleksioner: ['Hvilke dr\u00f8mme fra din ungdom lever stadig i dig?', 'Hvor blomstrer du i dit liv lige nu?', 'Hvad ville du g\u00f8re anderledes, hvis du vidste det var godt nok?'],
     elementInfo: { energi: 'Fra v\u00e6kst til udfoldelse', sanseorgan: '\u00d8jne \u2192 tunge', kropsvaev: 'Sener \u2192 blodkar', farve: 'Gr\u00f8n \u2192 r\u00f8d' },
     fasensRaad: [
@@ -320,7 +320,7 @@ const LIVSFASE_DETAIL = {
     sindTekst: 'Sindet jonglerer mange bolde. Karriere, b\u00f8rn, parforhold, identitet \u2014 alt kr\u00e6ver opm\u00e6rksomhed. Gl\u00e6den er stor men ogs\u00e5 s\u00e5rbar. Ildens f\u00e6lde er at br\u00e6nde for alt og glemme sig selv. Mange kvinder opdager her, at de har mistet kontakten til deres egne behov.',
     oevelse: { title: 'Melting Heart (Yin Yoga)', desc: '\u00c5bner bryst og hjertemeridian. En position der minder om at give slip og modtage.' },
     kost: { title: 'Bitter salat og gr\u00f8n te', desc: 'Bitter smag k\u00f8ler hjertet. Vandmelon, hibiscuste, r\u00f8de b\u00e6r der n\u00e6rer blodet.' },
-    healingLyd: { title: 'Hjertelyd: Haaaa', desc: 'En \u00e5ben, varm "haaaa"-ud\u00e5nding \u2014 \u00e5bner hjertet og frig\u00f8r rastl\u00f8shed.' },
+    meridianStrygning: { title: 'Pericardium', desc: 'Fra brystet ned langs armens midte til langfingeren. Beskytter hjertet mod overv\u00e6ldelse.' },
     refleksioner: ['Hvilke m\u00f8nstre gentager du fra din mor?', 'Hvad ville du g\u00f8re anderledes, hvis du kun havde ansvar for dig selv?', 'Hvorn\u00e5r br\u00e6ndte du sidst for noget uden at br\u00e6nde ud?'],
     elementInfo: { energi: 'Udfoldelse, varme, forbindelse', sanseorgan: 'Tunge', kropsvaev: 'Blodkar', farve: 'R\u00f8d' },
     fasensRaad: [
@@ -398,7 +398,7 @@ const LIVSFASE_DETAIL = {
     sindTekst: 'Sindet begynder den store sortering. Hvad er \u00e6gte, hvad er overtaget? Mange kvinder oplever en identitetskrise \u2014 ikke destruktiv men transformativ. Bekymring er jordens skygge, men dens gave er \u00e6gte omsorg. Der er en stille styrke i at vide hvad man vil.',
     oevelse: { title: 'Childs Pose (Yin Yoga)', desc: 'Barnets stilling n\u00e6rer milten og giver dyb tryghed. En position for tilbagevenden til det enkle.' },
     kost: { title: 'Rodfrugter og varme gryder', desc: 'Jord elsker s\u00f8dt fra naturen: s\u00f8de kartofler, gr\u00e6skar, hirse. Varm, n\u00e6rende mad.' },
-    healingLyd: { title: 'Miltlyd: Huuuuu', desc: 'En dyb "huuuu" fra maven \u2014 forankrer bekymring og n\u00e6rer jordens stabilitet.' },
+    meridianStrygning: { title: 'Miltens meridian', desc: 'Fra storet\u00e5en opad langs benets inderside til brystsiden. Samler spredt energi og bringer den hjem.' },
     refleksioner: ['Hvad har du l\u00e6rt om dig selv de sidste ti \u00e5r?', 'Hvad er du klar til at slippe?', 'Hvor finder du dit fundament, n\u00e5r alt andet vakler?'],
     elementInfo: { energi: 'Fugt, samling, stabilitet', sanseorgan: 'Mund', kropsvaev: 'Muskler', farve: 'Gul' },
     fasensRaad: [
@@ -478,7 +478,7 @@ const LIVSFASE_DETAIL = {
     sindTekst: 'Sindet oplever en frihed der kan v\u00e6re b\u00e5de skr\u00e6mmende og befriende. Roller falder \u2014 mor, karrierekvinde, partner \u2014 og sp\u00f8rgsm\u00e5let melder sig: hvem er jeg, n\u00e5r rollerne er v\u00e6k? Det er et vendepunkt. De kvinder der t\u00f8r se indad, finder en visdom de ikke vidste de havde.',
     oevelse: { title: 'Reclining Twist (Yin Yoga)', desc: 'Liggende drejning der masserer indre organer og st\u00f8tter ford\u00f8jelsen.' },
     kost: { title: 'Varm hirse og gr\u00e6skar', desc: 'Miltn\u00e6rende kost. Undg\u00e5 r\u00e5, kold mad. Ingef\u00e6r, kanel, kardemomme.' },
-    healingLyd: { title: 'Miltlyd: Huuuuu', desc: 'Samme jordlyd som fase 6 \u2014 rodf\u00e6ster og giver tryghed i overgangen.' },
+    meridianStrygning: { title: 'Mavens meridian', desc: 'Fra brystet ned over maven og benenes forside til f\u00f8dderne. Grounding i ren form.' },
     refleksioner: ['Hvad er du mest taknemlig for i dit liv?', 'Hvad er du klar til at slippe \u2014 og hvad holder du fast i af vane?', 'Hvis du ikke skulle leve op til nogens forventninger, hvad ville du s\u00e5 g\u00f8re?'],
     elementInfo: { energi: 'Fylde, omdannelse, begyndende klarhed', sanseorgan: 'Mund (n\u00e6sen v\u00e5gner)', kropsvaev: 'Muskler (huden begynder at \u00e6ndre sig)', farve: 'Gul (med hvide strejf)' },
     fasensRaad: [
@@ -557,7 +557,7 @@ const LIVSFASE_DETAIL = {
     sindTekst: 'Sindet finder klarhed. Det overfl\u00f8dige falder som blade fra et tr\u00e6 \u2014 ikke med smerte, men med lethed. Sorg kan melde sig, men den er metallets gave: evnen til at slippe det der var, og se det der er. Mange kvinder oplever en ny skarphed og \u00e6rlighed.',
     oevelse: { title: 'Open Wings (Yin Yoga)', desc: '\u00c5bner brystkassen og lungemeridianerne. En position for at give slip og modtage luft.' },
     kost: { title: 'Hvide f\u00f8devarer og ingef\u00e6r', desc: 'Lunger elsker hvidt: p\u00e6rer, radiser, ris. Skarp smag der \u00e5bner luftvejene.' },
-    healingLyd: { title: 'Lungelyd: Sssss', desc: 'En lang, kontrolleret "sssss" \u2014 frig\u00f8r sorg og \u00e5bner brystet.' },
+    meridianStrygning: { title: 'Lungernes meridian', desc: 'Fra kravebenet ned ad armens yderside til tommelfingeren. St\u00f8tter evnen til at give slip.' },
     refleksioner: ['Hvad kan du give slip p\u00e5 med k\u00e6rlighed?', 'Hvad er det essentielle i dit liv lige nu?', 'Hvorn\u00e5r f\u00f8ler du dig mest fri?'],
     elementInfo: { energi: 'T\u00f8rhed, klarhed, udskillelse', sanseorgan: 'N\u00e6se', kropsvaev: 'Hud', farve: 'Hvid' },
     fasensRaad: [
@@ -641,7 +641,7 @@ const LIVSFASE_DETAIL = {
     sindTekst: 'Sindet er som en stille flod. Den vise kvinde har v\u00e6ret ild, jord og metal \u2014 og nu vender hun tilbage til vandet med alt det, hun har l\u00e6rt. Der er en frihed i at have gennemlevet det meste. Intuition og indsigt smelter sammen. Hun ser m\u00f8nstre, hun forst\u00e5r cyklusser.',
     oevelse: { title: 'Sleeping Swan (Yin Yoga)', desc: 'Dyb hofte\u00e5bner der stimulerer nyrerne. En stilling for integration og ro.' },
     kost: { title: 'Varme supper med tang og sort sesam', desc: 'Tilbage til vandets mad. Valn\u00f8dder, b\u00f8nner, varm mad der n\u00e6rer essensen.' },
-    healingLyd: { title: 'Nyrelyd: Chuiii', desc: 'Cirklen sluttes med den samme lyd som begyndte \u2014 men nu med hele livets resonans.' },
+    meridianStrygning: { title: 'Nyrernes meridian', desc: 'Cirklen sluttes: fra fodens underside opad langs indersiden af benet \u2014 som om du samler et helt livs erfaring op fra jorden.' },
     refleksioner: ['Hvad er den vigtigste ting du har l\u00e6rt om dig selv?', 'Hvad vil du videregive til de kvinder der kommer efter dig?', 'Hvis du kunne sige \u00e9n ting til din yngre jeg, hvad ville det v\u00e6re?'],
     elementInfo: { energi: 'Fra essens til kilde', sanseorgan: 'N\u00e6se \u2192 \u00f8rer', kropsvaev: 'Hud \u2192 knogler', farve: 'Hvid \u2192 sort/m\u00f8rkebl\u00e5' },
     fasensRaad: [
@@ -780,12 +780,25 @@ const FORLOB_DATA = {
 
 // ---- Healing Sounds (per element) ----
 
-const HEALING_SOUNDS = {
-  'VAND': { lyd: 'Chuiii', organ: 'Nyrer', desc: 'Lad lyden vibrere dybt i l\u00e6nden. Chuiii beroer nyrerne og n\u00e6rer din grundl\u00e6ggende livsenergi.' },
-  'TR\u00c6': { lyd: 'Shhhhh', organ: 'Lever', desc: 'En blid ud\u00e5nding som letter leveren. Shhhhh hj\u00e6lper med at frig\u00f8re ophobede frustrationer.' },
-  'ILD': { lyd: 'Haaaa', organ: 'Hjerte', desc: '\u00c5bn munden og lad Haaaa str\u00f8mme ud. Lyden k\u00f8ler hjertet og giver indre ro.' },
-  'JORD': { lyd: 'Huuuuu', organ: 'Milt', desc: 'Huuuuu masserer milten indefra. Lyden forankrer dig og styrker din evne til at ford\u00f8je \u2014 b\u00e5de mad og oplevelser.' },
-  'METAL': { lyd: 'Sssss', organ: 'Lunger', desc: 'Sssss renser lungerne med en hvislende ud\u00e5nding. Giv slip p\u00e5 det der ikke l\u00e6ngere tjener dig.' }
+const MERIDIAN_STRYGNINGER = {
+  'VAND': [
+    { meridian: 'Nyrernes meridian', organ: 'Nyrer', retning: 'Opad', desc: 'Fra fodens underside opad langs indersiden af benet. Samler livets erfaring op fra jorden.', vejledning: 'Sid ned og stryg med flad h\u00e5nd fra fodens underside opad \u2014 langs indersiden af benet, op over kn\u00e6et, langs l\u00e5rets inderside og s\u00e5 langt op ad kroppen, som det f\u00f8les naturligt. Langsomt, med varme, en fornemmelse af at l\u00f8fte noget op fra dybden. 5\u20137 gange p\u00e5 hver side.' }
+  ],
+  'TR\u00c6': [
+    { meridian: 'Leverens meridian', organ: 'Lever', retning: 'Opad', desc: 'Fra storet\u00e5en op ad benets inderside til ribbenene. Hj\u00e6lper energien med at flyde frit.', vejledning: 'Sid ned og stryg med flad h\u00e5nd fra fodens inderside op ad benet, langs indersiden af l\u00e5ret og op til de nederste ribben. Langsomt, med en fornemmelse af at hj\u00e6lpe noget opad \u2014 som saft, der stiger i et tr\u00e6. 5\u20137 gange p\u00e5 hver side.' },
+    { meridian: 'Galdebl\u00e6rens meridian', organ: 'Galdebl\u00e6re', retning: 'Nedad', desc: 'Fra tindingerne ned langs kroppens sider til f\u00f8dderne. L\u00f8sner fastl\u00e5sthed og skaber handlekraft.', vejledning: 'St\u00e5 op og stryg med begge h\u00e6nder fra tindingerne ned over siderne af halsen, ud over skuldrene, ned langs kroppens sider, hofterne, ydersiden af benene helt ned til f\u00f8dderne. Brug hele h\u00e5ndfladen og stryg med en fast, rolig bev\u00e6gelse. 5\u20137 gange.' }
+  ],
+  'ILD': [
+    { meridian: 'Hjertets meridian', organ: 'Hjerte', retning: 'Nedad', desc: 'Fra armhulen ned ad armens inderside til lillefingeren. \u00c5bner evnen til gl\u00e6de og forbindelse.', vejledning: 'L\u00f8ft den ene arm let ud til siden og stryg med den anden h\u00e5nds flade fra armhulen ned ad indersiden af overarmen, underarmen og helt ud til lillefingeren. Langsomt og med let tryk. 5\u20137 gange p\u00e5 hver arm.' },
+    { meridian: 'Pericardium', organ: 'Hjertets\u00e6k', retning: 'Nedad', desc: 'Fra brystet ned langs armens midte til langfingeren. Beskytter hjertet mod overv\u00e6ldelse.', vejledning: 'Start midt p\u00e5 brystet. Stryg ud over skulderen, ned langs midten af overarmen og underarmen, over h\u00e5ndfladen og slut ved langfingerens spids. Langsomt og med let tryk. 3\u20135 gange p\u00e5 hver arm.' }
+  ],
+  'JORD': [
+    { meridian: 'Miltens meridian', organ: 'Milt', retning: 'Opad', desc: 'Fra storet\u00e5en opad langs benets inderside til brystsiden. Samler spredt energi og bringer den hjem.', vejledning: 'Sid ned og stryg med flad h\u00e5nd fra storet\u00e5en opad \u2014 langs fodens inderside, op ad benet, op over kn\u00e6et, langs indersiden af l\u00e5ret og s\u00e5 langt op ad kroppen, som det f\u00f8les naturligt. Langsomt, med en fornemmelse af at samle noget op. 5\u20137 gange p\u00e5 hver side.' },
+    { meridian: 'Mavens meridian', organ: 'Mave', retning: 'Nedad', desc: 'Fra brystet ned over maven og benenes forside til f\u00f8dderne. Grounding i ren form.', vejledning: 'St\u00e5 op og stryg med begge h\u00e6nder fra brystet ned over maven, ned ad l\u00e5renes forside, langs forsiden af l\u00e6ggen til f\u00f8dderne. Med tyngde og varme, en fornemmelse af at hj\u00e6lpe noget nedefter. 5\u20137 gange.' }
+  ],
+  'METAL': [
+    { meridian: 'Lungernes meridian', organ: 'Lunger', retning: 'Nedad', desc: 'Fra kravebenet ned ad armens yderside til tommelfingeren. St\u00f8tter evnen til at give slip.', vejledning: 'L\u00e6g den ene h\u00e5nds fingre lige under kravebenet p\u00e5 den modsatte side, t\u00e6t ved skulderen. Stryg ned ad armens yderside \u2014 over overarmen, underarmen, h\u00e5ndleddet og helt ud til tommelfingeren. Langsomt, med et let tryk, som om du f\u00f8lger noget p\u00e5 vej ud. 5\u20137 gange p\u00e5 hver arm.' }
+  ]
 };
 
 // ---- Yin Yoga: Fuld data (5 elementer × 3 stillinger) ----
@@ -1139,7 +1152,7 @@ window.MOON_CYCLE_DATA = MOON_CYCLE_DATA;
 window.REFLEKSION_DATA = REFLEKSION_DATA;
 window.KONTROL_TEKST = KONTROL_TEKST;
 window.FORLOB_DATA = FORLOB_DATA;
-window.HEALING_SOUNDS = HEALING_SOUNDS;
+window.MERIDIAN_STRYGNINGER = MERIDIAN_STRYGNINGER;
 window.YIN_YOGA_FULL = YIN_YOGA_FULL;
 window.INSIGHT_YOGA = INSIGHT_YOGA;
 window.INSIGHT_FOOD = INSIGHT_FOOD;

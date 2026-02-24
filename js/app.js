@@ -142,7 +142,7 @@ function toggleCheckinSupport() {
   const empati = MOOD_EMPATI[moodId] || '';
 
   // Get recommendations
-  const healing = (typeof HEALING_SOUNDS !== 'undefined') ? HEALING_SOUNDS[element] : null;
+  const mStryg = (typeof MERIDIAN_STRYGNINGER !== 'undefined' && MERIDIAN_STRYGNINGER[element]) ? MERIDIAN_STRYGNINGER[element][0] : null;
   const yoga = (typeof INSIGHT_YOGA !== 'undefined' && INSIGHT_YOGA[element]) ? INSIGHT_YOGA[element][0] : null;
   const food = (typeof INSIGHT_FOOD !== 'undefined' && INSIGHT_FOOD[element]) ? INSIGHT_FOOD[element][0] : null;
   const focus = (typeof INSIGHT_FOCUS !== 'undefined' && INSIGHT_FOCUS[element]) ? INSIGHT_FOCUS[element][0] : null;
@@ -150,16 +150,16 @@ function toggleCheckinSupport() {
   let recsHTML = '';
   if (yoga) {
     recsHTML += `<div class="ci-rec" onclick="Router.navigate('pra-yin-yoga')" style="margin-bottom:8px">
-      <div class="ci-rec-label">Yin Yoga · ${elLabel}</div>
+      <div class="ci-rec-label">Yin Yoga \u00b7 ${elLabel}</div>
       <div class="ci-rec-title">${yoga.pose.split('(')[0].trim()}</div>
       <div class="ci-rec-desc">${yoga.desc}</div>
     </div>`;
   }
-  if (healing) {
+  if (mStryg) {
     recsHTML += `<div class="ci-rec" onclick="Router.navigate('pra-healing')" style="margin-bottom:8px">
-      <div class="ci-rec-label">Healinglyd · ${elLabel}</div>
-      <div class="ci-rec-title">${healing.lyd}</div>
-      <div class="ci-rec-desc">${healing.desc}</div>
+      <div class="ci-rec-label">Meridianstrygning \u00b7 ${elLabel}</div>
+      <div class="ci-rec-title">${mStryg.meridian}</div>
+      <div class="ci-rec-desc">${mStryg.desc}</div>
     </div>`;
   }
   if (food) {
@@ -715,44 +715,140 @@ function initOnboardingResult() {
   }
 }
 
-/* ---- Forside (Home) ---- */
+/* ---- Forside (Home) — Daily Reading ---- */
+
+const ELEMENT_KVALITETER = {
+  'VAND': 'stilhed \u00b7 dybde \u00b7 intuition',
+  'TR\u00c6': 'v\u00e6kst \u00b7 retning \u00b7 vilje',
+  'ILD': 'gl\u00e6de \u00b7 forbindelse \u00b7 intensitet',
+  'JORD': 'n\u00e6ring \u00b7 omsorg \u00b7 fundament',
+  'METAL': 'klarhed \u00b7 essens \u00b7 frigivelse'
+};
+
+function buildDailyReading(cycles, dominant) {
+  const elLabel = (el) => Calculations.ELEMENT_LABELS[el] || el;
+  const domEl = dominant.element;
+  const phase = cycles.lifePhase;
+
+  // Count how many cycles share dominant element
+  const matching = cycles.elements.filter(e => e === domEl).length;
+
+  // Build concrete cycle references
+  const cykNavne = [];
+  if (phase.element === domEl) cykNavne.push('din livsfase');
+  if (cycles.season.element === domEl) cykNavne.push('\u00e5rstiden');
+  if (cycles.monthCycle.element === domEl) cykNavne.push('m\u00e5neden');
+  if (cycles.weekday.element === domEl) cykNavne.push('ugedagen');
+  if (cycles.organ.element === domEl) cykNavne.push('dit organur');
+
+  const cykStr = cykNavne.length > 0 ? cykNavne.join(', ') : 'dine cyklusser';
+
+  // Pick reading template
+  const templates = typeof DYNAMISK_TEKST !== 'undefined' ? DYNAMISK_TEKST[domEl] : null;
+  if (!templates) return ELEMENT_INTRO[domEl] || '';
+
+  let template;
+  if (matching >= 3) {
+    template = templates.dominant;
+  } else if (matching >= 2) {
+    template = templates.strong;
+  } else {
+    template = templates.present;
+  }
+
+  // Build concrete detail
+  const konkretParts = [];
+  if (phase.element === domEl) konkretParts.push(`Fase ${phase.phase} er ${elLabel(domEl)}`);
+  if (cycles.season.element === domEl) konkretParts.push(`${cycles.season.season} er ${elLabel(domEl)}`);
+  const konkret = konkretParts.length > 0 ? konkretParts.join(', og ') + '.' : '';
+
+  return template.replace('{cyklusser}', cykStr).replace('{konkret}', konkret);
+}
+
 function initForside() {
   const data = getUserCycles();
   if (!data) return;
   const { cycles, dominant } = data;
   const now = new Date();
+  const elLabel = (el) => Calculations.ELEMENT_LABELS[el] || el;
+  const domEl = dominant.element;
 
   // Date header
   setText('forside-date', `I dag \u00b7 ${formatDanishDate(now)}`);
 
-  // Concentric circles text
+  // Element hero — tegn + navn + kvaliteter
+  const tegnEl = document.getElementById('forside-tegn');
+  if (tegnEl) tegnEl.textContent = Calculations.ELEMENT_TEGN[domEl] || '';
+  setText('forside-element-navn', elLabel(domEl));
+  setText('forside-kvaliteter', ELEMENT_KVALITETER[domEl] || '');
+
+  // Daily reading text
+  const readingText = buildDailyReading(cycles, dominant);
+  setText('forside-reading', readingText);
+
+  // 5 cyklusser mini-oversigt
   const phase = cycles.lifePhase;
-  const elLabel = (el) => Calculations.ELEMENT_LABELS[el] || el;
-
-  const circLivsfase = document.getElementById('circle-livsfase');
-  if (circLivsfase) circLivsfase.textContent = `Fase ${phase.phase} \u2013 ${elLabel(phase.element)}`;
-
-  const circAarstid = document.getElementById('circle-aarstid');
-  if (circAarstid) circAarstid.textContent = `${cycles.season.season} \u2013 ${elLabel(cycles.season.element)}`;
-
-  const circMaaned = document.getElementById('circle-maaned');
-  if (circMaaned) {
-    const monthName = MONTHS_DA[now.getMonth()];
-    circMaaned.textContent = `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} \u2013 ${elLabel(cycles.monthCycle.element)}`;
+  const monthName = MONTHS_DA[now.getMonth()];
+  const cykContainer = document.getElementById('forside-cyklusser');
+  if (cykContainer) {
+    const rows = [
+      { label: 'Livsfase', value: `Fase ${phase.phase} \u00b7 ${elLabel(phase.element)}`, route: 'cir-livsfase' },
+      { label: '\u00c5rstid', value: `${cycles.season.season} \u00b7 ${elLabel(cycles.season.element)}`, route: 'cir-aarstid' },
+      { label: 'M\u00e5ned', value: `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} \u00b7 ${elLabel(cycles.monthCycle.element)}`, route: 'cir-maaned' },
+      { label: 'Ugedag', value: `${cycles.weekday.day} \u00b7 ${elLabel(cycles.weekday.element)}`, route: 'cir-ugedag' },
+      { label: 'Organur', value: `${cycles.organ.hours} \u00b7 ${cycles.organ.organ}`, route: 'cir-organur' }
+    ];
+    cykContainer.innerHTML = rows.map(r =>
+      `<div class="forside-cyk-row" onclick="Router.navigate('${r.route}')">` +
+        `<span class="forside-cyk-label">${r.label}</span>` +
+        `<span class="forside-cyk-value">${r.value}</span>` +
+      `</div>`
+    ).join('');
   }
 
-  const circUgedag = document.getElementById('circle-ugedag');
-  if (circUgedag) circUgedag.textContent = `${cycles.weekday.day} \u2013 ${elLabel(cycles.weekday.element)}`;
+  // Praksis cards — based on dominant element, rotated daily
+  const ri = Calculations.dayRotation(3);
+  const yoga = typeof INSIGHT_YOGA !== 'undefined' && INSIGHT_YOGA[domEl] ? INSIGHT_YOGA[domEl][ri % INSIGHT_YOGA[domEl].length] : null;
+  const mStryg = typeof MERIDIAN_STRYGNINGER !== 'undefined' && MERIDIAN_STRYGNINGER[domEl] ? MERIDIAN_STRYGNINGER[domEl][ri % MERIDIAN_STRYGNINGER[domEl].length] : null;
+  const food = typeof INSIGHT_FOOD !== 'undefined' && INSIGHT_FOOD[domEl] ? INSIGHT_FOOD[domEl][ri % INSIGHT_FOOD[domEl].length] : null;
 
-  const circOrganur = document.getElementById('circle-organur');
-  if (circOrganur) circOrganur.textContent = `${cycles.organ.hours} \u2013 ${cycles.organ.organ}`;
+  const MINDFULNESS_KORT = {
+    'VAND': { name: 'B\u00f8lgernes rytme', desc: 'Ind\u00e5nd 4s, hold 4s, ud\u00e5nd 6s. M\u00e6rk dybden.' },
+    'TR\u00c6': { name: 'Krop i bev\u00e6gelse', desc: 'St\u00e5, str\u00e6k mod loftet, m\u00e6rk r\u00f8dderne.' },
+    'ILD': { name: 'Hjertets n\u00e6rv\u00e6r', desc: 'H\u00e5nd p\u00e5 hjertet, m\u00e6rk slagene, m\u00e6rk varmen.' },
+    'JORD': { name: 'Forankring', desc: 'F\u00f8dder mod jorden, m\u00e6rk tyngden, m\u00e6rk b\u00e6ringen.' },
+    'METAL': { name: 'Slip med ud\u00e5ndingen', desc: 'Lang ud\u00e5nding, skuldrene falder, giv slip.' }
+  };
+  const mind = MINDFULNESS_KORT[domEl] || null;
 
-  // Climate card
-  const climate = analyzeClimate(cycles.elements, dominant);
-  setText('forside-climate-text', climate.text);
-  setText('forside-climate-sub', `${climate.label} \u2014 din energi samler sig i ${elLabel(dominant.element)}`);
+  const praksisCards = document.querySelectorAll('.praksis-card');
+  if (praksisCards.length >= 4) {
+    if (yoga) {
+      praksisCards[0].querySelector('.pk-label').textContent = `Yin Yoga \u00b7 ${elLabel(domEl)}`;
+      praksisCards[0].querySelector('.pk-name').textContent = yoga.pose.split('(')[0].trim();
+      praksisCards[0].querySelector('.pk-desc').textContent = yoga.desc;
+    }
+    if (mStryg) {
+      praksisCards[1].querySelector('.pk-label').textContent = `Meridianstrygning \u00b7 ${elLabel(domEl)}`;
+      praksisCards[1].querySelector('.pk-name').textContent = mStryg.meridian;
+      praksisCards[1].querySelector('.pk-desc').textContent = mStryg.desc;
+    }
+    if (mind) {
+      praksisCards[2].querySelector('.pk-label').textContent = `Mindfulness \u00b7 ${elLabel(domEl)}`;
+      praksisCards[2].querySelector('.pk-name').textContent = mind.name;
+      praksisCards[2].querySelector('.pk-desc').textContent = mind.desc;
+    }
+    if (food) {
+      praksisCards[3].querySelector('.pk-label').textContent = `N\u00e6ring \u00b7 ${elLabel(domEl)}`;
+      praksisCards[3].querySelector('.pk-name').textContent = food.item;
+      praksisCards[3].querySelector('.pk-desc').textContent = food.desc;
+    }
+  }
 
-  // Reset check-in state on every forside load
+  // Relation card
+  renderForsideRelation(cycles, dominant);
+
+  // Reset check-in state
   TrackingState.checkinMood = null;
   const allCiBtns = document.querySelectorAll('.checkin-card .ci-btn');
   allCiBtns.forEach(b => {
@@ -765,44 +861,8 @@ function initForside() {
   const supportPanel = document.getElementById('ci-support-panel');
   if (supportPanel) { supportPanel.style.display = 'none'; supportPanel.innerHTML = ''; }
 
-  // Mærk efter — render patterns
+  // Check-in patterns
   renderCheckinPatterns();
-
-  // Elementer section
-  renderElementIntro();
-
-  // Relation card (live partner/first relation)
-  renderForsideRelation(cycles, dominant);
-
-  // Tidsrejse quick-chips
-  renderForsideChips();
-
-  // Praksis cards — based on dominant element, rotated daily
-  const domEl = dominant.element;
-  const ri = Calculations.dayRotation(3);
-  const yoga = typeof INSIGHT_YOGA !== 'undefined' && INSIGHT_YOGA[domEl] ? INSIGHT_YOGA[domEl][ri % INSIGHT_YOGA[domEl].length] : null;
-  const healing = typeof HEALING_SOUNDS !== 'undefined' ? HEALING_SOUNDS[domEl] : null;
-  const food = typeof INSIGHT_FOOD !== 'undefined' && INSIGHT_FOOD[domEl] ? INSIGHT_FOOD[domEl][ri % INSIGHT_FOOD[domEl].length] : null;
-
-  const praksisCards = document.querySelectorAll('.praksis-card');
-  if (praksisCards.length >= 3) {
-    if (yoga) {
-      praksisCards[0].querySelector('.pk-label').textContent = `Yin Yoga \u00b7 ${elLabel(domEl)}`;
-      praksisCards[0].querySelector('.pk-name').textContent = yoga.pose.split('(')[0].trim();
-      praksisCards[0].querySelector('.pk-desc').textContent = yoga.desc;
-    }
-    if (healing) {
-      praksisCards[1].querySelector('.pk-label').textContent = `Healinglyd \u00b7 ${elLabel(domEl)}`;
-      praksisCards[1].querySelector('.pk-name').textContent = healing.lyd;
-      praksisCards[1].querySelector('.pk-desc').textContent = healing.desc;
-    }
-    if (food) {
-      praksisCards[2].querySelector('.pk-label').textContent = `N\u00e6ring \u00b7 ${elLabel(domEl)}`;
-      praksisCards[2].querySelector('.pk-name').textContent = food.item;
-      praksisCards[2].querySelector('.pk-desc').textContent = food.desc;
-    }
-  }
-
 }
 
 /* ============================================================
@@ -1042,11 +1102,11 @@ function initCyklusser() {
   // Featured text
   setText('cyk-featured-text', `Dine stærkeste cyklusser peger mod ${elLabel}. Din energi samler sig i én retning.`);
 
-  // Healing sound
-  const healing = typeof HEALING_SOUNDS !== 'undefined' ? HEALING_SOUNDS[domEl] : null;
-  if (healing) {
-    setText('cyk-healing-title', `${healing.lyd} \u2014 ${elLabel}s healinglyd`);
-    setText('cyk-healing-desc', healing.desc);
+  // Meridianstrygning
+  const mStryg = typeof MERIDIAN_STRYGNINGER !== 'undefined' && MERIDIAN_STRYGNINGER[domEl] ? MERIDIAN_STRYGNINGER[domEl][0] : null;
+  if (mStryg) {
+    setText('cyk-healing-title', `${mStryg.meridian} \u2014 ${elLabel}s meridianstrygning`);
+    setText('cyk-healing-desc', mStryg.desc);
   }
 }
 
@@ -1639,11 +1699,11 @@ function initVinduer() {
         html += `<div style="font-size:13px;color:#8B7D9B;margin-top:2px">${detail.kost.desc}</div>`;
         html += `</div>`;
       }
-      if (detail.healingLyd) {
+      if (detail.meridianStrygning) {
         html += `<div style="margin:6px 0;padding:10px 12px;background:rgba(107,95,123,0.04);border-radius:10px">`;
-        html += `<div style="font-size:12px;color:#a89bb3;margin-bottom:2px">Healinglyd</div>`;
-        html += `<div style="font-size:14px;color:#6B5F7B;font-weight:500">${detail.healingLyd.title}</div>`;
-        html += `<div style="font-size:13px;color:#8B7D9B;margin-top:2px">${detail.healingLyd.desc}</div>`;
+        html += `<div style="font-size:12px;color:#a89bb3;margin-bottom:2px">Meridianstrygning</div>`;
+        html += `<div style="font-size:14px;color:#6B5F7B;font-weight:500">${detail.meridianStrygning.title}</div>`;
+        html += `<div style="font-size:13px;color:#8B7D9B;margin-top:2px">${detail.meridianStrygning.desc}</div>`;
         html += `</div>`;
       }
       html += `</div>`;
@@ -1915,7 +1975,7 @@ function initLivsfaseDetail() {
       praksisEl.innerHTML = `
         <div class="praksis-card" onclick="Router.navigate('pra-yin-yoga')"><div><div class="pk-label">\u00d8velse \u00b7 ${elLabel}</div><div class="pk-name">${detail.oevelse.title}</div><div class="pk-desc">${detail.oevelse.desc}</div></div><div class="pk-arrow">\u2192</div></div>
         <div class="praksis-card" onclick="Router.navigate('pra-kost')"><div><div class="pk-label">N\u00e6ring \u00b7 ${elLabel}</div><div class="pk-name">${detail.kost.title}</div><div class="pk-desc">${detail.kost.desc}</div></div><div class="pk-arrow">\u2192</div></div>
-        <div class="praksis-card" onclick="Router.navigate('pra-healing')"><div><div class="pk-label">Healinglyd \u00b7 ${elLabel}</div><div class="pk-name">${detail.healingLyd.title}</div><div class="pk-desc">${detail.healingLyd.desc}</div></div><div class="pk-arrow">\u2192</div></div>
+        <div class="praksis-card" onclick="Router.navigate('pra-healing')"><div><div class="pk-label">Meridianstrygning \u00b7 ${elLabel}</div><div class="pk-name">${detail.meridianStrygning.title}</div><div class="pk-desc">${detail.meridianStrygning.desc}</div></div><div class="pk-arrow">\u2192</div></div>
       `;
     }
   }
@@ -2436,25 +2496,46 @@ function initPraKost() {
     `).join('');
   }
 
-  // Healing sound
-  const healing = typeof HEALING_SOUNDS !== 'undefined' ? HEALING_SOUNDS[domEl] : null;
-  if (healing) {
-    setText('kost-healing-label', `${elLabel}s healinglyd · ${healing.lyd}`);
-    setText('kost-healing-desc', healing.desc);
+  // Meridianstrygning
+  const mStryg = typeof MERIDIAN_STRYGNINGER !== 'undefined' && MERIDIAN_STRYGNINGER[domEl] ? MERIDIAN_STRYGNINGER[domEl][0] : null;
+  if (mStryg) {
+    setText('kost-healing-label', `${elLabel}s meridianstrygning \u00b7 ${mStryg.meridian}`);
+    setText('kost-healing-desc', mStryg.desc);
   }
 }
 
-/* ---- Healinglyde (pra-healing) ---- */
+/* ---- Meridianstrygninger (pra-healing) ---- */
 function initPraHealing() {
   const data = getUserCycles();
   if (!data) return;
   const domEl = data.dominant.element;
   const elLabel = Calculations.ELEMENT_LABELS[domEl];
-  const healing = typeof HEALING_SOUNDS !== 'undefined' ? HEALING_SOUNDS[domEl] : null;
+  const mStryg = typeof MERIDIAN_STRYGNINGER !== 'undefined' && MERIDIAN_STRYGNINGER[domEl] ? MERIDIAN_STRYGNINGER[domEl][0] : null;
 
-  if (healing) {
-    setText('healing-featured-label', `Din lyd · ${elLabel}`);
-    setText('healing-featured-text', `${healing.lyd} — ${healing.desc}`);
+  if (mStryg) {
+    setText('healing-featured-label', `Din strygning \u00b7 ${elLabel}`);
+    setText('healing-featured-text', `${mStryg.meridian} \u2014 ${mStryg.desc}`);
+  }
+
+  // Render all meridianstrygninger
+  const allContainer = document.getElementById('healing-all-cards');
+  if (allContainer && typeof MERIDIAN_STRYGNINGER !== 'undefined') {
+    const elOrder = ['VAND', 'TR\u00c6', 'ILD', 'JORD', 'METAL'];
+    let html = '';
+    elOrder.forEach(el => {
+      const arr = MERIDIAN_STRYGNINGER[el];
+      if (!arr) return;
+      const label = Calculations.ELEMENT_LABELS[el];
+      arr.forEach(s => {
+        const isActive = el === domEl ? ' style="border-left:3px solid rgba(122,144,139,0.4)"' : '';
+        html += `<div class="card"${isActive}><div class="card-row"><div>
+          <div class="card-label">${label} \u00b7 ${s.organ}</div>
+          <div class="card-title">${s.meridian}</div>
+          <div class="card-desc">${s.vejledning}</div>
+        </div></div></div>`;
+      });
+    });
+    allContainer.innerHTML = html;
   }
 }
 
