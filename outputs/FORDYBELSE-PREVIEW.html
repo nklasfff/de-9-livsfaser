@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Fordybelse">
+<meta name="theme-color" content="#FDFCFB">
+<title>Fordybelse — De 9 Livsfaser</title>
+<style>
+  @font-face { font-family: 'Playfair Display'; font-weight: 400; font-style: normal; src: url(../fonts/PlayfairDisplay-Regular.woff2) format('woff2'); }
+  @font-face { font-family: 'Playfair Display'; font-weight: 500; font-style: normal; src: url(../fonts/PlayfairDisplay-Medium.woff2) format('woff2'); }
+  @font-face { font-family: 'Playfair Display'; font-weight: 400; font-style: italic; src: url(../fonts/PlayfairDisplay-Italic.woff2) format('woff2'); }
+  @font-face { font-family: 'Playfair Display'; font-weight: 500; font-style: italic; src: url(../fonts/PlayfairDisplay-MediumItalic.woff2) format('woff2'); }
+  @font-face { font-family: 'DM Sans'; font-weight: 300; font-style: normal; src: url(../fonts/DMSans-Light.woff2) format('woff2'); }
+  @font-face { font-family: 'DM Sans'; font-weight: 400; font-style: normal; src: url(../fonts/DMSans-Regular.woff2) format('woff2'); }
+  @font-face { font-family: 'DM Sans'; font-weight: 500; font-style: normal; src: url(../fonts/DMSans-Medium.woff2) format('woff2'); }
+
+  :root {
+    --bg: #FDFCFB;
+    --text-dark: #2a2520;
+    --text-body: #3a3530;
+    --text-mid: #555;
+    --text-light: #888;
+    --blaa: #6c82a9;
+    --blaa-light: #889ec3;
+    --lilla: #6B5F7B;
+    --tone-cyklusser: #6c82a9;
+    --tone-relationer: #7b7a9e;
+    --tone-praksis: #7a908b;
+    --tone-rejse: #8a96a9;
+    --tone-vinduer: #6B5F7B;
+    --divider: rgba(0,0,0,0.06);
+    --radius: 14px;
+    --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --shadow-card: 0 2px 10px rgba(0,0,0,0.04);
+    --safe-t: env(safe-area-inset-top, 0px);
+    --safe-b: env(safe-area-inset-bottom, 0px);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  body {
+    background: var(--bg);
+    font-family: var(--font-sans);
+    color: var(--text-body);
+    overflow-x: hidden;
+    min-height: 100vh;
+    padding-top: calc(52px + var(--safe-t));
+    padding-bottom: calc(20px + var(--safe-b));
+  }
+
+  /* ===== HEADER ===== */
+  .app-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--bg);
+    padding-top: var(--safe-t);
+  }
+  .app-header-inner {
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+  }
+  .header-back {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-mid);
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+  .header-title {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    color: var(--text-dark);
+  }
+  .header-search {
+    font-size: 16px;
+    color: var(--text-light);
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+  .header-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(108,130,169,0.2) 25%, rgba(108,130,169,0.2) 75%, transparent);
+    margin: 0 20px;
+  }
+
+  /* ===== TAB BAR ===== */
+  .tab-bar {
+    display: flex;
+    gap: 8px;
+    padding: 14px 20px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tab-bar::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 400;
+    padding: 8px 18px;
+    border-radius: 24px;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: #fff;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tab-btn.active {
+    background: var(--blaa);
+    color: #fff;
+    border-color: var(--blaa);
+  }
+
+  /* ===== SCREENS ===== */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ===== CONTENT ===== */
+  .content { padding: 0 22px; }
+
+  /* ===== FIGURE TOP ===== */
+  .figur-top {
+    text-align: center;
+    padding: 20px 0 8px;
+  }
+  .figur-top img {
+    width: 180px;
+    height: auto;
+    margin: 0 auto;
+    opacity: 0.85;
+  }
+
+  /* ===== LOTUS SEPARATOR ===== */
+  .lotus-sep {
+    text-align: center;
+    padding: 28px 0;
+  }
+  .lotus-sep img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    opacity: 0.55;
+    margin: 0 auto;
+    display: block;
+  }
+
+  /* ===== OVERTITEL ===== */
+  .overtitel {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  /* ===== STOR TITEL ===== */
+  .stor-titel {
+    font-family: var(--font-serif);
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--text-dark);
+    text-align: center;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  /* ===== INGRESS ===== */
+  .ingress {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-style: italic;
+    color: var(--text-mid);
+    text-align: center;
+    line-height: 1.65;
+    margin-bottom: 8px;
+    max-width: 340px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ===== SEKTION LABEL ===== */
+  .sek-label {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .sek-label.cyklusser { color: var(--tone-cyklusser); }
+  .sek-label.relationer { color: var(--tone-relationer); }
+  .sek-label.praksis { color: var(--tone-praksis); }
+  .sek-label.neutral { color: var(--text-light); }
+
+  /* ===== SEKTION TITEL ===== */
+  .sek-titel {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text-dark);
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+
+  /* ===== ISABELLE BOKS ===== */
+  .isabelle-tekst {
+    font-family: var(--font-serif);
+    font-size: 15.5px;
+    font-style: italic;
+    color: var(--text-mid);
+    line-height: 1.75;
+  }
+
+  /* ===== BROEDTEKST ===== */
+  .brodtekst {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--text-body);
+    margin-bottom: 12px;
+  }
+
+  /* ===== LAES MERE ===== */
+  .laes-mere {
+    font-size: 12px;
+    color: var(--text-light);
+    cursor: pointer;
+    margin-top: 4px;
+    display: inline-block;
+  }
+
+  /* ===== TO-KOLONNER ===== */
+  .to-kolonner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--divider);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .kolonne { background: var(--bg); padding: 16px 14px; }
+  .kol-label {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 6px;
+  }
+  .kol-tekst {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--text-body);
+  }
+
+  /* ===== TRE-KOLONNER ===== */
+  .tre-kolonner {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--divider);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  /* ===== UBALANCE ===== */
+  .ubalance-group { margin-bottom: 14px; }
+  .ubalance-group-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 6px;
+  }
+  .ubalance-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--divider);
+  }
+  .ubalance-item:last-child { border-bottom: none; }
+  .u-prik {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--text-light);
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+  .u-tekst {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--text-body);
+  }
+
+  /* ===== TEMAER ===== */
+  .tema { margin-bottom: 10px; border-radius: var(--radius); overflow: hidden; }
+  .tema-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 18px;
+    cursor: pointer;
+    background: rgba(108,130,169,0.04);
+    border: 1px solid rgba(108,130,169,0.07);
+    border-radius: var(--radius);
+  }
+  .tema-bar:active { opacity: 0.7; }
+  .tema-titel {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--blaa);
+    flex: 1;
+    padding-right: 10px;
+    line-height: 1.4;
+  }
+  .tema-pil {
+    font-size: 14px;
+    color: var(--blaa);
+    opacity: 0.4;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .tema.open .tema-pil { transform: rotate(90deg); }
+  .tema-body { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+  .tema.open .tema-body { max-height: 800px; }
+  .tema-tekst {
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--text-body);
+    padding: 0 18px 18px;
+  }
+  .tema-tekst:first-child { padding-top: 14px; }
+
+  /* Relation-tema */
+  .tema-rel .tema-bar { background: rgba(123,122,158,0.04); border-color: rgba(123,122,158,0.07); }
+  .tema-rel .tema-titel { color: var(--tone-relationer); }
+  .tema-rel .tema-pil { color: var(--tone-relationer); }
+
+  /* ===== OEVELSER ===== */
+  .oevelse {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .oevelse:last-child { border-bottom: none; margin-bottom: 0; }
+  .oev-type {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 2px;
+  }
+  .oev-navn {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+  }
+  .oev-tekst {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--text-body);
+  }
+
+  /* ===== REFLEKSION ===== */
+  .refleksion-spg {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-style: italic;
+    color: var(--text-dark);
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  .journal-link {
+    font-size: 13px;
+    color: var(--blaa);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* ===== RAAD ===== */
+  .raad-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--divider);
+  }
+  .raad-item:last-child { border-bottom: none; }
+  .raad-prik {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+  .raad-prik.cyklusser { background: var(--tone-cyklusser); }
+  .raad-prik.relationer { background: var(--tone-relationer); }
+  .raad-tekst {
+    font-size: 13.5px;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--text-body);
+  }
+  .raad-tekst b { font-weight: 500; color: var(--text-dark); }
+
+  /* ===== LINK SEKTION ===== */
+  .link-sektion {
+    font-size: 13.5px;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--text-body);
+    margin-bottom: 8px;
+  }
+  .link-knap {
+    font-size: 13px;
+    color: var(--blaa);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* ===== PERSON PILL ===== */
+  .person-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 400;
+    margin-right: 6px;
+    margin-bottom: 6px;
+  }
+  .person-pill.user { background: rgba(108,130,169,0.08); color: var(--tone-cyklusser); }
+  .person-pill.relation { background: rgba(123,122,158,0.08); color: var(--tone-relationer); }
+
+  /* ===== INTERAKTION BOKS ===== */
+  .interaktion-boks {
+    background: rgba(123,122,158,0.04);
+    border: 1px solid rgba(123,122,158,0.08);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .interaktion-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--tone-relationer);
+    margin-bottom: 6px;
+  }
+  .interaktion-titel {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+  }
+  .interaktion-tekst {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--text-body);
+  }
+
+  /* ===== TIDSLINJE ===== */
+  .tidslinje-punkt {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .tl-linje {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20px;
+    flex-shrink: 0;
+  }
+  .tl-prik {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--tone-rejse);
+  }
+  .tl-streg {
+    width: 1px;
+    flex: 1;
+    background: rgba(138,150,169,0.2);
+    margin-top: 4px;
+  }
+  .tl-indhold { flex: 1; }
+  .tl-aar {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--tone-rejse);
+    margin-bottom: 2px;
+  }
+  .tl-fase {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    color: var(--text-dark);
+    margin-bottom: 3px;
+  }
+  .tl-tekst {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--text-body);
+  }
+
+  /* ===== BOTTOM SPACE ===== */
+  .bottom-space { height: 40px; }
+
+  /* ===== SECTION CLOSER ===== */
+  .section-closer {
+    text-align: center;
+    padding: 40px 0 20px;
+  }
+  .section-closer img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    opacity: 0.45;
+    margin: 0 auto;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="app-header">
+  <div class="app-header-inner">
+    <button class="header-back">&#8592; Tilbage</button>
+    <div class="header-title">De 9 Livsfaser</div>
+    <button class="header-search">&#128269;</button>
+  </div>
+  <div class="header-line"></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="showScreen(0)">Cyklus-skift</button>
+    <button class="tab-btn" onclick="showScreen(1)">Du &amp; Clara</button>
+    <button class="tab-btn" onclick="showScreen(2)">Da du var 21</button>
+  </div>
+</div>
+
+<!-- extra space for fixed header + tabs -->
+<div style="height:48px"></div>
+
+
+<!-- ============================================================ -->
+<!-- EKSEMPEL 1: CYKLUS-SKIFT — ILD → JORD                        -->
+<!-- ============================================================ -->
+<div class="screen active" id="screen-0">
+  <div class="content">
+
+    <!-- FIGUR OEVERST -->
+    <div class="figur-top">
+      <img src="../assets/images/forside-fem-kraefter.png" alt="De fem elementer">
+    </div>
+
+    <div class="overtitel">Cyklus-skift</div>
+    <div class="stor-titel">Ild &#8594; Jord</div>
+    <div class="ingress">Fra eksplosion til modning. Fra at skabe til at n&aelig;re. Fra at br&aelig;nde til at b&aelig;re.</div>
+
+    <!-- LOTUS 1 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- DETTE SKIFT I DIG -->
+    <div class="sek-label neutral">Dette skift i dig</div>
+    <div style="margin-bottom:8px">
+      <div class="isabelle-tekst">Jeg husker det som en morgen, hvor jeg pludselig ikke havde travlt. Ikke fordi der var mindre at g&oslash;re &mdash; men fordi noget indefra sagde stop. Kroppen vidste det f&oslash;r jeg gjorde. Skiftet fra Ild til Jord er ikke en beslutning. Det er en erkendelse der siver ind langsomt &mdash; og en dag er den bare der.</div>
+    </div>
+
+    <!-- LOTUS 2 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- HVAD SKER DER -->
+    <div class="sek-label cyklusser">Hvad sker der</div>
+    <div class="sek-titel">Ilden slukker ikke &mdash; den samler sig</div>
+    <div class="brodtekst">I den kinesiske medicin er Ild og Jord forbundet i den skabende cyklus: Ild n&aelig;rer Jord. Den intensitet og varme du bar i Ild-fasen forsvinder ikke &mdash; den omdannes. Den bliver til noget fastere, varmere, mere b&aelig;rende.</div>
+    <div class="brodtekst">Skiftet fra Ild til Jord er et af de mest m&aelig;rkbare i et kvindeliv. Ild-fasen er kendetegnet ved ekspansion &mdash; relationer, ambitioner, kroppen p&aring; sit st&aelig;rkeste. Jord-fasen er noget andet. Det er indsamlingen. Hvad vil du b&aelig;re videre? Hvad er du klar til at s&aelig;tte ned?</div>
+
+    <!-- KROP & SIND -->
+    <div class="sek-label cyklusser">Krop &amp; sind</div>
+    <div class="to-kolonner">
+      <div class="kolonne">
+        <div class="kol-label">Kroppen</div>
+        <div class="kol-tekst">Energien svinger mere. Perioder med h&oslash;j intensitet f&oslash;lges af et behov for hvile der f&oslash;les nyt. Milt og Maven overtager &mdash; de beder om varme, regelm&aelig;ssighed og ro.</div>
+      </div>
+      <div class="kolonne">
+        <div class="kol-label">Sindet</div>
+        <div class="kol-tekst">Sp&oslash;rgsm&aring;lene &aelig;ndrer sig. Fra &quot;hvad vil jeg opn&aring;?&quot; til &quot;hvad betyder det egentlig?&quot; Det er ikke tab af retning &mdash; det er dybde der vokser frem.</div>
+      </div>
+    </div>
+
+    <!-- LOTUS 3 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- BALANCE / UBALANCE -->
+    <div class="sek-label cyklusser">Tegn p&aring; balance</div>
+    <div class="brodtekst">En kvinde der er i god kontakt med Jord-energien i dette skift m&aelig;rker en ny slags ro. Hun s&oslash;ger ikke bekr&aelig;ftelse udefra p&aring; samme m&aring;de som f&oslash;r. Der er en tilfredshed der begynder at vokse indefra &mdash; ikke fordi livet er perfekt, men fordi hun er begyndt at samle det hun allerede har.</div>
+
+    <div style="height:14px"></div>
+
+    <div class="sek-label neutral">Tegn p&aring; ubalance</div>
+    <div class="ubalance-group">
+      <div class="ubalance-group-label">Fysiske tegn</div>
+      <div class="ubalance-item"><div class="u-prik"></div><div class="u-tekst">Ford&oslash;jelsen arbejder tungere &mdash; maven er mere f&oslash;lsom og reagerer p&aring; stress</div></div>
+      <div class="ubalance-item"><div class="u-prik"></div><div class="u-tekst">Tr&aelig;thed der ikke letter med s&oslash;vn &mdash; en dyb udt&oslash;mmelse i kroppen</div></div>
+      <div class="ubalance-item"><div class="u-prik"></div><div class="u-tekst">S&oslash;de trang og behov for at spise hyppigere &mdash; Miltens signal om ubalance</div></div>
+    </div>
+    <div class="ubalance-group">
+      <div class="ubalance-group-label">Mentale tegn</div>
+      <div class="ubalance-item"><div class="u-prik"></div><div class="u-tekst">Overt&aelig;nkning der k&oslash;rer i ring &mdash; har jeg gjort det rigtigt?</div></div>
+      <div class="ubalance-item"><div class="u-prik"></div><div class="u-tekst">Bekymring der ikke har noget konkret at h&aelig;nge p&aring; &mdash; en baggrundst&oslash;j af uro</div></div>
+      <div class="ubalance-item"><div class="u-prik"></div><div class="u-tekst">Sorg over det der ikke kan gentages &mdash; Ild-fasens energi og muligheder</div></div>
+    </div>
+
+    <!-- LOTUS 4 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- TEMAER -->
+    <div class="sek-label cyklusser">Skiftets temaer</div>
+
+    <div class="tema" onclick="this.classList.toggle('open')">
+      <div class="tema-bar">
+        <div class="tema-titel">At s&aelig;tte det ned du bar</div>
+        <span class="tema-pil">&#8250;</span>
+      </div>
+      <div class="tema-body">
+        <div class="tema-tekst" style="padding-top:14px">Ild-fasen kr&aelig;vede noget af dig. Den br&aelig;ndte st&aelig;rkt og tog meget. En del af dette skift handler om at anerkende hvad du bar &mdash; og at give dig selv tilladelse til at s&aelig;tte det ned. Ikke som kapitulation, men som visdom.</div>
+        <div class="tema-tekst">Det er ikke det samme som at give op. Det er at vide hvad der er dit, og hvad der aldrig var det. Jord-elementet er selektivt &mdash; det tager kun det der n&aelig;rer, og lader resten g&aring;.</div>
+      </div>
+    </div>
+
+    <div class="tema" onclick="this.classList.toggle('open')">
+      <div class="tema-bar">
+        <div class="tema-titel">Midtpunktets ansvar</div>
+        <span class="tema-pil">&#8250;</span>
+      </div>
+      <div class="tema-body">
+        <div class="tema-tekst" style="padding-top:14px">I dette skift begynder du at m&aelig;rke at du er midtpunktet mellem generationerne. B&oslash;rnene vokser til og har brug for en ny slags tilstedev&aelig;relse. For&aelig;ldrene n&aelig;rmer sig en alder, hvor du ser dem anderledes. Du b&aelig;rer begge dele.</div>
+        <div class="tema-tekst">Det er Jord-elementets opgave: at holde. At binde. At v&aelig;re der. Det er ikke let &mdash; men det er pr&aelig;cis det Jord-energien er skabt til.</div>
+      </div>
+    </div>
+
+    <div class="tema" onclick="this.classList.toggle('open')">
+      <div class="tema-bar">
+        <div class="tema-titel">Fylde midt i overgangen</div>
+        <span class="tema-pil">&#8250;</span>
+      </div>
+      <div class="tema-body">
+        <div class="tema-tekst" style="padding-top:14px">Der er et paradoks i dette skift: du har aldrig haft mere erfaring og klogskab &mdash; og alligevel kan det f&oslash;les som om noget mangler. Yoga-filosofien kalder det aparigraha &mdash; evnen til at modtage uden at gribe.</div>
+        <div class="tema-tekst">Fylde er ikke noget man n&aring;r frem til &mdash; det er noget man opdager at man allerede har.</div>
+      </div>
+    </div>
+
+    <!-- LOTUS 5 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- OEVELSER -->
+    <div class="sek-label praksis">&Oslash;velser for dette skift</div>
+
+    <div class="oevelse">
+      <div class="oev-type">Krop</div>
+      <div class="oev-navn">Langsom g&aring;tur</div>
+      <div class="oev-tekst">Halv&eacute;r dit tempo. M&aelig;rk hver fod der r&oslash;rer jorden &mdash; h&aelig;len, fods&aring;len, t&aelig;erne. Ti til femten minutter forankrer kroppen i Jord-energien.</div>
+    </div>
+
+    <div class="oevelse">
+      <div class="oev-type">&Aring;ndedr&aelig;t</div>
+      <div class="oev-navn">Varme i midten</div>
+      <div class="oev-tekst">H&aelig;nderne p&aring; maven. &Aring;nd ind i fire t&aelig;l ned i maven, hold i to, ud i seks t&aelig;l. Forestil dig et b&aring;l i kroppens midte der samler sig. Otte til ti gentagelser.</div>
+    </div>
+
+    <div class="oevelse">
+      <div class="oev-type">Meridian</div>
+      <div class="oev-navn">Mavens meridian</div>
+      <div class="oev-tekst">Stryg med begge h&aelig;nder fra brystet ned over maven, ned ad l&aring;renes forside til f&oslash;dderne. Med tyngde og varme, fem til syv gange.</div>
+    </div>
+
+    <div class="oevelse">
+      <div class="oev-type">Yin Yoga</div>
+      <div class="oev-navn">Sfinksen med vrid</div>
+      <div class="oev-tekst">L&aelig;g dig p&aring; maven i sfinksen. Drej langsomt overkroppen mod den ene side og bliv der. To til tre minutter p&aring; hver side &mdash; &aring;bner Milt-meridianen.</div>
+    </div>
+
+    <div class="oevelse">
+      <div class="oev-type">Sind</div>
+      <div class="oev-navn">Hvad b&aelig;rer du videre?</div>
+      <div class="oev-tekst">Skriv alt du skabte, oplevede og l&aelig;rte i Ild-fasen. Skriv derefter tre ting du er klar til at s&aelig;tte ned &mdash; og tre fr&oslash; du vil b&aelig;re ind i Jord.</div>
+    </div>
+
+    <!-- LOTUS 6 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- REFLEKSION -->
+    <div class="sek-label neutral">Refleksion</div>
+    <div class="refleksion-spg">Hvad bragte Ild-fasen dig, som du ikke vidste du havde brug for &mdash; og hvad er du klar til at b&aelig;re videre ind i Jord?</div>
+    <div class="journal-link">Skriv i din journal &#8594;</div>
+
+    <!-- LOTUS 7 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- RAAD -->
+    <div class="sek-label cyklusser">Skiftets r&aring;d</div>
+    <div class="raad-item">
+      <div class="raad-prik cyklusser"></div>
+      <div class="raad-tekst"><b>Tillad det langsomme.</b> Jord-energien bygges ikke med hast. En simpel daglig rutine er mere n&aelig;rende end store sporadiske indsatser.</div>
+    </div>
+    <div class="raad-item">
+      <div class="raad-prik cyklusser"></div>
+      <div class="raad-tekst"><b>N&aelig;ring fra Jordens farver.</b> Gule og orange f&oslash;devarer &mdash; hirse, s&oslash;de kartofler, gr&aelig;skar &mdash; varmt og kogt. Milten trives med varme.</div>
+    </div>
+    <div class="raad-item">
+      <div class="raad-prik cyklusser"></div>
+      <div class="raad-tekst"><b>Stol p&aring; dit Vand.</b> Som Vand-natur finder du instinktivt vejen rundt om forhindringer. Din Vand-natur finder lavpunkterne og samler sig der &mdash; stille og vedholdende.</div>
+    </div>
+
+    <!-- SECTION CLOSER -->
+    <div class="section-closer">
+      <img src="../assets/images/lotus-maerk-efter.png" alt="">
+    </div>
+
+    <div class="bottom-space"></div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- EKSEMPEL 2: DU & CLARA — MOR-DATTER FORDYBELSE               -->
+<!-- ============================================================ -->
+<div class="screen" id="screen-1">
+  <div class="content">
+
+    <!-- FIGUR OEVERST -->
+    <div class="figur-top">
+      <img src="../assets/images/forside-fem-kraefter.png" alt="De fem elementer">
+    </div>
+
+    <div class="overtitel">Mor &amp; datter</div>
+    <div class="stor-titel">Du &amp; Clara</div>
+    <div class="ingress">Jord der holder. Tr&aelig; der vokser. To elementer der har brug for hinanden &mdash; p&aring; en helt ny m&aring;de.</div>
+
+    <!-- LOTUS 1 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- ISABELLE -->
+    <div class="sek-label neutral">Isabelle</div>
+    <div style="margin-bottom:8px">
+      <div class="isabelle-tekst">Forholdet mellem en mor i Jord og en datter i Tr&aelig; er m&aring;ske det smukkeste og det sv&aelig;reste p&aring; samme tid. Du vil holde. Hun vil v&aelig;k. Ingen af jer tager fejl &mdash; I er bare i to helt forskellige bev&aelig;gelses-retninger lige nu.</div>
+    </div>
+
+    <!-- LOTUS 2 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- JERES ELEMENTER -->
+    <div class="sek-label relationer">Jeres elementer lige nu</div>
+    <div style="margin-bottom: 14px;">
+      <span class="person-pill user">Du &mdash; Jord (Fase 7)</span>
+      <span class="person-pill relation">Clara &mdash; Tr&aelig; (Fase 3)</span>
+    </div>
+
+    <div class="to-kolonner">
+      <div class="kolonne">
+        <div class="kol-label">Dig &mdash; Jord</div>
+        <div class="kol-tekst">Du er i indsamling. Du vil n&aelig;re, holde, skabe tryghed. Dit instinkt er at give &mdash; og det kan f&oslash;les som afvisning n&aring;r Clara ikke tager imod p&aring; den m&aring;de du forventer.</div>
+      </div>
+      <div class="kolonne">
+        <div class="kol-label">Clara &mdash; Tr&aelig;</div>
+        <div class="kol-tekst">Clara er i ekspansion. Alt i hende vil op og ud. Hun tester gr&aelig;nser &mdash; ikke for at s&aring;re dig, men fordi Tr&aelig;-energien kr&aelig;ver plads til at vokse.</div>
+      </div>
+    </div>
+
+    <!-- LOTUS 3 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- INTERAKTION -->
+    <div class="sek-label relationer">Jeres interaktion</div>
+    <div class="interaktion-boks">
+      <div class="interaktion-label">TCM-dynamik</div>
+      <div class="interaktion-titel">Jord kontrollerer Vand &mdash; Tr&aelig; kontrollerer Jord</div>
+      <div class="interaktion-tekst">I den kinesiske medicin kontrollerer Tr&aelig; Jord. Det betyder at Claras energi naturligt udfordrer din. Det er ikke et problem &mdash; det er cyklussens intelligens. Hun pusher dig til at give slip p&aring; det du holder for h&aring;rdt fast i.</div>
+    </div>
+
+    <div class="sek-titel">Hvad det betyder i praksis</div>
+    <div class="brodtekst">N&aring;r Clara presser p&aring;, aktiveres din Jord-energis skyggeside: bekymring og overt&aelig;nkning. Du vil beskytte &mdash; men det hun har brug for er at du stoler p&aring; hendes retning, selv n&aring;r den f&oslash;les kaotisk.</div>
+    <div class="brodtekst">Det sv&aelig;reste for en Jord-mor med en Tr&aelig;-datter er at forst&aring;, at slip ikke er det samme som ligegyldighed. Det er det modsatte: det er den st&oslash;rste form for tillid du kan give hende.</div>
+
+    <!-- LOTUS 4 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- KROP & SIND -->
+    <div class="sek-label relationer">Krop &amp; sind i jeres relation</div>
+    <div class="to-kolonner">
+      <div class="kolonne">
+        <div class="kol-label">Det du m&aelig;rker</div>
+        <div class="kol-tekst">En tyngde i maven n&aring;r I er uenige. Behovet for at ordne det med det samme. En &oslash;rhed der m&aring;ske overrasker dig &mdash; den er Jordens frustration over ikke at kunne n&aelig;re.</div>
+      </div>
+      <div class="kolonne">
+        <div class="kol-label">Det Clara m&aelig;rker</div>
+        <div class="kol-tekst">Uro i kroppen, behovet for at bev&aelig;ge sig. Irritation der kommer pludseligt. Skyldf&oslash;lelse bagefter &mdash; fordi hun kan m&aelig;rke at hun s&aring;rede dig, men ikke ved hvordan hun skal stoppe.</div>
+      </div>
+    </div>
+
+    <!-- LOTUS 5 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- TEMAER -->
+    <div class="sek-label relationer">Temaer i jeres relation</div>
+
+    <div class="tema tema-rel" onclick="this.classList.toggle('open')">
+      <div class="tema-bar">
+        <div class="tema-titel">Slip og stol</div>
+        <span class="tema-pil">&#8250;</span>
+      </div>
+      <div class="tema-body">
+        <div class="tema-tekst" style="padding-top:14px">Dit Jord-instinkt siger: hold fast. Claras Tr&aelig;-energi siger: giv plads. M&oslash;det mellem de to er selve kernen i jeres forhold lige nu. Det handler ikke om at du skal stoppe med at v&aelig;re mor &mdash; men om at finde en ny form.</div>
+        <div class="tema-tekst">Pr&oslash;v at t&aelig;nke p&aring; det som g&aelig;rtnerens kunst: du forbereder jorden, men du bestemmer ikke hvilken vej tr&aelig;et vokser. Det er Tr&aelig;ets eget valg.</div>
+      </div>
+    </div>
+
+    <div class="tema tema-rel" onclick="this.classList.toggle('open')">
+      <div class="tema-bar">
+        <div class="tema-titel">Stilhed som sprog</div>
+        <span class="tema-pil">&#8250;</span>
+      </div>
+      <div class="tema-body">
+        <div class="tema-tekst" style="padding-top:14px">Clara har m&aring;ske ikke brug for dine ord lige nu. Tr&aelig;-energien kommunikerer anderledes &mdash; den m&aelig;rker tilstedev&aelig;relse mere end den h&oslash;rer r&aring;d. Dit Vand-element kan hj&aelig;lpe dig her: v&aelig;r stille og n&aelig;rv&aelig;rende. Lad hende komme til dig.</div>
+        <div class="tema-tekst">Det er sv&aelig;rt. Men stilhed er ikke frav&aelig;relse af omsorg &mdash; det er en anden form for det.</div>
+      </div>
+    </div>
+
+    <div class="tema tema-rel" onclick="this.classList.toggle('open')">
+      <div class="tema-bar">
+        <div class="tema-titel">Tre generationer</div>
+        <span class="tema-pil">&#8250;</span>
+      </div>
+      <div class="tema-body">
+        <div class="tema-tekst" style="padding-top:14px">Du st&aring;r mellem Clara (Tr&aelig;, Fase 3) og Kirsten (Vand, Fase 9). Tre kvinder, tre elementer, tre livsfaser. Du er midtpunktet &mdash; og det er b&aring;de en gave og en v&aelig;gt. Jord-elementets styrke er pr&aelig;cis at b&aelig;re den slags kompleksitet.</div>
+      </div>
+    </div>
+
+    <!-- LOTUS 6 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- OEVELSER -->
+    <div class="sek-label praksis">&Oslash;velser for jer to</div>
+
+    <div class="oevelse">
+      <div class="oev-type">Sammen</div>
+      <div class="oev-navn">G&aring;tur uden m&aring;l</div>
+      <div class="oev-tekst">G&aring; sammen uden at tale om noget bestemt. Lad Clara bestemme retningen. Jord n&aelig;rer bedst n&aring;r den f&oslash;lger &mdash; ikke n&aring;r den leder. Tyve minutter er nok.</div>
+    </div>
+
+    <div class="oevelse">
+      <div class="oev-type">For dig</div>
+      <div class="oev-navn">M&aelig;rke uden at handle</div>
+      <div class="oev-tekst">N&aring;r Clara tr&aelig;kker sig, l&aelig;g m&aelig;rke til hvad der sker i din krop. Maven? Brystet? &Aring;ndedr&aelig;ttet? M&aelig;rk det &mdash; uden at g&oslash;re noget ved det. Tre minutter. Det tr&aelig;ner Jord-elementets evne til at holde uden at gribe.</div>
+    </div>
+
+    <div class="oevelse">
+      <div class="oev-type">For dig</div>
+      <div class="oev-navn">Skriv til hende &mdash; uden at sende</div>
+      <div class="oev-tekst">Skriv et brev til Clara som du ikke sender. Skriv alt det du gerne vil sige. L&aelig;g det v&aelig;k. Det frigiver Jordens behov for at udtrykke omsorg &mdash; uden at presse Tr&aelig;ets gr&aelig;nser.</div>
+    </div>
+
+    <!-- LOTUS 7 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- REFLEKSION -->
+    <div class="sek-label neutral">Refleksion</div>
+    <div class="refleksion-spg">Hvad ville der ske, hvis du stolede p&aring; at Clara finder vej &mdash; ogs&aring; uden din hj&aelig;lp?</div>
+    <div class="journal-link">Skriv i din journal &#8594;</div>
+
+    <div style="height:20px"></div>
+
+    <!-- RAAD -->
+    <div class="sek-label relationer">R&aring;d for jeres relation</div>
+    <div class="raad-item">
+      <div class="raad-prik relationer"></div>
+      <div class="raad-tekst"><b>Sp&oslash;rg i stedet for at r&aring;de.</b> Tr&aelig;-energien lukker ned for r&aring;d, men &aring;bner for sp&oslash;rgsm&aring;l. &quot;Hvad t&aelig;nker du?&quot; virker bedre end &quot;Du burde...&quot;</div>
+    </div>
+    <div class="raad-item">
+      <div class="raad-prik relationer"></div>
+      <div class="raad-tekst"><b>Lav mad sammen.</b> Jord n&aelig;rer gennem h&aelig;nderne. Tr&aelig;et vokser af at skabe noget. K&oslash;kkenet er et rum hvor jeres elementer m&oslash;des naturligt.</div>
+    </div>
+    <div class="raad-item">
+      <div class="raad-prik relationer"></div>
+      <div class="raad-tekst"><b>Giv hende en d&oslash;r hun kan lukke.</b> Tr&aelig;-energien har brug for et rum der er helt hendes. Det er ikke afvisning af dig &mdash; det er hendes r&oslash;dder der gror.</div>
+    </div>
+
+    <!-- SECTION CLOSER -->
+    <div class="section-closer">
+      <img src="../assets/images/lotus-maerk-efter.png" alt="">
+    </div>
+
+    <div class="bottom-space"></div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- EKSEMPEL 3: DA DU VAR 21 — TIDSREJSE                         -->
+<!-- ============================================================ -->
+<div class="screen" id="screen-2">
+  <div class="content">
+
+    <!-- FIGUR OEVERST -->
+    <div class="figur-top">
+      <img src="../assets/images/forside-fem-kraefter.png" alt="De fem elementer">
+    </div>
+
+    <div class="overtitel">Tidsrejse</div>
+    <div class="stor-titel">Da du var 21</div>
+    <div class="ingress">Tr&aelig;-energi. Fase 3. Alt var retning og kr&aelig;fter der endnu ikke kendte deres m&aring;l.</div>
+
+    <!-- LOTUS 1 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- ISABELLE -->
+    <div class="sek-label neutral">Isabelle</div>
+    <div style="margin-bottom:8px">
+      <div class="isabelle-tekst">Da du var 21 var du midt i Tr&aelig;ets tid. Det er den alder hvor kroppen er st&aelig;rkest og sindet er mest ut&aring;lmodigt. Alt f&oslash;les som om det skal ske nu. Der er en sk&aelig;rhed i det &mdash; og en sk&oslash;nhed. Du vidste ikke hvad du havde. Det g&oslash;r man aldrig i Tr&aelig;-fasen.</div>
+    </div>
+
+    <!-- LOTUS 2 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- DINE CYKLUSSER DENGANG -->
+    <div class="sek-label cyklusser">Dine cyklusser dengang</div>
+    <div class="sek-titel">Tre elementer, &eacute;n retning</div>
+
+    <div class="tre-kolonner">
+      <div class="kolonne">
+        <div class="kol-label">Livsfase</div>
+        <div class="kol-tekst" style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark);">Fase 3</div>
+        <div class="kol-tekst">Tr&aelig;</div>
+      </div>
+      <div class="kolonne">
+        <div class="kol-label">&Aring;rstid</div>
+        <div class="kol-tekst" style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark);">For&aring;r</div>
+        <div class="kol-tekst">Tr&aelig;</div>
+      </div>
+      <div class="kolonne">
+        <div class="kol-label">Dominant</div>
+        <div class="kol-tekst" style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark);">Tr&aelig;</div>
+        <div class="kol-tekst">V&aelig;kst</div>
+      </div>
+    </div>
+
+    <div class="brodtekst">Dengang var dit dominante element Tr&aelig; &mdash; med dobbelt v&aelig;gt fra b&aring;de livsfase og &aring;rstid. Det betod at alt i dig pegede i samme retning: op og ud. Ekspansion. Ambition. Ut&aring;lmodighed. Du havde ikke brug for balance &mdash; du havde brug for bev&aelig;gelses-frihed.</div>
+
+    <!-- LOTUS 3 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- KROP & SIND DENGANG -->
+    <div class="sek-label cyklusser">Krop &amp; sind dengang</div>
+    <div class="to-kolonner">
+      <div class="kolonne">
+        <div class="kol-label">Kroppen</div>
+        <div class="kol-tekst">Lever og Galdebl&aelig;re var dine styrende organer. Kroppen var elastisk, hurtig, utrolig tilpasningsdygtig. Du kunne skubbe dig selv h&aring;rdt &mdash; og komme igen n&aelig;ste dag.</div>
+      </div>
+      <div class="kolonne">
+        <div class="kol-label">Sindet</div>
+        <div class="kol-tekst">Vrede var t&aelig;ttere p&aring; overfladen. Frustration over ting der ikke bev&aelig;gede sig hurtigt nok. En ild i sindet der endnu ikke havde l&aelig;rt at v&aelig;re t&aelig;ndt uden at br&aelig;nde.</div>
+      </div>
+    </div>
+
+    <!-- LOTUS 4 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- DENGANG VS. NU -->
+    <div class="sek-label cyklusser">Dengang og nu</div>
+    <div class="sek-titel">Fra Tr&aelig; til Jord &mdash; 29 &aring;rs rejse</div>
+
+    <div class="to-kolonner">
+      <div class="kolonne">
+        <div class="kol-label">21 &aring;r &mdash; Tr&aelig;</div>
+        <div class="kol-tekst">Retning uden dybde. Kraft uden ro. Bev&aelig;gelse som identitet. Sp&oslash;rgsm&aring;let var: &quot;Hvor skal jeg hen?&quot;</div>
+      </div>
+      <div class="kolonne">
+        <div class="kol-label">50 &aring;r &mdash; Jord</div>
+        <div class="kol-tekst">Dybde uden hast. Ro som styrke. Forankring som identitet. Sp&oslash;rgsm&aring;let er: &quot;Hvad vil jeg holde fast i?&quot;</div>
+      </div>
+    </div>
+
+    <div class="brodtekst">Afstanden mellem Tr&aelig; og Jord er fire elementer &mdash; fire fulde skift. Du har passeret Ild (eksplosionen), Metal (rensningen) og Vand (stilheden) p&aring; vej hertil. Hver overgang har efterladt noget i dig.</div>
+
+    <!-- LOTUS 5 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- TIDSLINJE -->
+    <div class="sek-label neutral">Din rejse</div>
+    <div class="sek-titel">Element-tidslinje</div>
+
+    <div class="tidslinje-punkt">
+      <div class="tl-linje"><div class="tl-prik"></div><div class="tl-streg"></div></div>
+      <div class="tl-indhold">
+        <div class="tl-aar">15&ndash;21 &Aring;R</div>
+        <div class="tl-fase">Fase 2&ndash;3 &mdash; Vand &amp; Tr&aelig;</div>
+        <div class="tl-tekst">Opv&aring;gning og retning. Kroppen finder sin form. Sindet finder sin vilje. Alt er potentiale.</div>
+      </div>
+    </div>
+
+    <div class="tidslinje-punkt">
+      <div class="tl-linje"><div class="tl-prik"></div><div class="tl-streg"></div></div>
+      <div class="tl-indhold">
+        <div class="tl-aar">21&ndash;35 &Aring;R</div>
+        <div class="tl-fase">Fase 3&ndash;5 &mdash; Tr&aelig; &amp; Ild</div>
+        <div class="tl-tekst">Skabelse og intensitet. Relationer, b&oslash;rn, karriere. Ilden br&aelig;nder h&oslash;jt og klar &mdash; og kr&aelig;ver alt.</div>
+      </div>
+    </div>
+
+    <div class="tidslinje-punkt">
+      <div class="tl-linje"><div class="tl-prik"></div><div class="tl-streg"></div></div>
+      <div class="tl-indhold">
+        <div class="tl-aar">35&ndash;49 &Aring;R</div>
+        <div class="tl-fase">Fase 5&ndash;6 &mdash; Ild &amp; Metal</div>
+        <div class="tl-tekst">H&oslash;jdepunkt og rensning. Det der ikke virker falder fra. Metal l&aelig;rer dig at slippe.</div>
+      </div>
+    </div>
+
+    <div class="tidslinje-punkt">
+      <div class="tl-linje"><div class="tl-prik" style="background:var(--tone-cyklusser);width:10px;height:10px;"></div><div class="tl-streg"></div></div>
+      <div class="tl-indhold">
+        <div class="tl-aar">50 &Aring;R &mdash; NU</div>
+        <div class="tl-fase">Fase 7 &mdash; Jord</div>
+        <div class="tl-tekst">Indsamling og forankring. Alt det du l&aelig;rte p&aring; vejen er her. Du b&aelig;rer det hele &mdash; og for f&oslash;rste gang m&aelig;rker du m&aring;ske at det er nok.</div>
+      </div>
+    </div>
+
+    <!-- LOTUS 6 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- TEMAER -->
+    <div class="sek-label cyklusser">Hvad kan du l&aelig;re af din Tr&aelig;-tid?</div>
+
+    <div class="tema" onclick="this.classList.toggle('open')">
+      <div class="tema-bar">
+        <div class="tema-titel">Retningens gave</div>
+        <span class="tema-pil">&#8250;</span>
+      </div>
+      <div class="tema-body">
+        <div class="tema-tekst" style="padding-top:14px">Da du var 21 vidste du hvad du ville &mdash; eller troede du gjorde. Den energi er ikke v&aelig;k. Den er bare dybere nu. Tr&aelig;-fasens gave til Jord-fasen er klarhed: evnen til at se en retning og f&oslash;lge den, ogs&aring; n&aring;r verden er stille omkring dig.</div>
+      </div>
+    </div>
+
+    <div class="tema" onclick="this.classList.toggle('open')">
+      <div class="tema-bar">
+        <div class="tema-titel">Clara er der nu</div>
+        <span class="tema-pil">&#8250;</span>
+      </div>
+      <div class="tema-body">
+        <div class="tema-tekst" style="padding-top:14px">Clara er 16 &mdash; t&aelig;t p&aring; den Tr&aelig;-energi du selv bar ved 21. N&aring;r du ser hende, ser du m&aring;ske glimt af dig selv. Ut&aring;lmodigheden. Kr&aelig;fterne. Den sk&aelig;rhed der endnu ikke ved hvad den skal med sig selv. Du har v&aelig;ret der. Det er en styrke.</div>
+      </div>
+    </div>
+
+    <!-- LOTUS 7 -->
+    <div class="lotus-sep"><img src="../assets/images/lotus-maerk-efter.png" alt=""></div>
+
+    <!-- REFLEKSION -->
+    <div class="sek-label neutral">Refleksion</div>
+    <div class="refleksion-spg">Hvad ville du sige til dig selv som 21-&aring;rig &mdash; og hvad ville hun sige til dig nu?</div>
+    <div class="journal-link">Skriv i din journal &#8594;</div>
+
+    <div style="height:20px"></div>
+
+    <!-- RAAD -->
+    <div class="sek-label cyklusser">Fra Tr&aelig; til Jord</div>
+    <div class="raad-item">
+      <div class="raad-prik cyklusser"></div>
+      <div class="raad-tekst"><b>Tr&aelig;ets r&oslash;dder er i din Jord.</b> Den styrke du havde som 21-&aring;rig er ikke v&aelig;k. Den har bare f&aring;et r&oslash;dder. Jord-fasen er Tr&aelig;ets fundament &mdash; uden den vokser intet.</div>
+    </div>
+    <div class="raad-item">
+      <div class="raad-prik cyklusser"></div>
+      <div class="raad-tekst"><b>Genbes&oslash;g, ikke genoplev.</b> Du kan l&aelig;re af din Tr&aelig;-tid uden at pr&oslash;ve at gentage den. L&aelig;g m&aelig;rke til hvad den l&aelig;rte dig &mdash; ikke hvad den tog.</div>
+    </div>
+    <div class="raad-item">
+      <div class="raad-prik cyklusser"></div>
+      <div class="raad-tekst"><b>Giv Tr&aelig;-energien plads.</b> Selv i Jord-fasen har du brug for bev&aelig;gelses-frihed. En ny retning, et nyt projekt, noget der vokser. Jord uden Tr&aelig; stivner.</div>
+    </div>
+
+    <!-- SECTION CLOSER -->
+    <div class="section-closer">
+      <img src="../assets/images/lotus-maerk-efter.png" alt="">
+    </div>
+
+    <div class="bottom-space"></div>
+  </div>
+</div>
+
+
+<script>
+function showScreen(index) {
+  document.querySelectorAll('.screen').forEach(function(s, i) {
+    s.classList.toggle('active', i === index);
+  });
+  document.querySelectorAll('.tab-btn').forEach(function(b, i) {
+    b.classList.toggle('active', i === index);
+  });
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
