@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Fordybelse — De 9 Livsfaser (3 eksempler)</title>
+<style>
+  @font-face { font-family: 'Playfair Display'; font-weight: 400; font-style: normal; src: url(../fonts/PlayfairDisplay-Regular.woff2) format('woff2'); }
+  @font-face { font-family: 'Playfair Display'; font-weight: 500; font-style: normal; src: url(../fonts/PlayfairDisplay-Medium.woff2) format('woff2'); }
+  @font-face { font-family: 'Playfair Display'; font-weight: 400; font-style: italic; src: url(../fonts/PlayfairDisplay-Italic.woff2) format('woff2'); }
+  @font-face { font-family: 'Playfair Display'; font-weight: 500; font-style: italic; src: url(../fonts/PlayfairDisplay-MediumItalic.woff2) format('woff2'); }
+  @font-face { font-family: 'DM Sans'; font-weight: 300; font-style: normal; src: url(../fonts/DMSans-Light.woff2) format('woff2'); }
+  @font-face { font-family: 'DM Sans'; font-weight: 400; font-style: normal; src: url(../fonts/DMSans-Regular.woff2) format('woff2'); }
+  @font-face { font-family: 'DM Sans'; font-weight: 500; font-style: normal; src: url(../fonts/DMSans-Medium.woff2) format('woff2'); }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+  :root {
+    --bg: #FDFCFB;
+    --text-dark: #2a2520;
+    --text-body: #3a3530;
+    --text-mid: #555;
+    --text-light: #888;
+    --blaa: #6c82a9;
+    --blaa-light: #889ec3;
+    --lilla: #6B5F7B;
+    --tone-cyklusser: #6c82a9;
+    --tone-relationer: #7b7a9e;
+    --tone-praksis: #7a908b;
+    --tone-rejse: #8a96a9;
+    --tone-vinduer: #6B5F7B;
+    --divider: rgba(0,0,0,0.06);
+    --radius: 14px;
+    --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --shadow-card: 0 2px 10px rgba(0,0,0,0.04);
+  }
+
+  body {
+    background: #e8e4df;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 60px;
+    font-family: var(--font-sans);
+    color: var(--text-body);
+  }
+
+  /* ===== TAB SELECTOR ===== */
+  .tab-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .tab-btn {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 400;
+    padding: 8px 18px;
+    border-radius: 24px;
+    border: 1px solid rgba(0,0,0,0.12);
+    background: #fff;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    background: var(--text-dark);
+    color: #fff;
+    border-color: var(--text-dark);
+  }
+  .tab-btn:hover:not(.active) {
+    border-color: rgba(0,0,0,0.25);
+  }
+  .tab-label {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--text-light);
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ===== PHONE FRAME ===== */
+  .phone {
+    width: 390px;
+    background: var(--bg);
+    border-radius: 44px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.5);
+  }
+  .status-bar {
+    height: 50px;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dark);
+  }
+
+  /* ===== HEADER ===== */
+  .app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 20px 14px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .header-back {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-mid);
+    cursor: pointer;
+  }
+  .header-title {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    color: var(--text-dark);
+  }
+  .header-search {
+    font-size: 16px;
+    color: var(--text-light);
+    cursor: pointer;
+  }
+
+  /* ===== SCROLL CONTAINER ===== */
+  .scroll {
+    overflow-y: auto;
+    max-height: 720px;
+  }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ===== CONTENT SECTIONS ===== */
+  .content { padding: 28px 22px 0; }
+
+  /* Overtitel */
+  .overtitel {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  /* Stor titel */
+  .stor-titel {
+    font-family: var(--font-serif);
+    font-size: 34px;
+    font-weight: 400;
+    color: var(--text-dark);
+    text-align: center;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+
+  /* Ingress — Isabelles stemme */
+  .ingress {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-style: italic;
+    color: var(--text-mid);
+    text-align: center;
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+
+  /* Sektion-label */
+  .sek-label {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .sek-label.cyklusser { color: var(--tone-cyklusser); }
+  .sek-label.relationer { color: var(--tone-relationer); }
+  .sek-label.praksis { color: var(--tone-praksis); }
+  .sek-label.neutral { color: var(--text-light); }
+
+  /* Sektion-titel */
+  .sek-titel {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text-dark);
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+
+  /* Isabelle-boks */
+  .isabelle-boks {
+    margin-bottom: 8px;
+  }
+  .isabelle-tekst {
+    font-family: var(--font-serif);
+    font-size: 15.5px;
+    font-style: italic;
+    color: var(--text-mid);
+    line-height: 1.75;
+  }
+
+  /* Broedtekst */
+  .brodtekst {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--text-body);
+    margin-bottom: 12px;
+  }
+
+  /* Laes mere */
+  .laes-mere {
+    font-size: 12px;
+    color: var(--text-light);
+    cursor: pointer;
+    margin-top: 4px;
+    display: inline-block;
+  }
+
+  /* Dots separator */
+  .dots {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 13px;
+    letter-spacing: 6px;
+    padding: 18px 0;
+    opacity: 0.6;
+  }
+
+  /* To-kolonner */
+  .to-kolonner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--divider);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .kolonne {
+    background: var(--bg);
+    padding: 16px 14px;
+  }
+  .kol-label {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 6px;
+  }
+  .kol-tekst {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--text-body);
+  }
+
+  /* Tre-kolonner (til relationer) */
+  .tre-kolonner {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--divider);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  /* Ubalance-items */
+  .ubalance-group { margin-bottom: 14px; }
+  .ubalance-group-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 6px;
+  }
+  .ubalance-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--divider);
+  }
+  .ubalance-item:last-child { border-bottom: none; }
+  .u-prik {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--text-light);
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+  .u-tekst {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--text-body);
+  }
+
+  /* Temaer */
+  .tema { margin-bottom: 18px; }
+  .tema-titel {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--text-dark);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .tema-pil { font-size: 13px; color: var(--text-light); }
+  .tema-tekst {
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--text-body);
+    margin-top: 8px;
+  }
+
+  /* Oevelser */
+  .oevelse {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .oevelse:last-child { border-bottom: none; margin-bottom: 0; }
+  .oev-type {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 2px;
+  }
+  .oev-navn {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    font-weight: 400;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+  }
+  .oev-tekst {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--text-body);
+  }
+
+  /* Refleksion */
+  .refleksion-spg {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    font-style: italic;
+    color: var(--text-dark);
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  .journal-link {
+    font-size: 13px;
+    color: var(--blaa);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Raad */
+  .raad-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--divider);
+  }
+  .raad-item:last-child { border-bottom: none; }
+  .raad-prik {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+  .raad-prik.cyklusser { background: var(--tone-cyklusser); }
+  .raad-prik.relationer { background: var(--tone-relationer); }
+  .raad-prik.praksis { background: var(--tone-praksis); }
+  .raad-tekst {
+    font-size: 13.5px;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--text-body);
+  }
+  .raad-tekst b { font-weight: 500; color: var(--text-dark); }
+
+  .vis-flere {
+    font-size: 12px;
+    color: var(--text-light);
+    cursor: pointer;
+    margin-top: 6px;
+    display: block;
+  }
+
+  /* Link-sektion */
+  .link-sektion {
+    font-size: 13.5px;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--text-body);
+    margin-bottom: 8px;
+  }
+  .link-knap {
+    font-size: 13px;
+    color: var(--blaa);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Relation person-pill */
+  .person-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 400;
+    margin-right: 6px;
+    margin-bottom: 6px;
+  }
+  .person-pill.user { background: rgba(108,130,169,0.08); color: var(--tone-cyklusser); }
+  .person-pill.relation { background: rgba(123,122,158,0.08); color: var(--tone-relationer); }
+
+  /* Interaktion-boks */
+  .interaktion-boks {
+    background: rgba(123,122,158,0.04);
+    border: 1px solid rgba(123,122,158,0.08);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .interaktion-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--tone-relationer);
+    margin-bottom: 6px;
+  }
+  .interaktion-titel {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+  }
+  .interaktion-tekst {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--text-body);
+  }
+
+  /* Tidslinje-punkt */
+  .tidslinje-punkt {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .tl-linje {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20px;
+    flex-shrink: 0;
+  }
+  .tl-prik {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--tone-rejse);
+  }
+  .tl-streg {
+    width: 1px;
+    flex: 1;
+    background: rgba(138,150,169,0.2);
+    margin-top: 4px;
+  }
+  .tl-indhold { flex: 1; }
+  .tl-aar {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--tone-rejse);
+    margin-bottom: 2px;
+  }
+  .tl-fase {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    color: var(--text-dark);
+    margin-bottom: 3px;
+  }
+  .tl-tekst {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--text-body);
+  }
+
+  .bottom-space { height: 60px; }
+</style>
+</head>
+<body>
+
+<!-- TAB SELECTOR -->
+<div class="tab-label">Tre fordybelses-eksempler</div>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showScreen(0)">Cyklus-skift</button>
+  <button class="tab-btn" onclick="showScreen(1)">Du & Clara</button>
+  <button class="tab-btn" onclick="showScreen(2)">Da du var 21</button>
+</div>
+
+<!-- PHONE -->
+<div class="phone">
+  <div class="status-bar">
+    <span>12.57</span>
+    <span>71%</span>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- EKSEMPEL 1: CYKLUS-SKIFT — ILD → JORD                        -->
+  <!-- ============================================================ -->
+  <div class="screen active" id="screen-0">
+    <div class="app-header">
+      <div class="header-back">&#8592; Tilbage</div>
+      <div class="header-title">De 9 Livsfaser</div>
+      <div class="header-search">&#128269;</div>
+    </div>
+    <div class="scroll">
+      <div class="content">
+
+        <div class="overtitel">Cyklus-skift</div>
+        <div class="stor-titel">Ild &#8594; Jord</div>
+        <div class="ingress">Fra eksplosion til modning. Fra at skabe til at naere. Fra at braende til at baere.</div>
+
+        <!-- DETTE SKIFT I DIG -->
+        <div class="sek-label neutral">Dette skift i dig</div>
+        <div class="isabelle-boks">
+          <div class="isabelle-tekst">Jeg husker det som en morgen, hvor jeg pludselig ikke havde travlt. Ikke fordi der var mindre at goere — men fordi noget indefra sagde stop. Kroppen vidste det foer jeg gjorde. Skiftet fra Ild til Jord er ikke en beslutning. Det er en erkendelse der siver ind langsomt — og en dag er den bare der.</div>
+          <span class="laes-mere">Laes mere &#8595;</span>
+        </div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- HVAD SKER DER -->
+        <div class="sek-label cyklusser">Hvad sker der</div>
+        <div class="sek-titel">Ilden slukker ikke — den samler sig</div>
+        <div class="brodtekst">I den kinesiske medicin er Ild og Jord forbundet i den skabende cyklus: Ild naerer Jord. Den intensitet og varme du bar i Ild-fasen forsvinder ikke — den omdannes. Den bliver til noget fastere, varmere, mere baerende.</div>
+        <div class="brodtekst">Skiftet fra Ild til Jord er et af de mest maerkbare i et kvindeliv. Ild-fasen er kendetegnet ved ekspansion — relationer, ambitioner, kroppen paa sit staerkeste. Jord-fasen er noget andet. Det er indsamlingen. Hvad vil du baere videre? Hvad er du klar til at saette ned?</div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- KROP & SIND -->
+        <div class="sek-label cyklusser">Krop &amp; sind</div>
+        <div class="to-kolonner">
+          <div class="kolonne">
+            <div class="kol-label">Kroppen</div>
+            <div class="kol-tekst">Energien svinger mere. Perioder med hoej intensitet foelges af et behov for hvile der foeles nyt. Milt og Maven overtager — de beder om varme, regelmaessighed og ro.</div>
+          </div>
+          <div class="kolonne">
+            <div class="kol-label">Sindet</div>
+            <div class="kol-tekst">Spoergsmaalene aendrer sig. Fra "hvad vil jeg opnaa?" til "hvad betyder det egentlig?" Det er ikke tab af retning — det er dybde der vokser frem.</div>
+          </div>
+        </div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- BALANCE / UBALANCE -->
+        <div class="sek-label cyklusser">Tegn paa balance</div>
+        <div class="brodtekst">En kvinde der er i god kontakt med Jord-energien i dette skift maerker en ny slags ro. Hun soeger ikke bekraeftelse udefra paa samme maade som foer. Der er en tilfredshed der begynder at vokse indefra — ikke fordi livet er perfekt, men fordi hun er begyndt at samle det hun allerede har.</div>
+        <span class="laes-mere">Laes mere &#8595;</span>
+
+        <div style="height:14px"></div>
+
+        <div class="sek-label neutral">Tegn paa ubalance</div>
+        <div class="ubalance-group">
+          <div class="ubalance-group-label">Fysiske tegn</div>
+          <div class="ubalance-item"><div class="u-prik"></div><div class="u-tekst">Fordoejelsen arbejder tungere — maven er mere foelsom og reagerer paa stress</div></div>
+          <div class="ubalance-item"><div class="u-prik"></div><div class="u-tekst">Traethed der ikke letter med soevn — en dyb udtoemmelse i kroppen</div></div>
+          <div class="ubalance-item"><div class="u-prik"></div><div class="u-tekst">Soede trang og behov for at spise hyppigere — Miltens signal om ubalance</div></div>
+        </div>
+        <div class="ubalance-group">
+          <div class="ubalance-group-label">Mentale tegn</div>
+          <div class="ubalance-item"><div class="u-prik"></div><div class="u-tekst">Overtaenkning der koerer i ring — har jeg gjort det rigtigt?</div></div>
+          <div class="ubalance-item"><div class="u-prik"></div><div class="u-tekst">Bekymring der ikke har noget konkret at haenge paa — en baggrundsstoej af uro</div></div>
+          <div class="ubalance-item"><div class="u-prik"></div><div class="u-tekst">Sorg over det der ikke kan gentages — Ild-fasens energi og muligheder</div></div>
+        </div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- TEMAER -->
+        <div class="sek-label cyklusser">Skiftets temaer</div>
+
+        <div class="tema">
+          <div class="tema-titel">At saette det ned du bar <span class="tema-pil">&#8593;</span></div>
+          <div class="tema-tekst">Ild-fasen kraevede noget af dig. Den braendte staerkt og tog meget. En del af dette skift handler om at anerkende hvad du bar — og at give dig selv tilladelse til at saette det ned. Ikke som kapitulation, men som visdom.</div>
+          <div class="tema-tekst">Det er ikke det samme som at give op. Det er at vide hvad der er dit, og hvad der aldrig var det. Jord-elementet er selektivt — det tager kun det der naerer, og lader resten gaa.</div>
+        </div>
+
+        <div class="tema">
+          <div class="tema-titel">Midtpunktets ansvar <span class="tema-pil">&#8593;</span></div>
+          <div class="tema-tekst">I dette skift begynder du at maerke at du er midtpunktet mellem generationerne. Boernene vokser til og har brug for en ny slags tilstedevaerelse. Foraedrene naermer sig en alder, hvor du ser dem anderledes. Du baerer begge dele.</div>
+          <div class="tema-tekst">Det er Jord-elementets opgave: at holde. At binde. At vaere der. Det er ikke let — men det er praecis det Jord-energien er skabt til.</div>
+        </div>
+
+        <div class="tema">
+          <div class="tema-titel">Fylde midt i overgangen <span class="tema-pil">&#8593;</span></div>
+          <div class="tema-tekst">Der er et paradoks i dette skift: du har aldrig haft mere erfaring og klogskab — og alligevel kan det foeles som om noget mangler. Yoga-filosofien kalder det aparigraha — evnen til at modtage uden at gribe.</div>
+          <div class="tema-tekst">Fylde er ikke noget man naar frem til — det er noget man opdager at man allerede har.</div>
+        </div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- OEVELSER -->
+        <div class="sek-label praksis">Oevelser for dette skift</div>
+
+        <div class="oevelse">
+          <div class="oev-type">Krop</div>
+          <div class="oev-navn">Langsom gaatur</div>
+          <div class="oev-tekst">Halver dit tempo. Maerk hver fod der roerer jorden — haelen, fodsaalen, taeerne. Ti til femten minutter forankrer kroppen i Jord-energien.</div>
+        </div>
+
+        <div class="oevelse">
+          <div class="oev-type">Aandedraet</div>
+          <div class="oev-navn">Varme i midten</div>
+          <div class="oev-tekst">Haenderne paa maven. Aand ind i fire tael ned i maven, hold i to, ud i seks tael. Forestil dig et baal i kroppens midte der samler sig. Otte til ti gentagelser.</div>
+        </div>
+
+        <div class="oevelse">
+          <div class="oev-type">Meridian</div>
+          <div class="oev-navn">Mavens meridian</div>
+          <div class="oev-tekst">Stryg med begge haender fra brystet ned over maven, ned ad laarenes forside til foedderne. Med tyngde og varme, fem til syv gange.</div>
+        </div>
+
+        <div class="oevelse">
+          <div class="oev-type">Yin Yoga</div>
+          <div class="oev-navn">Sfinksen med vrid</div>
+          <div class="oev-tekst">Laeg dig paa maven i sfinksen. Drej langsomt overkroppen mod den ene side og bliv der. To til tre minutter paa hver side — aabner Milt-meridianen.</div>
+        </div>
+
+        <div class="oevelse">
+          <div class="oev-type">Sind</div>
+          <div class="oev-navn">Hvad baerer du videre?</div>
+          <div class="oev-tekst">Skriv alt du skabte, oplevede og laerte i Ild-fasen. Skriv derefter tre ting du er klar til at saette ned — og tre froe du vil baere ind i Jord.</div>
+        </div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- REFLEKSION -->
+        <div class="sek-label neutral">Refleksion</div>
+        <div class="refleksion-spg">Hvad bragte Ild-fasen dig, som du ikke vidste du havde brug for — og hvad er du klar til at baere videre ind i Jord?</div>
+        <div class="journal-link">Skriv i din journal &#8594;</div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- RAAD -->
+        <div class="sek-label cyklusser">Skiftets raad</div>
+        <div class="raad-item">
+          <div class="raad-prik cyklusser"></div>
+          <div class="raad-tekst"><b>Tillad det langsomme.</b> Jord-energien bygges ikke med hast. En simpel daglig rutine er mere naerende end store sporadiske indsatser.</div>
+        </div>
+        <div class="raad-item">
+          <div class="raad-prik cyklusser"></div>
+          <div class="raad-tekst"><b>Naering fra Jordens farver.</b> Gule og orange foedevarer — hirse, soede kartofler, graeskar — varmt og kogt. Milten trives med varme.</div>
+        </div>
+        <div class="raad-item">
+          <div class="raad-prik cyklusser"></div>
+          <div class="raad-tekst"><b>Stol paa dit Vand.</b> Som Vand-natur finder du instinktivt vejen rundt om forhindringer. Din Vand-natur finder lavpunkterne og samler sig der — stille og vedholdende.</div>
+        </div>
+        <span class="vis-flere">Vis flere raad &#8595;</span>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- DIT ELEMENT -->
+        <div class="sek-label cyklusser">Dit element i dette skift</div>
+        <div class="link-sektion">Som Vand-natur navigerer du dette skift anderledes. Vand-elementet er allerede fortroligt med det dybe og langsomme — det du nu bevaeger dig mod er dit naturlige hjemsted. Men Vand kan ogsaa fryse. Vaer opmaerksom paa om du traekker dig helt ind.</div>
+        <div class="link-knap">Laes mere &#8595;</div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- RELATIONER -->
+        <div class="sek-label relationer">Relationer i dette skift</div>
+        <div class="link-sektion">Skiftet fra Ild til Jord aendrer dine relationer maerkbart. Med Clara bevaeger forholdet sig fra at du styrer til at du er til raadighed. Med Mikkel gennemgaar I en proeve der kraever ny form for aabenhed.</div>
+        <div class="link-knap">Se dine relationer &#8594;</div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- DET DER VENTER -->
+        <div class="sek-label neutral">Det der venter</div>
+        <div class="link-sektion">Jord-fasen er ikke et endepunkt — det er et fundament. Det du samler og forankrer her, baerer du ind i Fase 8 og 9. De faser bringer temaer om frigoerelse, essens og den lethed der kan komme, naar vi giver slip.</div>
+
+        <div class="bottom-space"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- EKSEMPEL 2: DU & CLARA — MOR-DATTER FORDYBELSE               -->
+  <!-- ============================================================ -->
+  <div class="screen" id="screen-1">
+    <div class="app-header">
+      <div class="header-back">&#8592; Tilbage</div>
+      <div class="header-title">De 9 Livsfaser</div>
+      <div class="header-search">&#128269;</div>
+    </div>
+    <div class="scroll">
+      <div class="content">
+
+        <div class="overtitel">Mor &amp; datter</div>
+        <div class="stor-titel">Du &amp; Clara</div>
+        <div class="ingress">Jord der holder. Trae der vokser. To elementer der har brug for hinanden — paa en helt ny maade.</div>
+
+        <!-- ISABELLE -->
+        <div class="sek-label neutral">Isabelle</div>
+        <div class="isabelle-boks">
+          <div class="isabelle-tekst">Forholdet mellem en mor i Jord og en datter i Trae er maaske det smukkeste og det svaereste paa samme tid. Du vil holde. Hun vil vaekk. Ingen af jer tager fejl — I er bare i to helt forskellige bevaegelses-retninger lige nu.</div>
+        </div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- JERES ELEMENTER LIGE NU -->
+        <div class="sek-label relationer">Jeres elementer lige nu</div>
+        <div style="margin-bottom: 14px;">
+          <span class="person-pill user">Du — Jord (Fase 7)</span>
+          <span class="person-pill relation">Clara — Trae (Fase 3)</span>
+        </div>
+
+        <div class="to-kolonner">
+          <div class="kolonne">
+            <div class="kol-label">Dig — Jord</div>
+            <div class="kol-tekst">Du er i indsamling. Du vil naere, holde, skabe tryghed. Dit instinkt er at give — og det kan foeles som afvisning naar Clara ikke tager imod paa den maade du forventer.</div>
+          </div>
+          <div class="kolonne">
+            <div class="kol-label">Clara — Trae</div>
+            <div class="kol-tekst">Clara er i ekspansion. Alt i hende vil op og ud. Hun tester graenser — ikke for at saare dig, men fordi Trae-energien kraever plads til at vokse.</div>
+          </div>
+        </div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- INTERAKTION -->
+        <div class="sek-label relationer">Jeres interaktion</div>
+        <div class="interaktion-boks">
+          <div class="interaktion-label">TCM-dynamik</div>
+          <div class="interaktion-titel">Jord kontrollerer Vand — Trae kontrollerer Jord</div>
+          <div class="interaktion-tekst">I den kinesiske medicin kontrollerer Trae Jord. Det betyder at Claras energi naturligt udfordrer din. Det er ikke et problem — det er cyklussens intelligens. Hun pusher dig til at give slip paa det du holder for haardt fast i.</div>
+        </div>
+
+        <div class="sek-titel">Hvad det betyder i praksis</div>
+        <div class="brodtekst">Naar Clara presser paa, aktiveres din Jord-energis skyggeside: bekymring og overtaenkning. Du vil beskytte — men det hun har brug for er at du stoler paa hendes retning, selv naar den foeles kaotisk.</div>
+        <div class="brodtekst">Det svaereste for en Jord-mor med en Trae-datter er at forstaa, at slip ikke er det samme som ligegyldighed. Det er det modsatte: det er den stoerste form for tillid du kan give hende.</div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- KROP & SIND -->
+        <div class="sek-label relationer">Krop &amp; sind i jeres relation</div>
+        <div class="to-kolonner">
+          <div class="kolonne">
+            <div class="kol-label">Det du maerker</div>
+            <div class="kol-tekst">En tyngde i maven naar I er uenige. Behovet for at ordne det med det samme. En oerhed der maaske overrasker dig — den er Jordens frustration over ikke at kunne naere.</div>
+          </div>
+          <div class="kolonne">
+            <div class="kol-label">Det Clara maerker</div>
+            <div class="kol-tekst">Uro i kroppen, behovet for at bevaege sig. Irritation der kommer pludseligt. Skyldfoeelse bagefter — fordi hun kan maerke at hun saarede dig, men ikke ved hvordan hun skal stoppe.</div>
+          </div>
+        </div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- TEMAER -->
+        <div class="sek-label relationer">Temaer i jeres relation</div>
+
+        <div class="tema">
+          <div class="tema-titel">Slip og stol <span class="tema-pil">&#8593;</span></div>
+          <div class="tema-tekst">Dit Jord-instinkt siger: hold fast. Claras Trae-energi siger: giv plads. Moedet mellem de to er selve kernen i jeres forhold lige nu. Det handler ikke om at du skal stoppe med at vaere mor — men om at finde en ny form.</div>
+          <div class="tema-tekst">Proev at taenke paa det som gaertnerens kunst: du forbereder jorden, men du bestemmer ikke hvilken vej traeet vokser. Det er Traeets eget valg.</div>
+        </div>
+
+        <div class="tema">
+          <div class="tema-titel">Stilhed som sprog <span class="tema-pil">&#8593;</span></div>
+          <div class="tema-tekst">Clara har maaske ikke brug for dine ord lige nu. Trae-energien kommunikerer anderledes — den maerker tilstedevaerelse mere end den hoerer raad. Dit Vand-element kan hjaelpe dig her: vaer stille og naervaerenede. Lad hende komme til dig.</div>
+          <div class="tema-tekst">Det er svaert. Men stilhed er ikke fravaerelse af omsorg — det er en anden form for det.</div>
+        </div>
+
+        <div class="tema">
+          <div class="tema-titel">Tre generationer <span class="tema-pil">&#8593;</span></div>
+          <div class="tema-tekst">Du staar mellem Clara (Trae, Fase 3) og Kirsten (Vand, Fase 9). Tre kvinder, tre elementer, tre livsfaser. Du er midtpunktet — og det er baade en gave og en vaegt. Jord-elementets styrke er praecis at baere den slags kompleksitet.</div>
+        </div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- OEVELSER -->
+        <div class="sek-label praksis">Oevelser for jer to</div>
+
+        <div class="oevelse">
+          <div class="oev-type">Sammen</div>
+          <div class="oev-navn">Gaatur uden maal</div>
+          <div class="oev-tekst">Gaa sammen uden at tale om noget bestemt. Lad Clara bestemme retningen. Jord naerer bedst naar den foelger — ikke naar den leder. Tyve minutter er nok.</div>
+        </div>
+
+        <div class="oevelse">
+          <div class="oev-type">For dig</div>
+          <div class="oev-navn">Maerke uden at handle</div>
+          <div class="oev-tekst">Naar Clara traekker sig, laeg maerke til hvad der sker i din krop. Maven? Brystet? Aandedraettet? Maerk det — uden at goere noget ved det. Tre minutter. Det traener Jord-elementets evne til at holde uden at gribe.</div>
+        </div>
+
+        <div class="oevelse">
+          <div class="oev-type">For dig</div>
+          <div class="oev-navn">Skriv til hende — uden at sende</div>
+          <div class="oev-tekst">Skriv et brev til Clara som du ikke sender. Skriv alt det du gerne vil sige. Laeg det vaek. Det frigiver Jordens behov for at udtrykke omsorg — uden at presse Traeets graenser.</div>
+        </div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- REFLEKSION -->
+        <div class="sek-label neutral">Refleksion</div>
+        <div class="refleksion-spg">Hvad ville der ske, hvis du stolede paa at Clara finder vej — ogsaa uden din hjaelp?</div>
+        <div class="journal-link">Skriv i din journal &#8594;</div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- RAAD -->
+        <div class="sek-label relationer">Raad for jeres relation</div>
+        <div class="raad-item">
+          <div class="raad-prik relationer"></div>
+          <div class="raad-tekst"><b>Sporg i stedet for at raade.</b> Trae-energien lukker ned for raad, men aabner for spoergsmaal. "Hvad taenker du?" virker bedre end "Du burde..."</div>
+        </div>
+        <div class="raad-item">
+          <div class="raad-prik relationer"></div>
+          <div class="raad-tekst"><b>Lav mad sammen.</b> Jord naerer gennem haenderne. Traeet vokser af at skabe noget. Koekken er et rum hvor jeres elementer moedes naturligt.</div>
+        </div>
+        <div class="raad-item">
+          <div class="raad-prik relationer"></div>
+          <div class="raad-tekst"><b>Giv hende en doer hun kan lukke.</b> Trae-energien har brug for et rum der er helt hendes. Det er ikke afvisning af dig — det er hendes roedder der groer.</div>
+        </div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- LINK UD -->
+        <div class="sek-label neutral">Videre</div>
+        <div class="link-sektion">I de naeste aar vil Claras Trae-energi gradvist modnes. Omkring Fase 4 og 5 begynder Ild-elementet at dukke op — og jeres dynamik vil skifte igen. Det I bygger nu er fundamentet for det der kommer.</div>
+        <div class="link-knap">Se Claras faser &#8594;</div>
+
+        <div class="bottom-space"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- EKSEMPEL 3: DA DU VAR 21 — TIDSREJSE                         -->
+  <!-- ============================================================ -->
+  <div class="screen" id="screen-2">
+    <div class="app-header">
+      <div class="header-back">&#8592; Tilbage</div>
+      <div class="header-title">De 9 Livsfaser</div>
+      <div class="header-search">&#128269;</div>
+    </div>
+    <div class="scroll">
+      <div class="content">
+
+        <div class="overtitel">Tidsrejse</div>
+        <div class="stor-titel">Da du var 21</div>
+        <div class="ingress">Trae-energi. Fase 3. Alt var retning og kraefter der endnu ikke kendte deres maal.</div>
+
+        <!-- ISABELLE -->
+        <div class="sek-label neutral">Isabelle</div>
+        <div class="isabelle-boks">
+          <div class="isabelle-tekst">Da du var 21 var du midt i Traeets tid. Det er den alder hvor kroppen er staerkest og sindet er mest utaalmodigt. Alt foeles som om det skal ske nu. Der er en skaerhed i det — og en skoenhed. Du vidste ikke hvad du havde. Det goer man aldrig i Trae-fasen.</div>
+        </div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- DINE CYKLUSSER DENGANG -->
+        <div class="sek-label cyklusser">Dine cyklusser dengang</div>
+        <div class="sek-titel">Tre elementer, en retning</div>
+
+        <div class="tre-kolonner">
+          <div class="kolonne">
+            <div class="kol-label">Livsfase</div>
+            <div class="kol-tekst" style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark);">Fase 3</div>
+            <div class="kol-tekst">Trae</div>
+          </div>
+          <div class="kolonne">
+            <div class="kol-label">Aarstid</div>
+            <div class="kol-tekst" style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark);">Foraar</div>
+            <div class="kol-tekst">Trae</div>
+          </div>
+          <div class="kolonne">
+            <div class="kol-label">Dominant</div>
+            <div class="kol-tekst" style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark);">Trae</div>
+            <div class="kol-tekst">Vaekst</div>
+          </div>
+        </div>
+
+        <div class="brodtekst">Dengang var dit dominante element Trae — med dobbelt vaegt fra baade livsfase og aarstid. Det betoed at alt i dig pegte i samme retning: op og ud. Ekspansion. Ambition. Utaalmodighed. Du havde ikke brug for balance — du havde brug for bevaegelses-frihed.</div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- KROP & SIND DENGANG -->
+        <div class="sek-label cyklusser">Krop &amp; sind dengang</div>
+        <div class="to-kolonner">
+          <div class="kolonne">
+            <div class="kol-label">Kroppen</div>
+            <div class="kol-tekst">Lever og Galdeblaeere var dine styrende organer. Kroppen var elastisk, hurtig, utrolig tilpasningsdygtig. Du kunne skubbe dig selv haardt — og komme igen naeste dag.</div>
+          </div>
+          <div class="kolonne">
+            <div class="kol-label">Sindet</div>
+            <div class="kol-tekst">Vrede var taettere paa overfladen. Frustration over ting der ikke bevaegede sig hurtigt nok. En ild i sindet der endnu ikke havde laert at vaere taendt uden at braende.</div>
+          </div>
+        </div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- DENGANG VS. NU -->
+        <div class="sek-label cyklusser">Dengang og nu</div>
+        <div class="sek-titel">Fra Trae til Jord — 29 aars rejse</div>
+
+        <div class="to-kolonner">
+          <div class="kolonne">
+            <div class="kol-label">21 aar — Trae</div>
+            <div class="kol-tekst">Retning uden dybde. Kraft uden ro. Bevaegelse som identitet. Spoergsmaalet var: "Hvor skal jeg hen?"</div>
+          </div>
+          <div class="kolonne">
+            <div class="kol-label">50 aar — Jord</div>
+            <div class="kol-tekst">Dybde uden hast. Ro som styrke. Forankring som identitet. Spoergsmaalet er: "Hvad vil jeg holde fast i?"</div>
+          </div>
+        </div>
+
+        <div class="brodtekst">Afstanden mellem Trae og Jord er fire elementer — fire fulde skift. Du har passeret Ild (eksplosionen), Metal (rensningen) og Vand (stilheden) paa vej hertil. Hver overgang har efterladt noget i dig.</div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- TIDSLINJE -->
+        <div class="sek-label neutral">Din rejse</div>
+        <div class="sek-titel">Element-tidslinje</div>
+
+        <div class="tidslinje-punkt">
+          <div class="tl-linje"><div class="tl-prik"></div><div class="tl-streg"></div></div>
+          <div class="tl-indhold">
+            <div class="tl-aar">15-21 AAR</div>
+            <div class="tl-fase">Fase 2-3 — Vand &amp; Trae</div>
+            <div class="tl-tekst">Opvaagning og retning. Kroppen finder sin form. Sindet finder sin vilje. Alt er potentiale.</div>
+          </div>
+        </div>
+
+        <div class="tidslinje-punkt">
+          <div class="tl-linje"><div class="tl-prik"></div><div class="tl-streg"></div></div>
+          <div class="tl-indhold">
+            <div class="tl-aar">21-35 AAR</div>
+            <div class="tl-fase">Fase 3-5 — Trae &amp; Ild</div>
+            <div class="tl-tekst">Skabelse og intensitet. Relationer, boern, karriere. Ilden braender hoejt og klar — og kraever alt.</div>
+          </div>
+        </div>
+
+        <div class="tidslinje-punkt">
+          <div class="tl-linje"><div class="tl-prik"></div><div class="tl-streg"></div></div>
+          <div class="tl-indhold">
+            <div class="tl-aar">35-49 AAR</div>
+            <div class="tl-fase">Fase 5-6 — Ild &amp; Metal</div>
+            <div class="tl-tekst">Hoejdepunkt og rensning. Det der ikke virker falder fra. Metal laerer dig at slippe.</div>
+          </div>
+        </div>
+
+        <div class="tidslinje-punkt">
+          <div class="tl-linje"><div class="tl-prik" style="background:var(--tone-cyklusser);width:10px;height:10px;"></div><div class="tl-streg"></div></div>
+          <div class="tl-indhold">
+            <div class="tl-aar">50 AAR — NU</div>
+            <div class="tl-fase">Fase 7 — Jord</div>
+            <div class="tl-tekst">Indsamling og forankring. Alt det du laerte paa vejen er her. Du baerer det hele — og for foerste gang maerker du maaeske at det er nok.</div>
+          </div>
+        </div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- TEMAER -->
+        <div class="sek-label cyklusser">Hvad kan du laere af din Trae-tid?</div>
+
+        <div class="tema">
+          <div class="tema-titel">Retningens gave <span class="tema-pil">&#8593;</span></div>
+          <div class="tema-tekst">Da du var 21 vidste du hvad du ville — eller troede du gjorde. Den energi er ikke vaek. Den er bare dybere nu. Trae-fasens gave til Jord-fasen er klarhed: evnen til at se en retning og foelge den, ogsaa naar verden er stille omkring dig.</div>
+        </div>
+
+        <div class="tema">
+          <div class="tema-titel">Clara er der nu <span class="tema-pil">&#8593;</span></div>
+          <div class="tema-tekst">Clara er 16 — taet paa den Trae-energi du selv bar ved 21. Naar du ser hende, ser du maaske glimt af dig selv. Utaalmodigheden. Kraefterne. Den skaerhed der endnu ikke ved hvad den skal med sig selv. Du har vaeret der. Det er en styrke.</div>
+        </div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- REFLEKSION -->
+        <div class="sek-label neutral">Refleksion</div>
+        <div class="refleksion-spg">Hvad ville du sige til dig selv som 21-aarig — og hvad ville hun sige til dig nu?</div>
+        <div class="journal-link">Skriv i din journal &#8594;</div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- RAAD -->
+        <div class="sek-label cyklusser">Fra Trae til Jord</div>
+        <div class="raad-item">
+          <div class="raad-prik cyklusser"></div>
+          <div class="raad-tekst"><b>Traeets roedder er i din Jord.</b> Den styrke du havde som 21-aarig er ikke vaek. Den har bare faaet roedder. Jord-fasen er Traeets fundament — uden den vokser intet.</div>
+        </div>
+        <div class="raad-item">
+          <div class="raad-prik cyklusser"></div>
+          <div class="raad-tekst"><b>Genbesog, ikke genoplev.</b> Du kan laere af din Trae-tid uden at proeve at gentage den. Laeg maerke til hvad den laerte dig — ikke hvad den tog.</div>
+        </div>
+        <div class="raad-item">
+          <div class="raad-prik cyklusser"></div>
+          <div class="raad-tekst"><b>Giv Trae-energien plads.</b> Selv i Jord-fasen har du brug for bevaegelses-frihed. En ny retning, et nyt projekt, noget der vokser. Jord uden Trae stivner.</div>
+        </div>
+
+        <div class="dots">&#183; &#183; &#183;</div>
+
+        <!-- VIDERE -->
+        <div class="sek-label neutral">Udforsk videre</div>
+        <div class="link-sektion">Du kan rejse til enhver alder og se dine cyklusser dengang. Proev 7 aar (din Vand-foedsels-energi), 35 aar (dit Ild-hoejdepunkt), eller vaelg en dato der betyder noget for dig.</div>
+        <div class="link-knap">Vaelg en anden dato &#8594;</div>
+
+        <div class="bottom-space"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showScreen(index) {
+  document.querySelectorAll('.screen').forEach((s, i) => {
+    s.classList.toggle('active', i === index);
+  });
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === index);
+  });
+  document.querySelector('.phone .scroll')?.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
