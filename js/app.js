@@ -770,85 +770,44 @@ function initForside() {
   if (!data) return;
   const { cycles, dominant } = data;
   const now = new Date();
+  const hour = now.getHours();
   const elLabel = (el) => Calculations.ELEMENT_LABELS[el] || el;
   const domEl = dominant.element;
-
-  // Date header
-  setText('forside-date', `I dag \u00b7 ${formatDanishDate(now)}`);
-
-  // Element hero — tegn + navn + kvaliteter
-  const tegnEl = document.getElementById('forside-tegn');
-  if (tegnEl) tegnEl.textContent = Calculations.ELEMENT_TEGN[domEl] || '';
-  setText('forside-element-navn', elLabel(domEl));
-  setText('forside-kvaliteter', ELEMENT_KVALITETER[domEl] || '');
-
-  // Daily reading text
-  const readingText = buildDailyReading(cycles, dominant);
-  setText('forside-reading', readingText);
-
-  // 5 cyklusser mini-oversigt
   const phase = cycles.lifePhase;
-  const monthName = MONTHS_DA[now.getMonth()];
-  const cykContainer = document.getElementById('forside-cyklusser');
-  if (cykContainer) {
-    const rows = [
-      { label: 'Livsfase', value: `Fase ${phase.phase} \u00b7 ${elLabel(phase.element)}`, route: 'cir-dit-liv' },
-      { label: '\u00c5rstid', value: `${cycles.season.season} \u00b7 ${elLabel(cycles.season.element)}`, route: 'cir-dit-liv' },
-      { label: 'M\u00e5ned', value: `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} \u00b7 ${elLabel(cycles.monthCycle.element)}`, route: 'cir-dit-liv' },
-      { label: 'Ugedag', value: `${cycles.weekday.day} \u00b7 ${elLabel(cycles.weekday.element)}`, route: 'cir-dit-liv' },
-      { label: 'Organur', value: `${cycles.organ.hours} \u00b7 ${cycles.organ.organ}`, route: 'cir-dit-liv' }
-    ];
-    cykContainer.innerHTML = rows.map(r =>
-      `<div class="forside-cyk-row" onclick="Router.navigate('${r.route}')">` +
-        `<span class="forside-cyk-label">${r.label}</span>` +
-        `<span class="forside-cyk-value">${r.value}</span>` +
-      `</div>`
-    ).join('');
-  }
 
-  // Praksis cards — based on dominant element, rotated daily
-  const ri = Calculations.dayRotation(3);
-  const yoga = typeof INSIGHT_YOGA !== 'undefined' && INSIGHT_YOGA[domEl] ? INSIGHT_YOGA[domEl][ri % INSIGHT_YOGA[domEl].length] : null;
-  const mStryg = typeof MERIDIAN_STRYGNINGER !== 'undefined' && MERIDIAN_STRYGNINGER[domEl] ? MERIDIAN_STRYGNINGER[domEl][ri % MERIDIAN_STRYGNINGER[domEl].length] : null;
-  const food = typeof INSIGHT_FOOD !== 'undefined' && INSIGHT_FOOD[domEl] ? INSIGHT_FOOD[domEl][ri % INSIGHT_FOOD[domEl].length] : null;
+  // 1. DATO + HILSEN
+  const hilsen = hour < 12 ? 'God morgen' : hour < 18 ? 'God eftermiddag' : 'God aften';
+  setText('lige-nu-dato', hilsen + ' \u00b7 ' + formatDanishDate(now));
 
-  const MINDFULNESS_KORT = {
-    'VAND': { name: 'B\u00f8lgernes rytme', desc: 'Ind\u00e5nd 4s, hold 4s, ud\u00e5nd 6s. M\u00e6rk dybden.' },
-    'TR\u00c6': { name: 'Krop i bev\u00e6gelse', desc: 'St\u00e5, str\u00e6k mod loftet, m\u00e6rk r\u00f8dderne.' },
-    'ILD': { name: 'Hjertets n\u00e6rv\u00e6r', desc: 'H\u00e5nd p\u00e5 hjertet, m\u00e6rk slagene, m\u00e6rk varmen.' },
-    'JORD': { name: 'Forankring', desc: 'F\u00f8dder mod jorden, m\u00e6rk tyngden, m\u00e6rk b\u00e6ringen.' },
-    'METAL': { name: 'Slip med ud\u00e5ndingen', desc: 'Lang ud\u00e5nding, skuldrene falder, giv slip.' }
-  };
-  const mind = MINDFULNESS_KORT[domEl] || null;
+  // 2. ELEMENT HERO — tegn + navn + kvaliteter
+  const tegnEl = document.getElementById('lige-nu-tegn');
+  if (tegnEl) tegnEl.textContent = Calculations.ELEMENT_TEGN[domEl] || '';
+  setText('lige-nu-element', elLabel(domEl));
+  setText('lige-nu-kvaliteter', ELEMENT_KVALITETER[domEl] || '');
 
-  const praksisCards = document.querySelectorAll('.praksis-card');
-  if (praksisCards.length >= 4) {
-    if (yoga) {
-      praksisCards[0].querySelector('.pk-label').textContent = `Yin Yoga \u00b7 ${elLabel(domEl)}`;
-      praksisCards[0].querySelector('.pk-name').textContent = yoga.pose.split('(')[0].trim();
-      praksisCards[0].querySelector('.pk-desc').textContent = yoga.desc;
-    }
-    if (mStryg) {
-      praksisCards[1].querySelector('.pk-label').textContent = `Meridianstrygning \u00b7 ${elLabel(domEl)}`;
-      praksisCards[1].querySelector('.pk-name').textContent = mStryg.meridian;
-      praksisCards[1].querySelector('.pk-desc').textContent = mStryg.desc;
-    }
-    if (mind) {
-      praksisCards[2].querySelector('.pk-label').textContent = `Mindfulness \u00b7 ${elLabel(domEl)}`;
-      praksisCards[2].querySelector('.pk-name').textContent = mind.name;
-      praksisCards[2].querySelector('.pk-desc').textContent = mind.desc;
-    }
-    if (food) {
-      praksisCards[3].querySelector('.pk-label').textContent = `N\u00e6ring \u00b7 ${elLabel(domEl)}`;
-      praksisCards[3].querySelector('.pk-name').textContent = food.item;
-      praksisCards[3].querySelector('.pk-desc').textContent = food.desc;
+  // 3. MORGEN/AFTEN-TEKST
+  if (typeof MORGEN_AFTEN_TEKST !== 'undefined' && MORGEN_AFTEN_TEKST[domEl]) {
+    const tid = hour < 12 ? 'morgen' : 'aften';
+    const tekster = MORGEN_AFTEN_TEKST[domEl][tid];
+    if (tekster && tekster.length) {
+      const idx = Calculations.dayRotation(tekster.length);
+      setText('lige-nu-tidstekst', tekster[idx]);
     }
   }
 
-  // Relation card
-  renderForsideRelation(cycles, dominant);
+  // 4. ORGANUR LIGE NU
+  renderOrganur(cycles.organ);
 
-  // Reset check-in state
+  // 5. AARSTID x ELEMENT
+  renderAarstidElement(cycles.season, domEl);
+
+  // 6. DIN HANDLING (een yoga-pose)
+  renderHandling(domEl);
+
+  // 7. TEMAER (foldbare)
+  renderTemaer(domEl, phase);
+
+  // 8. MAERK EFTER — reset check-in state
   TrackingState.checkinMood = null;
   const allCiBtns = document.querySelectorAll('.checkin-card .ci-btn');
   allCiBtns.forEach(b => {
@@ -857,12 +816,164 @@ function initForside() {
     b.style.opacity = '';
   });
   const supportLink = document.getElementById('ci-support-link');
-  if (supportLink) supportLink.style.display = '';
+  if (supportLink) supportLink.style.display = 'none';
   const supportPanel = document.getElementById('ci-support-panel');
   if (supportPanel) { supportPanel.style.display = 'none'; supportPanel.innerHTML = ''; }
 
-  // Check-in patterns
-  renderCheckinPatterns();
+  // 9. REFLEKSION
+  renderRefleksion(phase);
+}
+
+/* ---- Forside helper: Organur lige nu ---- */
+function renderOrganur(organ) {
+  if (!organ) return;
+  // organ = { organ: 'Nyrer', element: 'VAND', hours: '17-19', startHour: 17 }
+  const organurKey = organ.hours; // e.g. '17-19'
+  setText('organur-tid', organ.organ + ' \u00b7 kl. ' + organ.hours);
+
+  if (typeof ORGANUR_VINDUER !== 'undefined' && ORGANUR_VINDUER[organurKey]) {
+    setText('organur-tekst', ORGANUR_VINDUER[organurKey].tekst);
+  } else {
+    setText('organur-tekst', organ.organ + 's energi er aktiv lige nu.');
+  }
+}
+
+/* ---- Forside helper: Aarstid x Element ---- */
+function renderAarstidElement(season, domEl) {
+  if (!season) return;
+  // season.season = 'Vinter'|'For\u00e5r'|'Sommer'|'Sensommer'|'Efter\u00e5r'
+  // AARSTID_ELEMENT_TEKST keys = vinter|foraar|sommer|sensommer|efteraar
+  const seasonMap = {
+    'Vinter': 'vinter',
+    'For\u00e5r': 'foraar',
+    'Sommer': 'sommer',
+    'Sensommer': 'sensommer',
+    'Efter\u00e5r': 'efteraar'
+  };
+  const key = seasonMap[season.season] || 'vinter';
+
+  if (typeof AARSTID_ELEMENT_TEKST !== 'undefined' && AARSTID_ELEMENT_TEKST[key] && AARSTID_ELEMENT_TEKST[key][domEl]) {
+    setText('lige-nu-aarstid', AARSTID_ELEMENT_TEKST[key][domEl]);
+  }
+}
+
+/* ---- Forside helper: Din handling (een yoga-pose) ---- */
+function renderHandling(domEl) {
+  const elLabel = (el) => Calculations.ELEMENT_LABELS[el] || el;
+  if (typeof YIN_YOGA_FULL === 'undefined' || !YIN_YOGA_FULL[domEl]) return;
+
+  const poses = YIN_YOGA_FULL[domEl];
+  const idx = Calculations.dayRotation(poses.length);
+  const pose = poses[idx];
+  if (!pose) return;
+
+  setText('handling-type', 'Yin Yoga \u00b7 ' + elLabel(domEl));
+  setText('handling-titel', pose.pose.split('(')[0].trim());
+
+  // Build description with meridian and time
+  let desc = pose.desc;
+  if (pose.tid) desc += ' ' + pose.tid + '.';
+  if (pose.meridian) desc += ' Meridian: ' + pose.meridian + '.';
+  setText('handling-tekst', desc);
+}
+
+/* ---- Forside helper: Temaer (foldbare kort) ---- */
+function renderTemaer(domEl, phase) {
+  const container = document.getElementById('lige-nu-temaer');
+  if (!container) return;
+
+  const temaer = [];
+
+  // Tema 1: Overgangsalder (kun fase 6-8)
+  if (phase.phase >= 6 && phase.phase <= 8 && typeof OVERGANGSALDER_SPECIFIK !== 'undefined') {
+    const oa = OVERGANGSALDER_SPECIFIK;
+    let oaBody = oa.intro || '';
+    // Add phase-specific element advice
+    const faseTrin = phase.phase === 6 ? 'tidlig' : phase.phase === 7 ? 'midt' : 'sen';
+    if (oa.faser && oa.faser[faseTrin] && oa.faser[faseTrin].element_raad && oa.faser[faseTrin].element_raad[domEl]) {
+      oaBody += '\n\n' + oa.faser[faseTrin].element_raad[domEl];
+    }
+    temaer.push({
+      titel: 'Overgangsalder og dit element',
+      tekst: oaBody,
+      link: { label: 'L\u00e6s mere om din fase \u2192', route: 'cir-dit-liv' }
+    });
+  }
+
+  // Tema 2: Stress og dit element
+  if (typeof UDVIDET_HJAELP !== 'undefined' && UDVIDET_HJAELP.stress && UDVIDET_HJAELP.stress[domEl]) {
+    const stress = UDVIDET_HJAELP.stress[domEl];
+    let stressBody = stress.dyb || '';
+    if (stress.oevelse) stressBody += '\n\n\u00d8velse: ' + stress.oevelse;
+    if (stress.kost_raad) stressBody += '\n\n' + stress.kost_raad;
+    temaer.push({
+      titel: 'Stress og dit element',
+      tekst: stressBody,
+      link: { label: 'Se flere \u00f8velser \u2192', route: 'din-praksis' }
+    });
+  }
+
+  // Tema 3: Naering til dit element
+  if (typeof INSIGHT_FOOD !== 'undefined' && INSIGHT_FOOD[domEl]) {
+    const foods = INSIGHT_FOOD[domEl];
+    let foodBody = foods.map(f => '\u2022 ' + f.item + ' \u2014 ' + f.desc).join('\n');
+    temaer.push({
+      titel: 'N\u00e6ring til dit element',
+      tekst: foodBody,
+      link: { label: 'Se mere om kost \u2192', route: 'din-praksis' }
+    });
+  }
+
+  if (temaer.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+
+  container.innerHTML = '<div class="eyebrow">Temaer for dig</div>' +
+    temaer.map(t => {
+      // Truncate display text to first ~200 chars for the collapsed view
+      const previewLen = 180;
+      const preview = t.tekst.length > previewLen ? t.tekst.substring(0, previewLen).replace(/\n/g, ' ') + '\u2026' : t.tekst.replace(/\n/g, ' ');
+      const fullText = t.tekst.replace(/\n/g, '<br>');
+      return `<div class="tema" onclick="this.classList.toggle('open')" style="background:rgba(108,130,169,0.03);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">${t.titel}</div>
+          <div class="tema-arr" style="font-size:18px;color:var(--blaa-pale);transition:transform 0.2s">\u203a</div>
+        </div>
+        <div class="tema-body" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease">
+          <div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(108,130,169,0.06)">${fullText}</div>
+          ${t.link ? `<a onclick="event.stopPropagation();Router.navigate('${t.link.route}')" style="display:inline-block;margin-top:10px;font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--blaa);opacity:0.7;cursor:pointer">${t.link.label}</a>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+
+  // Add CSS toggle behavior via class
+  container.querySelectorAll('.tema').forEach(tema => {
+    tema.addEventListener('click', function(e) {
+      const body = this.querySelector('.tema-body');
+      const arr = this.querySelector('.tema-arr');
+      if (body) {
+        if (body.style.maxHeight && body.style.maxHeight !== '0px') {
+          body.style.maxHeight = '0px';
+          if (arr) arr.style.transform = '';
+        } else {
+          body.style.maxHeight = body.scrollHeight + 'px';
+          if (arr) arr.style.transform = 'rotate(90deg)';
+        }
+      }
+    });
+    // Remove the inline onclick to avoid double-fire
+    tema.removeAttribute('onclick');
+  });
+}
+
+/* ---- Forside helper: Refleksion ---- */
+function renderRefleksion(phase) {
+  if (typeof REFLEKSION_DATA === 'undefined' || !REFLEKSION_DATA[phase.phase]) return;
+  const questions = REFLEKSION_DATA[phase.phase];
+  if (!questions || !questions.length) return;
+  const idx = Calculations.dayRotation(questions.length);
+  setText('lige-nu-refleksion', questions[idx]);
 }
 
 /* ============================================================
@@ -1279,72 +1390,26 @@ function initRelationer() {
 
 /* ---- Din Praksis (luftig hub — præsenterer konceptet, kort fører videre) ---- */
 function initDinPraksis() {
-  // ── 1. PRÆSENTATION — vises ALTID, uanset brugerdata ──
-  setText('prak-title', 'Hvad kroppen beder om');
-  setText('prak-sub', 'Tilpasset dit element \u2014 hver dag');
-  setText('prak-intro', '\u00d8velser, kost, meridianstrygninger og refleksion. Alt er valgt ud fra det element der dominerer dit liv lige nu. V\u00e6lg det der kalder \u2014 eller lad v\u00e6re.');
-
-  // ── STATISKE KORT — vises ALTID ──
-  var cardsEl = document.getElementById('prak-cards');
-  if (cardsEl) {
-    var html = '';
-    html += '<div class="group-label" style="color:#7a908b">Krop</div>';
-    html += buildPrakCard('Yin Yoga', 'Stille stillinger', 'Stille stillinger der \u00e5bner meridianer og frigiver sp\u00e6ndinger. Tilpasset dit element.', 'pra-yin-yoga');
-    html += buildPrakCard('Meridianstrygning', 'Energiens vej', 'Strygninger langs meridianerne der samler og bev\u00e6ger energien i dit element.', 'pra-healing');
-    html += '<div class="group-label" style="color:#7a908b;margin-top:24px">Sind</div>';
-    html += buildPrakCard('F\u00f8lelsernes Hjul', 'Hvad m\u00e6rker du?', 'Fem elementer, fem f\u00f8lelsesfelter. Find det der resonerer og forst\u00e5 hvad kroppen fort\u00e6ller dig.', 'pra-foelelser');
-    html += buildPrakCard('Mindfulness', 'N\u00e6rv\u00e6r og stilhed', 'Korte \u00f8velser i n\u00e6rv\u00e6r tilpasset den energi der dominerer dig lige nu.', 'pra-mindfulness');
-    html += buildPrakCard('Refleksion', 'Tre sp\u00f8rgsm\u00e5l til din fase', 'Skriv, m\u00e6rk efter, og lad tankerne lande i deres eget tempo.', 'pra-refleksion');
-    html += '<div class="group-label" style="color:#7a908b;margin-top:24px">N\u00e6ring</div>';
-    html += buildPrakCard('Kost & Urter', 'Det der n\u00e6rer dit element', 'De retter og urter der passer til dit element og din fase lige nu.', 'pra-kost');
-    cardsEl.innerHTML = html;
-  }
-
-  // ── STATISKE EXPLORE LINKS — vises ALTID ──
-  var exploreEl = document.getElementById('prak-explore-links');
-  if (exploreEl) {
-    var eHtml = '';
-    eHtml += '<span class="explore-link" style="color:#7a908b;border-color:rgba(122,144,139,0.15)" onclick="Router.navigate(\'cir-dit-liv\')">Dit dybe billede \u2192</span>';
-    eHtml += '<span class="explore-link" style="color:#7a908b;border-color:rgba(122,144,139,0.15)" onclick="Router.navigate(\'cyk-ni-faser\')">De ni faser \u2192</span>';
-    eHtml += '<span class="explore-link" style="color:#7a908b;border-color:rgba(122,144,139,0.15)" onclick="Router.navigate(\'din-relation\')">Dine relationer \u2192</span>';
-    eHtml += '<span class="explore-link" style="color:#7a908b;border-color:rgba(122,144,139,0.15)" onclick="Router.navigate(\'rejse\')">Min rejse \u2192</span>';
-    exploreEl.innerHTML = eHtml;
-  }
-
-  // ── STATISK ÅNDEDRÆT ──
-  setText('prak-breath-text', 'Langsomt og dybt. Ind\u00e5nd ro, ud\u00e5nd sp\u00e6nding.');
-  if (typeof initBreathBoxes === 'function') {
-    setTimeout(function() { initBreathBoxes(); }, 100);
-  }
-
-  // ── STATISK FEELING BOX fallback ──
-  setText('prak-feeling-text', 'Kroppen taler sit eget sprog. Nogle gange som smerte, andre gange som l\u00e6ngsel. Praksis er at lytte \u2014 uden at skulle \u00e6ndre noget.');
-
-  // ── STATISK REFLEKSION fallback ──
+  // Statisk fallback
+  setText('prak-intro', '\u00d8velser, kost, meridianstrygninger og refleksion. Alt er valgt ud fra det element der dominerer dit liv lige nu.');
   setText('prak-refleksion', '\u00ab\u2009Hvad beder din krop om lige nu?\u2009\u00bb');
+  if (typeof initBreathBoxes === 'function') setTimeout(function() { initBreathBoxes(); }, 100);
 
-  // ── BRUGERDATA — beriger med personligt indhold ──
   const data = getUserCycles();
   if (!data) return;
   const { cycles, dominant } = data;
   const phase = cycles.lifePhase;
+  const phaseNum = phase.phase;
   const domEl = dominant.element;
   const elLabel = Calculations.ELEMENT_LABELS[domEl];
-  const phaseNum = phase.phase;
   const detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[phaseNum] : null;
+  if (!detail) return;
 
-  // ── INSIGHT — personlig kontekst ──
-  var insightMap = {
-    'VAND': 'Vand dominerer lige nu. Din krop beder om stilhed, dybde og n\u00e6ring nedefra.',
-    'TR\u00c6': 'Tr\u00e6 dominerer lige nu. Din krop beder om bev\u00e6gelse, v\u00e6kst og frisk luft.',
-    'ILD': 'Ild dominerer lige nu. Din krop beder om forbindelse, gl\u00e6de og varme.',
-    'JORD': 'Jord dominerer lige nu. Din krop beder om n\u00e6ring, tryghed og regularitet.',
-    'METAL': 'Metal dominerer lige nu. Din krop beder om klarhed, renhed og dyb vejrtr\u00e6kning.'
-  };
-  setText('prak-insight-label', 'Dagens element \u00b7 ' + elLabel);
-  setText('prak-insight-text', insightMap[domEl] || '');
+  // 1. Hero
+  setText('prak-fase-label', elLabel + ' \u00b7 Fase ' + phaseNum);
+  setText('prak-intro', '\u00d8velser, kost, meridianstrygninger og refleksion. Alt er valgt ud fra det element der dominerer dit liv lige nu \u2014 ' + elLabel + '. V\u00e6lg det der kalder, eller lad v\u00e6re.');
 
-  // ── FEELING BOX — personlig emotionel bro ──
+  // 2. Det kroppen pr\u00f8ver at fort\u00e6lle dig
   var feelingMap = {
     'VAND': 'N\u00e5r Vand dominerer, m\u00e6rker du det m\u00e5ske som tr\u00e6thed der ikke forsvinder med s\u00f8vn. Eller som en l\u00e6nden der er \u00f8m, en bl\u00e6re der presser, en uro i knoglerne. Kroppen beder ikke om mere. Den beder om dybere.',
     'TR\u00c6': 'N\u00e5r Tr\u00e6 dominerer, m\u00e6rker du det m\u00e5ske som en rastl\u00f8shed i kroppen. En trang til at komme videre, str\u00e6kke dig, bryde fri. Kroppen beder om retning \u2014 ikke om stilstand.',
@@ -1352,37 +1417,52 @@ function initDinPraksis() {
     'JORD': 'N\u00e5r Jord dominerer, m\u00e6rker du det m\u00e5ske som tyngde i maven. Tanker der k\u00f8rer i ring, en bekymring der ikke slipper. Kroppen beder om forankring \u2014 ikke om l\u00f8sninger.',
     'METAL': 'N\u00e5r Metal dominerer, m\u00e6rker du det m\u00e5ske som en str\u00e6ben efter orden. En sorg der ligger under overfladen. Kroppen beder om slip \u2014 ikke om kontrol.'
   };
-  setText('prak-feeling-text', feelingMap[domEl] || '');
+  var feelingEl = document.getElementById('prak-feeling');
+  if (feelingEl) feelingEl.innerHTML = formatExpandable(feelingMap[domEl] || '', 60);
 
-  // ── FEATURED — personlig anbefaling ──
-  var featuredEl = document.getElementById('prak-featured');
-  if (featuredEl) {
-    var yoga = typeof YIN_YOGA_FULL !== 'undefined' && YIN_YOGA_FULL[domEl] ? YIN_YOGA_FULL[domEl][0] : null;
-    if (yoga) {
-      setText('prak-featured-label', 'Anbefalet lige nu \u00b7 ' + elLabel);
-      setText('prak-featured-title', yoga.pose + ' \u00b7 Yin Yoga');
-      setText('prak-featured-desc', yoga.desc.split('.').slice(0, 2).join('.') + '.');
-      featuredEl.onclick = function() { Router.navigate('pra-yin-yoga'); };
-    }
+  // 3. Central f\u00f8lelse
+  setText('prak-foelelse-title', detail.centralFoelelse.title);
+  var foelelseEl = document.getElementById('prak-foelelse-tekst');
+  if (foelelseEl) foelelseEl.innerHTML = formatExpandable(detail.centralFoelelse.tekst, 80);
+
+  // 4. Krop & Sind
+  var kropEl = document.getElementById('prak-krop');
+  if (kropEl) kropEl.innerHTML = formatExpandable(detail.kropTekst, 60);
+  var sindEl = document.getElementById('prak-sind');
+  if (sindEl) sindEl.innerHTML = formatExpandable(detail.sindTekst, 60);
+
+  // 5. Yin Yoga
+  var yogaEl = document.getElementById('prak-yoga');
+  if (yogaEl && typeof YIN_YOGA_FULL !== 'undefined' && YIN_YOGA_FULL[domEl]) {
+    var yHtml = '';
+    YIN_YOGA_FULL[domEl].forEach(function(pose) {
+      yHtml += '<div class="dybde-oevelse-card">';
+      yHtml += '<div class="dybde-oevelse-type">Yin Yoga \u00b7 ' + elLabel + '</div>';
+      yHtml += '<div class="dybde-oevelse-title">' + pose.pose + '</div>';
+      yHtml += '<div class="dybde-oevelse-desc">' + pose.desc + '</div>';
+      if (pose.tid) yHtml += '<div style="font-size:12px;color:#83938e;margin-top:4px">' + pose.tid + (pose.meridian ? ' \u00b7 ' + pose.meridian : '') + '</div>';
+      yHtml += '</div>';
+    });
+    yogaEl.innerHTML = yHtml;
   }
 
-  // ── KORT — berig med element-labels ──
-  if (cardsEl) {
-    var meridian = typeof MERIDIAN_STRYGNINGER !== 'undefined' && MERIDIAN_STRYGNINGER[domEl] ? MERIDIAN_STRYGNINGER[domEl][0] : null;
-    var html = '';
-    html += '<div class="group-label" style="color:#7a908b">Krop</div>';
-    html += buildPrakCard('Yin Yoga \u00b7 ' + elLabel, yoga ? yoga.pose : 'Stille stillinger', 'Stille stillinger der \u00e5bner meridianer og frigiver sp\u00e6ndinger. Tilpasset dit element.', 'pra-yin-yoga');
-    html += buildPrakCard('Meridianstrygning \u00b7 ' + elLabel, meridian ? meridian.meridian : 'Energiens vej', 'Strygninger langs meridianerne der samler og bev\u00e6ger energien i dit element.', 'pra-healing');
-    html += '<div class="group-label" style="color:#7a908b;margin-top:24px">Sind</div>';
-    html += buildPrakCard('F\u00f8lelsernes Hjul', 'Hvad m\u00e6rker du?', 'Fem elementer, fem f\u00f8lelsesfelter. Find det der resonerer og forst\u00e5 hvad kroppen fort\u00e6ller dig.', 'pra-foelelser');
-    html += buildPrakCard('Mindfulness \u00b7 ' + elLabel, 'N\u00e6rv\u00e6r og stilhed', 'Korte \u00f8velser i n\u00e6rv\u00e6r tilpasset den energi der dominerer dig lige nu.', 'pra-mindfulness');
-    html += buildPrakCard('Refleksion', 'Tre sp\u00f8rgsm\u00e5l til din fase', 'Skriv, m\u00e6rk efter, og lad tankerne lande i deres eget tempo.', 'pra-refleksion');
-    html += '<div class="group-label" style="color:#7a908b;margin-top:24px">N\u00e6ring</div>';
-    html += buildPrakCard('Kost & Urter \u00b7 ' + elLabel, 'Det der n\u00e6rer dit element', 'De retter og urter der passer til dit element og din fase lige nu.', 'pra-kost');
-    cardsEl.innerHTML = html;
+  // 6. Meridianstrygning
+  var meridianEl = document.getElementById('prak-meridian');
+  if (meridianEl && typeof MERIDIAN_STRYGNINGER !== 'undefined' && MERIDIAN_STRYGNINGER[domEl]) {
+    var mHtml = '';
+    MERIDIAN_STRYGNINGER[domEl].forEach(function(m) {
+      mHtml += '<div class="dybde-oevelse-card">';
+      mHtml += '<div class="dybde-oevelse-type">' + m.organ + '</div>';
+      mHtml += '<div class="dybde-oevelse-title">' + m.meridian + '</div>';
+      mHtml += '<div class="dybde-oevelse-desc">' + m.desc + '</div>';
+      if (m.retning) mHtml += '<div style="font-size:13px;color:#6b7f79;margin-top:6px;font-style:italic">Retning: ' + m.retning + '</div>';
+      if (m.vejledning) mHtml += '<div style="font-size:13px;color:#7a908b;margin-top:4px;line-height:1.5">' + m.vejledning + '</div>';
+      mHtml += '</div>';
+    });
+    meridianEl.innerHTML = mHtml;
   }
 
-  // ── ÅNDEDRÆT — personlig ──
+  // 7. \u00c5ndedr\u00e6t
   var breathTextMap = {
     'VAND': 'Vandets \u00e5ndedr\u00e6t. Langsomt og dybt \u2014 som b\u00f8lger der tr\u00e6kker sig tilbage.',
     'TR\u00c6': 'Tr\u00e6ets \u00e5ndedr\u00e6t. Frit og opadg\u00e5ende \u2014 som en stamme der vokser mod lyset.',
@@ -1392,31 +1472,46 @@ function initDinPraksis() {
   };
   setText('prak-breath-text', breathTextMap[domEl] || '');
 
-  // ── REFLEKSION — personlig ──
-  var questions = typeof REFLEKSION_DATA !== 'undefined' ? REFLEKSION_DATA[phaseNum] : null;
-  if (questions && questions.length) {
-    var qi = Calculations.dayRotation(questions.length);
-    setText('prak-refleksion', '\u00ab\u2009' + questions[qi] + '\u2009\u00bb');
+  // 8. N\u00e6ring
+  var naeringEl = document.getElementById('prak-naering');
+  if (naeringEl && typeof INSIGHT_FOOD !== 'undefined' && INSIGHT_FOOD[domEl]) {
+    var nHtml = '';
+    if (detail.kostDetaljer) {
+      nHtml += '<div class="dybde-body" style="margin-bottom:16px">' + formatExpandable(detail.kostDetaljer, 60) + '</div>';
+    }
+    INSIGHT_FOOD[domEl].forEach(function(food) {
+      nHtml += '<div class="dybde-oevelse-card">';
+      nHtml += '<div class="dybde-oevelse-type">' + elLabel + '</div>';
+      nHtml += '<div class="dybde-oevelse-title">' + food.item + '</div>';
+      nHtml += '<div class="dybde-oevelse-desc">' + food.desc + '</div>';
+      nHtml += '</div>';
+    });
+    naeringEl.innerHTML = nHtml;
   }
 
-  // ── EXPLORE — berig med fase-link ──
-  if (exploreEl) {
-    var eHtml = '';
-    eHtml += '<span class="explore-link" style="color:#7a908b;border-color:rgba(122,144,139,0.15)" onclick="Router.navigate(\'cir-dit-liv\')">Dit dybe billede \u2192</span>';
-    eHtml += '<span class="explore-link" style="color:#7a908b;border-color:rgba(122,144,139,0.15)" onclick="window._selectedPhase=' + phaseNum + ';Router.navigate(\'livsfase-detail\')">Din fase i dybden \u2192</span>';
-    eHtml += '<span class="explore-link" style="color:#7a908b;border-color:rgba(122,144,139,0.15)" onclick="Router.navigate(\'din-relation\')">Dine relationer \u2192</span>';
-    eHtml += '<span class="explore-link" style="color:#7a908b;border-color:rgba(122,144,139,0.15)" onclick="Router.navigate(\'cyk-ni-faser\')">De ni faser \u2192</span>';
-    exploreEl.innerHTML = eHtml;
-  }
-}
+  // 9. Fasens \u00f8velser
+  renderDybdeOevelser(document.getElementById('prak-oevelser'), detail.oevelser);
 
-/* Helper: byg et praksis-kort med → pil der navigerer */
-function buildPrakCard(label, title, desc, route) {
-  return '<div class="card" onclick="Router.navigate(\'' + route + '\')" style="cursor:pointer"><div class="card-row"><div>' +
-    '<div class="card-label" style="color:#7a908b">' + label + '</div>' +
-    '<div class="card-title">' + title + '</div>' +
-    '<div class="card-desc">' + desc + '</div>' +
-    '</div><div class="card-arrow" style="color:#7a908b">\u2192</div></div></div>';
+  // 10. Refleksion
+  if (detail.ekstraRefleksioner && detail.ekstraRefleksioner.length) {
+    var ri = Calculations.dayRotation(detail.ekstraRefleksioner.length);
+    setText('prak-refleksion', detail.ekstraRefleksioner[ri]);
+  } else if (detail.refleksioner && detail.refleksioner.length) {
+    var ri2 = Calculations.dayRotation(detail.refleksioner.length);
+    setText('prak-refleksion', detail.refleksioner[ri2]);
+  }
+
+  // 11. Fasens r\u00e5d
+  renderDybdeRaad(document.getElementById('prak-raad'), detail.fasensRaad);
+
+  // 12. Balance / Ubalance
+  var balanceEl = document.getElementById('prak-balance');
+  if (balanceEl) balanceEl.innerHTML = formatExpandable(detail.balanceTekst, 80);
+  renderDybdeUbalance(document.getElementById('prak-ubalance'), detail.ubalanceTegn);
+
+  // 13. Element essay
+  var essayEl = document.getElementById('prak-element-essay');
+  if (essayEl) essayEl.innerHTML = formatExpandable(detail.elementEssay, 80);
 }
 
 /* ---- Praksis (Section 3) ---- */

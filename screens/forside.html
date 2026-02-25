@@ -1,57 +1,69 @@
-<!-- DAILY READING -->
-<div class="s" style="padding-bottom:20px">
-  <div class="eyebrow" id="forside-date">I dag</div>
+<!-- LIGE NU — Primaer skaerm 1 -->
 
-  <!-- Element-tegn + navn -->
-  <div id="forside-element-hero" style="text-align:center;margin:28px 0 8px">
-    <div id="forside-tegn" style="font-size:64px;line-height:1;color:var(--blaa);opacity:0.25">&#27700;</div>
-    <div id="forside-element-navn" style="font-family:var(--font-serif);font-size:28px;color:var(--text-dark);margin-top:4px">Vand</div>
-    <div id="forside-kvaliteter" style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-light);margin-top:6px;letter-spacing:0.5px">stilhed &middot; dybde &middot; intuition</div>
+<!-- HERO: Element + figur -->
+<div class="s" style="padding-bottom:0">
+  <div class="eyebrow" id="lige-nu-dato">I dag</div>
+  <div style="text-align:center;margin:20px 0 8px">
+    <div id="lige-nu-tegn" style="font-size:64px;line-height:1;color:var(--blaa);opacity:0.18">&#27700;</div>
+    <div id="lige-nu-element" style="font-family:var(--font-serif);font-size:30px;color:var(--text-dark);margin-top:4px">Vand</div>
+    <div id="lige-nu-kvaliteter" style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:var(--text-light);margin-top:6px;letter-spacing:0.5px">stilhed &middot; dybde &middot; intuition</div>
   </div>
+  <div class="fig" style="padding:0 20px">
+    <img src="assets/images/Gemini_Generated_Image_4llrmp4llrmp4llr.png" alt="Dine fem cyklusser" style="max-width:340px;margin:0 auto">
+  </div>
+</div>
 
-  <!-- Daily reading tekst -->
-  <div id="forside-reading" style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.65;text-align:center;margin:24px 8px 0;max-width:340px;margin-left:auto;margin-right:auto">
+<!-- MORGEN/AFTEN-TEKST -->
+<div class="s" style="padding-top:0">
+  <div class="isa" id="lige-nu-tidstekst">
     Dine fem cyklusser samler sig i dag. M&aelig;rk efter &mdash; din krop ved allerede, hvad den har brug for.
   </div>
+</div>
 
-  <!-- 5 cyklusser mini-oversigt -->
-  <div id="forside-cyklusser" style="margin:28px 0 0"></div>
-
-  <!-- Link til dybere billede -->
-  <div style="text-align:center;margin-top:16px">
-    <a onclick="Router.navigate('cir-dit-liv')" style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--blaa);opacity:0.7;cursor:pointer;text-decoration:none">Se hele billedet &rarr;</a>
+<!-- ORGANUR LIGE NU -->
+<div class="s">
+  <div class="eyebrow">Dit organur lige nu</div>
+  <div id="lige-nu-organur" style="background:rgba(108,130,169,0.04);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);padding:16px 18px;margin-top:10px">
+    <div id="organur-tid" style="font-family:var(--font-sans);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:var(--blaa);margin-bottom:6px"></div>
+    <div id="organur-tekst" style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6"></div>
   </div>
 </div>
 
-<!-- DIN KROP NU — 4 praksis-kort -->
-<div class="s" style="padding-top:20px;padding-bottom:20px">
-  <div class="eyebrow">Din krop nu</div>
-  <div class="praksis-card" onclick="Router.navigate('din-praksis')"><div><div class="pk-label">Yin Yoga &middot; Vand</div><div class="pk-name">Butterfly</div><div class="pk-desc">&Aring;bner hofterne og stimulerer nyremeridianen. 3&ndash;5 min.</div></div><div class="pk-arrow">&rarr;</div></div>
-  <div class="praksis-card" onclick="Router.navigate('din-praksis')"><div><div class="pk-label">Meridianstrygning &middot; Vand</div><div class="pk-name">Nyrernes meridian</div><div class="pk-desc">Fra fodens underside opad langs indersiden af benet.</div></div><div class="pk-arrow">&rarr;</div></div>
-  <div class="praksis-card" onclick="Router.navigate('din-praksis')"><div><div class="pk-label">Mindfulness &middot; Vand</div><div class="pk-name">B&oslash;lgernes rytme</div><div class="pk-desc">Ind&aring;nd 4s, hold 4s, ud&aring;nd 6s. M&aelig;rk dybden.</div></div><div class="pk-arrow">&rarr;</div></div>
-  <div class="praksis-card" onclick="Router.navigate('din-praksis')"><div><div class="pk-label">N&aelig;ring &middot; Vand</div><div class="pk-name">Sort sesam &amp; valn&oslash;dder</div><div class="pk-desc">N&aelig;rer nyreessensen og styrker livskraften.</div></div><div class="pk-arrow">&rarr;</div></div>
+<!-- AARSTID x ELEMENT -->
+<div class="s" style="padding-top:0">
+  <div class="isa isa-sm" id="lige-nu-aarstid" style="margin-bottom:0"></div>
 </div>
 
-<!-- RELATION -->
-<div id="forside-relation" style="padding:20px 20px"></div>
+<!-- DIN HANDLING — een oevelse -->
+<div class="s">
+  <div class="eyebrow">Din handling lige nu</div>
+  <div class="fig">
+    <img src="assets/images/lotus-maerk-efter.png" alt="Lotus" style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin:0 auto">
+  </div>
+  <div id="lige-nu-handling" style="text-align:center;margin-top:12px">
+    <div id="handling-type" style="font-family:var(--font-sans);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:var(--blaa);margin-bottom:4px"></div>
+    <div id="handling-titel" style="font-family:var(--font-serif);font-size:19px;color:var(--text-dark);margin-bottom:8px"></div>
+    <div id="handling-tekst" style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:var(--text-body);line-height:1.6;max-width:320px;margin:0 auto"></div>
+    <a onclick="Router.navigate('din-praksis')" style="display:inline-block;margin-top:12px;font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--blaa);opacity:0.7;cursor:pointer">Se flere &oslash;velser &rarr;</a>
+  </div>
+</div>
 
-<!-- M&AElig;RK EFTER — CHECK-IN -->
-<div class="s" style="padding-top:20px;padding-bottom:24px">
+<!-- TEMAER — foldbare -->
+<div class="s" id="lige-nu-temaer"></div>
+
+<!-- MAERK EFTER — CHECK-IN -->
+<div class="s">
   <div class="eyebrow">M&aelig;rk efter</div>
-  <div style="font-family:var(--font-serif);font-size:17px;color:var(--text-dark);margin-bottom:14px">Hvordan har du det lige nu?</div>
 
   <div class="checkin-card" id="forside-checkin">
     <div class="ci-btns" id="checkin-moods">
       <div class="ci-btn" onclick="selectMood('vand',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c2-3 4-4 6-1s4 2 6-1 4-2 6 1"/><path d="M2 17c2-3 4-4 6-1s4 2 6-1 4-2 6 1" opacity="0.4"/></svg> Stille</div>
       <div class="ci-btn" onclick="selectMood('trae',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V10"/><path d="M9 14c-2-1-3-3-2-5"/><path d="M15 14c2-1 3-3 2-5"/><path d="M12 10c0-3 2-6 5-8"/><path d="M12 10c0-3-2-6-5-8" opacity="0.5"/></svg> Voksende</div>
       <div class="ci-btn" onclick="selectMood('ild',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c-4 0-6-3-6-7 0-5 6-12 6-12s6 7 6 12c0 4-2 7-6 7z"/><path d="M12 22v-8" opacity="0.4"/></svg> Intens</div>
-      <div class="ci-btn" onclick="selectMood('jord',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="4"/><path d="M12 14v4"/><path d="M8 22c0-2.2 1.8-4 4-4s4 1.8 4 4" opacity="0.5"/><path d="M9 7l-2-3" opacity="0.4"/><path d="M15 7l2-3" opacity="0.4"/></svg> Rodf&aelig;stet</div>
-      <div class="ci-btn" onclick="selectMood('metal',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83" opacity="0.4"/><path d="M16.24 7.76l2.83-2.83" opacity="0.4"/></svg> Klar</div>
+      <div class="ci-btn" onclick="selectMood('jord',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="4"/><path d="M12 14v4"/><path d="M8 22c0-2.2 1.8-4 4-4s4 1.8 4 4" opacity="0.5"/></svg> Rodf&aelig;stet</div>
+      <div class="ci-btn" onclick="selectMood('metal',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/></svg> Klar</div>
       <div class="ci-btn" onclick="selectMood('tung',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c0 0-2 4-2 8s2 6 2 10"/><path d="M10 17c-1 2-2 3-4 3" opacity="0.4"/><path d="M14 17c1 2 2 3 4 3" opacity="0.4"/></svg> Tung</div>
-      <div class="ci-btn" onclick="selectMood('rastloes',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18l4-6 4 4 4-8 4 6"/><path d="M4 22h16" opacity="0.4"/></svg> Rastl&oslash;s</div>
       <div class="ci-btn" onclick="selectMood('saarbar',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14c0 0 2-2 4-2s4 2 4 2"/><path d="M12 3v5"/><path d="M7 6c2 1 3 2 5 2s3-1 5-2" opacity="0.5"/></svg> S&aring;rbar</div>
-      <div class="ci-btn" onclick="selectMood('varm',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-4 0-6-2.5-6-6 0-4 6-10 6-10s6 6 6 10c0 3.5-2 6-6 6z"/><path d="M12 21v-6"/><path d="M9.5 17c1.5-1 3.5-1 5 0" opacity="0.4"/></svg> Varm</div>
-      <div class="ci-btn" onclick="selectMood('urolig',this)"><svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 5c-1 2-3 3-3 7"/><path d="M12 5c1 2 3 3 3 7" opacity="0.5"/><path d="M8 20c2-1 3-2 4-4"/><path d="M16 20c-2-1-3-2-4-4" opacity="0.4"/></svg> Urolig</div>
     </div>
 
     <div id="ci-support-link" style="display:none">
@@ -59,57 +71,26 @@
     </div>
     <div id="ci-support-panel" style="display:none"></div>
   </div>
-
-  <div id="checkin-patterns" style="display:none"></div>
 </div>
 
-<!-- UDFORSK -->
-<div class="s" style="padding-top:20px;padding-bottom:32px">
-  <div class="eyebrow">Udforsk</div>
-  <div id="forside-explore" style="display:flex;flex-direction:column;gap:14px">
-
-    <!-- Dit liv -->
-    <div class="explore-group">
-      <div class="explore-heading" style="color:#6c82a9">Dit liv</div>
-      <div class="explore-links">
-        <span class="explore-link" onclick="Router.navigate('cir-dit-liv')" style="color:#6c82a9;border-color:rgba(108,130,169,0.15)">Dit Dybe Billede</span>
-        <span class="explore-link" onclick="Router.navigate('cyk-ni-faser')" style="color:#6c82a9;border-color:rgba(108,130,169,0.15)">De Ni Faser</span>
-      </div>
-    </div>
-
-    <!-- Relationer -->
-    <div class="explore-group">
-      <div class="explore-heading" style="color:#7b7a9e">Relationer</div>
-      <div class="explore-links">
-        <span class="explore-link" onclick="Router.navigate('din-relation')" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)">Din Relation</span>
-        <span class="explore-link" onclick="Router.navigate('rel-konstellation')" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)">Konstellation</span>
-      </div>
-    </div>
-
-    <!-- Praksis -->
-    <div class="explore-group">
-      <div class="explore-heading" style="color:#7a908b">Praksis</div>
-      <div class="explore-links">
-        <span class="explore-link" onclick="Router.navigate('din-praksis')" style="color:#7a908b;border-color:rgba(122,144,139,0.15)">Din Praksis</span>
-      </div>
-    </div>
-
-    <!-- Rejse -->
-    <div class="explore-group">
-      <div class="explore-heading" style="color:#8a96a9">Rejse</div>
-      <div class="explore-links">
-        <span class="explore-link" onclick="Router.navigate('rejse')" style="color:#8a96a9;border-color:rgba(138,150,169,0.15)">Min Rejse</span>
-        <span class="explore-link" onclick="Router.navigate('rej-alle-faser')" style="color:#8a96a9;border-color:rgba(138,150,169,0.15)">Alle Faser</span>
-      </div>
-    </div>
-
-    <!-- Tid -->
-    <div class="explore-group">
-      <div class="explore-heading" style="color:#6B5F7B">Tid</div>
-      <div class="explore-links">
-        <span class="explore-link" onclick="Router.navigate('vinduer')" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)">Tidsrejse</span>
-      </div>
-    </div>
-
+<!-- REFLEKSION -->
+<div class="s">
+  <div class="eyebrow">Refleksion</div>
+  <div class="isa" id="lige-nu-refleksion" style="font-size:17px;margin-bottom:12px"></div>
+  <div style="text-align:center">
+    <a onclick="Router.navigate('rej-journal')" style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--blaa);opacity:0.7;cursor:pointer">Skriv i din journal &rarr;</a>
   </div>
 </div>
+
+<!-- DYK DYBERE -->
+<div class="s" style="padding-bottom:32px">
+  <div class="eyebrow">Dyk dybere</div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px">
+    <a onclick="Router.navigate('cir-dit-liv')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">Dit Dybe Billede</a>
+    <a onclick="Router.navigate('cyk-ni-faser')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">De Ni Faser</a>
+    <a onclick="Router.navigate('din-praksis')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">Din Praksis</a>
+    <a onclick="Router.navigate('rejse')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">Min Rejse</a>
+  </div>
+</div>
+
+<div class="section-closer"></div>

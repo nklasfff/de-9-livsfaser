@@ -141,6 +141,9 @@ const Router = {
     // Update header
     this._updateHeader(name, screen);
 
+    // Update tab bar
+    this._updateTabBar(name, screen);
+
     // Update arc nav
     this._updateArcNav(name, screen);
 
@@ -249,6 +252,28 @@ const Router = {
       const showSearch = screen.niveau >= 0;
       searchBtn.classList.toggle('visible', showSearch);
     }
+  },
+
+  /* ---- Update bottom tab bar ---- */
+  _updateTabBar(name, screen) {
+    const tabBar = document.getElementById('tab-bar');
+    if (!tabBar) return;
+
+    // Show tab bar on niveau 0-1 screens (primary + section overviews), hide on detail/onboarding
+    const showTabs = screen && screen.niveau >= 0 && screen.niveau <= 1;
+    tabBar.style.display = showTabs ? '' : 'none';
+
+    // Highlight active tab
+    const tabs = tabBar.querySelectorAll('.tab');
+    tabs.forEach(t => {
+      const route = t.dataset.route;
+      const isActive =
+        (route === 'forside' && name === 'forside') ||
+        (route === 'din-relation' && (name === 'din-relation' || screen.tone === 'relationer')) ||
+        (route === 'tidsrejse' && (name === 'tidsrejse' || name === 'vin-tidslinje')) ||
+        (route === 'vinduer' && (name === 'vinduer' || screen.tone === 'vinduer'));
+      t.classList.toggle('active', isActive);
+    });
   },
 
   /* ---- Update arc nav active state ---- */

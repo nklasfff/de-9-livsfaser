@@ -39,7 +39,7 @@ de-9-livsfaser/
 ├── fonts/                  # Self-hosted WOFF2 fonts (Playfair Display + DM Sans)
 ├── assets/
 │   ├── icons/              # App icons (192x192, 512x512)
-│   └── images/             # ~47 content images (PNG, SVG, JPG)
+│   └── images/             # 72 content images (PNG, SVG, JPG)
 ├── screens/                # 44 HTML screen templates
 │   ├── onboarding.html, onboarding-result.html
 │   ├── forside.html
@@ -58,25 +58,56 @@ de-9-livsfaser/
 1. storage.js
 2. calculations.js
 3. data.js
-4. arc-nav.js (loaded but never activated — dead code)
-5. router.js
-6. app.js
+4. data-expanded.js — 12 ekstra content-blokke (~420 snippets i Isabelles stemme)
+5. arc-nav.js (loaded but never activated — dead code)
+6. router.js
+7. app.js
+
+**Content i data-expanded.js:**
+MORGEN_AFTEN_TEKST (30), ELEMENT_FASE_DAGLIG (45), TEMA_DYBDE (30),
+TIDSREJSE_PAR (25), OVERGANGSALDER_SPECIFIK (~40), RELATION_DYBDE (20),
+UDVIDET_HJAELP (75), SJAELDNE_VINDUER (15), CYKLUS_SKIFT_TEKST (20),
+AARSTID_ELEMENT_TEKST (25), ORGANUR_VINDUER (12), EKSTRA_REFLEKSIONER_NY (45)
 
 ---
 
-## NAVIGATION SYSTEM
+## NAVIGATION SYSTEM (NY ARKITEKTUR — vedtaget 25. feb 2026)
 
-### Primary: Hamburger Drawer Menu
-The app uses a slide-out drawer menu triggered by the hamburger button in the header. **There is NO bottom navigation.**
+### TRE-LAGS ARKITEKTUR
+```
+LAG 1: 4 primaere skaerme med bottom tab navigation
+  Lige Nu | Relationer | Tidsrejse | Vinduer
+  → Lette, luftige oversigter. Mockup: mockup-4-skaerme.html
 
+LAG 2: Fordybelse (udfolder sig PAA de primaere skaerme)
+  → Naar brugeren vaelger at dykke dybere
+  → Motoren genererer indhold fra LIVSFASE_DETAIL + data-expanded.js
+  → IKKE separate skaerme — folder ud paa den primaere skaerm
+
+LAG 3: 5 sekundaere skaerme (separate destinationer)
+  De Ni Faser | Min Praksis | Min Rejse | Tre Generationer | Baggrund
+  → Tilgaengelige fra drawer-menu og "dyk dybere"-links
+```
+
+### Primary: Bottom Tab Navigation (4 tabs)
+```
+[ Lige Nu ] [ Relationer ] [ Tidsrejse ] [ Vinduer ]
+```
+
+### Secondary: Hamburger Drawer Menu
 ```
 Drawer sections:
-├── Forside                    → forside
-├── Mine Cyklusser (6 subs)    → cyklusser, cyk-cic, cyk-ni-faser, cyk-fire-uger, cyk-overgange, cyk-kontrol
-├── Mine Relationer (6 subs)   → relationer, rel-lige-nu, rel-to-rytmer, rel-tre-gen, rel-jeres-energi, rel-epigenetik
-├── Min Praksis (8 subs)       → praksis, pra-yin-yoga, pra-eft, pra-foelelser, pra-mindfulness, pra-refleksion, pra-kost, pra-healing, pra-inspiration
-├── Min Rejse (6 subs)         → rejse, rej-udvikling, rej-journal, rej-favoritter, rej-opdagelser, rej-alle-faser, rej-baggrund
-├── Mine Vinduer (3 subs)      → vinduer, vin-tidslinje, vin-oejeblikke
+├── Lige Nu                    → forside (tab 1)
+├── Relationer                 → relationer (tab 2)
+├── Tidsrejse                  → tidsrejse (tab 3)
+├── Vinduer                    → vinduer (tab 4)
+├── ──────────
+├── De Ni Faser                → cyk-ni-faser → livsfase-detail
+├── Min Praksis                → din-praksis
+├── Min Rejse                  → min-rejse
+├── Tre Generationer           → rel-tre-gen
+├── Baggrund                   → baggrund
+├── ──────────
 ├── Indstillinger              → indstillinger
 └── Om Isabelle                → om-isabelle
 ```
@@ -91,11 +122,11 @@ Drawer sections:
 </header>
 ```
 
-### Screen Levels (3 niveauer)
-- **Niveau 0:** forside (home)
-- **Niveau 1:** Section overviews (cyklusser, relationer, praksis, rejse, vinduer)
-- **Niveau 2:** All detail screens (cyk-*, rel-*, pra-*, rej-*, vin-*, cir-*, soeg, indstillinger, om-isabelle)
-- **Niveau -1:** Onboarding screens
+### Screen Levels (ny)
+- **Primaer (tabs):** forside, relationer, tidsrejse, vinduer (4 bottom tabs)
+- **Sekundaer:** De Ni Faser, Min Praksis, Min Rejse, Tre Generationer, Baggrund
+- **Utility:** soeg, indstillinger, om-isabelle
+- **Onboarding:** onboarding, onboarding-result
 
 ### Navigation Pattern
 ```javascript
@@ -382,6 +413,9 @@ git push origin main
 
 ## REFERENCES
 
+- **Mockup (4 primaere skaerme):** /mockup-4-skaerme.html — REFERENCEN for design
+- **Ekspertanalyse:** /outputs/RESEARCH-MOTOR-OPTIMIZATION.md — content-motor, retention, anbefalinger
+- **Skaerm-plan (detaljer):** Se memory/screen-plan.md
 - Design System: /outputs/DESIGNSYSTEM.md
 - Figure Catalog: /outputs/FIGUR-KATALOG.md
 - Screen Inventory: /outputs/KAPITEL-LOG.md

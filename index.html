@@ -11,12 +11,12 @@
 <title>De 9 Livsfasers Energi</title>
 
 <!-- Styles -->
-<link rel="stylesheet" href="css/tokens.css?v=97">
-<link rel="stylesheet" href="css/base.css?v=97">
-<link rel="stylesheet" href="css/components.css?v=97">
-<link rel="stylesheet" href="css/sections.css?v=97">
-<link rel="stylesheet" href="css/screens.css?v=97">
-<link rel="stylesheet" href="css/arc-nav.css?v=97">
+<link rel="stylesheet" href="css/tokens.css?v=98">
+<link rel="stylesheet" href="css/base.css?v=98">
+<link rel="stylesheet" href="css/components.css?v=98">
+<link rel="stylesheet" href="css/sections.css?v=98">
+<link rel="stylesheet" href="css/screens.css?v=98">
+<link rel="stylesheet" href="css/arc-nav.css?v=98">
 </head>
 <body>
 <div id="app">
@@ -117,14 +117,35 @@
   <!-- SCREEN CONTENT -->
   <main id="screen-content"></main>
 
+  <!-- BOTTOM TAB BAR -->
+  <nav id="tab-bar" class="tab-bar" style="display:none">
+    <button class="tab active" data-route="forside" onclick="Router.navigate('forside',{direction:'fade'})">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none"/></svg>
+      <span>Lige nu</span>
+    </button>
+    <button class="tab" data-route="din-relation" onclick="Router.navigate('din-relation',{direction:'fade'})">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 20c0-3.5 3.1-5 7-5 1.2 0 2.3.15 3.2.45M17 20c0-2.5-1.8-3.8-4-4.5M17 14.5c2.5.5 4 2 4 4"/></svg>
+      <span>Relationer</span>
+    </button>
+    <button class="tab" data-route="tidsrejse" onclick="Router.navigate('tidsrejse',{direction:'fade'})">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2.1"/></svg>
+      <span>Tidsrejse</span>
+    </button>
+    <button class="tab" data-route="vinduer" onclick="Router.navigate('vinduer',{direction:'fade'})">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 3L3 8l9 4.5L21 8z"/><path d="M3 12l9 4.5L21 12"/><path d="M3 16l9 4.5L21 16"/></svg>
+      <span>Vinduer</span>
+    </button>
+  </nav>
+
 </div>
 
 <!-- Scripts -->
-<script src="js/storage.js?v=97"></script>
-<script src="js/calculations.js?v=97"></script>
-<script src="js/data.js?v=97"></script>
-<script src="js/arc-nav.js?v=97"></script>
-<script src="js/router.js?v=97"></script>
-<script src="js/app.js?v=97"></script>
+<script src="js/storage.js?v=98"></script>
+<script src="js/calculations.js?v=98"></script>
+<script src="js/data.js?v=98"></script>
+<script src="js/data-expanded.js?v=98"></script>
+<script src="js/arc-nav.js?v=98"></script>
+<script src="js/router.js?v=98"></script>
+<script src="js/app.js?v=98"></script>
 </body>
 </html>
