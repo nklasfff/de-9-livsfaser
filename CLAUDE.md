@@ -214,7 +214,7 @@ HERO + mockup_forbydelse_figur_1.png → SEKTION + lotus-divider → ... → clo
 
 - Brug `<div class="dybde-section">` (IKKE `.s`)
 - Her bor ALT materialet — 8-12 sektioner med `formatExpandable(tekst, 80)`
-- Adskillere: `mockup_fordybelse_lotus.png` (40px, opacity 0.2) mellem tunge sektioner
+- Adskillere: `mockup_fordybelse_lotus.png` (40px) mellem tunge sektioner
 - Lette adskillere: `<div class="dots">· · ·</div>` mellem lette sektioner
 - Afslut med lotus-closer + back-to-top link
 
