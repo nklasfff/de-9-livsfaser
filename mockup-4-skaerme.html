@@ -37,7 +37,7 @@ body { background:var(--bg); font-family:var(--sans); color:var(--mid); -webkit-
 a { color:inherit; text-decoration:none; }
 img { max-width:100%; height:auto; display:block; }
 button { background:none; border:none; cursor:pointer; font-family:inherit; }
-input, select { font-family:var(--sans); }
+input { font-family:var(--sans); }
 
 /* ── HEADER ── */
 .hdr { position:fixed; top:0; left:0; right:0; z-index:100; background:var(--bg); padding:var(--safe-t) 0 0; }
@@ -75,9 +75,7 @@ input, select { font-family:var(--sans); }
 /* Isabelle tekst-blok */
 .isa { font-family:var(--serif); font-size:16px; font-style:italic; color:var(--body); line-height:1.7; text-align:center; max-width:320px; margin:0 auto; }
 .isa-sm { font-size:14.5px; max-width:300px; }
-
-/* Link pill */
-.pill-link { display:inline-block; font-family:var(--serif); font-size:13.5px; font-style:italic; color:var(--blaa); opacity:0.6; margin-top:16px; }
+.isa-left { text-align:left; max-width:none; }
 
 /* Foldbar tema */
 .tema { margin-bottom:10px; border-radius:var(--r); overflow:hidden; }
@@ -87,7 +85,7 @@ input, select { font-family:var(--sans); }
 .tema-arr { font-size:15px; opacity:0.35; transition:transform 0.2s; flex-shrink:0; }
 .tema.open .tema-arr { transform:rotate(90deg); }
 .tema-body { max-height:0; overflow:hidden; transition:max-height 0.3s ease; }
-.tema.open .tema-body { max-height:500px; }
+.tema.open .tema-body { max-height:600px; }
 .tema-in { padding:0 18px 18px; }
 .tema-txt { font-family:var(--sans); font-size:14px; color:var(--muted); font-weight:300; line-height:1.6; }
 .tema-link { display:inline-block; margin-top:10px; font-family:var(--serif); font-size:13px; font-style:italic; opacity:0.65; }
@@ -101,6 +99,37 @@ input, select { font-family:var(--sans); }
 .tema-g { background:rgba(122,144,139,0.04); border:1px solid rgba(122,144,139,0.07); }
 .tema-g .tema-t, .tema-g .tema-link { color:var(--praksis); }
 
+/* Organur-indikator */
+.organur { display:flex; align-items:center; gap:10px; padding:14px 18px; border-radius:var(--r); background:rgba(108,130,169,0.04); border:1px solid rgba(108,130,169,0.06); margin-bottom:20px; }
+.organur-tid { font-family:var(--sans); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--blaa-p); }
+.organur-txt { font-family:var(--serif); font-size:14px; font-style:italic; color:var(--body); line-height:1.5; }
+
+/* Handling-kort (én anbefalet handling) */
+.handling { padding:20px; border-radius:var(--r); background:rgba(122,144,139,0.05); border:1px solid rgba(122,144,139,0.10); }
+.handling-type { font-size:10.5px; letter-spacing:2px; text-transform:uppercase; color:var(--praksis); margin-bottom:6px; }
+.handling-titel { font-family:var(--serif); font-size:17px; color:var(--dark); margin-bottom:8px; }
+.handling-tekst { font-family:var(--sans); font-size:14px; color:var(--muted); font-weight:300; line-height:1.6; }
+.handling-link { display:inline-block; margin-top:10px; font-family:var(--serif); font-size:13px; font-style:italic; color:var(--praksis); opacity:0.7; }
+
+/* Relation mini-kort */
+.rel-mini { display:flex; align-items:center; gap:12px; padding:14px 16px; border-radius:var(--r); margin-bottom:8px; cursor:pointer; }
+.rel-mini-icon { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+.rel-mini-info { flex:1; }
+.rel-mini-name { font-family:var(--serif); font-size:15px; color:var(--dark); }
+.rel-mini-el { font-size:12.5px; color:var(--light); margin-top:1px; }
+.rel-mini-dynamik { font-family:var(--serif); font-size:12.5px; font-style:italic; flex-shrink:0; }
+
+/* Relation dybde-resultat */
+.rel-dyb { padding:20px; border-radius:var(--r); background:rgba(123,122,158,0.04); border:1px solid rgba(123,122,158,0.08); margin-top:16px; }
+.rel-dyb-type { font-size:10.5px; letter-spacing:2px; text-transform:uppercase; color:var(--rel); margin-bottom:6px; }
+.rel-dyb-head { font-family:var(--serif); font-size:18px; color:var(--dark); margin-bottom:10px; }
+.rel-dyb-txt { font-family:var(--sans); font-size:14px; color:var(--muted); font-weight:300; line-height:1.65; }
+
+/* Person-slot (tom) */
+.person-add { padding:14px 16px; border:1px dashed rgba(123,122,158,0.18); border-radius:var(--r); display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+.person-add-icon { width:36px; height:36px; border-radius:50%; background:rgba(123,122,158,0.06); display:flex; align-items:center; justify-content:center; font-size:18px; color:var(--rel); opacity:0.4; flex-shrink:0; }
+.person-add-txt { font-family:var(--serif); font-size:14px; font-style:italic; color:var(--rel); opacity:0.6; }
+
 /* Tidslinje items */
 .tl { padding:14px 0; border-bottom:1px solid rgba(108,130,169,0.06); }
 .tl:last-child { border-bottom:none; }
@@ -108,62 +137,46 @@ input, select { font-family:var(--sans); }
 .tl-t { font-family:var(--serif); font-size:15px; font-style:italic; color:var(--body); line-height:1.55; }
 .tl-t em { font-style:normal; color:var(--blaa); }
 
-/* Input bokse */
-.input-group { margin-bottom:16px; }
-.input-label { font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--blaa-p); margin-bottom:6px; }
-.input-row { display:flex; gap:10px; align-items:center; }
+/* Input */
+.input-group { margin-bottom:14px; }
+.input-label { font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--blaa-p); margin-bottom:6px; }
+.input-row { display:flex; gap:10px; }
 .input-field { flex:1; padding:11px 14px; border:1px solid rgba(108,130,169,0.15); border-radius:10px; font-size:15px; color:var(--dark); background:rgba(108,130,169,0.03); outline:none; }
 .input-field:focus { border-color:rgba(108,130,169,0.35); }
 .input-field::placeholder { color:var(--blaa-p); font-style:italic; }
 
-/* Relation person-kort */
-.person-slot { padding:14px 16px; border:1px dashed rgba(123,122,158,0.18); border-radius:var(--r); margin-bottom:10px; display:flex; align-items:center; gap:12px; }
-.person-slot.filled { border-style:solid; background:rgba(123,122,158,0.03); }
-.person-icon { width:38px; height:38px; border-radius:50%; background:rgba(123,122,158,0.08); display:flex; align-items:center; justify-content:center; font-size:18px; color:var(--rel); flex-shrink:0; }
-.person-info { flex:1; }
-.person-name { font-family:var(--serif); font-size:15px; color:var(--dark); }
-.person-detail { font-size:12.5px; color:var(--light); margin-top:2px; }
-.person-add { font-family:var(--serif); font-size:14px; font-style:italic; color:var(--rel); opacity:0.6; }
-
-/* Relation resultat */
-.rel-result { padding:20px 18px; border-radius:var(--r); background:rgba(123,122,158,0.04); border:1px solid rgba(123,122,158,0.08); margin-top:16px; }
-.rel-type { font-size:10.5px; letter-spacing:2px; text-transform:uppercase; color:var(--rel); margin-bottom:8px; }
-.rel-head { font-family:var(--serif); font-size:18px; color:var(--dark); margin-bottom:10px; }
-.rel-txt { font-family:var(--sans); font-size:14px; color:var(--muted); font-weight:300; line-height:1.6; }
+/* Chips */
+.chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:16px; }
+.chip { padding:8px 15px; border-radius:20px; font-size:13px; font-weight:300; border:1px solid rgba(108,130,169,0.12); color:var(--light); background:white; cursor:pointer; }
+.chip.active { background:rgba(108,130,169,0.08); color:var(--blaa); border-color:rgba(108,130,169,0.25); }
 
 /* Vindue-kort */
-.v-card { padding:22px 20px; border-radius:var(--r); margin-bottom:14px; text-align:center; }
+.v-card { padding:20px 18px; border-radius:var(--r); margin-bottom:12px; }
 .v-card-b { background:linear-gradient(135deg, rgba(108,130,169,0.06), rgba(108,130,169,0.02)); border:1px solid rgba(108,130,169,0.10); }
 .v-card-l { background:linear-gradient(135deg, rgba(107,95,123,0.06), rgba(107,95,123,0.02)); border:1px solid rgba(107,95,123,0.10); }
-.v-when { font-size:10.5px; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
-.v-what { font-family:var(--serif); font-size:16px; font-style:italic; line-height:1.5; margin-bottom:8px; }
+.v-card-r { background:linear-gradient(135deg, rgba(123,122,158,0.06), rgba(123,122,158,0.02)); border:1px solid rgba(123,122,158,0.10); }
+.v-when { font-size:10.5px; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+.v-what { font-family:var(--serif); font-size:16px; font-style:italic; line-height:1.5; margin-bottom:6px; }
 .v-why { font-family:var(--sans); font-size:13px; font-weight:300; line-height:1.5; }
+.v-level { display:inline-block; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; padding:3px 10px; border-radius:10px; margin-bottom:8px; }
+
+/* Action button */
+.action-btn { display:block; width:100%; text-align:center; padding:13px; border-radius:var(--r); font-family:var(--serif); font-size:15px; font-style:italic; cursor:pointer; margin-top:12px; }
+.action-b { color:var(--blaa); border:1px solid rgba(108,130,169,0.25); background:rgba(108,130,169,0.04); }
+.action-l { color:var(--lilla); border:1px solid rgba(107,95,123,0.25); background:rgba(107,95,123,0.04); }
 
 /* Check-in */
 .moods { display:flex; flex-wrap:wrap; gap:7px; justify-content:center; }
 .mood { padding:8px 14px; border-radius:20px; border:1px solid rgba(0,0,0,0.06); background:#FAF9F7; font-size:13.5px; color:var(--mid); font-weight:300; }
 
 /* Dyk dybere */
-.dyk-links { display:flex; flex-wrap:wrap; gap:7px; justify-content:center; }
-.dyk-link { font-size:12.5px; font-weight:300; padding:7px 14px; border-radius:20px; border:1px solid rgba(108,130,169,0.10); color:var(--light); background:white; }
-
-/* Chips */
-.chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:16px; }
-.chip { padding:8px 16px; border-radius:20px; font-size:13px; font-weight:300; border:1px solid rgba(108,130,169,0.12); color:var(--light); background:white; cursor:pointer; }
-.chip.active { background:rgba(108,130,169,0.08); color:var(--blaa); border-color:rgba(108,130,169,0.25); }
-
-/* Action button */
-.action-btn { display:block; width:100%; text-align:center; padding:13px; border-radius:var(--r); font-family:var(--serif); font-size:15px; font-style:italic; cursor:pointer; margin-top:12px; }
-.action-b { color:var(--blaa); border:1px solid rgba(108,130,169,0.25); background:rgba(108,130,169,0.04); }
-.action-l { color:var(--lilla); border:1px solid rgba(107,95,123,0.25); background:rgba(107,95,123,0.04); }
-.action-r { color:var(--rel); border:1px solid rgba(123,122,158,0.25); background:rgba(123,122,158,0.04); }
+.dyk { display:flex; flex-wrap:wrap; gap:7px; justify-content:center; }
+.dyk-l { font-size:12.5px; font-weight:300; padding:7px 14px; border-radius:20px; border:1px solid rgba(108,130,169,0.10); color:var(--light); background:white; }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════
-     HEADER
-     ═══════════════════════════════════════════ -->
+<!-- HEADER -->
 <header class="hdr">
   <div class="hdr-inner">
     <button class="hdr-btn hdr-l">
@@ -178,15 +191,17 @@ input, select { font-family:var(--sans); }
 </header>
 
 
-<!-- ═══════════════════════════════════════════════════
+<!-- ═══════════════════════════════════════════════════════════
      SKÆRM 1: LIGE NU
-     Alt handler om i dag, dette øjeblik, din krop nu
-     ═══════════════════════════════════════════════════ -->
+     Dedikeret til dette øjeblik. Morgen/aften-skift.
+     Organur. Én handling. Kontekstuelle temaer.
+     ═══════════════════════════════════════════════════════════ -->
 <div class="screen active" id="s-nu">
 
-  <!-- HERO: Element -->
-  <div style="text-align:center;padding:32px var(--pad) 0">
-    <div style="font-size:68px;line-height:1;color:var(--blaa);opacity:0.18">&#27700;</div>
+  <!-- HERO: Element + morgen-tekst -->
+  <div style="text-align:center;padding:28px var(--pad) 0">
+    <div class="eye">God aften &middot; 25. februar</div>
+    <div style="font-size:68px;line-height:1;color:var(--blaa);opacity:0.18;margin-top:8px">&#27700;</div>
     <div style="font-family:var(--serif);font-size:30px;color:var(--dark);margin-top:4px">Vand</div>
     <div style="font-family:var(--serif);font-size:14.5px;font-style:italic;color:var(--light);margin-top:6px;letter-spacing:0.5px">stilhed &middot; dybde &middot; intuition</div>
   </div>
@@ -196,61 +211,93 @@ input, select { font-family:var(--sans); }
     <img src="assets/images/koncentriske-cirkler.svg" alt="Dine fem cyklusser" style="max-width:300px;margin:0 auto;opacity:0.85">
   </div>
 
-  <!-- Isabelle-tekst -->
+  <!-- Morgen/aften-tekst (fra MORGEN_AFTEN_TEKST) -->
   <div class="s-pad">
     <div class="isa">
-      Dit dominerende element er Vand &mdash; livsfase, vinter og tirsdag peger alle indad. Dybden kalder i dig. Tre cyklusser samler sig i stilhed i dag.
+      Aftenen er vandets naturlige tid. Lad tankerne synke som sten i en stille s&oslash;. De finder selv deres plads.
     </div>
   </div>
 
   <div class="div"></div>
 
-  <!-- DIN KROP NU — råd baseret på element -->
+  <!-- ORGANUR — levende, skifter hver 2. time -->
   <div class="s-pad">
-    <div class="eye">Din krop nu</div>
-    <div class="s-head">Hvad Vand-energi<br>beder dig om i dag</div>
-
-    <!-- FIGUR 2: Lotus (mærk efter) -->
-    <div class="fig">
-      <img src="assets/images/lotus-maerk-efter.png" alt="Lotus" style="width:90px;height:90px;border-radius:50%;object-fit:cover;margin:0 auto">
-      <div class="fig-cap">Lyt til kroppen f&oslash;r du handler</div>
+    <div class="eye">Dit organur lige nu</div>
+    <div class="organur">
+      <div>
+        <div class="organur-tid">Kl. 17&ndash;19 &middot; Nyrer &middot; Vand</div>
+        <div class="organur-txt">Din dybeste energi samler sig nu. Mange m&aelig;rker en naturlig tr&aelig;thed. Lyt til det. Nyrerne beder om varme, ro og langsomhed.</div>
+      </div>
     </div>
+  </div>
 
+  <!-- ÅR + FASE KONTEKST (fra AARSTID_ELEMENT_TEKST + ELEMENT_FASE_DAGLIG) -->
+  <div class="s-pad">
     <div class="isa isa-sm" style="margin-bottom:20px">
-      Vand-elementet n&aelig;rer nyrerne og binyrer. I dag, hvor tre cyklusser peger indad, er det ekstra vigtigt at give kroppen ro og varme. M&aring;ske en kop varm ingef&aelig;rte. M&aring;ske bare at sidde stille et &oslash;jeblik.
+      Vinter og Vand. Dobbelt dybde, dobbelt stilhed. Alt i naturen bekr&aelig;fter det din krop allerede ved: det er tid til at samle kr&aelig;fter. Lad dig synke ind i m&oslash;rket uden skyld.
+    </div>
+  </div>
+
+  <div class="div"></div>
+
+  <!-- ÉN HANDLING — din øvelse lige nu -->
+  <div class="s-pad">
+    <div class="eye">Din handling lige nu</div>
+
+    <!-- FIGUR 2: Lotus -->
+    <div class="fig">
+      <img src="assets/images/lotus-maerk-efter.png" alt="Lotus" style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin:0 auto">
     </div>
 
-    <!-- Foldbare temaer -->
-    <div class="tema tema-b" onclick="this.classList.toggle('open')">
-      <div class="tema-bar">
-        <div class="tema-t">Yin Yoga &middot; Butterfly-stilling</div>
-        <div class="tema-arr">&rsaquo;</div>
-      </div>
-      <div class="tema-body"><div class="tema-in">
-        <div class="tema-txt">&Aring;bner hofterne og stimulerer nyremeridianen. Sid med fodsaalerne mod hinanden, lad kn&aelig;ene falde ud. Fold forover og pust blidt. 3&ndash;5 minutter.</div>
-        <a class="tema-link">Mere om Vand-yoga &rarr;</a>
-      </div></div>
+    <div class="handling">
+      <div class="handling-type">Yin Yoga &middot; Vand</div>
+      <div class="handling-titel">Butterfly-stilling</div>
+      <div class="handling-tekst">&Aring;bner hofterne og stimulerer nyremeridianen. Sid med fodsaalerne mod hinanden, lad kn&aelig;ene falde ud. Fold forover og pust blidt. 3&ndash;5 minutter.</div>
+      <a class="handling-link">Se flere Vand-&oslash;velser &rarr;</a>
     </div>
+  </div>
 
-    <div class="tema tema-g" onclick="this.classList.toggle('open')">
-      <div class="tema-bar">
-        <div class="tema-t">N&aelig;ring &middot; Sort sesam &amp; valn&oslash;dder</div>
-        <div class="tema-arr">&rsaquo;</div>
-      </div>
-      <div class="tema-body"><div class="tema-in">
-        <div class="tema-txt">N&aelig;rer nyreessensen og styrker livskraften. Sort sesam, valn&oslash;dder, b&oslash;nner og varme supper. Undg&aring; for koldt og r&aring;t i Vand-perioder.</div>
-        <a class="tema-link">Se alle Vand-f&oslash;devarer &rarr;</a>
-      </div></div>
-    </div>
+  <div class="div"></div>
 
+  <!-- TEMAER — kontekstuelle, baseret på alder/fase/element -->
+  <div class="s-pad">
+    <div class="eye">Temaer for dig i dag</div>
+
+    <!-- Overgangsalder — vises fordi bruger er fase 9 -->
     <div class="tema tema-l" onclick="this.classList.toggle('open')">
       <div class="tema-bar">
-        <div class="tema-t">Overgangsalder og Vand-energi</div>
+        <div class="tema-t">Overgangsalder og dit Vand-element</div>
         <div class="tema-arr">&rsaquo;</div>
       </div>
       <div class="tema-body"><div class="tema-in">
-        <div class="tema-txt">I Vand-fasen handler overgangsalder om at vende tilbage til en dybere ro. Kidney Yin inviterer dig til at lytte indad &mdash; ikke k&aelig;mpe imod, men flyde med de forandringer der allerede er i gang.</div>
-        <a class="tema-link">L&aelig;s mere &rarr;</a>
+        <div class="tema-txt">N&aelig;r Jing med langsom, dyb omsorg. S&oslash;vn, varme og stilhed er stadig de vigtigste redskaber. Bev&aelig;g dig bl&oslash;dt &mdash; tai chi, Yin Yoga, g&aring;ture. Din visdom er p&aring; sit h&oslash;jeste nu. Brug den.</div>
+        <a class="tema-link">L&aelig;s mere om overgangsalder &rarr;</a>
+      </div></div>
+    </div>
+
+    <!-- Stress/hjælp — altid relevant -->
+    <div class="tema tema-b" onclick="this.classList.toggle('open')">
+      <div class="tema-bar">
+        <div class="tema-t">Stress og Vand: N&aring;r vandet fryser</div>
+        <div class="tema-arr">&rsaquo;</div>
+      </div>
+      <div class="tema-body"><div class="tema-in">
+        <div class="tema-txt">N&aring;r stress rammer dit vand-element, er det nyrerne der t&aelig;rer. Du k&oslash;rer p&aring; reserve, og kroppen reagerer med frygt &mdash; en diffus, navnl&oslash;s angst. L&aelig;nden er &oslash;m, f&oslash;dderne er kolde. Det er ikke svaghed. Det er et system der er k&oslash;rt t&oslash;r.</div>
+        <div class="tema-txt" style="margin-top:10px"><strong>&Oslash;velse:</strong> L&aelig;g varme h&aelig;nder p&aring; l&aelig;nden. &Aring;nd ind i fire, hold i fire, ud i otte. Forestil dig varme der str&oslash;mmer ned i b&aelig;kkenet. Fem minutter.</div>
+        <div class="tema-txt" style="margin-top:6px"><strong>N&aelig;ring:</strong> Varm knoglesuppe eller varmt vand med ingef&aelig;r. Undg&aring; kaffe &mdash; den l&aring;ner energi du ikke har.</div>
+        <a class="tema-link">Se al hj&aelig;lp for Vand-stress &rarr;</a>
+      </div></div>
+    </div>
+
+    <!-- Kost — specifikt for element -->
+    <div class="tema tema-g" onclick="this.classList.toggle('open')">
+      <div class="tema-bar">
+        <div class="tema-t">N&aelig;ring til dit Vand-element</div>
+        <div class="tema-arr">&rsaquo;</div>
+      </div>
+      <div class="tema-body"><div class="tema-in">
+        <div class="tema-txt">Sort sesam, valn&oslash;dder, b&oslash;nner og varme supper n&aelig;rer nyreessensen og styrker livskraften. Undg&aring; for koldt og r&aring;t i Vand-perioder. Salt smag st&oslash;tter nyrerne &mdash; miso, tang, knoglesuppe.</div>
+        <a class="tema-link">Se alle Vand-f&oslash;devarer &rarr;</a>
       </div></div>
     </div>
   </div>
@@ -274,27 +321,37 @@ input, select { font-family:var(--sans); }
 
   <div class="div"></div>
 
+  <!-- REFLEKSION — fra EKSTRA_REFLEKSIONER_NY fase 9 -->
+  <div class="s-pad" style="text-align:center">
+    <div class="eye">Refleksion</div>
+    <div class="isa" style="font-size:17px;color:var(--dark)">Hvad har dit liv l&aelig;rt dig om k&aelig;rlighed?</div>
+    <div style="font-family:var(--serif);font-size:13px;font-style:italic;color:var(--blaa);opacity:0.5;margin-top:12px">Skriv i din journal &rarr;</div>
+  </div>
+
+  <div class="div"></div>
+
   <!-- DYK DYBERE -->
   <div class="s-pad" style="text-align:center">
     <div class="eye">Dyk dybere</div>
-    <div class="dyk-links">
-      <span class="dyk-link">Dit Dybe Billede</span>
-      <span class="dyk-link">De Ni Faser</span>
-      <span class="dyk-link">Din Praksis</span>
-      <span class="dyk-link">Min Rejse</span>
+    <div class="dyk">
+      <span class="dyk-l">Dit Dybe Billede</span>
+      <span class="dyk-l">De Ni Faser</span>
+      <span class="dyk-l">Din Praksis</span>
+      <span class="dyk-l">Min Rejse</span>
     </div>
   </div>
 
 </div>
 
 
-<!-- ═══════════════════════════════════════════════════
+<!-- ═══════════════════════════════════════════════════════════
      SKÆRM 2: RELATIONER
-     Motor med input — se element-møder dynamisk
-     ═══════════════════════════════════════════════════ -->
+     Oversigt over alle relationer → vælg én → dybde.
+     Samtale-åbnere. Tidsrejse-par hint.
+     ═══════════════════════════════════════════════════════════ -->
 <div class="screen" id="s-rel">
 
-  <div style="text-align:center;padding:32px var(--pad) 0">
+  <div style="text-align:center;padding:28px var(--pad) 0">
     <div class="eye">Relationer</div>
     <div class="s-head">Hvem m&oslash;der du<br>med dit Vand?</div>
     <div class="s-sub">Se hvordan jeres elementer taler sammen</div>
@@ -302,84 +359,101 @@ input, select { font-family:var(--sans); }
 
   <!-- FIGUR 1: Relationer-forside -->
   <div class="fig" style="padding:0 20px">
-    <img src="assets/images/relationer-forside.png" alt="Relationer" style="max-width:260px;margin:0 auto;opacity:0.8;mix-blend-mode:multiply">
-    <div class="fig-cap">Dine n&aelig;rmeste b&aelig;rer ogs&aring; elementer. De m&oslash;der dine.</div>
+    <img src="assets/images/relationer-forside.png" alt="Relationer" style="max-width:240px;margin:0 auto;opacity:0.8;mix-blend-mode:multiply">
   </div>
 
   <div class="div"></div>
 
-  <!-- PERSONER — input -->
+  <!-- OVERSIGT — alle relationer på én gang -->
   <div class="s-pad">
-    <div class="eye">Dine personer</div>
+    <div class="eye">Dine relationer lige nu</div>
 
-    <!-- Udfyldt person: Datter -->
-    <div class="person-slot filled">
-      <div class="person-icon">&#9825;</div>
-      <div class="person-info">
-        <div class="person-name">Clara (datter)</div>
-        <div class="person-detail">Fase 3 &middot; Tr&aelig; &middot; 16 &aring;r</div>
+    <!-- Clara — Vand nærer Træ -->
+    <div class="rel-mini" style="background:rgba(123,122,158,0.04);border:1px solid rgba(123,122,158,0.08)">
+      <div class="rel-mini-icon" style="background:rgba(123,122,158,0.10);color:var(--rel)">&#9825;</div>
+      <div class="rel-mini-info">
+        <div class="rel-mini-name">Clara (datter)</div>
+        <div class="rel-mini-el">Fase 3 &middot; Tr&aelig; &middot; 16 &aring;r</div>
       </div>
+      <div class="rel-mini-dynamik" style="color:var(--praksis)">N&aelig;rer &darr;</div>
     </div>
 
-    <!-- Udfyldt person: Partner -->
-    <div class="person-slot filled">
-      <div class="person-icon">&#9826;</div>
-      <div class="person-info">
-        <div class="person-name">Mikkel (partner)</div>
-        <div class="person-detail">Fase 7 &middot; Jord &middot; 48 &aring;r</div>
+    <!-- Mikkel — Jord modtager Vand -->
+    <div class="rel-mini" style="background:rgba(123,122,158,0.04);border:1px solid rgba(123,122,158,0.08)">
+      <div class="rel-mini-icon" style="background:rgba(123,122,158,0.10);color:var(--rel)">&#9826;</div>
+      <div class="rel-mini-info">
+        <div class="rel-mini-name">Mikkel (partner)</div>
+        <div class="rel-mini-el">Fase 7 &middot; Jord &middot; 48 &aring;r</div>
       </div>
+      <div class="rel-mini-dynamik" style="color:var(--blaa)">Modtager &harr;</div>
     </div>
 
-    <!-- Tom plads -->
-    <div class="person-slot">
-      <div class="person-icon" style="opacity:0.4">+</div>
-      <div class="person-info">
-        <div class="person-add">Tilf&oslash;j en person &rarr;</div>
-        <div class="person-detail">Navn og f&oslash;dselsdato</div>
+    <!-- Mor — Metal nærer Vand -->
+    <div class="rel-mini" style="background:rgba(123,122,158,0.04);border:1px solid rgba(123,122,158,0.08)">
+      <div class="rel-mini-icon" style="background:rgba(123,122,158,0.10);color:var(--rel)">&#10047;</div>
+      <div class="rel-mini-info">
+        <div class="rel-mini-name">Kirsten (mor)</div>
+        <div class="rel-mini-el">Fase 9 &middot; Metal &middot; 79 &aring;r</div>
       </div>
+      <div class="rel-mini-dynamik" style="color:var(--praksis)">N&aelig;rer &uarr;</div>
+    </div>
+
+    <!-- Tilføj person -->
+    <div class="person-add">
+      <div class="person-add-icon">+</div>
+      <div class="person-add-txt">Tilf&oslash;j en person &rarr;</div>
     </div>
   </div>
 
   <div class="div"></div>
 
-  <!-- RESULTAT: Dit Vand møder Claras Træ -->
+  <!-- DYBDE — Clara udfoldet (fra RELATION_DYBDE + TIDSREJSE_PAR) -->
   <div class="s-pad">
-    <div class="eye">Lige nu</div>
-    <div class="s-head">Dit Vand m&oslash;der<br>Claras Tr&aelig;</div>
+    <div class="eye">Dit Vand m&oslash;der Claras Tr&aelig;</div>
 
-    <!-- FIGUR 2: Rel-lige-nu-naerer -->
-    <div class="fig" style="padding:0 10px">
-      <img src="assets/images/rel-lige-nu-naerer.png" alt="Vand nærer Træ" style="max-width:240px;margin:0 auto;opacity:0.8;mix-blend-mode:multiply">
+    <!-- FIGUR 2 -->
+    <div class="fig">
+      <img src="assets/images/rel-lige-nu-naerer.png" alt="Vand n&aelig;rer Tr&aelig;" style="max-width:220px;margin:0 auto;opacity:0.8;mix-blend-mode:multiply">
     </div>
 
-    <div class="rel-result">
-      <div class="rel-type">N&aelig;rer</div>
-      <div class="rel-head">Vand n&aelig;rer Tr&aelig;</div>
-      <div class="rel-txt">Dit Vand n&aelig;rer hendes Tr&aelig; &mdash; din dybde giver n&aelig;ring til hendes v&aelig;kst. Du beh&oslash;ver ikke g&oslash;re noget s&aelig;rligt. Bare v&aelig;re der. Din ro er hendes fundament lige nu.</div>
+    <!-- Dybde-tekst fra RELATION_DYBDE.datter.TRÆ -->
+    <div class="rel-dyb">
+      <div class="rel-dyb-type">Datter i Tr&aelig;-energi</div>
+      <div class="rel-dyb-txt">Clara i tr&aelig;-energi er en kraft af natur. Hun vil fremad, hun vil selv, hun vil nu. Det kan f&oslash;les udfordrende &mdash; men det er livskraft i reneste form. Giv hende plads til at vokse, ogs&aring; n&aring;r retningen overrasker dig.</div>
     </div>
 
-    <!-- Foldbare temaer for relationen -->
-    <div style="margin-top:16px">
-      <div class="tema tema-r" onclick="this.classList.toggle('open')">
-        <div class="tema-bar">
-          <div class="tema-t">Samtale-&aring;bner med Clara i dag</div>
-          <div class="tema-arr">&rsaquo;</div>
-        </div>
-        <div class="tema-body"><div class="tema-in">
-          <div class="tema-txt"><strong>Sp&oslash;rg hende:</strong> &laquo;Hvad vokser i dig lige nu?&raquo;<br><br><strong>Del selv:</strong> &laquo;Jeg m&aelig;rker en stilhed i mig i dag &mdash; den er god.&raquo;<br><br><strong>Sammen:</strong> G&aring; en tur uden plan. Lad samtalen finde sit eget tempo.</div>
-        </div></div>
-      </div>
+    <!-- Par-dynamik fra TIDSREJSE_PAR.VAND_TRÆ -->
+    <div class="rel-dyb" style="margin-top:10px">
+      <div class="rel-dyb-type">Jeres dynamik</div>
+      <div class="rel-dyb-head">Vand m&oslash;der Tr&aelig;</div>
+      <div class="rel-dyb-txt">Dit vand m&oslash;der Claras tr&aelig;. Dybde m&oslash;der v&aelig;kst. Vand f&oslash;der tr&aelig; i den skabende cyklus &mdash; din dybde giver hendes r&oslash;dder n&aelig;ring. Du r&aelig;kker indad, hun r&aelig;kker opad.</div>
+      <div class="rel-dyb-txt" style="margin-top:8px"><strong>R&aring;d:</strong> V&aelig;r t&aring;lmodig med hendes tempo. Vand bev&aelig;ger sig langsomt, men det b&aelig;rer alt.</div>
+      <div class="rel-dyb-txt" style="margin-top:8px"><strong>&Oslash;velse:</strong> Plant noget sammen &mdash; en plante, et fr&oslash;, en id&eacute;. Lad det v&aelig;re en p&aring;mindelse om at v&aelig;kst kr&aelig;ver b&aring;de rod og retning.</div>
+    </div>
 
-      <div class="tema tema-r" onclick="this.classList.toggle('open')">
-        <div class="tema-bar">
-          <div class="tema-t">Dit Vand m&oslash;der Mikkels Jord</div>
-          <div class="tema-arr">&rsaquo;</div>
-        </div>
-        <div class="tema-body"><div class="tema-in">
-          <div class="rel-type">Modtager</div>
-          <div class="tema-txt">Jord modtager Vand &mdash; Mikkel kan rumme din dybde lige nu. Hans stabilitet m&oslash;der din flydende energi. Et godt tidspunkt for dybe samtaler.</div>
-        </div></div>
+    <!-- Samtale-åbner -->
+    <div class="tema tema-r" style="margin-top:14px" onclick="this.classList.toggle('open')">
+      <div class="tema-bar">
+        <div class="tema-t">Samtale-&aring;bner med Clara i dag</div>
+        <div class="tema-arr">&rsaquo;</div>
       </div>
+      <div class="tema-body"><div class="tema-in">
+        <div class="tema-txt"><strong>Sp&oslash;rg hende:</strong> &laquo;Hvad vokser i dig lige nu?&raquo;</div>
+        <div class="tema-txt" style="margin-top:8px"><strong>Del selv:</strong> &laquo;Jeg m&aelig;rker en stilhed i mig i dag &mdash; den er god.&raquo;</div>
+        <div class="tema-txt" style="margin-top:8px"><strong>Sammen:</strong> G&aring; en tur uden plan. Lad samtalen finde sit eget tempo.</div>
+      </div></div>
+    </div>
+
+    <!-- Tidsrejse-hint -->
+    <div class="tema tema-b" style="margin-top:0" onclick="this.classList.toggle('open')">
+      <div class="tema-bar">
+        <div class="tema-t">I n&aelig;ste uge skifter Clara til Ild</div>
+        <div class="tema-arr">&rsaquo;</div>
+      </div>
+      <div class="tema-body"><div class="tema-in">
+        <div class="tema-txt">Tr&aelig;et n&aelig;rer ilden. Claras v&aelig;kstkraft ant&aelig;ndes af passion. Det f&oslash;les naturligt &mdash; som for&aring;ret der g&aring;r over i sommer. Din Vand-energi kan k&oslash;le hendes flamme &mdash; v&aelig;r der som ro, ikke som modstand.</div>
+        <a class="tema-link">Se jeres cyklusser i tidsrejsen &rarr;</a>
+      </div></div>
     </div>
   </div>
 
@@ -388,23 +462,25 @@ input, select { font-family:var(--sans); }
   <!-- DYK DYBERE -->
   <div class="s-pad" style="text-align:center">
     <div class="eye">Dyk dybere</div>
-    <div class="dyk-links">
-      <span class="dyk-link">Jeres Energi</span>
-      <span class="dyk-link">Tre Generationer</span>
-      <span class="dyk-link">Epigenetik</span>
+    <div class="dyk">
+      <span class="dyk-l">Jeres Energi</span>
+      <span class="dyk-l">Tre Generationer</span>
+      <span class="dyk-l">Epigenetik</span>
+      <span class="dyk-l">Alle Relationer</span>
     </div>
   </div>
 
 </div>
 
 
-<!-- ═══════════════════════════════════════════════════
+<!-- ═══════════════════════════════════════════════════════════
      SKÆRM 3: TIDSREJSE
-     Dato + person input — se cyklusser for enhver dato
-     ═══════════════════════════════════════════════════ -->
+     Livsbegivenheder. Dato + person input.
+     Cyklus-skift. Årstid-kontekst.
+     ═══════════════════════════════════════════════════════════ -->
 <div class="screen" id="s-tid">
 
-  <div style="text-align:center;padding:32px var(--pad) 0">
+  <div style="text-align:center;padding:28px var(--pad) 0">
     <div class="eye">Tidsrejse</div>
     <div class="s-head">Rejse gennem<br>dine cyklusser</div>
     <div class="s-sub">Fortid &middot; nutid &middot; fremtid</div>
@@ -420,22 +496,23 @@ input, select { font-family:var(--sans); }
 
   <!-- DATO-VÆLGER -->
   <div class="s-pad">
-    <div class="eye">V&aelig;lg en dato</div>
+    <div class="eye">V&aelig;lg et &oslash;jeblik</div>
 
-    <!-- Hurtig-chips -->
+    <!-- Livsbegivenheder som chips -->
     <div class="chips">
       <div class="chip">Da du var 14</div>
       <div class="chip">Da du var 21</div>
+      <div class="chip">Da du f&oslash;dte Clara</div>
       <div class="chip active">I dag</div>
-      <div class="chip">Om 5 &aring;r</div>
     </div>
 
     <div class="input-group">
+      <div class="input-label">Eller v&aelig;lg en dato</div>
       <input type="date" class="input-field" value="2026-02-25" style="text-align:center">
     </div>
 
-    <!-- Valgfrit: Tilføj person -->
-    <div class="input-group" style="margin-top:8px">
+    <!-- Tilføj person -->
+    <div class="input-group">
       <div class="input-label">Tilf&oslash;j en person (valgfrit)</div>
       <div class="input-row">
         <input type="text" class="input-field" placeholder="Navn" style="flex:1">
@@ -448,34 +525,35 @@ input, select { font-family:var(--sans); }
 
   <div class="div"></div>
 
-  <!-- RESULTAT (statisk eksempel) -->
+  <!-- RESULTAT -->
   <div class="s-pad">
-    <div class="eye">25. februar 2026</div>
+    <div class="eye">25. februar 2026 &middot; i dag</div>
     <div class="s-head">Dit Vand-&oslash;jeblik</div>
 
+    <!-- Isabelle-tekst: ELEMENT_FASE_DAGLIG kontekst -->
     <div class="isa isa-sm" style="margin-bottom:20px">
-      Lige nu st&aring;r du i livets niende fase &mdash; Vand. Det er vinter ude, Vand-m&aring;ned, og dit organur peger mod nyrerne. Tre lag af Vand samler sig. Det er sj&aelig;ldent.
+      Du st&aring;r i livets niende fase &mdash; Vand. Det er vinter ude, Vand-m&aring;ned, og dit organur peger mod nyrerne. Tre lag af Vand samler sig. Det er sj&aelig;ldent.
     </div>
 
     <!-- FIGUR 2: Tre lag -->
     <div class="fig">
-      <img src="assets/images/tidslinje-tre-lag.png" alt="Tre lag: DIG NU, faserne, din livshistorie" style="max-width:250px;margin:0 auto;opacity:0.8;mix-blend-mode:multiply">
+      <img src="assets/images/tidslinje-tre-lag.png" alt="Tre lag" style="max-width:240px;margin:0 auto;opacity:0.8;mix-blend-mode:multiply">
       <div class="fig-cap">Dit &oslash;jeblik hviler i faser &mdash; som hviler i en hel historie</div>
     </div>
 
-    <!-- Tidslinje: Hvad der kommer -->
+    <!-- Kommende skift (fra CYKLUS_SKIFT_TEKST) -->
     <div style="margin-top:16px">
       <div class="tl">
         <div class="tl-w">I morgen &middot; kl. 15&ndash;17</div>
         <div class="tl-t">Dit organur skifter til <em>Metal</em>. Klarhed venter.</div>
       </div>
       <div class="tl">
-        <div class="tl-w">Om 3 dage</div>
-        <div class="tl-t">Ny m&aring;nedscyklus: <em>Tr&aelig;</em>. V&aelig;kst efter ro.</div>
+        <div class="tl-w">Om 3 dage &middot; ny m&aring;nedscyklus</div>
+        <div class="tl-t">Vandet giver plads til v&aelig;kst. Du m&aelig;rker m&aring;ske en ny energi &mdash; noget der vil fremad. Lad den komme, uden at forcere.</div>
       </div>
       <div class="tl">
-        <div class="tl-w">N&aelig;ste uge</div>
-        <div class="tl-t">Du og Mikkel har begge <em>Jord</em>. Sj&aelig;lden resonans.</div>
+        <div class="tl-w">N&aelig;ste uge &middot; du og Mikkel</div>
+        <div class="tl-t">Du og Mikkel har begge <em>Jord</em>. Dobbelt tryghed. I forst&aring;r hinandens behov for fundament. V&aelig;r modige sammen.</div>
       </div>
     </div>
   </div>
@@ -485,108 +563,135 @@ input, select { font-family:var(--sans); }
   <!-- DYK DYBERE -->
   <div class="s-pad" style="text-align:center">
     <div class="eye">Dyk dybere</div>
-    <div class="dyk-links">
-      <span class="dyk-link">Alle Ni Faser</span>
-      <span class="dyk-link">&Oslash;jeblikke</span>
-      <span class="dyk-link">Min Rejse</span>
+    <div class="dyk">
+      <span class="dyk-l">Alle Ni Faser</span>
+      <span class="dyk-l">&Oslash;jeblikke</span>
+      <span class="dyk-l">Min Rejse</span>
+      <span class="dyk-l">Journal</span>
     </div>
   </div>
 
 </div>
 
 
-<!-- ═══════════════════════════════════════════════════
+<!-- ═══════════════════════════════════════════════════════════
      SKÆRM 4: SJÆLDNE VINDUER
-     Appen beregner automatisk usædvanlige mønstre
-     ═══════════════════════════════════════════════════ -->
+     Gradueret: dobbelt → tredobbelt → fuld resonans.
+     Overgangsalder-vinduer. Relations-vinduer.
+     ═══════════════════════════════════════════════════════════ -->
 <div class="screen" id="s-vin">
 
-  <div style="text-align:center;padding:32px var(--pad) 0">
+  <div style="text-align:center;padding:28px var(--pad) 0">
     <div class="eye">&#10022; Sj&aelig;ldne vinduer</div>
     <div class="s-head">N&aring;r cyklusser<br>m&oslash;des i dig</div>
-    <div class="s-sub">Appen finder dem for dig &mdash; automatisk</div>
+    <div class="s-sub">Appen finder dem automatisk</div>
   </div>
 
-  <!-- FIGUR 1: Vinduer tid lilla (9 cirkler i bue) -->
+  <!-- FIGUR 1: Vinduer tid lilla -->
   <div class="fig" style="padding:0 12px">
-    <img src="assets/images/vinduer-tid-lilla.png" alt="Livsfaserne i tidens bue" style="max-width:360px;margin:0 auto;opacity:0.85;mix-blend-mode:multiply">
+    <img src="assets/images/vinduer-tid-lilla.png" alt="Livsfaserne" style="max-width:360px;margin:0 auto;opacity:0.85;mix-blend-mode:multiply">
     <div class="fig-cap">Nogle dage &aring;bner sig vinduer du ikke vidste fandtes</div>
   </div>
 
   <div class="div"></div>
 
-  <!-- AKTIVE VINDUER NU -->
+  <!-- AKTIVT NU — tredobbelt Vand (stærkt) -->
   <div class="s-pad">
-    <div class="eye">Aktivt nu</div>
+    <div class="eye">Aktivt lige nu</div>
 
-    <div class="v-card v-card-l">
-      <div class="v-when" style="color:var(--lilla-l)">&#10022; I dag &middot; 25. februar</div>
+    <div class="v-card v-card-l" style="text-align:center">
+      <div class="v-level" style="background:rgba(107,95,123,0.12);color:var(--lilla)">&#10022; Tredobbelt</div>
       <div class="v-what" style="color:var(--lilla)">Tre cyklusser i Vand</div>
-      <div class="v-why" style="color:var(--muted)">Livsfase, &aring;rstid og ugedag peger alle indad. Det sker f&aring; gange om &aring;ret. Et vindue for dyb intuition og indre lytning.</div>
+      <div class="v-why" style="color:var(--muted)">Tre cyklusser i Vand. Det er sj&aelig;ldent, og det er kraftfuldt. Alt i dig peger mod dybden lige nu. Giv dig selv lov til at synke ind. Dette vindue varer ikke l&aelig;nge.</div>
     </div>
   </div>
 
   <div class="div"></div>
 
-  <!-- KOMMENDE VINDUER -->
+  <!-- KOMMENDE VINDUER — gradueret -->
   <div class="s-pad">
-    <div class="eye">Kommende vinduer</div>
-    <div class="s-head" style="font-size:22px">De n&aelig;ste 90 dage</div>
+    <div class="eye">De n&aelig;ste 90 dage</div>
 
+    <!-- Dobbelt (mild) -->
     <div class="v-card v-card-b" style="text-align:left">
+      <div class="v-level" style="background:rgba(108,130,169,0.10);color:var(--blaa)">Dobbelt</div>
       <div class="v-when" style="color:var(--blaa-p)">12. marts 2026</div>
-      <div class="v-what" style="color:var(--dark);font-size:15px">Tr&aelig; m&oslash;der Vand &mdash; v&aelig;kst fra dybden</div>
-      <div class="v-why" style="color:var(--muted)">M&aring;nedscyklus skifter til Tr&aelig;, mens Vand stadig dominerer. En sj&aelig;lden kombination af n&aelig;ring nedefra.</div>
+      <div class="v-what" style="color:var(--dark);font-size:15px">To cyklusser i Tr&aelig;</div>
+      <div class="v-why" style="color:var(--muted)">Din v&aelig;kstkraft er forst&aelig;rket. Noget i dig s&oslash;ger fremad med ekstra styrke. F&oslash;lg den retning der kalder tydeligt.</div>
     </div>
 
-    <div class="v-card v-card-b" style="text-align:left">
-      <div class="v-when" style="color:var(--blaa-p)">4. april 2026</div>
-      <div class="v-what" style="color:var(--dark);font-size:15px">For&aring;r + Tr&aelig;-m&aring;ned + torsdag Jord</div>
-      <div class="v-why" style="color:var(--muted)">Tr&aelig;-energi er st&aelig;rk i b&aring;de &aring;rstid og m&aring;ned. Jord stabiliserer. Et vindue for at plante noget nyt.</div>
-    </div>
-
-    <div class="v-card v-card-l" style="text-align:left">
-      <div class="v-when" style="color:var(--lilla-l)">17. maj 2026</div>
+    <!-- Relations-vindue -->
+    <div class="v-card v-card-r" style="text-align:left">
+      <div class="v-level" style="background:rgba(123,122,158,0.10);color:var(--rel)">Relation</div>
+      <div class="v-when" style="color:var(--rel)">17. maj 2026</div>
       <div class="v-what" style="color:var(--dark);font-size:15px">Du og Clara har begge Tr&aelig;</div>
-      <div class="v-why" style="color:var(--muted)">Sj&aelig;lden element-resonans mellem jer. Hendes livsfase og din &aring;rstid deler Tr&aelig;. Godt for f&aelig;lles v&aelig;kst.</div>
+      <div class="v-why" style="color:var(--muted)">Sj&aelig;lden element-resonans. Hendes livsfase og din &aring;rstid deler Tr&aelig;. Et vindue for f&aelig;lles v&aelig;kst og dybe samtaler.</div>
+    </div>
+
+    <!-- Overgangsalder-vindue -->
+    <div class="v-card v-card-l" style="text-align:left">
+      <div class="v-level" style="background:rgba(107,95,123,0.10);color:var(--lilla)">Overgangsalder</div>
+      <div class="v-when" style="color:var(--lilla-l)">3. april 2026</div>
+      <div class="v-what" style="color:var(--dark);font-size:15px">Metal + Vand + Vinter</div>
+      <div class="v-why" style="color:var(--muted)">Metal-dag i Vand-&aring;rstid. Lungernes klarhed n&aelig;rer nyrernes dybde. Et godt vindue til at arbejde med s&oslash;vnproblemer &mdash; din krop er ekstra modtagelig for Yin-n&aelig;ring.</div>
+    </div>
+
+    <!-- Tredobbelt (stærkt) -->
+    <div class="v-card v-card-l" style="text-align:left">
+      <div class="v-level" style="background:rgba(107,95,123,0.15);color:var(--lilla)">&#10022; Tredobbelt</div>
+      <div class="v-when" style="color:var(--lilla-l)">28. april 2026</div>
+      <div class="v-what" style="color:var(--dark);font-size:15px">Tre cyklusser i Jord</div>
+      <div class="v-why" style="color:var(--muted)">En sj&aelig;lden dybde af tryghed og fundament. Brug dette vindue til at plante det der skal vare &mdash; relationer, ritualer, r&oslash;dder.</div>
     </div>
   </div>
 
   <div class="div"></div>
 
-  <!-- HVAD GIVER ET SJÆLDENT VINDUE -->
+  <!-- HVAD ER ET SJÆLDENT VINDUE -->
   <div class="s-pad">
-    <div class="eye">Hvad er et sj&aelig;ldent vindue?</div>
+    <div class="eye">Forst&aring; vinduerne</div>
 
     <!-- FIGUR 2: Tidsspiral -->
     <div class="fig">
-      <img src="assets/images/vinduer-tidsspiral.png" alt="Tidsspiralen" style="max-width:240px;margin:0 auto;opacity:0.8;mix-blend-mode:multiply">
+      <img src="assets/images/vinduer-tidsspiral.png" alt="Tidsspiralen" style="max-width:220px;margin:0 auto;opacity:0.8;mix-blend-mode:multiply">
     </div>
 
-    <div class="isa isa-sm">
-      Et sj&aelig;ldent vindue opst&aring;r, n&aring;r flere af dine cyklusser peger i samme retning. M&aring;ske 3 ud af 5 cyklusser er Vand p&aring; &eacute;n gang. Eller du og en du elsker deler element i en kort periode. Appen scanner dine kommende 90 dage og finder dem automatisk.
+    <div class="isa isa-sm" style="margin-bottom:18px">
+      Et sj&aelig;ldent vindue opst&aring;r n&aring;r flere cyklusser peger i samme retning. Jo flere der m&oslash;des, jo st&aelig;rkere er vinduet.
     </div>
 
-    <div style="margin-top:20px">
-      <div class="tema tema-l" onclick="this.classList.toggle('open')">
-        <div class="tema-bar">
-          <div class="tema-t">Overgangsalder-vinduer</div>
-          <div class="tema-arr">&rsaquo;</div>
-        </div>
-        <div class="tema-body"><div class="tema-in">
-          <div class="tema-txt">I overgangsalderen er din krop s&aelig;rlig modtagelig i visse Vand- og Metal-perioder. Appen viser dig hvorn&aring;r disse vinduer &aring;bner sig &mdash; s&aring; du kan m&oslash;de dem med omsorg i stedet for modstand.</div>
-        </div></div>
+    <div class="tema tema-l" onclick="this.classList.toggle('open')">
+      <div class="tema-bar">
+        <div class="tema-t">Overgangsalder-vinduer</div>
+        <div class="tema-arr">&rsaquo;</div>
       </div>
+      <div class="tema-body"><div class="tema-in">
+        <div class="tema-txt">I overgangsalderen er din krop s&aelig;rlig modtagelig i visse Vand- og Metal-perioder. Hedeture, s&oslash;vnproblemer og hum&oslash;rsvingninger p&aring;virkes af dine cyklusser. Appen finder de dage hvor dine cyklusser st&oslash;tter heling.</div>
+        <a class="tema-link">L&aelig;s mere om overgangsalder &rarr;</a>
+      </div></div>
+    </div>
 
-      <div class="tema tema-b" onclick="this.classList.toggle('open')">
-        <div class="tema-bar">
-          <div class="tema-t">Element-symmetri med en relation</div>
-          <div class="tema-arr">&rsaquo;</div>
-        </div>
-        <div class="tema-body"><div class="tema-in">
-          <div class="tema-txt">N&aring;r du og en anden person midlertidigt deler element &mdash; f.eks. begge i Jord &mdash; opst&aring;r en resonans. Disse &oslash;jeblikke er korte men kraftfulde. Appen beregner hvorn&aring;r de sker.</div>
-        </div></div>
+    <div class="tema tema-r" onclick="this.classList.toggle('open')">
+      <div class="tema-bar">
+        <div class="tema-t">Relations-vinduer</div>
+        <div class="tema-arr">&rsaquo;</div>
       </div>
+      <div class="tema-body"><div class="tema-in">
+        <div class="tema-txt">N&aring;r du og en anden person midlertidigt deler element opst&aring;r en resonans. Disse &oslash;jeblikke er korte men kraftfulde. Appen beregner hvorn&aring;r de sker for dig og dine relationer.</div>
+        <a class="tema-link">Se dine relationer &rarr;</a>
+      </div></div>
+    </div>
+
+    <div class="tema tema-b" onclick="this.classList.toggle('open')">
+      <div class="tema-bar">
+        <div class="tema-t">Tre niveauer af vinduer</div>
+        <div class="tema-arr">&rsaquo;</div>
+      </div>
+      <div class="tema-body"><div class="tema-in">
+        <div class="tema-txt"><strong>Dobbelt:</strong> To cyklusser i samme element. En forst&aelig;rkning du m&aelig;rker som en tydelig retning.</div>
+        <div class="tema-txt" style="margin-top:8px"><strong>Tredobbelt:</strong> Tre cyklusser m&oslash;des. Sj&aelig;ldent og kraftfuldt. Alt peger i samme retning.</div>
+        <div class="tema-txt" style="margin-top:8px"><strong>Fuld resonans:</strong> Fire eller fem cyklusser i &eacute;t element. Det sker n&aelig;sten aldrig. En dag der fortjener opm&aelig;rksomhed.</div>
+      </div></div>
     </div>
   </div>
 
@@ -595,10 +700,11 @@ input, select { font-family:var(--sans); }
   <!-- DYK DYBERE -->
   <div class="s-pad" style="text-align:center">
     <div class="eye">Dyk dybere</div>
-    <div class="dyk-links">
-      <span class="dyk-link">Tidsrejse</span>
-      <span class="dyk-link">&Oslash;jeblikke</span>
-      <span class="dyk-link">De Ni Faser</span>
+    <div class="dyk">
+      <span class="dyk-l">Tidsrejse</span>
+      <span class="dyk-l">&Oslash;jeblikke</span>
+      <span class="dyk-l">De Ni Faser</span>
+      <span class="dyk-l">Min Rejse</span>
     </div>
   </div>
 
@@ -637,17 +743,15 @@ function switchTab(id, btn) {
   btn.classList.add('active');
   window.scrollTo({top:0, behavior:'instant'});
 }
-
-document.querySelectorAll('.tema').forEach(t => {
-  t.querySelector('.tema-bar').addEventListener('click', function(e) {
+document.querySelectorAll('.tema-bar').forEach(bar => {
+  bar.addEventListener('click', function(e) {
     e.stopPropagation();
-    t.classList.toggle('open');
+    bar.closest('.tema').classList.toggle('open');
   });
 });
-
 document.querySelectorAll('.chip').forEach(c => {
   c.addEventListener('click', function() {
-    document.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
+    c.parentElement.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
     c.classList.add('active');
   });
 });
