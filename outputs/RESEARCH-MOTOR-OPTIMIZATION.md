@@ -1,6 +1,6 @@
 # Ekspertanalyse: Optimering af Motor & Koncept for Målgruppen
 
-**Dato:** 2026-02-24
+**Dato:** 2026-02-25 (opdateret)
 **Målgruppe:** Danske kvinder 28-63 år
 **Koncept:** PWA companion-app til "De 9 Livsfasers Energi" (TCM fem-elementer × fem cyklusser)
 **Motor:** Vanilla JS PWA, statisk hosting, ingen framework
@@ -9,13 +9,128 @@
 
 ## EXECUTIVE SUMMARY
 
-Appen har en stærk kerne: dyb personalisering via vægtet element-dominans, poetisk stemme (Isabelle), og et unikt koncept der kombinerer TCM fem-elementer med livscyklusser. Men forskning viser at der er **fem kritiske optimeringsområder** hvor eksperter ville forbedre motoren og konceptet markant for målgruppen:
+Appen har en stærk kerne: dyb personalisering via vægtet element-dominans, poetisk stemme (Isabelle), og et unikt koncept der kombinerer TCM fem-elementer med livscyklusser.
 
-1. **Retention-motor** — push-notifikationer og gentle nudges (mangler helt)
-2. **Gamification med sjæl** — streaks, milepæle og progression (kun primitiv streak)
-3. **Performance-optimering** — bundle-størrelse og billedoptimering (452 KB JS, 38 MB billeder)
-4. **Onboarding-dybde** — guided discovery og feature-afsløring (kun 2 steps nu)
-5. **Cyklus-bevidste påmindelser** — den store differentiator ingen konkurrent har
+Kerneerkendelsen fra denne analyse er at **content-dybde er den primære vækstmotor** — ikke tekniske features. Forsiden skal være den eneste destination der virkelig betyder noget, drevet af en content-motor med så meget substans at brugeren aldrig ser det samme to gange.
+
+**Seks strategiske prioriteter:**
+
+1. **Content-motor udvidelse** — fra 250 til 4.000+ tekst-snippets (temaer, tid, relationer)
+2. **Forsiden som alt** — tidslinje, temaer, relationer, øvelser i én scrollbar oplevelse
+3. **Tidsrejse som killer feature** — fortid, nutid, fremtid for sig selv og relationer
+4. **Tematisk dybde** — overgangsalder, graviditet, stress, depression belyst per element
+5. **Retention-motor** — push-notifikationer og gentle nudges (mangler helt)
+6. **Cyklus-bevidste påmindelser** — den store differentiator ingen konkurrent har
+
+---
+
+## 0. CONTENT-MOTOR: NUVÆRENDE TILSTAND OG POTENTIALE
+
+### Nuværende content i data.js (218 KB)
+
+| Datastruktur | Antal snippets | Ord estimat | Dækker |
+|-------------|---------------|-------------|--------|
+| LIVSFASE_DETAIL | 9 faser × 30+ felter | 22.500-27.000 | Krop, sind, kost, øvelser, refleksioner, overgange |
+| DYNAMISK_TEKST | 15 (5×3 niveauer) | 675 | Forsiden daglig læsning |
+| ELEMENT_INTERACTIONS | 25 par | 375 | Relation element-møder |
+| RELATION_RECOMMENDATIONS | 15 (5×3 perspektiver) | 600 | forDig/forAnden/sammen |
+| CYCLE_PAIR_TEXTS | 15 | 900 | Indre cyklus-narrativer |
+| INNER_CLIMATE | 5 klimatyper | 250 | Elementklima-analyser |
+| REFLEKSION_DATA | 27 (9×3) | 405 | Fase-specifikke spørgsmål |
+| YIN_YOGA_FULL | 15 (5×3) | 600 | Yoga per element |
+| INSIGHT_FOOD | 20 (5×4) | 700 | Kost per element |
+| INSIGHT_FOCUS | 15 (5×3) | 300 | Dagligt fokus |
+| TO_RYTMER_SAMTALE | 15 (5×3) | 450 | Samtaleåbnere |
+| MERIDIAN_STRYGNINGER | 8 | 960 | Meridian-teknikker |
+| Andre (11 strukturer) | ~45 | ~2.000 | Menstruation, måne, kontrol, dele-skabeloner |
+| **Total** | **~250-300 snippets** | **~35.000-40.000 ord** | |
+
+### Kombinatorisk rum
+
+Brugeren oplever på ethvert tidspunkt 5-6 samtidige cyklusser:
+```
+5 elementer × 5 elementer × 5 elementer × 5 elementer × 5 elementer × 4 uger = 12.500 kombinationer
+```
+
+Men DYNAMISK_TEKST (forsiden) har kun **15 unikke tekster**. Det betyder gentagelser efter ~2 uger.
+
+### Co-Star-modellen: Hvad der virker
+
+Co-Star har 20 mio downloads og 30-40% daglige aktive brugere — 4× bedre end wellness-gennemsnittet. Deres hemmelighed: brugeren åbner appen og får noget **unikt, personligt og friskt hver dag**. De åbner 2-3 gange dagligt af ren nysgerrighed.
+
+Forskellen: Co-Star har kun ét input (fødselsdata + planetpositioner). Denne app har **fem simultane cyklusser**. Det giver en langt rigere kombinatorisk motor — hvis content-korpusset matcher.
+
+### Content-udvidelse: Konkret plan
+
+**Mål:** Fra ~250 snippets til ~4.000-5.000 snippets
+
+| Content-blok | Antal | Gns. ord | Total ord |
+|-------------|-------|----------|-----------|
+| Element × fase daglig tekst | 45 (5×9) | 60 | 2.700 |
+| Element × tema dybde (6 temaer) | 30 | 200 | 6.000 |
+| Element × relation kontekst | 20 (5×4 typer) | 100 | 2.000 |
+| Tidsrejse par-tekster | 25 (5×5 par) | 150 | 3.750 |
+| Overgangsalder specifik | 15 | 200 | 3.000 |
+| Graviditet specifik | 15 | 200 | 3.000 |
+| Stress/depression/ensomhed | 25 | 150 | 3.750 |
+| Morgen/aften variationer | 30 | 40 | 1.200 |
+| **Ny content total** | **~205 blokke** | — | **~25.000 ord** |
+
+25.000 ord = ~50 sider tekst = ~60-80 KB ekstra i data.js. **Teknisk trivielt.**
+
+### TCM har substansen
+
+Hvert element har dybe, veldokumenterede forbindelser til specifikke livstemaer:
+
+| Tema | Element-vinkel | Kilde |
+|------|---------------|-------|
+| **Overgangsalder** | Kidney Yin-mangel (VAND), Lever Qi-stagnation (TRÆ) | [FemGevity Health](https://www.femgevityhealth.com/blog/exploring-traditional-chinese-medicine-for-menopause-symptom-relief) |
+| **Graviditet** | Kidney Yang (VAND), Spleen Qi (JORD) | [Golden Root Acupuncture](https://goldenrootacu.com/2024/09/24/tcmpsychology-and-the-menstrual-cycle/) |
+| **Stress** | Lever Qi-stagnation (TRÆ), Hjerte-uro (ILD) | [Michigan Acupuncture](https://www.acupunctureinmichigan.com/stress-the-five-elements-of-chinese-medicine/) |
+| **Depression** | Lever (TRÆ), Nyre-frygt (VAND), Lunge-sorg (METAL) | [PMC Research](https://pmc.ncbi.nlm.nih.gov/articles/PMC11129158/) |
+| **Ensomhed** | Metal-sorg, Vand-isolation, Jord-overomsorg | [TCM World](https://www.tcmworld.org/what-is-tcm/five-elements/) |
+| **Forandring/tab** | Metal-slip, Vand-frygt, Træ-frustration | [Open Care Community](https://opencarecommunity.com/blog/five-elements-chinese-medicine-health) |
+
+Hvert element stresser på sin unikke måde:
+- **VAND** fryser — tilbagetrækning, frygt, isolation
+- **TRÆ** eksploderer — frustration, vrede, manglende retning
+- **ILD** brænder ud — overeksitering, angst, forbindelses-tab
+- **JORD** grublerer — bekymring, overkontrol, selvopofring
+- **METAL** lukker af — sorg, perfektionisme, ensomhed
+
+### Forsiden som den eneste destination
+
+**Nuværende:** Forside har 7 sektioner med navigation til 44 skærme.
+**Vision:** Forside bliver en dyb, scrollbar oplevelse med tre lag:
+
+**Lag 1: "Lige nu"**
+> Dit dominerende element + poetisk daglig læsning + cyklus-oversigt + indre klima
+
+**Lag 2: "Temaer og relationer"**
+> Element-specifik dybde om overgangsalder/stress/etc. + relation-møder i dag
+
+**Lag 3: "Tidslinje"**
+> Hvad der kommer (i morgen, næste uge, næste måned) + sjældne vinduer + relation-resonanser
+
+Alt andet er "dyk dybere"-links fra forsiden — ikke selvstændige navigations-destinationer.
+
+### Tidsrejse: Killer feature
+
+Beregningslogikken (`cyclesAtDate()`) er allerede der. Hvad der mangler er **rig nok content** til at gøre svaret meningsfuldt.
+
+**Eksempel med content-dybde:**
+> **Tirsdag kl. 16: Du og Emma**
+> Du er i VAND (livsfase 5, vinter). Emma er i ILD (livsfase 2, vinter).
+> Vand møder Ild — din dybde kan dæmpe hendes flamme, men også beskytte den.
+>
+> *Hvad det betyder for jeres eftermiddag:*
+> Du vil sandsynligvis søge ro. Emma vil søge forbindelse og opmærksomhed.
+> Gaven er at dit vand kan rumme hendes ild — uden at slukke den.
+>
+> *En øvelse for jer to:*
+> Sid sammen 5 minutter. Lad Emma fortælle om sin dag mens du bare lytter.
+
+**Det kræver content, ikke teknologi.**
 
 ---
 
@@ -291,60 +406,74 @@ Danmark er **foregangsland** for digital sundhed ([Odelle Technology](https://od
 
 ---
 
-## 7. PRIORITERET HANDLINGSPLAN
+## 7. PRIORITERET HANDLINGSPLAN (REVIDERET)
 
-Baseret på al forskning, rangeret efter **impact × feasibility** for denne specifikke motor og målgruppe:
+Baseret på al forskning + content-motor-analyse, rangeret efter **impact × feasibility**:
 
-### Tier 1 — Hurtige gevinster (høj impact, lav indsats)
-
-| # | Optimering | Impact | Indsats |
-|---|-----------|--------|---------|
-| 1 | Fjern dead code (arc-nav.js/css) | Performance + code hygiene | 10 min |
-| 2 | Tilføj `loading="lazy"` til alle billeder | FCP forbedring | 30 min |
-| 3 | Streak-milepæle med Isabelle-tekst | Retention + gamification | 2-3 timer |
-| 4 | "Energi-vejrudsigt" tekst på forside | Unik daglig værdi | 2-3 timer |
-
-### Tier 2 — Strategiske forbedringer (høj impact, moderat indsats)
+### Tier 1 — Content-motor (højeste impact)
 
 | # | Optimering | Impact | Indsats |
 |---|-----------|--------|---------|
-| 5 | Web Notifications API + morgen/aften nudges | Retention game-changer | 1-2 dage |
-| 6 | Cyklus-skift alerts | Unik differentiator | 1 dag |
-| 7 | Progressiv onboarding (uge 1-4 discovery) | Reducér 30-dag churn | 1-2 dage |
-| 8 | Billede-optimering (WebP + compression) | 60-70% billedreduktion | 1 dag |
+| 1 | Skriv tematisk dybde-content (overgangsalder, stress, graviditet per element) | Transformativ — gør appen uerstattelig | Skriveprocess (~50 sider) |
+| 2 | Redesign forside som primær destination (3 lag: nu/temaer/tidslinje) | Daglig åbningsgrund | Moderat refaktor |
+| 3 | Kobl tidsrejse til dybde-content (relation-møder, fremtidige skift) | Killer feature | Moderat |
+| 4 | Morgen/aften tekst-variationer per element × fase | Friskhed ved genbesøg | Content + let kode |
 
-### Tier 3 — Dybe forbedringer (transformativ impact, stor indsats)
+### Tier 2 — Retention og daglig vane
 
 | # | Optimering | Impact | Indsats |
 |---|-----------|--------|---------|
-| 9 | Organur-vinduer med aktive notifikationer | Killer feature | 2-3 dage |
-| 10 | Rejse-tidslinje visualisering | Langvarig engagement | 2-3 dage |
+| 5 | Web Notifications API + morgen/aften nudges i Isabelles stemme | Retention game-changer | 1-2 dage |
+| 6 | Cyklus-skift alerts ("i morgen skifter du til...") | Unik differentiator | 1 dag |
+| 7 | Organur-vinduer med aktive notifikationer | Sjældne vinduer | 2-3 dage |
+| 8 | Streak-milepæle med poetisk tekst | Stille gamification | 2-3 timer |
+
+### Tier 3 — Teknisk optimering
+
+| # | Optimering | Impact | Indsats |
+|---|-----------|--------|---------|
+| 9 | Fjern dead code (arc-nav.js/css) | Code hygiene | 10 min |
+| 10 | Billede-optimering (WebP + lazy-load) | Performance | 1 dag |
 | 11 | JS minifikation + build pipeline | Performance | 1 dag |
-| 12 | Code-split app.js + data.js | Skalerbarhed | 3-5 dage |
+| 12 | Split data.js i chunks (vigtigt med mere content) | Skalerbarhed | 2-3 dage |
 
 ---
 
 ## 8. KONKLUSION
 
+### Kerneerkendelsen
+
+**Content er motoren. Teknologi er bare beholderen.**
+
+Appen har allerede beregningslogikken til at kombinere fem cyklusser, analysere element-interaktioner, og rejse i tid. Hvad der mangler er **nok tekst til at gøre hver kombination meningsfuld og unik**.
+
+Med ~250 tekst-snippets ser brugeren gentagelser efter 2 uger. Med ~4.000 snippets organiseret i temaer (overgangsalder, stress, graviditet, relationer, overgange) og tid (morgen/aften, cyklus-skift, sjældne vinduer), kan motoren levere **frisk, personlig indsigt hver eneste dag i årevis**.
+
+### Forsiden som alt
+
+Andre screens er "dyk dybere"-links. Forsiden er det eneste brugeren behøver. Tre lag:
+
+1. **"Lige nu"** — element, klima, cyklusser, daglig læsning
+2. **"Temaer"** — overgangsalder/stress/etc. belyst gennem dagens element + fase
+3. **"Tidslinje"** — hvad der kommer, sjældne vinduer, relations-resonanser
+
+### Det Co-Star beviser
+
+Astrologiapps har 30-40% daglige aktive brugere fordi de leverer **noget nyt hver dag** som føles personligt. Denne app har et stærkere fundament (5 cyklusser vs. 1 fødselsdata), men et tyndere content-lag. Løsningen er ikke mere teknologi — det er mere substans.
+
 ### Appens styrker (bevar disse)
 
 - **Unik positionering:** Ingen konkurrent kombinerer 5 cyklusser × 5 elementer
-- **Isabelles stemme:** Poetisk, tentativ, personlig — præcis hvad målgruppen responderer på
-- **Dyb personalisering:** Vægtet dominans-algoritme er sofistikeret og meningsfuld
+- **Isabelles stemme:** Poetisk, tentativ, personlig — præcis hvad 73% kvindelige mindfulness-brugere foretrækker
+- **Beregningsmotor:** cyclesAtDate(), getWeightedDominant(), analyzeClimate() — allerede sofistikeret
 - **Æstetisk kvalitet:** Farver, fonts, og layout er roligt og tillidsfuldt
-- **Simpel teknologi:** Vanilla JS = hurtig, vedligeholdelsesvenlig, ingen dependency-risiko
-
-### Appens gaps (prioriter disse)
-
-- **Retention-motor mangler:** Uden push-notifikationer forsvinder brugere efter dag 3
-- **Gamification er for spartansk:** Streaks tæller men fejrer ikke
-- **Performance kan forbedres:** 452 KB JS + 38 MB billeder hæmmer mobile brugere
-- **Onboarding afslører for lidt:** Brugere opdager ikke 80% af features
-- **Den største feature er usynlig:** Cyklus-skift og organur-vinduer bruges ikke proaktivt
+- **Simpel teknologi:** Vanilla JS = ingen dependency-risiko, fuld kontrol
 
 ### Det store billede
 
-Denne app sidder i krydspunktet mellem **FemTech** (€6.69 mia marked i 2034), **mindfulness-apps** (73% kvindelige brugere), og **TCM digital wellness** (voksende niche). Med de rigtige optimering af motoren og konceptet kan den gå fra en bog-companion til en **daglig livscyklus-companion** der ingen konkurrenter har.
+Denne app sidder i krydspunktet mellem **FemTech** (€6.69 mia marked i 2034), **mindfulness-apps** (73% kvindelige brugere), og **TCM digital wellness** (voksende niche).
+
+Med content-dybde kan den gå fra en bog-companion til en **daglig livscyklus-companion** — noget brugeren åbner hver morgen af nysgerrighed, sidder med om aftenen for refleksion, og konsulterer før vigtige møder med relationer. Ingen konkurrent kan kopiere dette, fordi det kræver dyb TCM-viden + Isabelles unikke stemme.
 
 ---
 
@@ -376,3 +505,17 @@ Denne app sidder i krydspunktet mellem **FemTech** (€6.69 mia marked i 2034), 
 - [Lollypop: PWA UX Tips 2025](https://lollypop.design/blog/2025/september/progressive-web-app-ux-tips-2025/)
 - [TCM Mobile Apps: Ancient Wisdom to Modern Convenience](https://fastercapital.com/content/TCM-Mobile-App--From-Ancient-Wisdom-to-Modern-Convenience--How-TCM-Apps-Are-Changing-Healthcare.html)
 - [TCM World: Five Element Framework](https://www.tcmworld.org/what-is-tcm/five-elements/)
+- [Co-Star Astrology App](https://www.costarastrology.com/)
+- [Co-Star Design Critique (IXD@Pratt)](https://ixd.prattsi.org/2022/02/design-critique-co-star-iphone-app/)
+- [How Co-Star Design Conquers the Masses (Medium)](https://medium.com/demagsign/how-the-design-of-the-astrology-app-co-star-is-conquering-the-masses-d6b6d235c806)
+- [Astrology App Retention Best Practices (Vocal)](https://vocal.media/education/user-engagement-in-astrology-apps-best-practices-for-retention)
+- [How to Develop an Astrology App Like Co-Star](https://www.apptunix.com/blog/how-to-develop-an-astrology-app-like-co-star/)
+- [AI in Astrology: Personalization Models](https://www.digittrix.com/blogs/ai-in-astrology-models-data-personalization)
+- [Mobile App Retention Benchmarks 2025](https://growth-onomics.com/mobile-app-retention-benchmarks-by-industry-2025/)
+- [FemGevity: TCM for Menopause](https://www.femgevityhealth.com/blog/exploring-traditional-chinese-medicine-for-menopause-symptom-relief)
+- [Stress & The Five Elements (Michigan Acupuncture)](https://www.acupunctureinmichigan.com/stress-the-five-elements-of-chinese-medicine/)
+- [TCM & The Menstrual Cycle (Golden Root)](https://goldenrootacu.com/2024/09/24/tcmpsychology-and-the-menstrual-cycle/)
+- [PMC: TCM Impact on Depression](https://pmc.ncbi.nlm.nih.gov/articles/PMC11129158/)
+- [TCM Perspectives on Menopause (Climacteric Journal)](https://www.tandfonline.com/doi/full/10.1080/13697137.2018.1434983)
+- [Menopausal Syndrome in Chinese Medicine (MeAndQi)](https://www.meandqi.com/tcm-education-center/diseases/menopausal-syndrome)
+- [Five Elements & Health (Open Care Community)](https://opencarecommunity.com/blog/five-elements-chinese-medicine-health)
