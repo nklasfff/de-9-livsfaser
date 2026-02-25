@@ -3434,29 +3434,8 @@ function buildRelationReading() {
     }
   }
 
-  // ── 2. DYK DYBERE — inline expandable bogtekst ──
-  const linksEl = document.getElementById('rel-deep-links');
-  if (linksEl) {
-    let html = '';
-
-    // a) Relationer i din fase — kort, expandable
-    if (userDetail && userDetail.relationerIFasen) {
-      html += '<div style="padding:14px 18px;background:rgba(123,122,158,0.04);border:1px solid rgba(123,122,158,0.08);border-radius:var(--radius);margin-bottom:8px">';
-      html += '<div style="font-family:var(--font-sans);font-size:11px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Relationer i din fase</div>';
-      html += '<div class="isa isa-sm" style="margin:0">' + formatExpandable(userDetail.relationerIFasen, 15) + '</div>';
-      html += '</div>';
-    }
-
-    // b) Partnerens fase — kort, expandable
-    if (theirDetail && theirDetail.introText) {
-      html += '<div style="padding:14px 18px;background:rgba(123,122,158,0.04);border:1px solid rgba(123,122,158,0.08);border-radius:var(--radius);margin-bottom:8px">';
-      html += '<div style="font-family:var(--font-sans);font-size:11px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">' + rel.name + ' \u00b7 Fase ' + theirPhaseNum + ' \u00b7 ' + theirElLabel + '</div>';
-      html += '<div class="isa isa-sm" style="margin:0">' + formatExpandable(theirDetail.introText, 15) + '</div>';
-      html += '</div>';
-    }
-
-    linksEl.innerHTML = html;
-  }
+  // ── 2. TEMAER — foldbare dybe kort (som forsidens temaer) ──
+  renderRelationTemaer(rel, userEl, theirEl, userPhaseNum, theirPhaseNum, userDetail, theirDetail);
 
   // ── 3. SAMTALE\u00c5BNER — een poetisk saetning ──
   const samtale = typeof TO_RYTMER_SAMTALE !== 'undefined' ? TO_RYTMER_SAMTALE[userEl] : null;
@@ -3465,18 +3444,119 @@ function buildRelationReading() {
     samtaleEl.innerHTML = '\u00ab\u2009' + samtale.spoerg + '\u2009\u00bb';
   }
 
-  // ── 4. UDFORSK VIDERE — intelligente links (unikt indhold per person) ──
-  const exploreEl = document.getElementById('rel-explore-links');
-  if (exploreEl) {
-    let eHtml = '';
-    eHtml += '<span class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)" onclick="window._selectedPhase=' + userPhaseNum + ';Router.navigate(\'livsfase-detail\')">Din fase i dybden \u2192</span>';
-    eHtml += '<span class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)" onclick="window._selectedPhase=' + theirPhaseNum + ';Router.navigate(\'livsfase-detail\')">' + rel.name + 's fase \u2192</span>';
-    eHtml += '<span class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)" onclick="Router.navigate(\'rel-tre-gen\')">Tre generationer \u2192</span>';
-    eHtml += '<span class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)" onclick="Router.navigate(\'cir-dit-liv\')">Dit dybe billede \u2192</span>';
-    exploreEl.innerHTML = eHtml;
+  window.scrollTo({ top: 0 });
+}
+
+// ── renderRelationTemaer — foldbare kort med dybt relations-indhold ──
+function renderRelationTemaer(rel, userEl, theirEl, userPhaseNum, theirPhaseNum, userDetail, theirDetail) {
+  var container = document.getElementById('rel-temaer');
+  if (!container) return;
+
+  var temaer = [];
+  var pairKey = userEl + '_' + theirEl;
+  var userElLabel = Calculations.ELEMENT_LABELS[userEl];
+  var theirElLabel = Calculations.ELEMENT_LABELS[theirEl];
+
+  // Tema 1: Jeres element-dynamik (TIDSREJSE_PAR)
+  if (typeof TIDSREJSE_PAR !== 'undefined' && TIDSREJSE_PAR[pairKey]) {
+    var par = TIDSREJSE_PAR[pairKey];
+    var body = par.intro.replace(/\{navn\}/g, rel.name);
+    if (par.raad) body += '\n\n' + par.raad.replace(/\{navn\}/g, rel.name);
+    temaer.push({
+      titel: userElLabel + ' m\u00f8der ' + theirElLabel,
+      tekst: body,
+      link: { label: 'Se jeres konstellation \u2192', route: 'rel-konstellation' }
+    });
   }
 
-  window.scrollTo({ top: 0 });
+  // Tema 2: Samtale — alle tre felter (spoerg/sig/sammen)
+  if (typeof TO_RYTMER_SAMTALE !== 'undefined' && TO_RYTMER_SAMTALE[userEl]) {
+    var s = TO_RYTMER_SAMTALE[userEl];
+    var samBody = 'Sp\u00f8rg: \u00ab ' + s.spoerg + ' \u00bb';
+    samBody += '\n\nSig: \u00ab ' + s.sig + ' \u00bb';
+    samBody += '\n\nSammen: \u00ab ' + s.sammen + ' \u00bb';
+    temaer.push({
+      titel: 'Samtale med ' + rel.name,
+      tekst: samBody,
+      link: { label: 'L\u00e6s om to rytmer \u2192', route: 'rel-to-rytmer' }
+    });
+  }
+
+  // Tema 3: Relationer i din fase (LIVSFASE_DETAIL)
+  if (userDetail && userDetail.relationerIFasen) {
+    temaer.push({
+      titel: 'Relationer i din fase',
+      tekst: userDetail.relationerIFasen,
+      link: { label: 'Se din fase i dybden \u2192', route: 'livsfase-detail', phase: userPhaseNum }
+    });
+  }
+
+  // Tema 4: Partnerens fase
+  if (theirDetail && theirDetail.introText) {
+    var theirBody = theirDetail.introText;
+    if (theirDetail.denneFaseIDig) theirBody += '\n\n' + theirDetail.denneFaseIDig;
+    temaer.push({
+      titel: rel.name + ' \u00b7 Fase ' + theirPhaseNum + ' \u00b7 ' + theirElLabel,
+      tekst: theirBody,
+      link: { label: 'Se ' + rel.name + 's fase \u2192', route: 'livsfase-detail', phase: theirPhaseNum }
+    });
+  }
+
+  // Tema 5: Centrale foelelser (begge)
+  if (userDetail && userDetail.centralFoelelse && theirDetail && theirDetail.centralFoelelse) {
+    var fBody = 'Dig: ' + userDetail.centralFoelelse.title + '\n' + userDetail.centralFoelelse.tekst;
+    fBody += '\n\n' + rel.name + ': ' + theirDetail.centralFoelelse.title + '\n' + theirDetail.centralFoelelse.tekst;
+    temaer.push({
+      titel: 'Jeres centrale f\u00f8lelser',
+      tekst: fBody
+    });
+  }
+
+  if (temaer.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+
+  // Render som foldbare kort (praecis som forsidens renderTemaer)
+  var tone = '123,122,158'; // relationer-tone
+  container.innerHTML = '<div class="eyebrow" style="color:#88839e">Temaer for jer</div>' +
+    temaer.map(function(t) {
+      var fullText = t.tekst.replace(/\n/g, '<br>');
+      var linkHtml = '';
+      if (t.link) {
+        var onclick = t.link.phase
+          ? "event.stopPropagation();window._selectedPhase=" + t.link.phase + ";Router.navigate('" + t.link.route + "')"
+          : "event.stopPropagation();Router.navigate('" + t.link.route + "')";
+        linkHtml = '<a onclick="' + onclick + '" style="display:inline-block;margin-top:10px;font-family:var(--font-serif);font-size:13px;font-style:italic;color:#7b7a9e;opacity:0.7;cursor:pointer">' + t.link.label + '</a>';
+      }
+      return '<div class="tema" onclick="this.classList.toggle(\'open\')" style="background:rgba(' + tone + ',0.03);border:1px solid rgba(' + tone + ',0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center">' +
+          '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">' + t.titel + '</div>' +
+          '<div class="tema-arr" style="font-size:18px;color:rgba(' + tone + ',0.4);transition:transform 0.2s">\u203a</div>' +
+        '</div>' +
+        '<div class="tema-body" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease">' +
+          '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(' + tone + ',0.06)">' + fullText + '</div>' +
+          linkHtml +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+  // Aktiver fold-toggle (praecis som forsidens temaer)
+  container.querySelectorAll('.tema').forEach(function(tema) {
+    tema.addEventListener('click', function() {
+      var body = this.querySelector('.tema-body');
+      var arr = this.querySelector('.tema-arr');
+      if (body) {
+        if (body.style.maxHeight && body.style.maxHeight !== '0px') {
+          body.style.maxHeight = '0px';
+          if (arr) arr.style.transform = '';
+        } else {
+          body.style.maxHeight = body.scrollHeight + 'px';
+          if (arr) arr.style.transform = 'rotate(90deg)';
+        }
+      }
+    });
+  });
 }
 
 /* ============================================================
