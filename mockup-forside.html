@@ -33,6 +33,7 @@
 html { -webkit-text-size-adjust:100%; -webkit-tap-highlight-color:transparent; }
 body { background:var(--bg); font-family:var(--sans); color:var(--mid); -webkit-font-smoothing:antialiased; overflow-x:hidden; }
 a { color:inherit; text-decoration:none; }
+img { max-width:100%; height:auto; display:block; }
 
 /* Header */
 .hdr { position:fixed; top:0; left:0; right:0; z-index:100; background:var(--bg); padding:var(--safe-t) 0 0; }
@@ -40,7 +41,7 @@ a { color:inherit; text-decoration:none; }
 .hdr-title { font-family:var(--serif); font-size:17px; font-style:italic; color:var(--dark); }
 .hdr-title span { color:var(--lilla); font-size:30px; }
 .hdr-line { height:1px; background:linear-gradient(90deg, transparent, rgba(108,130,169,0.28) 25%, rgba(108,130,169,0.28) 75%, transparent); margin:0 var(--pad); }
-.hdr-btn { position:absolute; top:50%; transform:translateY(-50%); color:var(--blaa-p); }
+.hdr-btn { position:absolute; top:50%; transform:translateY(-50%); color:var(--blaa-p); background:none; border:none; }
 .hdr-btn svg { width:20px; height:20px; }
 .hdr-l { left:var(--pad); color:var(--blaa); }
 .hdr-r { right:var(--pad); }
@@ -54,8 +55,17 @@ main { padding-top:calc(57px + var(--safe-t)); padding-bottom:60px; }
 /* Eyebrow */
 .eye { font-family:var(--sans); font-size:11px; color:var(--blaa-p); letter-spacing:3px; text-transform:uppercase; text-align:center; margin-bottom:4px; }
 
+/* Section heading — used for each lag */
+.lag-head { font-family:var(--serif); font-size:26px; color:var(--dark); text-align:center; line-height:1.3; margin-bottom:6px; }
+.lag-sub { font-family:var(--serif); font-size:15px; font-style:italic; color:var(--light); text-align:center; letter-spacing:0.5px; margin-bottom:28px; }
+
 /* Divider between layers */
 .div { height:1px; background:linear-gradient(90deg, transparent, rgba(108,130,169,0.12) 30%, rgba(108,130,169,0.12) 70%, transparent); margin:40px var(--pad); }
+
+/* Figure container */
+.fig { text-align:center; margin:24px auto; }
+.fig img { margin:0 auto; }
+.fig-caption { font-family:var(--serif); font-size:13px; font-style:italic; color:var(--light); text-align:center; margin-top:10px; line-height:1.5; }
 
 /* ── LAG 1 ── */
 .hero { text-align:center; padding:36px var(--pad) 0; }
@@ -63,13 +73,12 @@ main { padding-top:calc(57px + var(--safe-t)); padding-bottom:60px; }
 .hero-el { font-family:var(--serif); font-size:32px; color:var(--dark); margin-top:6px; }
 .hero-qual { font-family:var(--serif); font-size:15px; font-style:italic; color:var(--light); margin-top:8px; letter-spacing:0.5px; }
 
-.reading { font-family:var(--serif); font-size:17px; font-style:italic; color:var(--body); line-height:1.7; text-align:center; max-width:320px; margin:32px auto 0; }
+.reading { font-family:var(--serif); font-size:17px; font-style:italic; color:var(--body); line-height:1.7; text-align:center; max-width:320px; margin:28px auto 0; }
 
-.cyk-link { display:block; text-align:center; margin-top:28px; font-family:var(--serif); font-size:14px; font-style:italic; color:var(--blaa); opacity:0.6; }
+.cyk-link { display:block; text-align:center; margin-top:24px; font-family:var(--serif); font-size:14px; font-style:italic; color:var(--blaa); opacity:0.6; }
 
 /* ── LAG 2 ── */
 .lag2 { padding:0 var(--pad); }
-.lag2-head { font-family:var(--serif); font-size:22px; font-style:italic; color:var(--dark); text-align:center; margin-bottom:24px; line-height:1.35; }
 
 /* Tema cards — foldable */
 .tema { margin-bottom:12px; border-radius:var(--r); overflow:hidden; }
@@ -106,9 +115,9 @@ main { padding-top:calc(57px + var(--safe-t)); padding-bottom:60px; }
 .tl-text { font-family:var(--serif); font-size:15.5px; font-style:italic; color:var(--body); line-height:1.55; }
 .tl-text em { font-style:normal; color:var(--blaa); }
 
-/* Rare window — highlight */
-.vindue { margin-top:24px; border-radius:var(--r); padding:24px 22px; text-align:center; background:linear-gradient(135deg, rgba(107,95,123,0.06), rgba(108,130,169,0.04)); border:1px solid rgba(107,95,123,0.10); }
-.vindue-label { font-family:var(--sans); font-size:10px; letter-spacing:2.5px; text-transform:uppercase; color:var(--lilla-l); margin-bottom:10px; }
+/* ── SJÆLDENT VINDUE ── */
+.vindue { border-radius:var(--r); padding:32px 22px; text-align:center; background:linear-gradient(135deg, rgba(107,95,123,0.06), rgba(108,130,169,0.04)); border:1px solid rgba(107,95,123,0.10); }
+.vindue-lotus { width:100px; height:100px; border-radius:50%; margin:0 auto 20px; }
 .vindue-text { font-family:var(--serif); font-size:16px; font-style:italic; color:var(--lilla); line-height:1.6; }
 .vindue-sub { font-family:var(--sans); font-size:13px; color:var(--muted); font-weight:300; margin-top:10px; line-height:1.5; }
 
@@ -145,15 +154,20 @@ main { padding-top:calc(57px + var(--safe-t)); padding-bottom:60px; }
 
 <main>
 
-  <!-- ═══════════════════════════════════════
+  <!-- ═══════════════════════════════════════════════
        LAG 1: LIGE NU
-       Altid synligt. Rent, poetisk, luftigt.
-       ═══════════════════════════════════════ -->
+       Element + koncentriske cirkler + poetisk tekst
+       ═══════════════════════════════════════════════ -->
 
   <div class="hero">
     <div class="hero-tegn">&#27700;</div>
     <div class="hero-el">Vand</div>
     <div class="hero-qual">stilhed &middot; dybde &middot; intuition</div>
+  </div>
+
+  <!-- FIGUR: Koncentriske cirkler — dine 5 cyklusser -->
+  <div class="fig" style="padding:0 16px;">
+    <img src="assets/images/koncentriske-cirkler.svg" alt="Dine fem cyklusser i koncentriske cirkler" style="max-width:320px;margin:0 auto;opacity:0.85">
   </div>
 
   <div class="reading">
@@ -165,15 +179,20 @@ main { padding-top:calc(57px + var(--safe-t)); padding-bottom:60px; }
   <!-- ─── divider ─── -->
   <div class="div"></div>
 
-  <!-- ═══════════════════════════════════════
+  <!-- ═══════════════════════════════════════════════
        LAG 2: TEMAER
-       Foldbare kort. Man vælger selv.
-       Lukkede som default — kun titler synlige.
-       ═══════════════════════════════════════ -->
+       Overskrift + tre-lag figur + foldbare kort
+       ═══════════════════════════════════════════════ -->
 
   <div class="lag2">
     <div class="eye">Temaer for dig i dag</div>
-    <div class="lag2-head">Hvad dit Vand-element<br>betyder lige nu</div>
+    <div class="lag-head">Hvad dit Vand-element<br>betyder lige nu</div>
+
+    <!-- FIGUR: Tre lag — DIG NU / faserne / din livshistorie -->
+    <div class="fig" style="padding:0 20px;">
+      <img src="assets/images/tidslinje-tre-lag.png" alt="Tre lag: DIG NU, faserne, din livshistorie" style="max-width:280px;margin:0 auto;opacity:0.8;mix-blend-mode:multiply">
+      <div class="fig-caption">Du er i centrum &mdash; omgivet af dine faser og din historie</div>
+    </div>
 
     <!-- Tema 1: Overgangsalder -->
     <div class="tema tema-blaa" onclick="this.classList.toggle('open')">
@@ -222,13 +241,21 @@ main { padding-top:calc(57px + var(--safe-t)); padding-bottom:60px; }
   <!-- ─── divider ─── -->
   <div class="div"></div>
 
-  <!-- ═══════════════════════════════════════
-       LAG 3: TIDSLINJE
-       Hvad der kommer. Interaktiv.
-       ═══════════════════════════════════════ -->
+  <!-- ═══════════════════════════════════════════════
+       LAG 3: HVAD DER KOMMER
+       Tydelig overskrift + 9-cirkler figur + tidslinje
+       ═══════════════════════════════════════════════ -->
 
   <div class="block">
-    <div class="eye">Hvad der kommer</div>
+    <div class="eye">Din tidslinje</div>
+    <div class="lag-head">Hvad der kommer</div>
+    <div class="lag-sub">De n&aelig;ste skift i dine cyklusser</div>
+
+    <!-- FIGUR: De 9 livsfaser — buen -->
+    <div class="fig">
+      <img src="assets/images/tidslinje-livets-bue.png" alt="De ni livsfaser i en bue — DU ER HER ved fase 9" style="max-width:380px;margin:0 auto;opacity:0.85;mix-blend-mode:multiply">
+      <div class="fig-caption">Ni faser &mdash; du er her</div>
+    </div>
 
     <div class="tl-item">
       <div class="tl-when">I morgen &middot; kl. 15&ndash;17</div>
@@ -245,22 +272,37 @@ main { padding-top:calc(57px + var(--safe-t)); padding-bottom:60px; }
       <div class="tl-text">Du og Mikkel har begge <em>Jord</em>-energi &mdash; en sj&aelig;lden resonans. Godt for dybe samtaler.</div>
     </div>
 
-    <!-- Sjældent vindue -->
-    <div class="vindue">
-      <div class="vindue-label">&#10022; Sj&aelig;ldent vindue</div>
-      <div class="vindue-text">3 af dine 5 cyklusser er Vand i dag. Det sker f&aring; gange om &aring;ret.</div>
-      <div class="vindue-sub">Et vindue for dyb intuition. M&aelig;rk hvad der bobler op fra dybden.</div>
-    </div>
-
     <a class="explore">Udforsk en bestemt dato &rarr;</a>
   </div>
 
   <!-- ─── divider ─── -->
   <div class="div"></div>
 
-  <!-- ═══════════════════════════════════════
+  <!-- ═══════════════════════════════════════════════
+       SJÆLDENT VINDUE
+       Tydelig overskrift + blå lotus + poetisk tekst
+       ═══════════════════════════════════════════════ -->
+
+  <div class="block">
+    <div class="eye">&#10022; Sj&aelig;ldent vindue</div>
+    <div class="lag-head">Tre cyklusser<br>m&oslash;des i Vand</div>
+    <div class="lag-sub">Det sker f&aring; gange om &aring;ret</div>
+
+    <div class="vindue">
+      <!-- FIGUR: Blå cirkel med hvid lotus -->
+      <img class="vindue-lotus" src="assets/images/lotus-maerk-efter.png" alt="Lotus i bl&aring; cirkel" style="width:110px;height:110px;object-fit:cover;">
+
+      <div class="vindue-text">3 af dine 5 cyklusser er Vand i dag. Livsfase, &aring;rstid og ugedag peger alle indad p&aring; &eacute;n gang.</div>
+      <div class="vindue-sub">Et vindue for dyb intuition. M&aelig;rk hvad der bobler op fra dybden.</div>
+    </div>
+  </div>
+
+  <!-- ─── divider ─── -->
+  <div class="div"></div>
+
+  <!-- ═══════════════════════════════════════════════
        MÆRK EFTER — minimal check-in
-       ═══════════════════════════════════════ -->
+       ═══════════════════════════════════════════════ -->
 
   <div class="checkin">
     <div class="eye">M&aelig;rk efter</div>
@@ -279,9 +321,9 @@ main { padding-top:calc(57px + var(--safe-t)); padding-bottom:60px; }
   <!-- ─── divider ─── -->
   <div class="div"></div>
 
-  <!-- ═══════════════════════════════════════
+  <!-- ═══════════════════════════════════════════════
        DYK DYBERE — links til alt andet
-       ═══════════════════════════════════════ -->
+       ═══════════════════════════════════════════════ -->
 
   <div class="dyk">
     <div class="eye">Dyk dybere</div>
