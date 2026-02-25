@@ -3559,6 +3559,160 @@ function renderRelationTemaer(rel, userEl, theirEl, userPhaseNum, theirPhaseNum,
   });
 }
 
+// ── initRelDybere — fuld fordybelse som cir-dit-liv men for relationer ──
+function initRelDybere() {
+  var user = Storage.getUser();
+  if (!user || !user.birthdate) return;
+  var rel = RelDeepState.selectedPerson;
+  if (!rel || !rel.birthdate) {
+    // Fallback: brug foerste relation eller eksempel
+    var rels = Storage.getRelations();
+    if (rels && rels.length) { rel = rels[0]; }
+    else { rel = { name: 'Partner', birthdate: '1983-04-15', gender: 'male', type: 'partner' }; }
+  }
+
+  var targetDate = RelDeepState.targetDate || new Date();
+  var isMale = rel.gender === 'male';
+  var userCycles = Calculations.allCycles(user.birthdate, targetDate);
+  var userDom = Calculations.getWeightedDominant(userCycles);
+  var theirCycles = cyclesAtDate(rel.birthdate, targetDate, isMale);
+
+  var userPhaseNum = userCycles.lifePhase.phase;
+  var theirPhaseNum = theirCycles.lifePhase.phase;
+  var userEl = userCycles.lifePhase.element;
+  var theirEl = theirCycles.lifePhase.element;
+  var userElLabel = Calculations.ELEMENT_LABELS[userEl];
+  var theirElLabel = Calculations.ELEMENT_LABELS[theirEl];
+  var userDetail = LIVSFASE_DETAIL[userPhaseNum];
+  var theirDetail = LIVSFASE_DETAIL[theirPhaseNum];
+  var pairKey = userEl + '_' + theirEl;
+
+  // 1. Hero
+  setText('rdyb-hero-label', 'Dig og ' + rel.name);
+  setText('rdyb-hero-intro', 'Fase ' + userPhaseNum + ' \u00b7 ' + userElLabel + '  \u2014  ' + rel.name + ' \u00b7 Fase ' + theirPhaseNum + ' \u00b7 ' + theirElLabel);
+
+  // 2. Jeres element-dynamik (TIDSREJSE_PAR — fuld tekst)
+  var dynEl = document.getElementById('rdyb-dynamik');
+  if (dynEl) {
+    var par = typeof TIDSREJSE_PAR !== 'undefined' ? TIDSREJSE_PAR[pairKey] : null;
+    if (par) {
+      var dynTekst = par.intro.replace(/\{navn\}/g, rel.name);
+      dynEl.innerHTML = formatExpandable(dynTekst, 80);
+    }
+  }
+
+  // 3. Den dybe laesning (RELATION_DYBDE — fuld tekst)
+  var dybdeEl = document.getElementById('rdyb-dybde');
+  if (dybdeEl) {
+    var relType = rel.type || 'partner';
+    var dybdeData = typeof RELATION_DYBDE !== 'undefined' ? RELATION_DYBDE[relType] : null;
+    if (dybdeData && dybdeData[userEl]) {
+      var dybdeTekst = dybdeData[userEl].replace(/\{navn\}/g, rel.name);
+      dybdeEl.innerHTML = formatExpandable(dybdeTekst, 80);
+    }
+  }
+
+  // 4. Samtale (TO_RYTMER_SAMTALE — alle tre felter, fuldt)
+  var samEl = document.getElementById('rdyb-samtale');
+  if (samEl) {
+    var samtale = typeof TO_RYTMER_SAMTALE !== 'undefined' ? TO_RYTMER_SAMTALE[userEl] : null;
+    if (samtale) {
+      var sHtml = '';
+      sHtml += '<div style="margin-bottom:16px">';
+      sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Sp\u00f8rg</div>';
+      sHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.6">\u00ab\u2009' + samtale.spoerg + '\u2009\u00bb</div>';
+      sHtml += '</div>';
+      sHtml += '<div style="margin-bottom:16px">';
+      sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Sig</div>';
+      sHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.6">\u00ab\u2009' + samtale.sig + '\u2009\u00bb</div>';
+      sHtml += '</div>';
+      sHtml += '<div>';
+      sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Sammen</div>';
+      sHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.6">\u00ab\u2009' + samtale.sammen + '\u2009\u00bb</div>';
+      sHtml += '</div>';
+      samEl.innerHTML = sHtml;
+    }
+  }
+
+  // 5. Relationer i din fase (LIVSFASE_DETAIL — fuld tekst)
+  var relFaseEl = document.getElementById('rdyb-rel-i-fase');
+  if (relFaseEl && userDetail && userDetail.relationerIFasen) {
+    relFaseEl.innerHTML = formatExpandable(userDetail.relationerIFasen, 80);
+  }
+
+  // 6. Partnerens fase (fuld introText + denneFaseIDig)
+  if (theirDetail) {
+    setText('rdyb-deres-fase-label', rel.name + ' \u00b7 Fase ' + theirPhaseNum + ' \u00b7 ' + theirElLabel);
+    setText('rdyb-deres-fase-title', theirDetail.introText);
+    var deresFaseEl = document.getElementById('rdyb-deres-fase');
+    if (deresFaseEl && theirDetail.denneFaseIDig) {
+      deresFaseEl.innerHTML = formatExpandable(theirDetail.denneFaseIDig, 80);
+    }
+  }
+
+  // 7. Jeres centrale foelelser (begge — fuldt)
+  var foelEl = document.getElementById('rdyb-foelelser');
+  if (foelEl && userDetail && userDetail.centralFoelelse && theirDetail && theirDetail.centralFoelelse) {
+    var fHtml = '';
+    fHtml += '<div style="margin-bottom:20px">';
+    fHtml += '<div style="font-family:var(--font-serif);font-size:20px;font-style:italic;color:var(--text-dark);margin-bottom:8px">Dig: ' + userDetail.centralFoelelse.title + '</div>';
+    fHtml += '<div class="dybde-body">' + formatExpandable(userDetail.centralFoelelse.tekst, 80) + '</div>';
+    fHtml += '</div>';
+    fHtml += '<div>';
+    fHtml += '<div style="font-family:var(--font-serif);font-size:20px;font-style:italic;color:var(--text-dark);margin-bottom:8px">' + rel.name + ': ' + theirDetail.centralFoelelse.title + '</div>';
+    fHtml += '<div class="dybde-body">' + formatExpandable(theirDetail.centralFoelelse.tekst, 80) + '</div>';
+    fHtml += '</div>';
+    foelEl.innerHTML = fHtml;
+  }
+
+  // 8. Raad til jer (TIDSREJSE_PAR.raad + RELATION_RECOMMENDATIONS)
+  var raadEl = document.getElementById('rdyb-raad');
+  if (raadEl) {
+    var raadParts = [];
+    var par2 = typeof TIDSREJSE_PAR !== 'undefined' ? TIDSREJSE_PAR[pairKey] : null;
+    if (par2 && par2.raad) raadParts.push(par2.raad.replace(/\{navn\}/g, rel.name));
+    var recs = typeof RELATION_RECOMMENDATIONS !== 'undefined' ? RELATION_RECOMMENDATIONS[userEl] : null;
+    if (recs) {
+      if (recs.forDig) raadParts.push('For dig: ' + recs.forDig);
+      if (recs.forAnden) raadParts.push('For ' + rel.name + ': ' + recs.forAnden);
+    }
+    if (raadParts.length) raadEl.innerHTML = formatExpandable(raadParts.join('\n\n'), 80);
+  }
+
+  // 9. Noget I kan goere sammen (TIDSREJSE_PAR.oevelse)
+  var oevEl = document.getElementById('rdyb-oevelse');
+  if (oevEl) {
+    var par3 = typeof TIDSREJSE_PAR !== 'undefined' ? TIDSREJSE_PAR[pairKey] : null;
+    if (par3 && par3.oevelse) {
+      oevEl.innerHTML = '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.6">' + par3.oevelse.replace(/\{navn\}/g, rel.name) + '</div>';
+    } else if (recs && recs.sammen) {
+      oevEl.innerHTML = '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.6">' + recs.sammen + '</div>';
+    }
+  }
+
+  // 10. Refleksion
+  var reflEl = document.getElementById('rdyb-refleksion');
+  if (reflEl) {
+    var reflQuestions = [
+      'Hvad giver ' + rel.name + ' dig, som ingen andre kan?',
+      'Hvorn\u00e5r f\u00f8lte du jer sidst virkelig forbundne?',
+      'Hvad ville du sige til ' + rel.name + ', hvis du vidste det blev h\u00f8rt uden dom?',
+      'Hvilket m\u00f8nster i jeres relation \u00f8nsker du at \u00e6ndre?',
+      'Hvad har du l\u00e6rt af ' + rel.name + ' uden at sige det h\u00f8jt?'
+    ];
+    var ri = Calculations.dayRotation(reflQuestions.length);
+    reflEl.textContent = reflQuestions[ri];
+  }
+
+  // 11. Jeres klima (INNER_CLIMATE)
+  var klimaEl = document.getElementById('rdyb-klima');
+  if (klimaEl) {
+    var allElements = [userEl, theirEl, userCycles.season.element, theirCycles.season.element];
+    var climate = analyzeClimate(allElements, userDom);
+    klimaEl.innerHTML = '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.6">' + climate.text + '</div>';
+  }
+}
+
 /* ============================================================
    NIVEAU 2 — Relationer undersider
    ============================================================ */

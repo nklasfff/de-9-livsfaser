@@ -47,6 +47,7 @@ const Router = {
     'rel-jeres-energi':  { file: 'screens/rel-jeres-energi.html',  niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelJeresEnergi' },
     'rel-epigenetik':    { file: 'screens/rel-epigenetik.html',    niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelEpigenetik' },
     'rel-konstellation': { file: 'screens/rel-konstellation.html', niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelKonstellation' },
+    'rel-dybere':        { file: 'screens/rel-dybere.html',        niveau: 2,  parent: 'din-relation', tone: 'relationer',  init: 'initRelDybere' },
 
     // Din Praksis (konsolideret)
     'din-praksis':       { file: 'screens/din-praksis.html',       niveau: 1,  parent: 'forside',     tone: 'praksis',     init: 'initDinPraksis' },
