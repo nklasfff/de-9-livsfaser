@@ -795,16 +795,22 @@ function initForside() {
     }
   }
 
+  // 3b. ELEMENT_FASE_DAGLIG — personlig daglig læsning
+  renderElementFaseDaglig(domEl, phase);
+
   // 4. ORGANUR LIGE NU
   renderOrganur(cycles.organ);
 
   // 5. AARSTID x ELEMENT
   renderAarstidElement(cycles.season, domEl);
 
+  // 5b. KOMMENDE SKIFT
+  renderKommendeSkift(cycles);
+
   // 6. DIN HANDLING (een yoga-pose)
   renderHandling(domEl);
 
-  // 7. TEMAER (foldbare)
+  // 7. TEMAER (foldbare — inkl. TEMA_DYBDE)
   renderTemaer(domEl, phase);
 
   // 8. MAERK EFTER — reset check-in state
@@ -924,6 +930,51 @@ function renderTemaer(domEl, phase) {
     });
   }
 
+  // Tema 4-5: TEMA_DYBDE — kontekstuelle dybe temaer
+  if (typeof TEMA_DYBDE !== 'undefined') {
+    // Forandring og overgang — relevant for alle
+    if (TEMA_DYBDE.forandring_og_overgang && TEMA_DYBDE.forandring_og_overgang[domEl]) {
+      const tekst = TEMA_DYBDE.forandring_og_overgang[domEl];
+      // Vis kun første afsnit som preview i den foldbare
+      const firstPara = tekst.split('\n\n')[0];
+      temaer.push({
+        titel: 'Forandring og dit element',
+        tekst: firstPara,
+        link: { label: 'L\u00e6s mere \u2192', route: 'cir-dit-liv' }
+      });
+    }
+    // Sorg og tab — for fase 7-9 (frigørelse, visdom)
+    if (phase.phase >= 7 && TEMA_DYBDE.sorg_og_tab && TEMA_DYBDE.sorg_og_tab[domEl]) {
+      const tekst = TEMA_DYBDE.sorg_og_tab[domEl];
+      const firstPara = tekst.split('\n\n')[0];
+      temaer.push({
+        titel: 'Sorg og dit element',
+        tekst: firstPara,
+        link: { label: 'L\u00e6s mere \u2192', route: 'cir-dit-liv' }
+      });
+    }
+    // Ensomhed — for fase 5-6 (ansvar, modning — ofte ensomme faser)
+    if (phase.phase >= 5 && phase.phase <= 6 && TEMA_DYBDE.ensomhed_og_isolation && TEMA_DYBDE.ensomhed_og_isolation[domEl]) {
+      const tekst = TEMA_DYBDE.ensomhed_og_isolation[domEl];
+      const firstPara = tekst.split('\n\n')[0];
+      temaer.push({
+        titel: 'Ensomhed og dit element',
+        tekst: firstPara,
+        link: { label: 'L\u00e6s mere \u2192', route: 'cir-dit-liv' }
+      });
+    }
+    // Graviditet/fertilitet — for fase 3-5 (forvandling, blomstring, ansvar)
+    if (phase.phase >= 3 && phase.phase <= 5 && TEMA_DYBDE.graviditet_og_fertilitet && TEMA_DYBDE.graviditet_og_fertilitet[domEl]) {
+      const tekst = TEMA_DYBDE.graviditet_og_fertilitet[domEl];
+      const firstPara = tekst.split('\n\n')[0];
+      temaer.push({
+        titel: 'Fertilitet og dit element',
+        tekst: firstPara,
+        link: { label: 'L\u00e6s mere \u2192', route: 'cir-dit-liv' }
+      });
+    }
+  }
+
   if (temaer.length === 0) {
     container.style.display = 'none';
     return;
@@ -967,13 +1018,95 @@ function renderTemaer(domEl, phase) {
   });
 }
 
-/* ---- Forside helper: Refleksion ---- */
+/* ---- Forside helper: Refleksion (udvidet med EKSTRA_REFLEKSIONER_NY) ---- */
 function renderRefleksion(phase) {
-  if (typeof REFLEKSION_DATA === 'undefined' || !REFLEKSION_DATA[phase.phase]) return;
-  const questions = REFLEKSION_DATA[phase.phase];
-  if (!questions || !questions.length) return;
+  // Saml alle refleksioner fra begge kilder
+  let questions = [];
+  if (typeof REFLEKSION_DATA !== 'undefined' && REFLEKSION_DATA[phase.phase]) {
+    questions = questions.concat(REFLEKSION_DATA[phase.phase]);
+  }
+  if (typeof EKSTRA_REFLEKSIONER_NY !== 'undefined' && EKSTRA_REFLEKSIONER_NY[phase.phase]) {
+    questions = questions.concat(EKSTRA_REFLEKSIONER_NY[phase.phase]);
+  }
+  if (!questions.length) return;
   const idx = Calculations.dayRotation(questions.length);
   setText('lige-nu-refleksion', questions[idx]);
+}
+
+/* ---- Forside helper: Element+Fase daglig læsning ---- */
+function renderElementFaseDaglig(domEl, phase) {
+  const wrap = document.getElementById('lige-nu-daglig-wrap');
+  if (!wrap) return;
+  if (typeof ELEMENT_FASE_DAGLIG === 'undefined' || !ELEMENT_FASE_DAGLIG[domEl] || !ELEMENT_FASE_DAGLIG[domEl][phase.phase]) {
+    wrap.style.display = 'none';
+    return;
+  }
+  setText('lige-nu-daglig', ELEMENT_FASE_DAGLIG[domEl][phase.phase]);
+  wrap.style.display = '';
+}
+
+/* ---- Forside helper: Kommende skift ---- */
+function renderKommendeSkift(cycles) {
+  const wrap = document.getElementById('lige-nu-skift-wrap');
+  if (!wrap) return;
+  if (typeof CYKLUS_SKIFT_TEKST === 'undefined') { wrap.style.display = 'none'; return; }
+
+  const now = new Date();
+  const shifts = [];
+
+  // Ugedag-skift (næste dag)
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const nextWeekday = Calculations.calculateWeekday(tomorrow);
+  if (nextWeekday.element !== cycles.weekday.element) {
+    const key = cycles.weekday.element + '_' + nextWeekday.element;
+    if (CYKLUS_SKIFT_TEKST[key]) {
+      shifts.push({ label: 'I morgen', tekst: CYKLUS_SKIFT_TEKST[key] });
+    }
+  }
+
+  // Måned-skift (tjek om vi nærmer os næste måned)
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const daysLeft = daysInMonth - now.getDate();
+  if (daysLeft <= 5) {
+    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    const nextMonthCycle = Calculations.calculateCalendarMonth(nextMonth);
+    if (nextMonthCycle.element !== cycles.monthCycle.element) {
+      const key = cycles.monthCycle.element + '_' + nextMonthCycle.element;
+      if (CYKLUS_SKIFT_TEKST[key]) {
+        shifts.push({ label: 'Om ' + daysLeft + ' dage', tekst: CYKLUS_SKIFT_TEKST[key] });
+      }
+    }
+  }
+
+  // Årstid-skift (tjek om vi nærmer os næste årstid — inden for 14 dage)
+  const seasonDates = [
+    { month: 3, day: 20, element: 'TRÆ' },
+    { month: 6, day: 21, element: 'ILD' },
+    { month: 8, day: 23, element: 'JORD' },
+    { month: 9, day: 23, element: 'METAL' },
+    { month: 12, day: 21, element: 'VAND' }
+  ];
+  for (const sd of seasonDates) {
+    const target = new Date(now.getFullYear(), sd.month - 1, sd.day);
+    if (target < now) continue;
+    const diff = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+    if (diff <= 14 && sd.element !== cycles.season.element) {
+      const key = cycles.season.element + '_' + sd.element;
+      if (CYKLUS_SKIFT_TEKST[key]) {
+        shifts.push({ label: 'Om ' + diff + ' dage', tekst: CYKLUS_SKIFT_TEKST[key] });
+      }
+      break;
+    }
+  }
+
+  if (shifts.length === 0) { wrap.style.display = 'none'; return; }
+
+  // Vis det mest relevante skift (længst varighed først: årstid > måned > ugedag)
+  const shift = shifts[shifts.length - 1];
+  setText('skift-label', 'Kommende skift · ' + shift.label);
+  setText('skift-tekst', shift.tekst);
+  wrap.style.display = '';
 }
 
 /* ============================================================
