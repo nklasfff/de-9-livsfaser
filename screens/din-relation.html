@@ -1,18 +1,21 @@
-<!-- VELKOMST -->
-<div class="dybde-section" style="text-align:center">
-  <div class="eyebrow" style="color:#88839e">Dine relationer</div>
-  <div id="rel-title" style="font-family:var(--font-serif);font-size:28px;color:var(--text-dark);margin:16px 0 8px"></div>
-  <div id="rel-intro" style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.65;max-width:340px;margin:0 auto"></div>
-</div>
+<!-- RELATIONER — Primaer skaerm 2 -->
 
-<!-- FIGUR — atmosf&aelig;risk, h&oslash;rer til pr&aelig;sentationen -->
-<div class="fig" style="margin:24px auto 0">
-  <img src="assets/images/rel-lige-nu-felt.png" alt="Jeres energifelt" style="max-width:300px;opacity:0.85">
+<!-- HERO: Titel + figur 1 -->
+<div class="s" style="padding-bottom:0">
+  <div class="eyebrow" style="color:#88839e">Dine relationer</div>
+  <div style="text-align:center;margin:16px 0 8px">
+    <div id="rel-title" style="font-family:var(--font-serif);font-size:28px;color:var(--text-dark)">N&aring;r livsfaser m&oslash;des</div>
+    <div id="rel-intro" style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:var(--text-light);margin-top:6px;line-height:1.6;max-width:320px;margin-left:auto;margin-right:auto">Hvert menneske du m&oslash;der, b&aelig;rer sin egen rytme</div>
+  </div>
+  <div class="fig" style="padding:0 20px">
+    <img src="assets/images/relationer_forside.png" alt="Relationer" style="max-width:300px;margin:0 auto">
+  </div>
 </div>
 
 <!-- V&AElig;LG PERSON + TIDSPUNKT -->
-<div class="dybde-section" style="padding-top:20px;padding-bottom:0">
-  <div id="rel-pills" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 0 12px"></div>
+<div class="s">
+  <div class="eyebrow" style="color:#88839e">V&aelig;lg person</div>
+  <div id="rel-pills" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0 12px"></div>
   <div style="display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap">
     <span class="rel-deep-chip active" onclick="setRelDeepDate(null, this)">Nu</span>
     <input type="date" id="rel-deep-date" style="font-family:var(--font-sans);font-size:14px;color:var(--text-body);border:1px solid rgba(123,122,158,0.15);border-radius:10px;padding:6px 10px;background:var(--bg)" onchange="onRelDeepDateChange(this.value)">
@@ -20,38 +23,55 @@
   <div id="rel-smart-chips" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px"></div>
 </div>
 
-<!-- KLIMA — f&oslash;rste personspecifikke sektion -->
-<div class="dybde-section" style="padding-top:16px">
-  <div id="rel-climate" style="padding:14px 18px;background:rgba(123,122,158,0.05);border:1px solid rgba(123,122,158,0.10);border-radius:var(--radius)">
-    <div id="rel-climate-label" style="font-family:var(--font-sans);font-size:11px;color:#88839e;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px"></div>
+<!-- JERES KLIMA — dynamisk TCM-interaktion -->
+<div class="s">
+  <div id="rel-climate" style="padding:16px 18px;background:rgba(123,122,158,0.04);border:1px solid rgba(123,122,158,0.08);border-radius:var(--radius)">
+    <div id="rel-climate-label" style="font-family:var(--font-sans);font-size:11px;color:#88839e;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px"></div>
     <div id="rel-climate-text" style="font-family:var(--font-sans);font-size:14.5px;color:var(--text-body);line-height:1.55;font-weight:300"></div>
   </div>
 </div>
 
-<div class="dots" style="color:#b0a8c0">&middot; &middot; &middot;</div>
-
-<!-- DYK DYBERE — inline bogtekst + intelligente links -->
-<div class="dybde-section">
-  <div class="eyebrow" style="color:#88839e">Dyk dybere</div>
-  <div id="rel-deep-links" style="display:flex;flex-direction:column;gap:8px"></div>
+<!-- DEN DYBE L&AElig;SNING — RELATION_DYBDE (expandable) -->
+<div class="s" id="rel-dybde-wrap" style="display:none">
+  <div class="isa isa-sm" id="rel-dybde-tekst"></div>
 </div>
 
-<div class="dots" style="color:#b0a8c0">&middot; &middot; &middot;</div>
-
-<!-- SAMTALE&Aring;BNER -->
-<div class="dybde-section">
-  <div class="eyebrow" style="color:#88839e">Samtale&aring;bner</div>
-  <div style="padding:14px 18px;background:rgba(123,122,158,0.05);border:1px solid rgba(123,122,158,0.10);border-radius:var(--radius)">
-    <div id="rel-samtale" style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:#7b7a9e;line-height:1.55"></div>
+<!-- FIGUR 2 — visuel pause -->
+<div class="s">
+  <div class="fig">
+    <img src="assets/images/relationer_blad_liberation_HQ.png" alt="Relationer" style="max-width:220px;margin:0 auto;opacity:0.85">
   </div>
 </div>
 
-<div class="dots" style="color:#b0a8c0">&middot; &middot; &middot;</div>
-
-<!-- UDFORSK VIDERE -->
-<div class="dybde-section" style="padding-bottom:32px">
-  <div class="eyebrow" style="color:#88839e">Udforsk videre</div>
-  <div id="rel-explore-links" class="explore-links" style="justify-content:center"></div>
+<!-- SAMTALE&Aring;BNER — een poetisk s&aelig;tning -->
+<div class="s">
+  <div class="eyebrow" style="color:#88839e">Samtale&aring;bner</div>
+  <div style="padding:16px 18px;background:rgba(123,122,158,0.04);border:1px solid rgba(123,122,158,0.08);border-radius:var(--radius)">
+    <div id="rel-samtale" style="font-family:var(--font-serif);font-size:17px;font-style:italic;color:#7b7a9e;line-height:1.55;text-align:center"></div>
+  </div>
 </div>
 
-<div class="section-closer"><div class="lotus-fill"><img src="assets/images/lotus-adskiller.png" alt=""></div></div>
+<!-- JERES HANDLING — oevelse sammen -->
+<div class="s" id="rel-handling-wrap" style="display:none">
+  <div class="eyebrow" style="color:#88839e">Noget I kan g&oslash;re sammen</div>
+  <div id="rel-handling-tekst" style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6;text-align:center"></div>
+</div>
+
+<!-- JERES FASER — foldbare dybdel&aelig;sninger -->
+<div class="s" id="rel-deep-links-wrap">
+  <div class="eyebrow" style="color:#88839e">Jeres faser</div>
+  <div id="rel-deep-links" style="display:flex;flex-direction:column;gap:8px"></div>
+</div>
+
+<!-- DYK DYBERE — links til sekundaere skaerme -->
+<div class="s" style="padding-bottom:32px">
+  <div class="eyebrow" style="color:#88839e">Dyk dybere</div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px">
+    <a onclick="Router.navigate('rel-tre-gen')" class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15);cursor:pointer">Tre Generationer</a>
+    <a onclick="Router.navigate('rel-to-rytmer')" class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15);cursor:pointer">To Rytmer</a>
+    <a onclick="Router.navigate('rel-epigenetik')" class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15);cursor:pointer">Epigenetik &amp; Arv</a>
+    <a onclick="Router.navigate('rel-konstellation')" class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15);cursor:pointer">Jeres Konstellation</a>
+  </div>
+</div>
+
+<div class="section-closer"></div>

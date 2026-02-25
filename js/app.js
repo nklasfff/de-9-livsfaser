@@ -2294,36 +2294,44 @@ function initVinduer() {
 
 function formatExpandable(text, wordLimit) {
   if (!text) return '';
-  // Split into paragraphs, then words
-  const paragraphs = text.split('\n\n').filter(p => p.trim());
-  const allWords = text.split(/\s+/);
+  var paragraphs = text.split('\n\n').filter(function(p){ return p.trim(); });
+  var allWords = text.split(/\s+/);
   if (allWords.length <= wordLimit) {
-    // Short enough — show all, split into paragraphs
-    return paragraphs.map(p => `<p>${p.trim()}</p>`).join('');
+    return paragraphs.map(function(p){ return '<p>' + p.trim() + '</p>'; }).join('');
   }
-  // Find split point: show first N words, hide rest
-  let wordCount = 0;
-  let visibleParagraphs = [];
-  let hiddenParagraphs = [];
-  let splitDone = false;
-  for (let i = 0; i < paragraphs.length; i++) {
-    const pWords = paragraphs[i].trim().split(/\s+/);
-    if (!splitDone && wordCount + pWords.length > wordLimit && visibleParagraphs.length > 0) {
+  // Hvis foerste afsnit alene overstiger wordLimit, klip midt i afsnittet
+  var firstWords = paragraphs[0].trim().split(/\s+/);
+  if (paragraphs.length === 1 || firstWords.length > wordLimit) {
+    var vis = firstWords.slice(0, wordLimit).join(' ') + ' \u2026';
+    var hid = firstWords.slice(wordLimit).join(' ');
+    var hidRest = paragraphs.length > 1 ? paragraphs.slice(1).map(function(p){ return '<p>' + p.trim() + '</p>'; }).join('') : '';
+    return '<p>' + vis + '</p>' +
+      '<div class="dybde-expand-more"><p>' + hid + '</p>' + hidRest + '</div>' +
+      '<a class="dybde-expand-btn" onclick="toggleDybdeExpand(this)">L\u00e6s mere \u2193</a>';
+  }
+  // Flere afsnit — klip mellem afsnit
+  var wordCount = 0;
+  var visibleP = [];
+  var hiddenP = [];
+  var splitDone = false;
+  for (var i = 0; i < paragraphs.length; i++) {
+    var pWords = paragraphs[i].trim().split(/\s+/);
+    if (!splitDone && wordCount + pWords.length > wordLimit && visibleP.length > 0) {
       splitDone = true;
     }
     if (splitDone) {
-      hiddenParagraphs.push(paragraphs[i].trim());
+      hiddenP.push(paragraphs[i].trim());
     } else {
-      visibleParagraphs.push(paragraphs[i].trim());
+      visibleP.push(paragraphs[i].trim());
       wordCount += pWords.length;
     }
   }
-  if (hiddenParagraphs.length === 0) {
-    return visibleParagraphs.map(p => `<p>${p}</p>`).join('');
+  if (hiddenP.length === 0) {
+    return visibleP.map(function(p){ return '<p>' + p + '</p>'; }).join('');
   }
-  return visibleParagraphs.map(p => `<p>${p}</p>`).join('') +
-    `<div class="dybde-expand-more">${hiddenParagraphs.map(p => `<p>${p}</p>`).join('')}</div>` +
-    `<a class="dybde-expand-btn" onclick="toggleDybdeExpand(this)">L\u00e6s mere \u2193</a>`;
+  return visibleP.map(function(p){ return '<p>' + p + '</p>'; }).join('') +
+    '<div class="dybde-expand-more">' + hiddenP.map(function(p){ return '<p>' + p + '</p>'; }).join('') + '</div>' +
+    '<a class="dybde-expand-btn" onclick="toggleDybdeExpand(this)">L\u00e6s mere \u2193</a>';
 }
 
 function toggleDybdeExpand(btn) {
@@ -3391,66 +3399,70 @@ function buildRelationReading() {
   setText('rel-climate-label', 'Dig og ' + rel.name + ' \u00b7 ' + tcmType);
   setText('rel-climate-text', climate.text);
 
+  // ── 1b. RELATION_DYBDE — dyb laesning, expandable (kort foerst) ──
+  const dybdeWrap = document.getElementById('rel-dybde-wrap');
+  if (dybdeWrap) {
+    const relType = rel.type || 'partner';
+    const dybdeData = typeof RELATION_DYBDE !== 'undefined' ? RELATION_DYBDE[relType] : null;
+    if (dybdeData && dybdeData[userEl]) {
+      const tekst = dybdeData[userEl].replace(/\{navn\}/g, rel.name);
+      setHTML('rel-dybde-tekst', formatExpandable(tekst, 15));
+      dybdeWrap.style.display = '';
+    } else {
+      dybdeWrap.style.display = 'none';
+    }
+  }
+
+  // ── 1c. JERES HANDLING — oevelse I kan goere sammen ──
+  const handlingWrap = document.getElementById('rel-handling-wrap');
+  if (handlingWrap) {
+    const pairKey = userEl + '_' + theirEl;
+    const parData = typeof TIDSREJSE_PAR !== 'undefined' ? TIDSREJSE_PAR[pairKey] : null;
+    if (parData && parData.oevelse) {
+      const oevTekst = parData.oevelse.replace(/\{navn\}/g, rel.name);
+      setText('rel-handling-tekst', oevTekst);
+      handlingWrap.style.display = '';
+    } else {
+      // Fallback til RELATION_RECOMMENDATIONS
+      const recs = typeof RELATION_RECOMMENDATIONS !== 'undefined' ? RELATION_RECOMMENDATIONS[userEl] : null;
+      if (recs && recs.sammen) {
+        setText('rel-handling-tekst', recs.sammen);
+        handlingWrap.style.display = '';
+      } else {
+        handlingWrap.style.display = 'none';
+      }
+    }
+  }
+
   // ── 2. DYK DYBERE — inline expandable bogtekst ──
   const linksEl = document.getElementById('rel-deep-links');
   if (linksEl) {
     let html = '';
 
-    // a) Relationer i din fase — bogens dybe tekst
+    // a) Relationer i din fase — kort, expandable
     if (userDetail && userDetail.relationerIFasen) {
       html += '<div style="padding:14px 18px;background:rgba(123,122,158,0.04);border:1px solid rgba(123,122,158,0.08);border-radius:var(--radius);margin-bottom:8px">';
       html += '<div style="font-family:var(--font-sans);font-size:11px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Relationer i din fase</div>';
-      html += '<div class="dybde-body">' + formatExpandable(userDetail.relationerIFasen, 50) + '</div>';
+      html += '<div class="isa isa-sm" style="margin:0">' + formatExpandable(userDetail.relationerIFasen, 15) + '</div>';
       html += '</div>';
     }
 
-    // b) Partnerens fase — introText + denneFaseIDig
-    if (theirDetail) {
+    // b) Partnerens fase — kort, expandable
+    if (theirDetail && theirDetail.introText) {
       html += '<div style="padding:14px 18px;background:rgba(123,122,158,0.04);border:1px solid rgba(123,122,158,0.08);border-radius:var(--radius);margin-bottom:8px">';
       html += '<div style="font-family:var(--font-sans);font-size:11px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">' + rel.name + ' \u00b7 Fase ' + theirPhaseNum + ' \u00b7 ' + theirElLabel + '</div>';
-      html += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6;margin-bottom:8px">' + theirDetail.introText + '</div>';
-      if (theirDetail.denneFaseIDig) {
-        html += '<div class="dybde-body">' + formatExpandable(theirDetail.denneFaseIDig, 50) + '</div>';
-      }
-      html += '</div>';
-    }
-
-    // c) Jeres centrale f\u00f8lelser
-    if (userDetail && userDetail.centralFoelelse && theirDetail && theirDetail.centralFoelelse) {
-      html += '<div style="padding:14px 18px;background:rgba(123,122,158,0.04);border:1px solid rgba(123,122,158,0.08);border-radius:var(--radius);margin-bottom:8px">';
-      html += '<div style="font-family:var(--font-sans);font-size:11px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Jeres centrale f\u00f8lelser</div>';
-      html += '<div style="margin-bottom:12px">';
-      html += '<div style="font-family:var(--font-serif);font-size:17px;font-style:italic;color:var(--text-dark);margin-bottom:4px">Dig: ' + userDetail.centralFoelelse.title + '</div>';
-      html += '<div class="dybde-body">' + formatExpandable(userDetail.centralFoelelse.tekst, 40) + '</div>';
-      html += '</div>';
-      html += '<div>';
-      html += '<div style="font-family:var(--font-serif);font-size:17px;font-style:italic;color:var(--text-dark);margin-bottom:4px">' + rel.name + ': ' + theirDetail.centralFoelelse.title + '</div>';
-      html += '<div class="dybde-body">' + formatExpandable(theirDetail.centralFoelelse.tekst, 40) + '</div>';
-      html += '</div>';
+      html += '<div class="isa isa-sm" style="margin:0">' + formatExpandable(theirDetail.introText, 15) + '</div>';
       html += '</div>';
     }
 
     linksEl.innerHTML = html;
   }
 
-  // ── 3. SAMTALE\u00c5BNER — alle tre felter ──
+  // ── 3. SAMTALE\u00c5BNER — een poetisk saetning ──
   const samtale = typeof TO_RYTMER_SAMTALE !== 'undefined' ? TO_RYTMER_SAMTALE[userEl] : null;
   const samtaleEl = document.getElementById('rel-samtale');
   if (samtaleEl && samtale) {
-    let sHtml = '';
-    sHtml += '<div style="margin-bottom:12px">';
-    sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Sp\u00f8rg</div>';
-    sHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:#7b7a9e;line-height:1.55">\u00ab\u2009' + samtale.spoerg + '\u2009\u00bb</div>';
-    sHtml += '</div>';
-    sHtml += '<div style="margin-bottom:12px">';
-    sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Sig</div>';
-    sHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:#7b7a9e;line-height:1.55">\u00ab\u2009' + samtale.sig + '\u2009\u00bb</div>';
-    sHtml += '</div>';
-    sHtml += '<div>';
-    sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Sammen</div>';
-    sHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:#7b7a9e;line-height:1.55">\u00ab\u2009' + samtale.sammen + '\u2009\u00bb</div>';
-    sHtml += '</div>';
-    samtaleEl.innerHTML = sHtml;
+    samtaleEl.innerHTML = '\u00ab\u2009' + samtale.spoerg + '\u2009\u00bb';
   }
 
   // ── 4. UDFORSK VIDERE — intelligente links (unikt indhold per person) ──
