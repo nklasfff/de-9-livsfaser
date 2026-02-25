@@ -21,7 +21,7 @@ Dynamisk companion til bogen — hjaelper brugere med at forstaa hvor de er i AL
 de-9-livsfaser/
 ├── index.html              # Main app shell (header, drawer nav, screen-content)
 ├── manifest.json           # PWA manifest (theme: #6c82a9, bg: #FDFCFB)
-├── sw.js                   # Service worker (currently v57)
+├── sw.js                   # Service worker (currently v114)
 ├── css/
 │   ├── tokens.css          # Design tokens, font-face, CSS variables
 │   ├── base.css            # Layout, header, drawer, animations
@@ -75,18 +75,18 @@ AARSTID_ELEMENT_TEKST (25), ORGANUR_VINDUER (12), EKSTRA_REFLEKSIONER_NY (45)
 
 ### TRE-LAGS ARKITEKTUR
 ```
-LAG 1: 4 primaere skaerme med bottom tab navigation
-  Lige Nu | Relationer | Tidsrejse | Vinduer
-  → Lette, luftige oversigter. Mockup: mockup-4-skaerme.html
+LAG 1: SKAERME (primaere + sekundaere) — lette, luftige, 2 billeder
+  Primaere: Lige Nu | Relationer | Tidsrejse | Vinduer
+  Sekundaere: De Ni Faser | Min Praksis | Min Rejse | Tre Gen | Baggrund
+  → Korte tekster, foldbare temaer, "Dyk dybere" pill nederst
+  → ALDRIG fuldt materiale — kun previews og smaabtter
 
-LAG 2: Fordybelse (udfolder sig PAA de primaere skaerme)
-  → Naar brugeren vaelger at dykke dybere
-  → Motoren genererer indhold fra LIVSFASE_DETAIL + data-expanded.js
-  → IKKE separate skaerme — folder ud paa den primaere skaerm
-
-LAG 3: 5 sekundaere skaerme (separate destinationer)
-  De Ni Faser | Min Praksis | Min Rejse | Tre Generationer | Baggrund
-  → Tilgaengelige fra drawer-menu og "dyk dybere"-links
+LAG 2: DYBE SKAERME — fuld fordybelse med ALT materialet
+  → HVER skaerm (primaer OG sekundaer) har sin EGEN dybe skaerm
+  → Tilgaengelig via "Dyk dybere" pill i bunden af skaermen
+  → 8-12 sektioner med lotus-adskillere, formatExpandable(80)
+  → Her lever ALT fra de 12 blokke i data-expanded.js og bogen
+  → Eksempler: "Dit Dybe Billede" (forside), "Dine Dybere Relationer" (relationer)
 ```
 
 ### Primary: Bottom Tab Navigation (4 tabs)
@@ -148,6 +148,81 @@ Router.navigate('livsfase-detail');
 
 ### Dead Code Warning
 `js/arc-nav.js` and `css/arc-nav.css` are loaded but **never activated**. The DOM elements (`<div id="arc-nav">`, `<svg id="arc-svg">`) do not exist in index.html. `ArcNav.init()` is never called. Router._updateArcNav() calls ArcNav.setActive/toggle which silently fail because the DOM target is missing.
+
+---
+
+## SCREEN BUILD STATUS
+
+| Skaerm | Status | Route | Init |
+|--------|--------|-------|------|
+| Forside (Lige Nu) | DONE — GOLDEN STANDARD | `forside` | initForside |
+| Relationer (primaer) | DONE | `din-relation` | initDinRelation |
+| Dine Dybere Relationer | DONE | `rel-dybere` | initRelDybere |
+| Dit Dybe Billede | DONE (older) | `cir-dit-liv` | initCirDitLiv |
+| Tidsrejse | NOT BUILT | — | — |
+| Vinduer | NOT BUILT | — | — |
+
+**Cache versions:** index.html `?v=105`, sw.js `livsfaser-v114`
+
+---
+
+## GOLDEN STANDARD — FORSIDEN DEFINERER STILEN
+
+Forsiden (`screens/forside.html` + `initForside()`) er den perfekte reference.
+
+### HVER SKAERM HAR SIN EGEN DYBE SKAERM — DETTE ER KERNEN
+
+Alt det store materiale fra de 12 blokke i data-expanded.js og bogen
+lever paa DYBE SKAERME — IKKE paa primaere eller sekundaere skaerme.
+
+Baade primaere OG sekundaere skaerme er lette og luftige med 2 billeder.
+Hver skaerm har en "Dyk dybere" pill i bunden → aabner den dybe skaerm
+hvor ALT materialet er udfoldet i 8-12 sektioner med lotus-adskillere.
+
+De dybe skaerme er IKKE synlige i menuen. Brugeren ser kun de 9 skaerme
+(4 primaere i bottom tabs + 5 sekundaere i drawer). De dybe skaerme folder
+sig foerst ud naar brugeren aktivt trykker "Dyk dybere" paa en skaerm.
+
+```
+Forside (primaer, let)     → Dit Dybe Billede (cir-dit-liv)        FAERDIG
+Relationer (primaer, let)  → Dine Dybere Relationer (rel-dybere)   FAERDIG
+Tidsrejse (primaer, let)   → [dyb skaerm — skal bygges]
+Vinduer (primaer, let)     → [dyb skaerm — skal bygges]
+De Ni Faser (sekundaer)    → [dyb skaerm — skal bygges]
+Min Praksis (sekundaer)    → [dyb skaerm — skal bygges]
+Min Rejse (sekundaer)      → [dyb skaerm — skal bygges]
+Tre Generationer (sekund.) → [dyb skaerm — skal bygges]
+Baggrund (sekundaer)       → [dyb skaerm — skal bygges]
+```
+
+### Skaerm-moenster (primaer + sekundaer — `.s` sektioner)
+```
+Rytme: BILLEDE → kort tekst → BOKS → kort tekst → BILLEDE → kort tekst → FOLDBAR → INTERAKTION → links
+```
+
+- Brug `<div class="s">` for alle sektioner (giver 30px top-padding)
+- 2 illustrationer paa HVER skaerm (figur 1 oeverst, figur 2 midt/nede)
+- Korte tekster — `formatExpandable(tekst, 15)` — aldrig fulde afsnit
+- 5 foldbare temaer (klik for at aabne, aldrig vis alt)
+- "Dyk dybere" pills i bunden (pb:32) — FOERSTE pill = den dybe skaerm
+- Afslut med `<div class="section-closer"></div>`
+
+### Dyb skaerm-moenster (`.dybde-section`)
+```
+HERO + mockup_forbydelse_figur_1.png → SEKTION + lotus-divider → ... → closer + "Tilbage til toppen"
+```
+
+- Brug `<div class="dybde-section">` (IKKE `.s`)
+- Her bor ALT materialet — 8-12 sektioner med `formatExpandable(tekst, 80)`
+- Adskillere: `mockup_fordybelse_lotus.png` (40px, opacity 0.2) mellem tunge sektioner
+- Lette adskillere: `<div class="dots">· · ·</div>` mellem lette sektioner
+- Afslut med lotus-closer + back-to-top link
+
+### Vigtige konventioner
+- **formatExpandable(tekst, wordLimit)** — splitter MID-afsnit, viser "Laes mere ↓"
+- **Visuel rytme** — ALDRIG to tekst-sektioner i traek uden billede/boks/divider imellem
+- **Foldbare temaer** — brug renderRelationTemaer() moenster (titel + ikon + fold-ud)
+- **Tone-farver** — Forside: `--blaa` (#6c82a9), Relationer: `#7b7a9e`
 
 ---
 
@@ -228,6 +303,8 @@ DM Sans: Light (300), Regular (400), Medium (500)
 | cyk-overgange | screens/cyk-overgange.html | 2 | cyklusser | cyklusser | initCykOvergange |
 | cyk-kontrol | screens/cyk-kontrol.html | 2 | cyklusser | cyklusser | initCykKontrol |
 | livsfase-detail | screens/livsfase-detail.html | 2 | cyk-ni-faser | cyklusser | initLivsfaseDetail |
+| din-relation | screens/din-relation.html | 1 | forside | relationer | initDinRelation |
+| rel-dybere | screens/rel-dybere.html | 2 | din-relation | relationer | initRelDybere |
 | rel-lige-nu | screens/rel-lige-nu.html | 2 | relationer | relationer | initRelLigeNu |
 | rel-to-rytmer | screens/rel-to-rytmer.html | 2 | relationer | relationer | initRelToRytmer |
 | rel-tre-gen | screens/rel-tre-gen.html | 2 | relationer | relationer | initRelTreGen |
@@ -382,7 +459,7 @@ Main focus is on USER HERSELF first.
 2. **Router.navigate()** is the ONLY way to navigate — NOT `App.loadScreen()`
 3. **window._selectedPhase** stores which phase to show in livsfase-detail
 4. **_bound flag pattern** — always check `if (el._bound) return` before adding event listeners
-5. **Service worker cache** needs version bump on every deploy (currently v57 in sw.js line 1)
+5. **Service worker cache** needs version bump on every deploy (currently v114 in sw.js line 1)
 6. **Dates** — use `Storage.getLocalDateStr()` for local dates, NEVER `toISOString().split('T')[0]`
 7. **getText/setHTML helpers** — use `setText(id, text)` and `setHTML(id, html)` for DOM updates
 8. **getUserCycles()** returns null if no user/birthdate — always check for null
@@ -413,9 +490,9 @@ git push origin main
 
 ## REFERENCES
 
-- **Mockup (4 primaere skaerme):** /mockup-4-skaerme.html — REFERENCEN for design
+- **Golden standard:** `screens/forside.html` + `initForside()` — ALLE skaerme foelger denne stil
+- **Mockup (4 primaere skaerme):** /mockup-4-skaerme.html — REFERENCEN for layout
 - **Ekspertanalyse:** /outputs/RESEARCH-MOTOR-OPTIMIZATION.md — content-motor, retention, anbefalinger
-- **Skaerm-plan (detaljer):** Se memory/screen-plan.md
 - Design System: /outputs/DESIGNSYSTEM.md
 - Figure Catalog: /outputs/FIGUR-KATALOG.md
 - Screen Inventory: /outputs/KAPITEL-LOG.md
