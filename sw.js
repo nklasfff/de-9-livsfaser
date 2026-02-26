@@ -1,4 +1,4 @@
-const CACHE_NAME = 'livsfaser-v124';
+const CACHE_NAME = 'livsfaser-v125';
 const urlsToCache = [
   './',
   './index.html',
@@ -81,6 +81,7 @@ const urlsToCache = [
   // Screens — Vinduer undersider
   './screens/vin-tidslinje.html',
   './screens/vin-oejeblikke.html',
+  './screens/vin-dybere.html',
   './screens/tids-dybere.html',
   // Screens — Relationer undersider
   './screens/rel-lige-nu.html',

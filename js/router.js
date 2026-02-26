@@ -80,6 +80,7 @@ const Router = {
     // Niveau 2 — Vinduer undersider
     'vin-tidslinje':     { file: 'screens/vin-tidslinje.html',     niveau: 2,  parent: 'vinduer',     tone: 'vinduer',     init: 'initVinTidslinje' },
     'vin-oejeblikke':    { file: 'screens/vin-oejeblikke.html',    niveau: 2,  parent: 'vinduer',     tone: 'vinduer',     init: 'initVinOejeblikke' },
+    'vin-dybere':        { file: 'screens/vin-dybere.html',        niveau: 2,  parent: 'vinduer',     tone: 'vinduer',     init: 'initVinDybere' },
 
     // Utility
     'soeg':              { file: 'screens/soeg.html',              niveau: 2,  parent: 'forside',     tone: null,          init: 'initSoeg' },

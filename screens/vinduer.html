@@ -1,98 +1,90 @@
-<!-- PRÆSENTATION -->
-<div class="dybde-section" style="text-align:center">
-  <div class="eyebrow" style="color:#6B5F7B">Tidsrejse</div>
-  <div id="vin-title" style="font-family:var(--font-serif);font-size:28px;color:var(--text-dark);margin:16px 0 4px"></div>
-  <div id="vin-sub" style="font-family:var(--font-sans);font-size:13px;color:#8B7D9B;letter-spacing:1px;margin-bottom:12px"></div>
-  <div id="vin-intro" style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.65;max-width:340px;margin:0 auto"></div>
-</div>
+<!-- SJ&AElig;LDNE VINDUER — Prim&aelig;r sk&aelig;rm 4 -->
 
-<!-- FIGUR — atmosf&aelig;risk -->
-<div style="text-align:center;margin:24px auto 0">
-  <img src="assets/images/vinduer-tid-lilla.png" alt="Tidsvinduet" style="width:100%;max-width:340px;height:auto">
-</div>
-
-<!-- INSIGHT — kort kontekst -->
-<div class="dybde-section" style="padding-top:20px">
-  <div class="insight-box" style="background:rgba(107,95,123,0.05);border:1px solid rgba(107,95,123,0.10)">
-    <div class="insight-label" style="color:#a89bb3" id="vin-insight-label">Din tid</div>
-    <div class="insight-text" style="color:#8B7D9B" id="vin-insight-text"></div>
+<!-- HERO: Titel + figur 1 -->
+<div class="s" style="padding-bottom:0">
+  <div class="eyebrow" style="color:#8B7D9B">Sj&aelig;ldne Vinduer</div>
+  <div style="text-align:center;margin:16px 0 8px">
+    <div id="vin-title" style="font-family:var(--font-serif);font-size:28px;color:var(--text-dark)">Dine vinduer i tid</div>
+    <div id="vin-intro" style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:var(--text-light);margin-top:6px;line-height:1.6;max-width:320px;margin-left:auto;margin-right:auto"></div>
+  </div>
+  <div class="fig" style="padding:0 20px">
+    <img src="assets/images/vinduer-tid-lilla.png" alt="Sj&aelig;ldne Vinduer" style="max-width:300px;margin:0 auto">
   </div>
 </div>
 
-<!-- FEELING BOX — emotionel bro -->
-<div class="dybde-section" style="padding-top:0">
-  <div class="feeling-box" style="border-color:rgba(107,95,123,0.08);background:linear-gradient(135deg,rgba(107,95,123,0.04),rgba(139,125,155,0.04))">
-    <div class="feeling-label" style="color:#a89bb3">Det der ikke har et sprog endnu</div>
-    <div class="feeling-text" style="color:#6e5f7a">Nogle &aring;r b&aelig;rer vi med os uden helt at vide hvorf&aring;r. En periode der &aelig;ndrede alt. En dato der stadig g&oslash;r ondt. M&aring;ske handler det ikke om at huske bedre &mdash; men om at forst&aring; hvad der var p&aring; spil dengang. Dine cyklusser kan vise dig det.</div>
+<!-- INTRO TEKST (h&oslash;rer visuelt til hero, derfor pt:0) -->
+<div class="s" style="padding-top:0">
+  <div class="isa" id="vin-nu-tekst">
+    Nogle dage peger alt i samme retning. Det er sj&aelig;ldent &mdash; og det er v&aelig;rdifuldt.
   </div>
 </div>
 
-<div class="dots" style="color:#b3a9c0">&middot; &middot; &middot;</div>
+<!-- DIT VINDUE LIGE NU — n&oslash;gle-sektion -->
+<div class="s">
+  <div class="eyebrow" style="color:#8B7D9B">Dit vindue lige nu</div>
+  <div id="vin-aktiv-nu"></div>
+  <div id="vin-organur" style="margin-top:12px"></div>
+</div>
 
-<!-- DATO-V&AElig;LGER (motoren) -->
-<div class="dybde-section">
-  <div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;text-align:center">V&aelig;lg en dato</div>
-  <div class="date-chips" id="vin-date-chips" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:14px">
-    <span class="date-chip">Da du var 14</span>
-    <span class="date-chip">Da du var 21</span>
-    <span class="date-chip">Om 5 &aring;r</span>
-    <span class="date-chip">N&aelig;ste jul</span>
-  </div>
-  <div style="margin:0 0 10px">
-    <input type="date" id="vinduer-date" style="width:100%;padding:10px 12px;border:1px solid rgba(107,95,123,0.15);border-radius:10px;font-family:sans-serif;font-size:15px;color:#6B5F7B;background:rgba(107,95,123,0.03);outline:none;box-sizing:border-box">
-  </div>
-  <div class="quick-action-btn" style="border-color:rgba(107,95,123,0.25);color:#6B5F7B;cursor:pointer;text-align:center;display:block" id="vinduer-btn">Se dine cyklusser &rarr;</div>
-  <div id="vinduer-result" style="display:none;margin-top:14px;padding:16px;background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.10);border-radius:var(--radius)"></div>
+<!-- KOMMENDE VINDUER -->
+<div class="s">
+  <div class="eyebrow" style="color:#8B7D9B">Kommende vinduer</div>
+  <div id="vin-kommende"></div>
+</div>
 
-  <!-- Person-valg — sekund&aelig;rt -->
-  <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(107,95,123,0.08)">
+<!-- V&AElig;LG EN DATO — motoren -->
+<div class="s">
+  <div class="eyebrow" style="color:#8B7D9B">Udforsk en dato</div>
+  <div id="vin-chips" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0 12px"></div>
+  <div style="display:flex;gap:10px;align-items:center">
+    <input type="date" id="vinduer-date" style="flex:1;padding:10px 12px;border:1px solid rgba(107,95,123,0.15);border-radius:10px;font-family:var(--font-sans);font-size:15px;color:#6B5F7B;background:rgba(107,95,123,0.03);outline:none;box-sizing:border-box">
+    <div class="quick-action-btn" style="border-color:rgba(107,95,123,0.25);color:#6B5F7B;cursor:pointer;white-space:nowrap;margin:0" id="vinduer-btn">Se &rarr;</div>
+  </div>
+  <!-- Person-valg (valgfrit, vises kun med relationer) -->
+  <div id="vin-person-wrap" style="display:none;margin-top:14px;padding-top:12px;border-top:1px solid rgba(107,95,123,0.08)">
     <div style="font-size:12px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Tilf&oslash;j en person (valgfrit)</div>
-    <div class="person-pills" id="vin-person-pills"></div>
+    <div id="vin-person-pills" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center"></div>
   </div>
 </div>
 
-<div class="dots" style="color:#b3a9c0">&middot; &middot; &middot;</div>
-
-<!-- KORT med &rarr; pile -->
-<div class="dybde-section">
-  <div id="vin-cards"></div>
+<!-- RESULTAT — kompakt (skjult f&oslash;r dato-valg) -->
+<div class="s" id="vin-result-wrap" style="display:none">
+  <div id="vinduer-result" style="background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.08);border-radius:var(--radius);padding:16px 18px"></div>
 </div>
 
-<div class="dots" style="color:#b3a9c0">&middot; &middot; &middot;</div>
-
-<!-- PULL QUOTE -->
-<div class="pull-quote">
-  <div class="pull-quote-text" style="color:#8B7D9B">&laquo;&thinsp;Tiden er ikke en linje. Den er en spiral &mdash; og de steder der g&oslash;r ondt, er de steder der vil forst&aring;s.&thinsp;&raquo;</div>
-  <div class="pull-quote-attr">&mdash; Isabelle</div>
-</div>
-
-<!-- FIGUR 2 — Spiralen -->
-<div class="dybde-section" style="padding-top:0">
-  <div style="background:rgba(107,95,123,0.03);border:1px solid rgba(107,95,123,0.07);border-radius:var(--radius);padding:20px;text-align:center">
-    <div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">Tiden bev&aelig;ger sig i spiraler</div>
-    <div class="fig">
-      <img src="assets/images/vinduer-tidsspiral.png" alt="Tidsspiralen" style="max-width:300px">
-    </div>
-    <div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:#8B7D9B;margin-top:10px;line-height:1.5">Hvert &oslash;jeblik i spiralen b&aelig;rer sine cyklusser. V&aelig;lg et punkt &mdash; og se hvad der var p&aring; spil.</div>
+<!-- FIGUR 2 — tidsspiralen -->
+<div class="s">
+  <div class="fig">
+    <img src="assets/images/vinduer-tidsspiral.png" alt="Tidsspiralen" style="max-width:220px;margin:0 auto;opacity:0.85">
   </div>
 </div>
 
-<div class="dots" style="color:#b3a9c0">&middot; &middot; &middot;</div>
+<!-- ISABELLE TEKST — kort poetisk -->
+<div class="s">
+  <div class="isa isa-sm" id="vin-isabelle">Sj&aelig;ldne vinduer er &oslash;jeblikke hvor flere af dine cyklusser synger den samme tone. De varer ikke l&aelig;nge &mdash; men de kan &aelig;ndre noget i dig.</div>
+</div>
+
+<!-- TEMAER — foldbare -->
+<div class="s" id="vin-temaer"></div>
 
 <!-- REFLEKSION -->
-<div class="dybde-section">
-  <div class="eyebrow" style="color:#6B5F7B">Refleksion</div>
-  <div style="padding:14px 18px;background:rgba(107,95,123,0.05);border:1px solid rgba(107,95,123,0.10);border-radius:var(--radius)">
-    <div id="vin-refleksion" style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:#8B7D9B;line-height:1.55"></div>
+<div class="s">
+  <div class="eyebrow" style="color:#8B7D9B">Refleksion</div>
+  <div class="isa" id="vin-refleksion" style="font-size:17px;margin-bottom:12px"></div>
+  <div style="text-align:center">
+    <a onclick="Router.navigate('rej-journal')" style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#6B5F7B;opacity:0.7;cursor:pointer">Skriv i din journal &rarr;</a>
   </div>
 </div>
 
-<div class="dots" style="color:#b3a9c0">&middot; &middot; &middot;</div>
-
-<!-- UDFORSK VIDERE -->
-<div class="dybde-section" style="padding-bottom:32px">
-  <div class="eyebrow" style="color:#6B5F7B">Udforsk videre</div>
-  <div id="vin-explore-links" class="explore-links" style="justify-content:center"></div>
+<!-- DYK DYBERE -->
+<div class="s" style="padding-bottom:32px">
+  <div class="eyebrow" style="color:#8B7D9B">Dyk dybere</div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px">
+    <a onclick="Router.navigate('vin-dybere')" class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15);cursor:pointer">Dine Dybere Vinduer</a>
+    <a onclick="Router.navigate('vin-tidslinje')" class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15);cursor:pointer">Mit livs tidslinje</a>
+    <a onclick="Router.navigate('vin-oejeblikke')" class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15);cursor:pointer">Vigtige &oslash;jeblikke</a>
+    <a onclick="Router.navigate('tidsrejse')" class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15);cursor:pointer">Tidsrejse</a>
+  </div>
 </div>
 
-<div class="section-closer"><div class="lotus-fill"><img src="assets/images/lotus-adskiller.png" alt=""></div></div>
+<div class="section-closer"></div>
