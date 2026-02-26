@@ -1719,50 +1719,50 @@ function initDinPraksis() {
     sindEl.innerHTML = formatExpandable('Sindet f\u00f8lger elementet. Vand giver dybde og refleksion \u2014 men ogs\u00e5 isolation. Tr\u00e6 giver handlekraft og retning \u2014 men ogs\u00e5 utaalmodighed. Ild giver forbindelse og gl\u00e6de \u2014 men ogs\u00e5 s\u00e5rbarhed. Jord giver stabilitet og omsorg \u2014 men ogs\u00e5 bekymring. Metal giver klarhed og struktur \u2014 men ogs\u00e5 sorg. At kende din mentale signatur er at kende dig selv.', 60);
   }
 
-  // 4. Yin Yoga — alle 5 elementers stillinger, grupperet med luft
+  // 4. Yin Yoga — foldbare element-grupper
   var yogaEl = document.getElementById('prak-yoga');
   if (yogaEl && typeof YIN_YOGA_FULL !== 'undefined') {
-    var yHtml = '<div class="dybde-body" style="margin-bottom:20px">' + formatExpandable('Yin yoga er langsomme, stille stillinger du holder i 3\u20135 minutter. Ingen kraft, ingen ambition. Bare tyngdekraft, tid og tillid. Hver stilling \u00e5bner bestemte meridianer og taler til bestemte elementer.', 40) + '</div>';
-    var yFirst = true;
+    var yHtml = formatExpandable('Yin yoga er langsomme, stille stillinger du holder i 3\u20135 minutter. Ingen kraft, ingen ambition. Bare tyngdekraft, tid og tillid. Hver stilling \u00e5bner bestemte meridianer og taler til bestemte elementer.', 40);
     allElements.forEach(function(el) {
       if (YIN_YOGA_FULL[el]) {
         var elName = Calculations.ELEMENT_LABELS[el];
-        if (!yFirst) yHtml += '<div style="text-align:center;padding:18px 0;color:#9cb5b0;font-size:13px;letter-spacing:4px">\u00b7 \u00b7 \u00b7</div>';
-        yHtml += '<div style="font-family:var(--font-serif);font-size:17px;font-style:italic;color:var(--text-mid);margin-bottom:10px">' + elName + '</div>';
+        var count = YIN_YOGA_FULL[el].length;
+        yHtml += '<div class="dybde-tema-card" onclick="toggleDybdeTema(this)">';
+        yHtml += '<div class="dybde-tema-header"><span class="dybde-tema-title">' + elName + ' \u00b7 ' + count + ' stillinger</span><span class="dybde-tema-arrow">\u2193</span></div>';
+        yHtml += '<div class="dybde-tema-body">';
         YIN_YOGA_FULL[el].forEach(function(pose) {
           yHtml += '<div class="dybde-oevelse-card">';
-          yHtml += '<div class="dybde-oevelse-type">' + elName + '</div>';
           yHtml += '<div class="dybde-oevelse-title">' + pose.pose + '</div>';
           yHtml += '<div class="dybde-oevelse-desc">' + pose.desc + '</div>';
           if (pose.tid) yHtml += '<div style="font-size:12px;color:#83938e;margin-top:4px">' + pose.tid + (pose.meridian ? ' \u00b7 ' + pose.meridian : '') + '</div>';
           yHtml += '</div>';
         });
-        yFirst = false;
+        yHtml += '</div></div>';
       }
     });
     yogaEl.innerHTML = yHtml;
   }
 
-  // 5. Meridianstrygning — alle 5 elementers meridianer, grupperet med luft
+  // 5. Meridianstrygning — foldbare element-grupper
   var meridianEl = document.getElementById('prak-meridian');
   if (meridianEl && typeof MERIDIAN_STRYGNINGER !== 'undefined') {
-    var mHtml = '<div class="dybde-body" style="margin-bottom:20px">' + formatExpandable('H\u00e6nderne f\u00f8lger meridianernes forl\u00f8b og hj\u00e6lper energien med at flyde frit. Brug flad h\u00e5nd, stryg langsomt med let tryk, f\u00f8lg meridianens retning. Gentag 5\u20137 gange p\u00e5 hver side.', 40) + '</div>';
-    var mFirst = true;
+    var mHtml = formatExpandable('H\u00e6nderne f\u00f8lger meridianernes forl\u00f8b og hj\u00e6lper energien med at flyde frit. Brug flad h\u00e5nd, stryg langsomt med let tryk, f\u00f8lg meridianens retning. Gentag 5\u20137 gange p\u00e5 hver side.', 40);
     allElements.forEach(function(el) {
       if (MERIDIAN_STRYGNINGER[el]) {
         var elName = Calculations.ELEMENT_LABELS[el];
-        if (!mFirst) mHtml += '<div style="text-align:center;padding:18px 0;color:#9cb5b0;font-size:13px;letter-spacing:4px">\u00b7 \u00b7 \u00b7</div>';
-        mHtml += '<div style="font-family:var(--font-serif);font-size:17px;font-style:italic;color:var(--text-mid);margin-bottom:10px">' + elName + '</div>';
+        mHtml += '<div class="dybde-tema-card" onclick="toggleDybdeTema(this)">';
+        mHtml += '<div class="dybde-tema-header"><span class="dybde-tema-title">' + elName + '</span><span class="dybde-tema-arrow">\u2193</span></div>';
+        mHtml += '<div class="dybde-tema-body">';
         MERIDIAN_STRYGNINGER[el].forEach(function(m) {
           mHtml += '<div class="dybde-oevelse-card">';
-          mHtml += '<div class="dybde-oevelse-type">' + elName + ' \u00b7 ' + m.organ + '</div>';
+          mHtml += '<div class="dybde-oevelse-type">' + m.organ + '</div>';
           mHtml += '<div class="dybde-oevelse-title">' + m.meridian + '</div>';
           mHtml += '<div class="dybde-oevelse-desc">' + m.desc + '</div>';
           if (m.retning) mHtml += '<div style="font-size:13px;color:#6b7f79;margin-top:6px;font-style:italic">Retning: ' + m.retning + '</div>';
           if (m.vejledning) mHtml += '<div style="font-size:13px;color:#7a908b;margin-top:4px;line-height:1.5">' + m.vejledning + '</div>';
           mHtml += '</div>';
         });
-        mFirst = false;
+        mHtml += '</div></div>';
       }
     });
     meridianEl.innerHTML = mHtml;
@@ -1771,47 +1771,48 @@ function initDinPraksis() {
   // 6. Aandedraet — generelt
   setText('prak-breath-text', 'Tre vejrtr\u00e6kninger. Ind 4 sekunder, hold 4, ud 6. Hvert element har sin egen kvalitet \u2014 Vand er dybt, Tr\u00e6 er frit, Ild er varmt, Jord er forankret, Metal er klart.');
 
-  // 7. Naering — alle 5 elementers foedevarer, grupperet med luft
+  // 7. Naering — foldbare element-grupper
   var naeringEl = document.getElementById('prak-naering');
   if (naeringEl && typeof INSIGHT_FOOD !== 'undefined') {
-    var nHtml = '<div class="dybde-body" style="margin-bottom:20px">' + formatExpandable('I kinesisk medicin er mad medicin. Hvert element har sine f\u00f8devarer, smage og urter. N\u00e5r du er sulten efter noget bestemt, er det organerne der taler. Lyt til appetitten \u2014 den er visdom forklaedt som sult.', 40) + '</div>';
-    var nFirst = true;
+    var nHtml = formatExpandable('I kinesisk medicin er mad medicin. Hvert element har sine f\u00f8devarer, smage og urter. N\u00e5r du er sulten efter noget bestemt, er det organerne der taler. Lyt til appetitten \u2014 den er visdom forklaedt som sult.', 40);
     allElements.forEach(function(el) {
       if (INSIGHT_FOOD[el]) {
         var elName = Calculations.ELEMENT_LABELS[el];
-        if (!nFirst) nHtml += '<div style="text-align:center;padding:18px 0;color:#9cb5b0;font-size:13px;letter-spacing:4px">\u00b7 \u00b7 \u00b7</div>';
-        nHtml += '<div style="font-family:var(--font-serif);font-size:17px;font-style:italic;color:var(--text-mid);margin-bottom:10px">' + elName + '</div>';
+        var count = INSIGHT_FOOD[el].length;
+        nHtml += '<div class="dybde-tema-card" onclick="toggleDybdeTema(this)">';
+        nHtml += '<div class="dybde-tema-header"><span class="dybde-tema-title">' + elName + ' \u00b7 ' + count + ' f\u00f8devarer</span><span class="dybde-tema-arrow">\u2193</span></div>';
+        nHtml += '<div class="dybde-tema-body">';
         INSIGHT_FOOD[el].forEach(function(food) {
           nHtml += '<div class="dybde-oevelse-card">';
-          nHtml += '<div class="dybde-oevelse-type">' + elName + '</div>';
           nHtml += '<div class="dybde-oevelse-title">' + food.item + '</div>';
           nHtml += '<div class="dybde-oevelse-desc">' + food.desc + '</div>';
           nHtml += '</div>';
         });
-        nFirst = false;
+        nHtml += '</div></div>';
       }
     });
     naeringEl.innerHTML = nHtml;
   }
 
-  // 8. Oevelser — grupperet efter fase med luft
+  // 8. Oevelser — foldbare fase-grupper
   var oevelserEl = document.getElementById('prak-oevelser');
   if (oevelserEl && typeof LIVSFASE_DETAIL !== 'undefined') {
-    var oHtml = '<div class="dybde-body" style="margin-bottom:20px">' + formatExpandable('Hver livsfase har sine egne \u00f8velser \u2014 valgt ud fra den energi der pr\u00e6ger fasen. Ikke som pligt, men som invitation.', 30) + '</div>';
+    var oHtml = formatExpandable('Hver livsfase har sine egne \u00f8velser \u2014 valgt ud fra den energi der pr\u00e6ger fasen. Ikke som pligt, men som invitation.', 30);
     var shownPhases = [1, 3, 5, 7, 9];
-    var oFirst = true;
     shownPhases.forEach(function(p) {
       var d = LIVSFASE_DETAIL[p];
-      if (d && d.oevelser) {
-        if (!oFirst) oHtml += '<div style="text-align:center;padding:14px 0;color:#9cb5b0;font-size:13px;letter-spacing:4px">\u00b7 \u00b7 \u00b7</div>';
-        oHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-mid);margin-bottom:8px">Fase ' + p + ' \u00b7 ' + Calculations.ELEMENT_LABELS[d.element] + '</div>';
-        d.oevelser.slice(0, 1).forEach(function(ov) {
+      if (d && d.oevelser && d.oevelser.length) {
+        oHtml += '<div class="dybde-tema-card" onclick="toggleDybdeTema(this)">';
+        var phaseEl = Calculations.PHASE_DATA[p] ? Calculations.PHASE_DATA[p].element : '';
+        oHtml += '<div class="dybde-tema-header"><span class="dybde-tema-title">Fase ' + p + ' \u00b7 ' + (Calculations.ELEMENT_LABELS[phaseEl] || '') + '</span><span class="dybde-tema-arrow">\u2193</span></div>';
+        oHtml += '<div class="dybde-tema-body">';
+        d.oevelser.forEach(function(ov) {
           oHtml += '<div class="dybde-oevelse-card">';
           oHtml += '<div class="dybde-oevelse-title">' + ov.title + '</div>';
           oHtml += '<div class="dybde-oevelse-desc">' + ov.desc + '</div>';
           oHtml += '</div>';
         });
-        oFirst = false;
+        oHtml += '</div></div>';
       }
     });
     oevelserEl.innerHTML = oHtml;
@@ -1861,10 +1862,10 @@ function initDinPraksis() {
     essayEl.innerHTML = formatExpandable('De fem elementer \u2014 Vand, Tr\u00e6, Ild, Jord og Metal \u2014 er ikke kategorier du passer ind i. De er kr\u00e6fter der alle lever i dig, hele tiden. \u00c9t dominerer. Men de andre er der ogs\u00e5. N\u00e5r du kender alle fem, kender du hele paletten. Og s\u00e5 kan du v\u00e6lge den praksis der passer til lige pr\u00e6cis der hvor du er.', 80);
   }
 
-  // 13. UDVIDET HJAELP — grupperet efter emne med luft og adskillere
+  // 13. UDVIDET HJAELP — foldbare emne-grupper
   var hjelpEl = document.getElementById('prak-udvidet-hjaelp');
   if (hjelpEl && typeof UDVIDET_HJAELP !== 'undefined') {
-    var hHtml = '<div class="dybde-body" style="margin-bottom:20px">' + formatExpandable('N\u00e5r livet presser, reagerer hvert element p\u00e5 sin m\u00e5de. Her er fem emner set gennem alle fem elementer. Find det der taler til dig.', 30) + '</div>';
+    var hHtml = formatExpandable('N\u00e5r livet presser, reagerer hvert element p\u00e5 sin m\u00e5de. Her er fem emner set gennem alle fem elementer. Find det der taler til dig.', 30);
     var topics = [
       { key: 'stress', label: 'Stress' },
       { key: 'angst', label: 'Angst' },
@@ -1872,23 +1873,23 @@ function initDinPraksis() {
       { key: 'ensomhed', label: 'Ensomhed' },
       { key: 'udbraendthed', label: 'Udbr\u00e6ndthed' }
     ];
-    var hFirst = true;
     topics.forEach(function(topic) {
       if (UDVIDET_HJAELP[topic.key]) {
-        if (!hFirst) hHtml += '<div style="text-align:center;padding:24px 0"><img src="assets/images/groen-lotus.png" alt="" style="width:32px;height:32px;opacity:0.6"></div>';
-        hHtml += '<div style="font-family:var(--font-serif);font-size:20px;color:var(--text-dark);margin-bottom:14px">' + topic.label + '</div>';
+        hHtml += '<div class="dybde-tema-card" onclick="toggleDybdeTema(this)">';
+        hHtml += '<div class="dybde-tema-header"><span class="dybde-tema-title">' + topic.label + '</span><span class="dybde-tema-arrow">\u2193</span></div>';
+        hHtml += '<div class="dybde-tema-body">';
         allElements.forEach(function(el) {
           if (UDVIDET_HJAELP[topic.key][el]) {
             var h = UDVIDET_HJAELP[topic.key][el];
             hHtml += '<div class="dybde-oevelse-card">';
-            hHtml += '<div class="dybde-oevelse-type">' + topic.label + ' \u00b7 ' + Calculations.ELEMENT_LABELS[el] + '</div>';
+            hHtml += '<div class="dybde-oevelse-type">' + Calculations.ELEMENT_LABELS[el] + '</div>';
             hHtml += '<div class="dybde-oevelse-desc">' + formatExpandable(h.dyb, 40) + '</div>';
             if (h.oevelse) hHtml += '<div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(122,144,139,0.06)"><div style="font-size:11px;color:#83938e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">\u00d8velse</div><div style="font-size:14px;color:var(--text-body);line-height:1.55;font-weight:300">' + h.oevelse + '</div></div>';
             if (h.kost_raad) hHtml += '<div style="margin-top:8px;font-size:13px;color:#6b7f79;font-style:italic">' + h.kost_raad + '</div>';
             hHtml += '</div>';
           }
         });
-        hFirst = false;
+        hHtml += '</div></div>';
       }
     });
     hjelpEl.innerHTML = hHtml;
