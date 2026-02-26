@@ -4422,23 +4422,209 @@ function shareMoment(title, text) {
   }
 }
 
-/* ---- De Ni Livsfaser (cyk-ni-faser) ---- */
+/* ---- De Ni Livsfaser (cyk-ni-faser — sekundaer skaerm) ---- */
 function initCykNiFaser() {
-  const data = getUserCycles();
-  if (!data) return;
-  const phase = data.cycles.lifePhase;
+  // 1. Isabelle-tekst
+  setText('nf-isabelle-tekst', 'Hvert syvende \u00e5r skifter noget i dig. Ikke pludseligt, men som \u00e5rstider der glider over i hinanden. Ni faser, fem elementer, \u00e9t liv. Find din \u2014 og m\u00e6rk hvad den beder dig om.');
 
-  // Highlight current phase card
-  const cards = document.querySelectorAll('.fase-card');
-  cards.forEach(card => {
-    const faseNum = parseInt(card.dataset.fase);
-    if (faseNum === phase.phase) {
-      card.classList.add('active');
+  // 2. Insight-boks + kort tekst
+  var data = getUserCycles();
+  if (data) {
+    var phase = data.cycles.lifePhase;
+    var phaseNum = phase.phase;
+    var phaseData = Calculations.PHASE_DATA[phaseNum];
+    var elLabel = Calculations.ELEMENT_LABELS[phase.element];
+    var detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[phaseNum] : null;
+    var age = data.cycles.age;
+    var yearInPhase = age - phaseData.startAge + 1;
+
+    setText('nf-insight-label', 'Fase ' + phaseNum + ' \u00b7 ' + phaseData.name + ' \u00b7 ' + elLabel);
+    if (detail && detail.introText) {
+      var sents = detail.introText.split(/(?<=\.)\s+/);
+      setText('nf-insight-text', sents.slice(0, 2).join(' '));
     }
-  });
 
-  // Update header
-  setText('ni-faser-current', `Du er i Fase ${phase.phase} · ${phase.name}`);
+    // Kort tekst
+    var kortEl = document.getElementById('nf-kort-tekst');
+    if (kortEl) {
+      kortEl.innerHTML = formatExpandable('Fra det f\u00f8rste \u00e5ndedrag til visdommens stille rum. Ni faser med hvert sit element, sin krop og sin opgave. Du er i dit ' + yearInPhase + '. \u00e5r af fase ' + phaseNum + '. Hvert kapitel har sin energi \u2014 og n\u00e5r du forst\u00e5r den, kan du m\u00e6rke hvad den beder dig om.', 15);
+    }
+  }
+
+  // 3. Fase-kort i 3 grupper
+  renderNiFaserCards('nf-tidlige', [1, 2, 3], data);
+  renderNiFaserCards('nf-midte', [4, 5, 6], data);
+  renderNiFaserCards('nf-modne', [7, 8, 9], data);
+
+  // 4. Temaer
+  renderNiFaserTemaer();
+
+  // 5. Refleksion
+  var reflQuestions = [
+    'Hvilken fase i dit liv har formet dig mest?',
+    'Hvad har din nuv\u00e6rende fase l\u00e6rt dig?',
+    'Hvilken fase l\u00e6ngtes du efter at forst\u00e5 bedre?',
+    'Hvad ville du sige til dig selv i en tidligere fase?',
+    'Hvad bringer din fase dig, som ingen anden fase kan?'
+  ];
+  var ri = Calculations.dayRotation(reflQuestions.length);
+  setText('nf-refleksion', '\u00ab ' + reflQuestions[ri] + ' \u00bb');
+}
+
+function renderNiFaserCards(containerId, phases, data) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+  var currentPhase = data ? data.cycles.lifePhase.phase : -1;
+
+  var html = '';
+  phases.forEach(function(num) {
+    var pd = Calculations.PHASE_DATA[num];
+    if (!pd) return;
+    var elLabel = Calculations.ELEMENT_LABELS[pd.element];
+    var isCurrent = (num === currentPhase);
+    var detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[num] : null;
+
+    var bgStyle = isCurrent
+      ? 'background:linear-gradient(135deg,rgba(108,130,169,0.06),rgba(136,158,195,0.04));border:1px solid rgba(108,130,169,0.18)'
+      : 'background:rgba(108,130,169,0.03);border:1px solid rgba(108,130,169,0.08)';
+
+    html += '<div style="' + bgStyle + ';border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer" onclick="navigateToFaseDetail(' + num + ')">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:flex-start">';
+    html += '<div style="flex:1">';
+    html += '<div style="font-family:var(--font-sans);font-size:11px;color:#9cabc3;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
+    html += 'Fase ' + num + ' \u00b7 ' + pd.startAge + '\u2013' + pd.endAge + ' \u00e5r \u00b7 ' + elLabel;
+    if (isCurrent) {
+      html += ' <span style="display:inline-block;padding:3px 8px;border-radius:10px;font-size:10px;letter-spacing:1px;background:rgba(108,130,169,0.12);color:#6c82a9;font-weight:500;text-transform:uppercase">Du er her</span>';
+    }
+    html += '</div>';
+    html += '<div style="font-family:var(--font-serif);font-size:17px;color:' + (isCurrent ? '#6c82a9' : 'var(--text-dark)') + ';margin-bottom:4px">' + pd.name + '</div>';
+    if (detail && detail.introText) {
+      var shortIntro = detail.introText.split('.')[0] + '.';
+      html += '<div style="font-family:var(--font-sans);font-size:13.5px;color:var(--text-body);line-height:1.5;font-weight:300">' + shortIntro + '</div>';
+    }
+    html += '</div>';
+    html += '<div style="font-size:18px;color:rgba(108,130,169,' + (isCurrent ? '0.6' : '0.4') + ');margin-left:12px;margin-top:14px">\u2192</div>';
+    html += '</div></div>';
+  });
+  container.innerHTML = html;
+}
+
+function renderNiFaserTemaer() {
+  var container = document.getElementById('nf-temaer');
+  if (!container) return;
+
+  var data = getUserCycles();
+  var yearInPhase = '';
+  if (data) {
+    var age = data.cycles.age;
+    var pd = Calculations.PHASE_DATA[data.cycles.lifePhase.phase];
+    yearInPhase = (age - pd.startAge + 1);
+  }
+
+  var temaer = [
+    { titel: 'Elementernes vandring', tekst: 'Fra Vand i livets begyndelse til Vand igen i visdommens fase. Elementerne f\u00f8lger en naturlig cyklus: Vand n\u00e6rer Tr\u00e6, Tr\u00e6 n\u00e6rer Ild, Ild n\u00e6rer Jord, Jord n\u00e6rer Metal, Metal n\u00e6rer Vand. Ni faser, men kun fem elementer \u2014 s\u00e5 nogle elementer vender tilbage, og med dem en dybere forst\u00e5else.' },
+    { titel: 'Syv\u00e5rs-rytmen', tekst: 'I kinesisk medicin skifter kvindekroppen hvert syvende \u00e5r. Ikke som en kalender, men som en b\u00f8lge. Nogle m\u00e6rker skiftet tydeligt \u2014 andre opdager det f\u00f8rst, n\u00e5r de kigger tilbage. Overgangen mellem faserne er sjcldent pludselig. Den er en langsom forvandling.' },
+    { titel: 'Overgangene', tekst: 'Mellem faserne er der et ingenmandsland. En tid hvor det gamle stadig er der, men det nye allerede kalder. Kroppen meerker det f\u00f8r sindet. M\u00e5ske som tr\u00e6thed, uro eller en pludselig l\u00e6ngsel efter noget nyt. Det er ikke krise \u2014 det er forvandling.' },
+    { titel: 'Tiden i din fase', tekst: yearInPhase ? 'Du er i dit ' + yearInPhase + '. \u00e5r af denne fase. Hvert \u00e5r inden for fasen har sin egen kvalitet. De f\u00f8rste \u00e5r er ofte s\u00f8gende, de midterste er dybe, de sidste forbereder dig p\u00e5 det n\u00e6ste kapitel.' : 'Hvert \u00e5r inden for fasen har sin egen kvalitet. De f\u00f8rste \u00e5r er ofte s\u00f8gende, de midterste er dybe, de sidste forbereder dig p\u00e5 det n\u00e6ste kapitel.' },
+    { titel: 'Faserne og kroppen', tekst: 'Hvert element har sine organer, sine meridianer, sine s\u00e5rbarheder. Vand holder nyrerne og knoglerne. Tr\u00e6 holder leveren og \u00f8jnene. Ild holder hjertet og blodet. Jord holder maven og musklerne. Metal holder lungerne og huden. N\u00e5r du kender din fases element, kender du ogs\u00e5 dens krop.' }
+  ];
+
+  var html = '<div class="eyebrow" style="color:#9cabc3">Temaer</div>';
+  temaer.forEach(function(t) {
+    html += '<div class="tema" style="background:rgba(108,130,169,0.03);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center">';
+    html += '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">' + t.titel + '</div>';
+    html += '<div class="tema-arr" style="font-size:18px;color:rgba(108,130,169,0.5);transition:transform 0.2s">\u203a</div>';
+    html += '</div>';
+    html += '<div class="tema-body" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease">';
+    html += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(108,130,169,0.06)">' + t.tekst + '</div>';
+    html += '</div></div>';
+  });
+  container.innerHTML = html;
+
+  container.querySelectorAll('.tema').forEach(function(tema) {
+    if (tema._bound) return;
+    tema._bound = true;
+    tema.addEventListener('click', function() {
+      var body = this.querySelector('.tema-body');
+      var arr = this.querySelector('.tema-arr');
+      if (body) {
+        if (body.style.maxHeight && body.style.maxHeight !== '0px') {
+          body.style.maxHeight = '0px';
+          if (arr) arr.style.transform = '';
+        } else {
+          body.style.maxHeight = body.scrollHeight + 'px';
+          if (arr) arr.style.transform = 'rotate(90deg)';
+        }
+      }
+    });
+  });
+}
+
+/* ---- Dine Dybere Faser (faser-dybere — dyb skaerm) ---- */
+function initFaserDybere() {
+  var data = getUserCycles();
+  if (!data) return;
+  var cycles = data.cycles;
+  var phase = cycles.lifePhase;
+  var phaseNum = phase.phase;
+  var detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[phaseNum] : null;
+  if (!detail) return;
+  var elLabel = Calculations.ELEMENT_LABELS[phase.element] || phase.element;
+
+  // 1. Hero
+  setText('fd-fase-label', 'Fase ' + phaseNum + ' \u00b7 ' + elLabel);
+  setText('fd-intro', detail.introText);
+
+  // 2. Denne fase i dig
+  var denneFaseEl = document.getElementById('fd-denne-fase');
+  if (denneFaseEl && detail.denneFaseIDig) denneFaseEl.innerHTML = formatExpandable(detail.denneFaseIDig, 80);
+
+  // 3. Central foelelse
+  if (detail.centralFoelelse) {
+    setText('fd-foelelse-title', detail.centralFoelelse.title);
+    var foelelseEl = document.getElementById('fd-foelelse-tekst');
+    if (foelelseEl) foelelseEl.innerHTML = formatExpandable(detail.centralFoelelse.tekst, 80);
+  }
+
+  // 4. Krop & Sind
+  var kropEl = document.getElementById('fd-krop');
+  if (kropEl && detail.kropTekst) kropEl.innerHTML = formatExpandable(detail.kropTekst, 60);
+  var sindEl = document.getElementById('fd-sind');
+  if (sindEl && detail.sindTekst) sindEl.innerHTML = formatExpandable(detail.sindTekst, 60);
+
+  // 5. Fasens temaer
+  renderDybdeTemaer(document.getElementById('fd-temaer'), detail.temaerNarrativer);
+
+  // 6. Fasens oevelser
+  renderDybdeOevelser(document.getElementById('fd-oevelser'), detail.oevelser);
+
+  // 7. Aarets rytme
+  var aarEl = document.getElementById('fd-aarets-rytme');
+  if (aarEl && detail.aaretsRytme) aarEl.innerHTML = formatExpandable(detail.aaretsRytme, 80);
+
+  // 8. Overgangen
+  var overgangEl = document.getElementById('fd-overgang');
+  if (overgangEl && detail.overgangTekst) overgangEl.innerHTML = formatExpandable(detail.overgangTekst, 80);
+
+  // 9. Fasens raad
+  renderDybdeRaad(document.getElementById('fd-raad'), detail.fasensRaad);
+
+  // 10. Balance & ubalance
+  var balanceEl = document.getElementById('fd-balance');
+  if (balanceEl && detail.balanceTekst) balanceEl.innerHTML = formatExpandable(detail.balanceTekst, 80);
+  renderDybdeUbalance(document.getElementById('fd-ubalance'), detail.ubalanceTegn);
+
+  // 11. Element essay
+  var essayEl = document.getElementById('fd-element-essay');
+  if (essayEl && detail.elementEssay) essayEl.innerHTML = formatExpandable(detail.elementEssay, 80);
+
+  // 12. Refleksion
+  var reflections = detail.ekstraRefleksioner || detail.refleksioner || [];
+  if (reflections.length) {
+    var ri = Calculations.dayRotation(reflections.length);
+    setText('fd-refleksion', '\u00ab\u2009' + reflections[ri] + '\u2009\u00bb');
+  }
 }
 
 /* ---- De Fire Uger (cyk-fire-uger) ---- */

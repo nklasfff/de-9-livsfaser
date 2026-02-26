@@ -35,7 +35,8 @@ const Router = {
 
     // Niveau 2 — Cyklusser undersider
     'cyk-cic':           { file: 'screens/cyk-cic.html',           niveau: 2,  parent: 'cyklusser',   tone: 'cyklusser',   init: 'initCykCic' },
-    'cyk-ni-faser':      { file: 'screens/cyk-ni-faser.html',      niveau: 2,  parent: 'cyklusser',   tone: 'cyklusser',   init: 'initCykNiFaser' },
+    'cyk-ni-faser':      { file: 'screens/cyk-ni-faser.html',      niveau: 1,  parent: 'forside',     tone: 'cyklusser',   init: 'initCykNiFaser' },
+    'faser-dybere':      { file: 'screens/faser-dybere.html',      niveau: 2,  parent: 'cyk-ni-faser', tone: 'cyklusser',  init: 'initFaserDybere' },
     'cyk-fire-uger':     { file: 'screens/cyk-fire-uger.html',     niveau: 2,  parent: 'cyklusser',   tone: 'cyklusser',   init: 'initCykFireUger' },
     'cyk-overgange':     { file: 'screens/cyk-overgange.html',     niveau: 2,  parent: 'cyklusser',   tone: 'cyklusser',   init: 'initCykOvergange' },
     'cyk-kontrol':       { file: 'screens/cyk-kontrol.html',       niveau: 2,  parent: 'cyklusser',   tone: 'cyklusser',   init: 'initCykKontrol' },
