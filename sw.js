@@ -1,4 +1,4 @@
-const CACHE_NAME = 'livsfaser-v128';
+const CACHE_NAME = 'livsfaser-v129';
 const urlsToCache = [
   './',
   './index.html',
@@ -97,6 +97,7 @@ const urlsToCache = [
   './screens/rej-opdagelser.html',
   './screens/rej-alle-faser.html',
   './screens/rej-baggrund.html',
+  './screens/baggrund-dybere.html',
   // Screens — Utility
   './screens/soeg.html',
   './screens/indstillinger.html',

@@ -6617,7 +6617,227 @@ function initRejAlleFaser() {
 }
 
 function initRejBaggrund() {
-  // Mostly static content
+  // HERO — statisk
+  setText('bg-title', 'Viden der bærer');
+  setText('bg-intro', 'Traditionerne, forskningen og den røde tråd \u2014 den dybere forståelse bag cyklusser og elementer');
+
+  // ISABELLE TEKST
+  setText('bg-isabelle-tekst', 'Viden er ikke noget man samler. Det er noget man genkender. Når du læser om de fem elementer og tænker \u201Eja, sådan er det\u201D \u2014 så vidste du det allerede. Disse sider rummer den baggrund der bærer alt det andet.');
+
+  // INSIGHT BOS — personaliseret
+  var data = getUserCycles();
+  if (data) {
+    var phase = data.cycles.lifePhase;
+    var elLabel = Calculations.ELEMENT_LABELS[phase.element];
+    var pName = Calculations.PHASE_DATA[phase.phase] ? Calculations.PHASE_DATA[phase.phase].name : '';
+    setText('bg-insight-label', 'Fase ' + phase.phase + ' \u00B7 ' + pName + ' \u00B7 ' + elLabel);
+
+    var insightMap = {
+      'VAND': 'Vand-energien giver dybde \u2014 du forstår måske mere end du tror. Viden siver ind i dig som grundvand, stille og uden krav.',
+      'TRAE': 'Træ-energien søger vækst \u2014 din nysgerrighed er stærk nu. Du vil forstå, forme og bruge det du lærer.',
+      'ILD': 'Ild-energien giver intuition \u2014 du mærker sandheden før du forstår den. Lad viden bekræfte det du allerede aner.',
+      'JORD': 'Jord-energien giver overblik \u2014 du kan samle trådene. Viden ordner sig naturligt i dig, som en have efter regn.',
+      'METAL': 'Metal-energien giver klarhed \u2014 du skelner det væsentlige fra det uvæsentlige. Viden bliver essens.'
+    };
+    setText('bg-insight-text', insightMap[phase.element] || 'Din fase bærer sin egen måde at forstå verden på.');
+  }
+
+  // KORT TEKST
+  var kortEl = document.getElementById('bg-kort-tekst');
+  if (kortEl) {
+    kortEl.innerHTML = formatExpandable('Fra kinesisk medicin til vedisk filosofi, fra epigenetik til nordisk visdom \u2014 forskellige traditioner og forskellige sprog, men de peger alle mod den samme sandhed: livet bevæger sig i cyklusser, og cyklusserne bærer visdom. Hvert syvende år skifter noget i dig. Ikke pludseligt, men som årstider der glider over i hinanden. Disse sider rummer den viden der bærer hele appen. Tag det i dit tempo. Du behøver ikke forstå alt på én gang. Viden modnes også \u2014 ligesom du gør.', 15);
+  }
+
+  // TRADITIONER — 3 kort
+  renderBaggrundKort('bg-traditioner', [
+    { label: 'Kinesisk medicin', titel: 'De fem elementer', tekst: 'Vand, Træ, Ild, Jord, Metal \u2014 elementernes cyklus, organer, følelser og årstider. Denne tradition bærer hele bogens grundstruktur.' },
+    { label: 'Indisk tradition', titel: 'Vedisk filosofi', tekst: 'Ashramerne, dharma og de vediske livsperioder \u2014 en indisk spejling af de kinesiske cyklusser. Parallellen er slående.' },
+    { label: 'Universelt', titel: 'Ni traditioner, én visdom', tekst: 'Fra Anishinaabe til nordisk, keltisk til sufisme \u2014 kulturer over hele verden har set de samme cykliske mønstre.' }
+  ]);
+
+  // VIDENSKAB — 3 kort
+  renderBaggrundKort('bg-videnskab', [
+    { label: 'Forskning', titel: 'Celler og fornyelse', tekst: 'Cellerne i din krop fornyes fuldstændigt hvert syvende år. Det er ikke blot en metafor. Moderne forskning bekræfter rytmen.' },
+    { label: 'Følelser', titel: 'Følelsernes funktion', tekst: 'Frygt hører til nyrerne. Vrede til leveren. Glæde til hjertet. Det er ikke tilfældigt. Det er kroppens sprog.' },
+    { label: 'Kroppen', titel: 'Yin, Yang og kvindekroppen', tekst: 'Kvinden følger Yin \u2014 det receptive, det indadvendte. Yin og Yang skifter gennem livet og former din energi.' }
+  ]);
+
+  // TEMAER
+  renderBaggrundTemaer();
+
+  // REFLEKSION
+  var reflQuestions = [
+    'Hvilken tradition taler mest til dig lige nu \u2014 og hvad siger det om hvor du er?',
+    'Hvornår mærkede du sidst at din krop vidste noget, dit hoved endnu ikke forstod?',
+    'Hvad ville det betyde for dig, hvis de syv-årige cyklusser virkelig stemmer?',
+    'Hvad ved du nu, som du ville ønske du vidste for tyve år siden?',
+    'Hvilken viden har du båret længe \u2014 uden at give den plads?'
+  ];
+  var ri = Calculations.dayRotation(reflQuestions.length);
+  setText('bg-refleksion', '\u00AB ' + reflQuestions[ri] + ' \u00BB');
+}
+
+function renderBaggrundKort(containerId, kort) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+  var html = '';
+  kort.forEach(function(k) {
+    html += '<div style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:var(--radius);padding:16px;margin-top:10px">';
+    html += '<div style="font-family:var(--font-sans);font-size:12px;color:#8d95a1;letter-spacing:1.5px;font-weight:400;text-transform:uppercase;margin-bottom:6px">' + k.label + '</div>';
+    html += '<div style="font-family:var(--font-serif);font-size:17px;color:#8a96a9;margin-bottom:8px">' + k.titel + '</div>';
+    html += '<div style="font-family:var(--font-sans);font-size:15px;color:var(--text-body);line-height:1.6;font-weight:300">' + k.tekst + '</div>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function renderBaggrundTemaer() {
+  var container = document.getElementById('bg-temaer');
+  if (!container) return;
+
+  var temaer = [
+    { titel: 'Elementernes sprog', tekst: 'De fem elementer \u2014 Vand, Træ, Ild, Jord, Metal \u2014 er ikke bare symboler. De er levende energier der gennemsyrer alt: dine organer, dine følelser, dine årstider. Hvert element har sin tid på døgnet, sin årstid og sin livsfase. Når du kender dit element, kender du din rytme.' },
+    { titel: 'Syv-års cyklussen', tekst: 'Hvert syvende år skifter noget fundamentalt i dig. Cellerne fornyes, hormonerne ændres, sindet modnes. Den kinesiske medicin har vidst det i tusinder af år. Rudolf Steiner beskrev det. Moderne forskning bekræfter det. Syv-års rytmen er ikke en tilfældighed \u2014 den er livets grundpuls.' },
+    { titel: 'Yin og Yang', tekst: 'Kvinden følger Yin \u2014 det receptive, det indadvendte, det nærende. Det betyder ikke passivitet. Det betyder dybde. Yin er vandet der sliber stenen, roden der bærer træet. Gennem livets faser skifter balancen mellem Yin og Yang \u2014 fra barnets rene Yin til den modne kvindes integrerede helhed.' },
+    { titel: 'Følelser og organer', tekst: 'I den kinesiske medicin er følelser ikke psykiske tilstande \u2014 de er organernes stemmer. Nyrerne bærer frygten. Leveren bærer vreden. Hjertet bærer glæden. Milten bærer bekymringen. Lungerne bærer sorgen. Når du mærker en følelse, taler et organ til dig. Lyt.' },
+    { titel: 'Fra tradition til praksis', tekst: 'Viden er ikke noget du samler \u2014 det er noget der bliver levende i dig. Når du lægger hænderne på maven og trækker vejret dybt, praktiserer du tusind år gammel visdom. Når du mærker årstiderne skifte i kroppen, lever du det traditionerne altid har vidst. Viden der bærer er viden du kan mærke.' }
+  ];
+
+  var html = '<div class="eyebrow" style="color:#8d95a1">Temaer</div>';
+  temaer.forEach(function(t) {
+    html += '<div class="tema" style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center">';
+    html += '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">' + t.titel + '</div>';
+    html += '<div class="tema-arr" style="font-size:18px;color:rgba(138,150,169,0.5);transition:transform 0.2s">\u203A</div>';
+    html += '</div>';
+    html += '<div class="tema-body" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease">';
+    html += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(138,150,169,0.06)">' + t.tekst + '</div>';
+    html += '</div></div>';
+  });
+  container.innerHTML = html;
+
+  container.querySelectorAll('.tema').forEach(function(tema) {
+    tema.addEventListener('click', function() {
+      var body = this.querySelector('.tema-body');
+      var arr = this.querySelector('.tema-arr');
+      if (body) {
+        if (body.style.maxHeight && body.style.maxHeight !== '0px') {
+          body.style.maxHeight = '0px';
+          if (arr) arr.style.transform = '';
+        } else {
+          body.style.maxHeight = body.scrollHeight + 'px';
+          if (arr) arr.style.transform = 'rotate(90deg)';
+        }
+      }
+    });
+  });
+}
+
+/* ---- DYB SKAERM: De Dybere Baggrunde ---- */
+
+function initBaggrundDybere() {
+  // HERO
+  setText('bd-intro', 'Den dybere forståelse bag cyklusser, elementer og livets rytmer \u2014 fra kinesisk medicin til vedisk filosofi, fra epigenetik til kroppens indre visdom.');
+
+  // 1. KINESISK MEDICIN
+  var tcmEl = document.getElementById('bd-tcm');
+  if (tcmEl) {
+    tcmEl.innerHTML = formatExpandable('De fem elementer \u2014 Vand, Træ, Ild, Jord og Metal \u2014 er grundstenene i den kinesiske medicin. De er ikke blot symboler eller kategorier. De er levende energier der gennemsyrer alt i naturen og i dig: dine organer, dine følelser, dine årstider, din tid på døgnet.\n\nVand bærer nyrerne, frygten og vinteren. Det er livets begyndelse og slutning \u2014 den dybe stille kraft der holder alt i gang. Træ bærer leveren, vreden og foråret. Det er vækst, udfoldelse, retning. Ild bærer hjertet, glæden og sommeren. Det er forbindelse, varme, tilstedeværelse. Jord bærer milten, bekymringen og sensommeren. Det er næring, stabilitet, centrum. Metal bærer lungerne, sorgen og efteråret. Det er klarhed, essens, det der bliver tilbage.\n\nDisse fem elementer følger en skabelsescyklus \u2014 Vand nærer Træ, Træ nærer Ild, Ild nærer Jord, Jord nærer Metal, Metal nærer Vand. Og en kontrolcyklus der holder balancen. Hele bogens ni livsfaser hviler på denne struktur. Hvert syvende år skifter dit dominerende element. Ikke pludseligt, men som årstider der glider over i hinanden.', 80);
+  }
+
+  // 2. VEDISK FILOSOFI
+  var vediskEl = document.getElementById('bd-vedisk');
+  if (vediskEl) {
+    vediskEl.innerHTML = formatExpandable('Den vediske tradition deler livet i fire ashramaer \u2014 livsstadier der hver har sin opgave, sin energi og sin mening. Brahmacharya er lærlingens tid, hvor man optager viden og former sit fundament. Grihastha er husholderens tid, hvor man bygger, skaber og bærer ansvar. Vanaprastha er tilbagetrækningen, hvor man langsomt giver slip og vender blikket indad. Sannyasa er forsagelsen \u2014 den dybe frihed der kommer af at have levet fuldt og nu hvile i det væsentlige.\n\nParallellen til de ni livsfaser er slående. Barnets åbne modtagelighed svarer til Brahmacharya. De produktive år svarer til Grihastha. Overgangen til den modne kvinde svarer til Vanaprastha. Og visdommens fase svarer til Sannyasa. Forskellige sprog, forskellige kulturer, men de peger mod den samme sandhed: livet har en retning, og hvert stadium har sin gave.\n\nDharma \u2014 livets formål \u2014 skifter med faserne. Det der var rigtigt i én fase, behøver ikke være rigtigt i den næste. At turde skifte dharma er måske den sværeste og vigtigste overgang i ethvert liv.', 80);
+  }
+
+  // 3. NI TRADITIONER
+  var tradEl = document.getElementById('bd-traditioner');
+  if (tradEl) {
+    var html = '';
+    // 5 kultur-kort
+    var kulturer = [
+      { navn: 'Anishinaabe', tekst: 'Syv-års faser og syv generationer. Den viden du bærer, rækker både bagud og fremad i tid.' },
+      { navn: 'Keltisk', tekst: 'Årets hjul med otte nøgletidspunkter. Naturens cyklusser som spejl for livets gang.' },
+      { navn: 'Sufisme', tekst: 'Sjælens syv stadier \u2014 fra opvågnen til forening. En indre rejse der svarer til livets ydre faser.' },
+      { navn: 'Nordisk', tekst: 'Ni verdener forbundet af Yggdrasil. Nornerne væver fortid, nutid og fremtid. Alt hænger sammen.' },
+      { navn: 'M\u0101ori', tekst: 'Whakapapa \u2014 alt er forbundet. Dine forfædre lever i dig, og du lever i dem der kommer efter.' }
+    ];
+    html += '<div style="display:flex;gap:10px;overflow-x:auto;padding:4px 0 16px;-webkit-overflow-scrolling:touch">';
+    kulturer.forEach(function(k) {
+      html += '<div style="min-width:140px;background:rgba(138,150,169,0.04);border:1px solid rgba(138,150,169,0.08);border-radius:var(--radius);padding:14px 12px;flex-shrink:0">';
+      html += '<div style="font-family:var(--font-serif);font-size:15px;color:#8a96a9;margin-bottom:6px">' + k.navn + '</div>';
+      html += '<div style="font-family:var(--font-sans);font-size:13px;color:var(--text-body);line-height:1.5;font-weight:300">' + k.tekst + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+    html += formatExpandable('Ni kulturer, ni traditioner, men de peger alle i samme retning. Anishinaabe-folket taler om syv-års faser og syv generationer \u2014 den viden du bærer, rækker både bagud og fremad i tid. Den keltiske tradition følger årets hjul med otte nøgletidspunkter og ser naturens cyklusser som spejl for menneskets livsfaser. Sufismens syv stadier beskriver sjælens indre rejse fra opvågnen til forening \u2014 en rejse der svarer til livets ydre faser.\n\nDen nordiske tradition ser ni verdener forbundet af livstræet Yggdrasil, og Nornerne væver fortid, nutid og fremtid i ét. Māori-folkets Whakapapa-begreb rummer hele slægtens forbundethed \u2014 dine forfædre lever i dig, og du lever videre i dem der kommer efter.\n\nDet bemærkelsesværdige er ikke forskellene, men ligheden. Kulturer der aldrig har mødtes, har uafhængigt af hinanden set de samme mønstre: livet bevæger sig i cyklusser, hvert stadium har sin energi, og visdom kommer af at lytte til rytmen.', 80);
+    tradEl.innerHTML = html;
+  }
+
+  // 4. VIDENSKABENS BEKRÆFTELSE
+  var vidEl = document.getElementById('bd-videnskab');
+  if (vidEl) {
+    vidEl.innerHTML = formatExpandable('Cellerne i din krop fornyes fuldstændigt hvert syvende år. Det er ikke blot en metafor \u2014 det er biologi. Knogleceller tager syv år om at udskifte sig. Leverceller fornyes over halvandet år. Tarmslimhinden skiftes ud på få dage. Din krop er bogstaveligt talt et andet menneske end for syv år siden.\n\nModerne forskning i udviklingspsykologi bekræfter hvad traditionerne altid har vidst: livet bevæger sig i faser, og overgangene mellem dem er de mest sårbare og foranderlige perioder. Erik Eriksons otte livsfaser, Daniel Levinsons livscyklusser og Gail Sheehys passager peger alle på det samme mønster.\n\nEpigenetik \u2014 videnskaben om hvordan miljø og erfaringer påvirker genernes udtryk \u2014 viser at dine oplevelser ikke bare former dig psykisk, men ændrer selve den måde dine gener aktiveres på. Det du lever i dag, sætter aftryk i din biologi. Og de aftryk kan gå i arv. Dine bedsteforældres erfaringer lever videre i dine celler, og dine erfaringer lever videre i dine børnebørns.', 80);
+  }
+
+  // 5. FØLELSERNES FUNKTION
+  var foelEl = document.getElementById('bd-foelelser');
+  if (foelEl) {
+    foelEl.innerHTML = formatExpandable('I den kinesiske medicin er følelser ikke psykiske tilstande \u2014 de er organernes stemmer. Hvert organ har sin følelse, og følelsen er organets måde at kommunikere på.\n\nNyrerne bærer frygten. Ikke angst i moderne forstand, men den dybe respekt for livet \u2014 den varsomhed der holder dig i live. Når frygten er i balance, giver den mod. Leveren bærer vreden. Ikke aggressionen, men den retfærdige kraft der sætter grænser og skaber forandring. I balance bliver vreden til beslutningsevne. Hjertet bærer glæden. Ikke euforien, men den stille varme der forbinder dig med andre. I balance bliver glæden til medfølelse. Milten bærer bekymringen. Ikke grublerier, men den omhyggelighed der nærer og holder sammen. I balance bliver bekymringen til omsorg. Lungerne bærer sorgen. Ikke depressionen, men den evne til at give slip der gør plads til det nye. I balance bliver sorgen til klarhed.\n\nNår du mærker en følelse stærkt, taler et organ til dig. Det er ikke noget der skal fikses. Det er noget der skal lyttes til.', 80);
+  }
+
+  // 6. YIN, YANG OG KVINDEKROPPEN
+  var yyEl = document.getElementById('bd-yinyang');
+  if (yyEl) {
+    yyEl.innerHTML = formatExpandable('Kvinden følger Yin \u2014 det receptive, det indadvendte, det nærende. Manden følger Yang \u2014 det aktive, det udadvendte, det skabende. Det er ikke hierarki. Det er komplementaritet. Yin og Yang er som indånding og udånding \u2014 ingen af dem er vigtigere, og ingen kan eksistere uden den anden.\n\nGennem livets faser skifter balancen. Barnet er ren Yin \u2014 åben, modtagelig, formbar. I puberteten vågner Yang \u2014 kraft, retning, vilje. De produktive år er en dans mellem begge. I overgangsalderen trækker Yin sig tilbage, og kvinden må finde en ny balance \u2014 ikke gennem det receptive alene, men gennem en integration af begge kræfter.\n\nDen modne kvinde er hverken rent Yin eller rent Yang. Hun er begge dele \u2014 og det er præcis dér hendes styrke ligger. Den stilhed der ikke er svaghed. Den kraft der ikke er aggression. Den visdom der ikke behøver bevise sig.', 80);
+  }
+
+  // 7. VIDEN I DIN FASE — personaliseret
+  var dinFaseEl = document.getElementById('bd-din-fase');
+  var data = getUserCycles();
+  if (dinFaseEl && data) {
+    var phase = data.cycles.lifePhase;
+    var elLabel = Calculations.ELEMENT_LABELS[phase.element];
+    var phaseNum = phase.phase;
+
+    var faseVidenMap = {
+      1: 'I Fase 1, Vand-fasen, er du ren modtagelighed. Viden siver ind i dig som grundvand \u2014 stille, dybt, uden krav. Barnet behøver ikke forstå. Det absorberer. Og det der absorberes nu, bliver fundamentet for alt der kommer.',
+      2: 'I Fase 2, Træ-fasen, vokser din nysgerrighed eksplosivt. Du vil vide alt, forstå alt, forme alt. Viden er brændstof for vækst. Det er her du opdager at verden er større end dig \u2014 og at du kan nå den.',
+      3: 'I Fase 3, Ild-fasen, er viden forbindelse. Du lærer gennem relationer, gennem kroppen, gennem oplevelser. Teori alene rækker ikke \u2014 du skal mærke det for at tro på det. Det er ikke en svaghed. Det er Ildens gave: intuitiv forståelse.',
+      4: 'I Fase 4, Jord-fasen, samler du trådene. Viden ordner sig i dig som en have efter regn. Du begynder at se mønstre, forbindelser, den røde tråd. Det er her du opdager at du faktisk ved mere end du troede.',
+      5: 'I Fase 5, Metal-fasen, skelner du det væsentlige fra det uvæsentlige. Viden bliver essens. Du behøver ikke længere alle detaljerne \u2014 du kan se kernen. Det er Metallets gave: klarhed.',
+      6: 'I Fase 6, Vand-fasen, vender du tilbage til det dybe. Viden bliver mere intuitiv, mere kropslig. Du mærker sandheden før du kan forklare den. Det er cyklussens visdom \u2014 vandet vender tilbage til sin kilde.',
+      7: 'I Fase 7, Jord-fasen, har du overblik. Du kan samle traditioner, forskning og erfaring i ét billede. Viden er ikke længere noget du søger \u2014 det er noget du har. Din opgave nu er at dele den.',
+      8: 'I Fase 8, Metal-fasen, skelner du mere og mere. Hvad er vigtigt? Hvad kan du give slip på? Viden renses til det allermest essentielle. Og det essentielle er ofte overraskende simpelt.',
+      9: 'I Fase 9, Vand-fasen, er du visdom. Ikke fordi du ved alt, men fordi du har levet det. Viden og erfaring er smeltet sammen til noget der ikke behøver ord. Du kender rytmen indefra.'
+    };
+
+    var faseTekst = faseVidenMap[phaseNum] || 'Din fase bærer sin egen måde at forstå verden på.';
+    dinFaseEl.innerHTML = formatExpandable(faseTekst, 80);
+  } else if (dinFaseEl) {
+    dinFaseEl.innerHTML = '<p style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6">Tilføj din fødselsdato under Indstillinger for at se hvordan viden lever i din fase.</p>';
+  }
+
+  // 8. ISABELLES INDSIGT
+  var isaEl = document.getElementById('bd-isabelle');
+  if (isaEl) {
+    isaEl.innerHTML = '<div style="font-family:var(--font-serif);font-size:17px;font-style:italic;color:var(--text-dark);line-height:1.6;margin-bottom:16px;text-align:center">\u00AB\u2009Viden er ikke noget man samler. Det er noget man genkender.\u2009\u00BB</div>' +
+      formatExpandable('Jeg begyndte ikke med bøger. Jeg begyndte med en fornemmelse af at noget manglede \u2014 en forståelse af de skift jeg mærkede i min egen krop og mit eget sind. Overgangsalderen ramte mig som en mur. Ikke fordi den var uventet, men fordi jeg ikke havde sprog for den.\n\nSå begyndte jeg at lede. Kinesisk medicin gav mig elementerne. Vedisk filosofi gav mig livsfaserne. Nordisk tradition gav mig forbundetheden. Og moderne forskning gav mig bekræftelsen på at det hele hænger sammen.\n\nDet der overraskede mig mest var ikke forskellene mellem traditionerne, men ligheden. Kulturer der aldrig har mødtes, har uafhængigt af hinanden set de samme mønstre. Og de mønstre stemte med det jeg mærkede i min egen krop. Det var ikke teori. Det var genkendelse.\n\nDenne app er mit forsøg på at samle de tråde \u2014 ikke som et system du skal lære, men som et spejl du kan kigge i. Og måske genkende noget du allerede vidste.', 80);
+  }
+
+  // 9. REFLEKSION
+  var reflQuestions = [
+    'Hvilken tradition taler mest til dig lige nu \u2014 og hvad siger det om hvor du er?',
+    'Hvornår mærkede du sidst at din krop vidste noget, dit hoved endnu ikke forstod?',
+    'Hvad ville det betyde for dig, hvis de syv-årige cyklusser virkelig stemmer?',
+    'Hvad ved du nu, som du ville ønske du vidste for tyve år siden?',
+    'Hvilken viden har du båret længe \u2014 uden at give den plads?',
+    'Hvis du kunne give din yngre selv ét stykke visdom, hvad ville det være?',
+    'Hvad er den viden du ikke kan forklare, men som du ved er sand?'
+  ];
+  var ri = Calculations.dayRotation(reflQuestions.length);
+  setText('bd-refleksion', '\u00AB ' + reflQuestions[ri] + ' \u00BB');
 }
 
 /* ============================================================

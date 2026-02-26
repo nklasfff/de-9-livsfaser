@@ -76,7 +76,8 @@ const Router = {
     'rej-favoritter':    { file: 'screens/rej-favoritter.html',    niveau: 2,  parent: 'min-rejse',   tone: 'rejse',       init: 'initRejFavoritter' },
     'rej-opdagelser':    { file: 'screens/rej-opdagelser.html',    niveau: 2,  parent: 'min-rejse',   tone: 'rejse',       init: 'initRejOpdagelser' },
     'rej-alle-faser':    { file: 'screens/rej-alle-faser.html',    niveau: 2,  parent: 'min-rejse',   tone: 'rejse',       init: 'initRejAlleFaser' },
-    'rej-baggrund':      { file: 'screens/rej-baggrund.html',      niveau: 2,  parent: 'min-rejse',   tone: 'rejse',       init: 'initRejBaggrund' },
+    'rej-baggrund':      { file: 'screens/rej-baggrund.html',      niveau: 1,  parent: 'forside',     tone: 'rejse',       init: 'initRejBaggrund' },
+    'baggrund-dybere':   { file: 'screens/baggrund-dybere.html',   niveau: 2,  parent: 'rej-baggrund', tone: 'rejse',      init: 'initBaggrundDybere' },
 
     // Niveau 2 — Vinduer undersider
     'vin-tidslinje':     { file: 'screens/vin-tidslinje.html',     niveau: 2,  parent: 'vinduer',     tone: 'vinduer',     init: 'initVinTidslinje' },
