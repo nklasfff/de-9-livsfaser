@@ -3035,8 +3035,21 @@ function scanUpcomingWindows(birthdate, relations, days) {
   var pad2 = function(n) { return String(n).padStart(2, '0'); };
   var toDateStr = function(d) { return d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate()); };
   var nourishing = { 'VAND': 'TR\u00c6', 'TR\u00c6': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
+  var controlling = { 'VAND': 'ILD', 'TR\u00c6': 'JORD', 'ILD': 'METAL', 'JORD': 'VAND', 'METAL': 'TR\u00c6' };
+  var UDFORDRING_TEKST = {
+    'VAND_ILD': 'Vand og ild tr\u00e6kker i dig samtidig. Dybden s\u00f8ger stilhed, hjertet s\u00f8ger forbindelse. M\u00e6rk sp\u00e6ndingen uden at v\u00e6lge side \u2014 begge stemmer er dine.',
+    'ILD_VAND': 'Ild og vand m\u00f8des i dig. Varmen vil ud, dybden vil ind. Det kan f\u00f8les som at st\u00e5 mellem to verdener. V\u00e6r t\u00e5lmodig \u2014 de finder en balance, hvis du giver dem tid.',
+    'TR\u00c6_JORD': 'Tr\u00e6et vil fremad, jorden beder dig blive. Det m\u00e6rkes m\u00e5ske som uro i kroppen \u2014 en rastl\u00f8shed der ikke finder ro. G\u00e5 en tur. Lad f\u00f8dderne m\u00e6rke jorden mens du bev\u00e6ger dig.',
+    'JORD_TR\u00c6': 'Jorden holder fast, tr\u00e6et skyder op. Du l\u00e6nges m\u00e5ske efter tryghed og forandring p\u00e5 \u00e9n gang. Det er ikke modsigelse \u2014 det er v\u00e6kst med r\u00f8dder.',
+    'ILD_METAL': 'Ildens varme m\u00f8der metals sk\u00e6rpede klarhed. Hjertet og lungerne forhandler \u2014 hvad skal du f\u00f8le, og hvad skal du slippe? Lad dem begge tale f\u00e6rdigt.',
+    'METAL_ILD': 'Metal og ild gnider mod hinanden. Klarheden vil sortere, varmen vil forbinde. Det kan f\u00f8les som en indre debat. Lyt \u2014 svaret er ofte enklere end du tror.',
+    'JORD_VAND': 'Jorden vil holde fast, vandet vil flyde. Din tryghed udfordres af en str\u00f8m du ikke helt kontrollerer. Det er ubehageligt \u2014 men det er ogs\u00e5 pr\u00e6cis d\u00e9r, noget nyt kan bryde igennem.',
+    'VAND_JORD': 'Vand og jord m\u00f8des i dig. Dybden s\u00f8ger det formbare, men fundamentet st\u00e5r fast. M\u00e5ske er det en dag til at lytte indad uden at handle \u2014 bare m\u00e6rke hvad der rører sig.',
+    'METAL_TR\u00c6': 'Klarhed m\u00f8der v\u00e6kst. Metal vil besk\u00e6re, tr\u00e6et vil spire. Frustration kan ligge t\u00e6t p\u00e5 overfladen. Giv det tid \u2014 tr\u00e6et vokser ogs\u00e5 om vinteren, bare langsommere.',
+    'TR\u00c6_METAL': 'Tr\u00e6et presser opad, metal holder igen. Der er noget i dig der vil fri, og noget der insisterer p\u00e5 form. Det er kreativ sp\u00e6nding \u2014 lad den arbejde i dig.'
+  };
   var EL = Calculations.ELEMENT_LABELS;
-  var doubleCount = 0, tripleCount = 0, fullCount = 0, relCount = 0;
+  var doubleCount = 0, tripleCount = 0, fullCount = 0, relCount = 0, conflictCount = 0;
 
   for (var d = 0; d <= days; d++) {
     var date = new Date(now);
@@ -3059,6 +3072,24 @@ function scanUpcomingWindows(birthdate, relations, days) {
       var txt = (typeof SJAELDNE_VINDUER !== 'undefined' && SJAELDNE_VINDUER.dobbelt) ? SJAELDNE_VINDUER.dobbelt[maxEl] || '' : '';
       windows.push({ date: date, dateStr: toDateStr(date), daysFromNow: d, level: 'dobbelt', element: maxEl, text: txt, type: 'alignment' });
       doubleCount++;
+    }
+
+    // Udfordrings-vinduer: kontrolcyklus (max 3)
+    if (conflictCount < 3 && maxCount < 3) {
+      for (var ci = 0; ci < els.length - 1; ci++) {
+        for (var cj = ci + 1; cj < els.length; cj++) {
+          var cKey = els[ci] + '_' + els[cj];
+          if (controlling[els[ci]] === els[cj] || controlling[els[cj]] === els[ci]) {
+            var cTxt = UDFORDRING_TEKST[cKey] || UDFORDRING_TEKST[els[cj] + '_' + els[ci]] || '';
+            if (cTxt && conflictCount < 3) {
+              windows.push({ date: date, dateStr: toDateStr(date), daysFromNow: d, level: 'udfordring', element: els[ci], element2: els[cj], text: cTxt, type: 'conflict' });
+              conflictCount++;
+            }
+            ci = els.length; // break outer
+            break;
+          }
+        }
+      }
     }
 
     // Relations: check every 7th day
@@ -3548,48 +3579,71 @@ function initVinDybere() {
     aktivEl.innerHTML = aHtml;
   }
 
-  // 4. Kommende vinduer — fuld liste (scan 90 dage)
+  // 4. Kommende vinduer — intro + fold
   var komEl = document.getElementById('vdyb-kommende');
   if (komEl && user && user.birthdate) {
     var allWindows = scanUpcomingWindows(user.birthdate, relations, 90);
-    // Filter only alignment windows for this section
-    var alignWindows = allWindows.filter(function(w) { return w.type === 'alignment'; });
-    if (alignWindows.length > 0) {
-      var kHtml = '';
+    var showWindows = allWindows.filter(function(w) { return w.type === 'alignment' || w.type === 'conflict'; });
+    var kHtml = '';
+    kHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6;margin-bottom:16px">I de kommende tre m\u00e5neder \u00e5bner og lukker vinduer sig for dig. Nogle er harmoniske \u2014 dine cyklusser synger sammen. Andre er udfordrende \u2014 elementer der tr\u00e6kker i hver sin retning. Begge er v\u00e6rdifulde.</div>';
+
+    if (showWindows.length > 0) {
       var MAANEDER = ['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
-      var UGEDAGE = ['søndag','mandag','tirsdag','onsdag','torsdag','fredag','lørdag'];
-      for (var wi = 0; wi < alignWindows.length; wi++) {
-        var w = alignWindows[wi];
+      var UGEDAGE = ['s\u00f8ndag','mandag','tirsdag','onsdag','torsdag','fredag','l\u00f8rdag'];
+      var renderWindow = function(w) {
         var wDate = w.date;
         var dagNavn = UGEDAGE[wDate.getDay()];
         var datoStr = wDate.getDate() + '. ' + MAANEDER[wDate.getMonth()];
-        var wIcon = w.level === 'fuld_resonans' ? '✨' : w.level === 'tredobbelt' ? '✧' : '✦';
-        var wLabel = w.level === 'fuld_resonans' ? 'Fuld resonans' : w.level === 'tredobbelt' ? 'Tredobbelt' : 'Dobbelt';
+        var wIcon, wLabel;
+        if (w.type === 'conflict') {
+          wIcon = '~'; wLabel = 'Udfordring \u00b7 ' + EL[w.element] + ' \u2194 ' + EL[w.element2];
+        } else {
+          wIcon = w.level === 'fuld_resonans' ? '\u2728' : w.level === 'tredobbelt' ? '\u2727' : '\u2726';
+          wLabel = (w.level === 'fuld_resonans' ? 'Fuld resonans' : w.level === 'tredobbelt' ? 'Tredobbelt' : 'Dobbelt') + ' \u00b7 ' + EL[w.element];
+        }
         var daysLabel = w.daysFromNow === 0 ? 'I dag' : w.daysFromNow === 1 ? 'I morgen' : 'Om ' + w.daysFromNow + ' dage';
-
-        kHtml += '<div style="padding:14px 0;border-bottom:1px solid rgba(107,95,123,0.06)">';
-        kHtml += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
-        kHtml += '<span style="font-size:18px">' + wIcon + '</span>';
-        kHtml += '<span style="font-family:var(--font-sans);font-size:13px;font-weight:500;color:#6B5F7B">' + wLabel + ' · ' + EL[w.element] + '</span>';
-        kHtml += '<span style="margin-left:auto;font-size:12px;color:#a89bb3">' + daysLabel + '</span>';
-        kHtml += '</div>';
-        kHtml += '<div style="font-size:13px;color:var(--text-mid);margin-bottom:4px">' + dagNavn + ' ' + datoStr + '</div>';
+        var h = '';
+        h += '<div style="padding:14px 0;border-bottom:1px solid rgba(107,95,123,0.06)">';
+        h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
+        h += '<span style="font-size:' + (w.type === 'conflict' ? '14px;color:#a89bb3' : '18px') + '">' + wIcon + '</span>';
+        h += '<span style="font-family:var(--font-sans);font-size:13px;font-weight:500;color:' + (w.type === 'conflict' ? '#a89bb3' : '#6B5F7B') + '">' + wLabel + '</span>';
+        h += '<span style="margin-left:auto;font-size:12px;color:#a89bb3">' + daysLabel + '</span>';
+        h += '</div>';
+        h += '<div style="font-size:13px;color:var(--text-mid);margin-bottom:4px">' + dagNavn + ' ' + datoStr + '</div>';
         if (w.text) {
-          kHtml += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.55">' + w.text + '</div>';
+          h += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.55">' + w.text + '</div>';
+        }
+        h += '</div>';
+        return h;
+      };
+
+      // Vis de f\u00f8rste 2 direkte
+      for (var wi = 0; wi < Math.min(2, showWindows.length); wi++) {
+        kHtml += renderWindow(showWindows[wi]);
+      }
+
+      // Fold resten bag "Se alle" knap
+      if (showWindows.length > 2) {
+        var foldId = 'vdyb-kom-fold';
+        kHtml += '<div id="' + foldId + '" style="display:none">';
+        for (var wi2 = 2; wi2 < showWindows.length; wi2++) {
+          kHtml += renderWindow(showWindows[wi2]);
         }
         kHtml += '</div>';
+        kHtml += '<div style="text-align:center;margin-top:12px"><a onclick="var f=document.getElementById(\'' + foldId + '\');if(f){f.style.display=f.style.display===\'none\'?\'\':\'none\';this.textContent=f.style.display===\'none\'?\'Se alle ' + showWindows.length + ' vinduer \u2193\':\'Vis f\u00e6rre \u2191\'}" style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:#8B7D9B;cursor:pointer;opacity:0.8">Se alle ' + showWindows.length + ' vinduer \u2193</a></div>';
       }
-      komEl.innerHTML = kHtml;
     } else {
-      komEl.innerHTML = '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6">Ingen sjældne vinduer fundet i de kommende 90 dage. Dine cyklusser bevæger sig i forskellige elementer — og det er helt naturligt. Vinduer åbner sig, når tiden er til det.</div>';
+      kHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-light);line-height:1.6">Dine cyklusser bev\u00e6ger sig roligt i de kommende m\u00e5neder. Vinduer \u00e5bner sig n\u00e5r tiden er til det.</div>';
     }
+    komEl.innerHTML = kHtml;
   }
 
-  // 5. Vinduer med dine nærmeste (relations)
+  // 5. Vinduer med dine n\u00e6rmeste (relations) — brug TIDSREJSE_PAR
   var relEl = document.getElementById('vdyb-relationer');
   if (relEl) {
     if (relations.length > 0) {
       var rHtml = '';
+      rHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6;margin-bottom:16px">Dine n\u00e6rmeste b\u00e6rer deres egne cyklusser. N\u00e5r jeres elementer m\u00f8des \u2014 eller udfordrer hinanden \u2014 m\u00e6rker I det begge.</div>';
       for (var ri = 0; ri < relations.length; ri++) {
         var rel = relations[ri];
         if (!rel.birthdate) continue;
@@ -3597,32 +3651,34 @@ function initVinDybere() {
         var theirCycles = cyclesAtDate(rel.birthdate, now, isMale);
         var uEl = phase.element;
         var rEl = theirCycles.lifePhase.element;
+        var pairKey = uEl + '_' + rEl;
 
         rHtml += '<div style="padding:14px 0;border-bottom:1px solid rgba(107,95,123,0.06)">';
-        rHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#8B7D9B;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">' + rel.name + ' · Fase ' + theirCycles.lifePhase.phase + ' · ' + EL[rEl] + '</div>';
+        rHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#8B7D9B;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">' + rel.name + ' \u00b7 Fase ' + theirCycles.lifePhase.phase + ' \u00b7 ' + EL[rEl] + '</div>';
 
-        if (uEl === rEl) {
-          rHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6">Du og ' + rel.name + ' deler ' + EL[uEl] + '-energi lige nu. Jeres livsfaser synger den samme tone — det er en sjælden resonans, der kan mærkes som dyb genkendelighed i jeres møde.</div>';
-        } else if (nourishing[uEl] === rEl) {
-          rHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6">Dit ' + EL[uEl] + ' nærer ' + rel.name + 's ' + EL[rEl] + '. Der er noget i din energi der bærer den andens videre — som vand der nærer træets rødder.</div>';
-        } else if (nourishing[rEl] === uEl) {
-          rHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6">' + rel.name + 's ' + EL[rEl] + ' nærer dit ' + EL[uEl] + '. Der er en gave i den andens rytme — en energi der stille styrker din egen.</div>';
-        } else if (controlling[uEl] === rEl || controlling[rEl] === uEl) {
-          rHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6">' + EL[uEl] + ' og ' + EL[rEl] + ' udfordrer hinanden. Det kan føles som friktion — men det er også den dynamik der skaber vækst mellem jer.</div>';
+        // Brug TIDSREJSE_PAR for autentisk Isabelle-tekst
+        var parData = typeof TIDSREJSE_PAR !== 'undefined' ? TIDSREJSE_PAR[pairKey] : null;
+        if (parData && parData.intro) {
+          rHtml += '<div class="dybde-body">' + formatExpandable(parData.intro.replace(/\{navn\}/g, rel.name), 80) + '</div>';
         } else {
-          rHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6">' + EL[uEl] + ' møder ' + EL[rEl] + '. Forskellige energier der kan berige hinanden når I giver dem plads.</div>';
+          // Fallback til RELATION_DYBDE
+          var relType = rel.type || 'partner';
+          var relDybde = typeof RELATION_DYBDE !== 'undefined' ? RELATION_DYBDE[relType] : null;
+          if (relDybde && relDybde[uEl]) {
+            rHtml += '<div class="dybde-body">' + formatExpandable(relDybde[uEl].replace(/\{navn\}/g, rel.name), 80) + '</div>';
+          }
         }
 
-        // Scan upcoming relation windows for this person
+        // Kommende vindue for denne person
         if (user && user.birthdate) {
           var relWindows = scanUpcomingWindows(user.birthdate, [rel], 90).filter(function(w) { return w.type === 'relation'; });
           if (relWindows.length > 0) {
-            rHtml += '<div style="margin-top:10px;padding:10px 12px;background:rgba(107,95,123,0.04);border-radius:10px">';
-            rHtml += '<div style="font-size:11px;color:#a89bb3;margin-bottom:4px">Kommende vindue:</div>';
             var rw = relWindows[0];
             var rwDate = rw.date;
             var MAANEDER2 = ['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
-            rHtml += '<div style="font-size:13px;color:#6B5F7B">' + rwDate.getDate() + '. ' + MAANEDER2[rwDate.getMonth()] + ' · Om ' + rw.daysFromNow + ' dage</div>';
+            rHtml += '<div style="margin-top:10px;padding:10px 12px;background:rgba(107,95,123,0.04);border-radius:10px">';
+            rHtml += '<div style="font-size:11px;color:#a89bb3;margin-bottom:4px">Kommende vindue:</div>';
+            rHtml += '<div style="font-size:13px;color:#6B5F7B">' + rwDate.getDate() + '. ' + MAANEDER2[rwDate.getMonth()] + ' \u00b7 Om ' + rw.daysFromNow + ' dage</div>';
             rHtml += '<div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--text-body);margin-top:4px">' + rw.text + '</div>';
             rHtml += '</div>';
           }
@@ -3631,19 +3687,24 @@ function initVinDybere() {
       }
       relEl.innerHTML = rHtml;
     } else {
-      relEl.innerHTML = '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6">Du har ikke tilføjet nogen relationer endnu. Når du gør det, kan du se hvornår jeres cyklusser mødes — og hvornår I deler det samme element.</div>';
+      relEl.innerHTML = '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6">Du har ikke tilf\u00f8jet nogen relationer endnu. N\u00e5r du g\u00f8r det, kan du se hvordan jeres elementer m\u00f8des \u2014 hvorn\u00e5r I n\u00e6rer hinanden, og hvorn\u00e5r I udfordrer.</div>';
     }
   }
 
-  // 6. Organur — dagens vinduer (alle 12)
+  // 6. Organur \u2014 intro + aktivt vindue synligt + fold resten
   var orgEl = document.getElementById('vdyb-organur');
   if (orgEl && typeof ORGANUR_VINDUER !== 'undefined') {
     var hour = now.getHours();
     var oKeys = ['03-05','05-07','07-09','09-11','11-13','13-15','15-17','17-19','19-21','21-23','23-01','01-03'];
     var oStarts = [3,5,7,9,11,13,15,17,19,21,23,1];
     var oEnds = [5,7,9,11,13,15,17,19,21,23,1,3];
-    var oHtml = '';
 
+    var oHtml = '';
+    oHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6;margin-bottom:16px">Kroppen har sin egen klokke. Hvert organ har to timer hvor det arbejder st\u00e6rkest \u2014 og det vindue der er \u00e5bent lige nu, farver din energi i dette \u00f8jeblik. Det er ikke tilfaeldigt at du f\u00f8ler dig p\u00e5 en bestemt m\u00e5de p\u00e5 bestemte tidspunkter.</div>';
+
+    // Find og vis det aktive vindue direkte
+    var activeHtml = '';
+    var restHtml = '';
     for (var oi = 0; oi < oKeys.length; oi++) {
       var oData = ORGANUR_VINDUER[oKeys[oi]];
       if (!oData) continue;
@@ -3654,28 +3715,39 @@ function initVinDybere() {
         isActive = hour >= oStarts[oi] || hour < oEnds[oi];
       }
 
-      oHtml += '<div style="padding:12px 14px;margin-bottom:8px;border-radius:12px;';
+      var card = '<div style="padding:12px 14px;margin-bottom:8px;border-radius:12px;';
       if (isActive) {
-        oHtml += 'background:linear-gradient(135deg,rgba(107,95,123,0.08),rgba(107,95,123,0.03));border:1px solid rgba(107,95,123,0.15)">';
-        oHtml += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
-        oHtml += '<div style="width:8px;height:8px;border-radius:50%;background:#6B5F7B"></div>';
-        oHtml += '<span style="font-family:var(--font-sans);font-size:12px;font-weight:500;color:#6B5F7B">Kl. ' + oKeys[oi].replace('-',' – ') + ' · ' + oData.organ + ' · ' + EL[oData.element] + '</span>';
-        oHtml += '<span style="margin-left:auto;font-size:10px;color:#6B5F7B;font-weight:500;text-transform:uppercase;letter-spacing:1px">Nu</span>';
-        oHtml += '</div>';
+        card += 'background:linear-gradient(135deg,rgba(107,95,123,0.08),rgba(107,95,123,0.03));border:1px solid rgba(107,95,123,0.15)">';
+        card += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
+        card += '<div style="width:8px;height:8px;border-radius:50%;background:#6B5F7B"></div>';
+        card += '<span style="font-family:var(--font-sans);font-size:12px;font-weight:500;color:#6B5F7B">Kl. ' + oKeys[oi].replace('-',' \u2013 ') + ' \u00b7 ' + oData.organ + ' \u00b7 ' + EL[oData.element] + '</span>';
+        card += '<span style="margin-left:auto;font-size:10px;color:#6B5F7B;font-weight:500;text-transform:uppercase;letter-spacing:1px">Nu</span>';
+        card += '</div>';
+        card += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6">' + oData.tekst + '</div>';
+        card += '</div>';
+        activeHtml += card;
       } else {
-        oHtml += 'background:rgba(107,95,123,0.02);border:1px solid rgba(107,95,123,0.05)">';
-        oHtml += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
-        oHtml += '<div style="width:6px;height:6px;border-radius:50%;background:rgba(107,95,123,0.15)"></div>';
-        oHtml += '<span style="font-family:var(--font-sans);font-size:12px;color:var(--text-light)">Kl. ' + oKeys[oi].replace('-',' – ') + ' · ' + oData.organ + ' · ' + EL[oData.element] + '</span>';
-        oHtml += '</div>';
+        card += 'background:rgba(107,95,123,0.02);border:1px solid rgba(107,95,123,0.05)">';
+        card += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">';
+        card += '<div style="width:6px;height:6px;border-radius:50%;background:rgba(107,95,123,0.15)"></div>';
+        card += '<span style="font-family:var(--font-sans);font-size:12px;color:var(--text-light)">Kl. ' + oKeys[oi].replace('-',' \u2013 ') + ' \u00b7 ' + oData.organ + ' \u00b7 ' + EL[oData.element] + '</span>';
+        card += '</div>';
+        card += '<div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--text-light);line-height:1.55">' + oData.tekst + '</div>';
+        card += '</div>';
+        restHtml += card;
       }
-      oHtml += '<div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:' + (isActive ? 'var(--text-body)' : 'var(--text-light)') + ';line-height:1.55">' + oData.tekst + '</div>';
-      oHtml += '</div>';
+    }
+
+    oHtml += activeHtml;
+    if (restHtml) {
+      var orgFoldId = 'vdyb-org-fold';
+      oHtml += '<div id="' + orgFoldId + '" style="display:none">' + restHtml + '</div>';
+      oHtml += '<div style="text-align:center;margin-top:8px"><a onclick="var f=document.getElementById(\'' + orgFoldId + '\');if(f){f.style.display=f.style.display===\'none\'?\'\':\'none\';this.textContent=f.style.display===\'none\'?\'Se alle 12 vinduer \u2193\':\'Vis f\u00e6rre \u2191\'}" style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:#8B7D9B;cursor:pointer;opacity:0.8">Se alle 12 vinduer \u2193</a></div>';
     }
     orgEl.innerHTML = oHtml;
   }
 
-  // 7. Overgangsalderen (kun fase 7-8)
+  // 7. Overgangsalderen (kun fase 7-8) — intro + element-boks + foldbare temaer
   if ((phaseNum === 7 || phaseNum === 8) && typeof OVERGANGSALDER_SPECIFIK !== 'undefined') {
     var oWrap = document.getElementById('vdyb-overgang-wrap');
     var oDots = document.getElementById('vdyb-overgang-dots');
@@ -3685,8 +3757,11 @@ function initVinDybere() {
     var ovEl = document.getElementById('vdyb-overgang');
     if (ovEl) {
       var ovHtml = '';
-      // Intro
-      ovHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.6;margin-bottom:20px">' + OVERGANGSALDER_SPECIFIK.intro + '</div>';
+
+      // Kort intro (Isabelles stemme)
+      ovHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6;margin-bottom:20px">';
+      ovHtml += 'Overgangen er ikke et forfald \u2014 det er en forvandling. Den energi der f\u00f8r gik til menstruation og fertilitet er stadig din. Den leder efter en ny vej.';
+      ovHtml += '</div>';
 
       // Bestem fase (tidlig/midt/sen baseret på alder)
       var userAge = cycles.age || 50;
@@ -3694,37 +3769,47 @@ function initVinDybere() {
       var ovFaseLabel = ovFaseKey === 'tidlig' ? 'Tidlig overgang' : ovFaseKey === 'midt' ? 'Midt i overgangen' : 'Postmenopausen';
       var ovFase = OVERGANGSALDER_SPECIFIK.faser[ovFaseKey];
 
+      // Element-boks (personlig, kort — vises direkte)
+      if (ovFase && ovFase.element_raad && ovFase.element_raad[userEl]) {
+        ovHtml += '<div style="padding:14px;background:rgba(107,95,123,0.04);border-radius:12px;border:1px solid rgba(107,95,123,0.08);margin-bottom:20px">';
+        ovHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#8B7D9B;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Dit ' + elLabel + '-element i overgangen</div>';
+        ovHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6">' + ovFase.element_raad[userEl] + '</div>';
+        ovHtml += '</div>';
+      }
+
+      // Foldbare temaer — brugeren vælger selv hvad hun vil læse
+      var ovAllTemaer = [];
+      // Fase-tekster (krop + sind)
       if (ovFase) {
-        ovHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#8B7D9B;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">' + ovFaseLabel + '</div>';
-        // Krop
-        ovHtml += '<div style="margin-bottom:16px">' + formatExpandable(ovFase.krop, 80) + '</div>';
-        // Sind
-        ovHtml += '<div style="margin-bottom:16px">' + formatExpandable(ovFase.sind, 80) + '</div>';
-        // Element-råd
-        if (ovFase.element_raad && ovFase.element_raad[userEl]) {
-          ovHtml += '<div style="padding:14px;background:rgba(107,95,123,0.04);border-radius:12px;border:1px solid rgba(107,95,123,0.08);margin-bottom:16px">';
-          ovHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#8B7D9B;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Dit ' + elLabel + '-element i overgangen</div>';
-          ovHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6">' + ovFase.element_raad[userEl] + '</div>';
-          ovHtml += '</div>';
+        ovAllTemaer.push({ label: ovFaseLabel + ' \u2014 kroppen', tekst: ovFase.krop, icon: '\u2661' });
+        ovAllTemaer.push({ label: ovFaseLabel + ' \u2014 sindet', tekst: ovFase.sind, icon: '\u25CB' });
+      }
+      // Specifikke temaer
+      var ovSpecTemaer = [
+        { key: 'hedeture', label: 'Hedeture og naturesved', icon: '\u2736' },
+        { key: 'soevn', label: 'S\u00f8vn og hvile', icon: '\u263D' },
+        { key: 'humoor', label: 'Hum\u00f8r og f\u00f8lelser', icon: '\u223C' },
+        { key: 'libido', label: 'Intimitet og libido', icon: '\u2727' }
+      ];
+      for (var oti = 0; oti < ovSpecTemaer.length; oti++) {
+        var ovT = ovSpecTemaer[oti];
+        var ovTekst = OVERGANGSALDER_SPECIFIK[ovT.key];
+        if (ovTekst) {
+          ovAllTemaer.push({ label: ovT.label, tekst: ovTekst, icon: ovT.icon });
         }
       }
 
-      // Specifikke temaer: hedeture, søvn, humør, libido
-      var ovTemaer = [
-        { key: 'hedeture', label: 'Hedeture' },
-        { key: 'soevn', label: 'Søvn' },
-        { key: 'humoor', label: 'Humør' },
-        { key: 'libido', label: 'Intimitet og libido' }
-      ];
-      for (var oti = 0; oti < ovTemaer.length; oti++) {
-        var ovT = ovTemaer[oti];
-        var ovTekst = OVERGANGSALDER_SPECIFIK[ovT.key];
-        if (ovTekst) {
-          ovHtml += '<div style="margin-top:20px">';
-          ovHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#8B7D9B;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">' + ovT.label + '</div>';
-          ovHtml += formatExpandable(ovTekst, 80);
-          ovHtml += '</div>';
-        }
+      // Render som foldbare kort (som renderRelationTemaer mønster)
+      for (var ti = 0; ti < ovAllTemaer.length; ti++) {
+        var tema = ovAllTemaer[ti];
+        ovHtml += '<div style="border-bottom:1px solid rgba(107,95,123,0.06);padding:10px 0;cursor:pointer" onclick="var b=this.querySelector(\'.tema-body\');var a=this.querySelector(\'.tema-arr\');if(b.style.maxHeight && b.style.maxHeight!==\'0px\'){b.style.maxHeight=\'0px\';a.style.transform=\'rotate(0deg)\';}else{b.style.maxHeight=b.scrollHeight+\'px\';a.style.transform=\'rotate(90deg)\';}">';
+        ovHtml += '<div style="display:flex;justify-content:space-between;align-items:center">';
+        ovHtml += '<div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px;opacity:0.4">' + tema.icon + '</span><span style="font-family:var(--font-serif);font-size:15px;color:var(--text-dark)">' + tema.label + '</span></div>';
+        ovHtml += '<div class="tema-arr" style="font-size:18px;color:rgba(107,95,123,0.3);transition:transform 0.2s">\u203A</div>';
+        ovHtml += '</div>';
+        ovHtml += '<div class="tema-body" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease">';
+        ovHtml += '<div style="padding-top:10px">' + formatExpandable(tema.tekst, 80) + '</div>';
+        ovHtml += '</div></div>';
       }
 
       ovEl.innerHTML = ovHtml;
@@ -3735,10 +3820,8 @@ function initVinDybere() {
   var elemEl = document.getElementById('vdyb-elementer');
   if (elemEl) {
     var eHtml = '';
-    // Forklaring om hvordan elementer interagerer
-    eHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6;margin-bottom:20px">';
-    eHtml += 'I kinesisk medicin danser de fem elementer i to store kredsløb. Det nærende kredsløb: Vand → Træ → Ild → Jord → Metal → Vand. Hvert element føder det næste, som en mor der giver liv. Og det kontrollerende kredsløb: Vand kontrollerer Ild, Træ kontrollerer Jord, Ild kontrollerer Metal, Jord kontrollerer Vand, Metal kontrollerer Træ.';
-    eHtml += '</div>';
+    var dansTekst = 'Elementerne er ikke adskilte kr\u00e6fter \u2014 de danser med hinanden. Vand n\u00e6rer tr\u00e6, tr\u00e6 n\u00e6rer ild, ild n\u00e6rer jord, jord n\u00e6rer metal, metal n\u00e6rer vand. En evig cirkel af gaver, som en mor der f\u00f8der det n\u00e6ste led.\n\nMen de udfordrer ogs\u00e5 hinanden. Vand sl\u00e6kker ild. Tr\u00e6 br\u00e6kker jord. Ild smelter metal. Det er ikke ondskab \u2014 det er naturens m\u00e5de at holde balance. Uden kontrol vokser elementerne vildt. Uden n\u00e6ring visner de.\n\nDu b\u00e6rer alle fem elementer i dig. Og lige nu er det ' + elLabel + ' der taler h\u00f8jest.';
+    eHtml += formatExpandable(dansTekst, 80);
 
     // Dit aktuelle element
     eHtml += '<div style="padding:14px;background:rgba(107,95,123,0.04);border-radius:12px;border:1px solid rgba(107,95,123,0.08);margin-bottom:16px">';
