@@ -3157,391 +3157,313 @@ function cyclesAtDate(birthdate, targetDate, isMale) {
   return { age, lifePhase, season, weekday, date };
 }
 
-/* ---- Vinduer/Tidsrejse (luftig hub + dato-motor) ---- */
-function initVinduer() {
-  // ── PRÆSENTATION — vises ALTID ──
-  setText('vin-title', 'Rejsen gennem tid');
-  setText('vin-sub', 'Fortid \u00b7 Nutid \u00b7 Fremtid');
-  setText('vin-intro', 'Dit liv er ikke bare her og nu. Hvert \u00f8jeblik b\u00e6rer aftryk af de cyklusser der var aktive. V\u00e6lg en dato \u2014 og se hvad der var p\u00e5 spil.');
+/* ============================================================
+   VINDUER — Sjaeldne Vinduer scanner + orakel
+   ============================================================ */
 
-  // ── STATISK INSIGHT fallback ──
-  setText('vin-insight-label', 'Tidsrejse');
-  setText('vin-insight-text', 'Tilf\u00f8j din f\u00f8dselsdato i indstillinger for at se dine personlige cyklusser.');
-
-  // ── STATISKE KORT — vises ALTID ──
-  var cardsEl = document.getElementById('vin-cards');
-  if (cardsEl) {
-    var cHtml = '';
-    cHtml += '<div class="group-label" style="color:#6B5F7B">Dyk dybere</div>';
-    cHtml += '<div class="card" onclick="Router.navigate(\'vin-tidslinje\')" style="cursor:pointer"><div class="card-row"><div>' +
-      '<div class="card-label" style="color:#8B7D9B">Mit livs tidslinje</div>' +
-      '<div class="card-title">Se hele dit liv som en bue</div>' +
-      '<div class="card-desc">Fase for fase, element for element. Fra f\u00f8dsel til nu, og videre frem.</div>' +
-      '</div><div class="card-arrow" style="color:#8B7D9B">\u2192</div></div></div>';
-    cHtml += '<div class="card" onclick="Router.navigate(\'vin-oejeblikke\')" style="cursor:pointer"><div class="card-row"><div>' +
-      '<div class="card-label" style="color:#8B7D9B">Vigtige \u00f8jeblikke</div>' +
-      '<div class="card-title">Gem de datoer der betyder noget</div>' +
-      '<div class="card-desc">En f\u00f8dsel, et vendepunkt, en ny begyndelse. Se hvilke cyklusser der var aktive.</div>' +
-      '</div><div class="card-arrow" style="color:#8B7D9B">\u2192</div></div></div>';
-    cardsEl.innerHTML = cHtml;
-  }
-
-  // ── STATISK REFLEKSION fallback ──
-  setText('vin-refleksion', '\u00ab\u2009Hvilket \u00f8jeblik i dit liv ville du gerne forst\u00e5 bedre?\u2009\u00bb');
-
-  // ── STATISKE EXPLORE LINKS — vises ALTID ──
-  var exploreEl = document.getElementById('vin-explore-links');
-  if (exploreEl) {
-    var eHtml = '';
-    eHtml += '<span class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)" onclick="Router.navigate(\'cir-dit-liv\')">Dit dybe billede \u2192</span>';
-    eHtml += '<span class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)" onclick="Router.navigate(\'din-praksis\')">Din praksis \u2192</span>';
-    eHtml += '<span class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)" onclick="Router.navigate(\'din-relation\')">Dine relationer \u2192</span>';
-    eHtml += '<span class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)" onclick="Router.navigate(\'rejse\')">Min rejse \u2192</span>';
-    exploreEl.innerHTML = eHtml;
-  }
-
-  // ── BRUGERDATA — stop her hvis ingen data ──
-  const user = Storage.getUser();
-  if (!user || !user.birthdate) return;
-  const relations = Storage.getRelations();
-
-  // ── INSIGHT — personlig kontekst ──
-  var userAge = Calculations.calculateAge(user.birthdate);
-  var currentPhase = Calculations.calculateLifePhase(userAge);
-  var nextPhaseAge = currentPhase ? currentPhase.endAge : null;
-  var yearsToNext = nextPhaseAge ? (nextPhaseAge - userAge) : null;
-  if (yearsToNext !== null && yearsToNext > 0) {
-    var nxtPhase = Calculations.calculateLifePhase(nextPhaseAge);
-    setText('vin-insight-label', 'Din n\u00e6ste faseskift');
-    setText('vin-insight-text', 'Om ' + Math.round(yearsToNext) + ' \u00e5r skifter du til Fase ' + (nxtPhase ? nxtPhase.phase : '') + ': ' + (nxtPhase ? nxtPhase.name : '') + ' (' + (nxtPhase ? Calculations.ELEMENT_LABELS[nxtPhase.element] : '') + ')');
+// Hjælper: 4 elementer paa en given dato (uden organur — for daglig scanning)
+function getElementsAtDate(birthdate, date, isMale) {
+  var age = ageAtDate(birthdate, date);
+  var phaseNum, phaseEl;
+  if (isMale) {
+    phaseNum = Math.min(Math.floor(age / 8) + 1, 8);
+    phaseEl = Calculations.MALE_PHASE_DATA[phaseNum].element;
   } else {
-    setText('vin-insight-label', 'Din fase lige nu');
-    setText('vin-insight-text', 'Du er i din niende og sidste fase \u2014 Visdom. ' + Calculations.ELEMENT_LABELS[currentPhase.element] + '-energien n\u00e6rer det du allerede ved.');
+    phaseNum = Math.min(Math.floor(age / 7) + 1, 9);
+    phaseEl = Calculations.PHASE_DATA[phaseNum].element;
   }
+  var season = Calculations.calculateSeason(date);
+  var month = Calculations.calculateCalendarMonth(date);
+  var weekday = Calculations.calculateWeekday(date);
+  return [phaseEl, season.element, month.element, weekday.element];
+}
 
-  const nourishing = { 'VAND': 'TRÆ', 'TRÆ': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
+// Scanner: find sjaeldne vinduer i de naeste N dage
+function scanVinduer(birthdate, daysAhead) {
+  var NOURISH = { 'VAND': 'TRÆ', 'TRÆ': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
+  var CONTROL = { 'VAND': 'ILD', 'TRÆ': 'JORD', 'ILD': 'METAL', 'JORD': 'VAND', 'METAL': 'TRÆ' };
+  var results = [];
+  var today = new Date();
+  today.setHours(12, 0, 0, 0);
 
-  // Personal date presets based on user's birthdate
-  const now = new Date();
-  const bd = new Date(user.birthdate);
-  const pad2 = n => String(n).padStart(2, '0');
-  const toDateStr = d => d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate());
+  for (var i = 0; i <= daysAhead; i++) {
+    var d = new Date(today.getTime() + i * 86400000);
+    var elements = getElementsAtDate(birthdate, d, false);
 
-  const chipDates = {
-    0: toDateStr(new Date(bd.getFullYear() + 14, bd.getMonth(), bd.getDate())),  // Da du var 14
-    1: toDateStr(new Date(bd.getFullYear() + 21, bd.getMonth(), bd.getDate())),  // Da du var 21
-    2: toDateStr(new Date(now.getFullYear() + 5, now.getMonth(), now.getDate())),  // Om 5 år
-    3: now.getFullYear() + '-12-24'  // Næste jul
-  };
-
-  const dateInput = document.getElementById('vinduer-date');
-  const btn = document.getElementById('vinduer-btn');
-  const resultEl = document.getElementById('vinduer-result');
-
-  // Render person pills dynamically (only if user has relations)
-  const pillsContainer = document.getElementById('vin-person-pills');
-  if (pillsContainer) {
-    let pillsHtml = '<div class="person-pill active"><span class="person-pill-dot"></span>Dig</div>';
-    if (relations.length > 0) {
-      relations.forEach(r => {
-        pillsHtml += `<div class="person-pill"><span class="person-pill-dot"></span>${r.name}</div>`;
-      });
+    // Tael elementer
+    var counts = {};
+    elements.forEach(function(el) { counts[el] = (counts[el] || 0) + 1; });
+    var maxCount = 0, maxEl = '';
+    for (var el in counts) {
+      if (counts[el] > maxCount) { maxCount = counts[el]; maxEl = el; }
     }
-    pillsHtml += '<span class="rel-add-pill" onclick="openRelationModal()" title="Tilf\u00f8j relation" style="vertical-align:middle">+</span>';
-    pillsContainer.innerHTML = pillsHtml;
+
+    // Tael TCM-par
+    var nourishCount = 0, challengeCount = 0;
+    for (var a = 0; a < elements.length; a++) {
+      for (var b = a + 1; b < elements.length; b++) {
+        if (NOURISH[elements[a]] === elements[b] || NOURISH[elements[b]] === elements[a]) nourishCount++;
+        if (CONTROL[elements[a]] === elements[b] || CONTROL[elements[b]] === elements[a]) challengeCount++;
+      }
+    }
+
+    var type = null, rarity = 0;
+    if (maxCount === 4) { type = 'fuld_resonans'; rarity = 10; }
+    else if (maxCount === 3) { type = 'tredobbelt'; rarity = 7; }
+    else if (Object.keys(counts).length >= 4 && nourishCount >= 3) { type = 'naerende_kaede'; rarity = 5; }
+    else if (challengeCount >= 2) { type = 'indre_storm'; rarity = 4; }
+
+    if (type) {
+      results.push({ date: d, type: type, element: maxEl, rarity: rarity, daysFromNow: i });
+    }
   }
 
-  // Render time-shift section dynamically (about YOUR next changes)
-  const timeShiftEl = document.getElementById('vin-time-shift');
-  if (timeShiftEl) {
-    const userAge = Calculations.calculateAge(user.birthdate);
-    const currentPhase = Calculations.calculateLifePhase(userAge);
-    const nextPhaseAge = currentPhase ? currentPhase.endAge : null;
-    const yearsToNext = nextPhaseAge ? (nextPhaseAge - userAge) : null;
-
-    let shiftHtml = '<div class="time-shift-item" style="background:rgba(107,95,123,0.04);border-color:rgba(107,95,123,0.08)">';
-    shiftHtml += '<div class="time-shift-when" style="color:#a89bb3">Din næste faseskift</div>';
-    if (yearsToNext !== null && yearsToNext > 0) {
-      const nextPhase = Calculations.calculateLifePhase(nextPhaseAge);
-      const nextEl = nextPhase ? Calculations.ELEMENT_LABELS[nextPhase.element] : '';
-      const nextName = nextPhase ? nextPhase.name : '';
-      shiftHtml += `<div class="time-shift-what" style="color:#6B5F7B">Om ${Math.round(yearsToNext)} år · Fase ${nextPhase ? nextPhase.phase : ''}: ${nextName} (${nextEl})</div>`;
+  // Grupper sammenhængende dage med same type+element til vinduer
+  var windows = [];
+  var cur = null;
+  for (var j = 0; j < results.length; j++) {
+    var r = results[j];
+    if (cur && r.type === cur.type && r.element === cur.element && r.daysFromNow === cur.endDay + 1) {
+      cur.endDate = r.date;
+      cur.endDay = r.daysFromNow;
+      cur.days++;
     } else {
-      shiftHtml += '<div class="time-shift-what" style="color:#6B5F7B">Du er i din niende og sidste fase</div>';
+      if (cur) windows.push(cur);
+      cur = { startDate: r.date, endDate: r.date, type: r.type, element: r.element, rarity: r.rarity, daysFromNow: r.daysFromNow, endDay: r.daysFromNow, days: 1 };
     }
-    shiftHtml += '</div>';
-
-    // Next season shift
-    const season = Calculations.calculateSeason(now);
-    const seasonDates = [
-      { m: 2, d: 20, name: 'Forår', el: 'TRÆ' },
-      { m: 5, d: 21, name: 'Sommer', el: 'ILD' },
-      { m: 7, d: 23, name: 'Sensommer', el: 'JORD' },
-      { m: 8, d: 23, name: 'Efterår', el: 'METAL' },
-      { m: 11, d: 21, name: 'Vinter', el: 'VAND' }
-    ];
-    let nextSeason = null;
-    for (const s of seasonDates) {
-      const sDate = new Date(now.getFullYear(), s.m, s.d);
-      if (sDate > now) { nextSeason = { ...s, date: sDate }; break; }
-    }
-    if (!nextSeason) {
-      const s = seasonDates[0];
-      nextSeason = { ...s, date: new Date(now.getFullYear() + 1, s.m, s.d) };
-    }
-    const daysToSeason = Math.ceil((nextSeason.date - now) / (1000*60*60*24));
-    shiftHtml += `<div class="time-shift-item" style="background:rgba(107,95,123,0.04);border-color:rgba(107,95,123,0.08)">`;
-    shiftHtml += `<div class="time-shift-when" style="color:#a89bb3">Næste årstidsskift</div>`;
-    shiftHtml += `<div class="time-shift-what" style="color:#6B5F7B">Om ${daysToSeason} dage · ${nextSeason.name} (${Calculations.ELEMENT_LABELS[nextSeason.el]})</div>`;
-    shiftHtml += '</div>';
-
-    timeShiftEl.innerHTML = shiftHtml;
   }
+  if (cur) windows.push(cur);
 
-  // Date chips → set date input
-
-  const chips = document.querySelectorAll('.date-chip');
-
-  chips.forEach((chip, i) => {
-    if (chip._bound) return;
-    chip._bound = true;
-    chip.addEventListener('click', function() {
-
-      chips.forEach(c => c.classList.remove('active'));
-      this.classList.add('active');
-      if (dateInput && chipDates[i]) {
-        dateInput.value = chipDates[i];
-      }
-    });
+  // Sorter: sjaeldnest foerst, derefter naermest
+  windows.sort(function(a, b) {
+    if (b.rarity !== a.rarity) return b.rarity - a.rarity;
+    return a.daysFromNow - b.daysFromNow;
   });
+  return windows;
+}
 
-  // Person pills toggle (delegated since pills are dynamic)
-  if (pillsContainer && !pillsContainer._bound) {
-    pillsContainer._bound = true;
-    pillsContainer.addEventListener('click', function(e) {
-      const pill = e.target.closest('.person-pill');
-      if (!pill) return;
-      // First pill ("Dig") stays active
-      const allPills = pillsContainer.querySelectorAll('.person-pill');
-      const idx = Array.from(allPills).indexOf(pill);
-      if (idx === 0) return;
-      pill.classList.toggle('active');
-    });
+// Scanner: find sjaeldne relation-vinduer
+function scanRelationVinduer(userBirth, relBirth, relIsMale, relName, daysAhead) {
+  var results = [];
+  var today = new Date();
+  today.setHours(12, 0, 0, 0);
+
+  for (var i = 0; i <= daysAhead; i++) {
+    var d = new Date(today.getTime() + i * 86400000);
+    var userEls = getElementsAtDate(userBirth, d, false);
+    var relEls = getElementsAtDate(relBirth, d, relIsMale);
+
+    // Begges dominerende element
+    var uCounts = {}, rCounts = {};
+    userEls.forEach(function(el) { uCounts[el] = (uCounts[el] || 0) + 1; });
+    relEls.forEach(function(el) { rCounts[el] = (rCounts[el] || 0) + 1; });
+    var uMax = 0, uEl = '', rMax = 0, rEl = '';
+    for (var e in uCounts) { if (uCounts[e] > uMax) { uMax = uCounts[e]; uEl = e; } }
+    for (var f in rCounts) { if (rCounts[f] > rMax) { rMax = rCounts[f]; rEl = f; } }
+
+    // Faelles resonans: begge har 2+ i samme element
+    if (uEl === rEl && uMax >= 2 && rMax >= 2) {
+      results.push({ date: d, type: 'faelles_resonans', element: uEl, name: relName, daysFromNow: i, rarity: 8 });
+    }
+    // Begge har tredobbelt (uanset element)
+    else if (uMax >= 3 && rMax >= 3) {
+      results.push({ date: d, type: 'dobbelt_kraft', userEl: uEl, relEl: rEl, name: relName, daysFromNow: i, rarity: 6 });
+    }
   }
 
-  // Button → calculate and show rich result
+  // Grupper sammenhængende dage
+  var windows = [];
+  var cur = null;
+  for (var j = 0; j < results.length; j++) {
+    var r = results[j];
+    if (cur && r.type === cur.type && r.element === cur.element && r.daysFromNow === cur.endDay + 1) {
+      cur.endDate = r.date;
+      cur.endDay = r.daysFromNow;
+      cur.days++;
+    } else {
+      if (cur) windows.push(cur);
+      cur = { startDate: r.date, endDate: r.date, type: r.type, element: r.element || '', userEl: r.userEl, relEl: r.relEl, name: r.name, rarity: r.rarity, daysFromNow: r.daysFromNow, endDay: r.daysFromNow, days: 1 };
+    }
+  }
+  if (cur) windows.push(cur);
+  windows.sort(function(a, b) { return b.rarity !== a.rarity ? b.rarity - a.rarity : a.daysFromNow - b.daysFromNow; });
+  return windows;
+}
 
-  if (btn && dateInput && !btn._bound) {
-    btn._bound = true;
+// Formater dansk dato
+function formatVindueDato(date) {
+  var d = new Date(date);
+  return d.getDate() + '. ' + MONTHS_DA[d.getMonth()] + ' ' + d.getFullYear();
+}
 
-    btn.addEventListener('click', () => {
+// Vinduer type-labels og ikoner
+var VIN_TYPE_META = {
+  fuld_resonans:  { icon: '\u2728', label: 'Fuld resonans', color: '#6B5F7B', desc: 'Alle fire cyklusser i samme element' },
+  tredobbelt:     { icon: '\u25C6', label: 'Tredobbelt', color: '#7b7a9e', desc: 'Tre cyklusser i samme element' },
+  naerende_kaede: { icon: '\u223F', label: 'N\u00e6rende k\u00e6de', color: '#7a908b', desc: 'Elementerne danner en komplet n\u00e6ringscirkel' },
+  indre_storm:    { icon: '\u26A1', label: 'Indre storm', color: '#8a7a6e', desc: 'Flere elementer udfordrer hinanden' },
+  faelles_resonans: { icon: '\u2665', label: 'F\u00e6lles resonans', color: '#7b7a9e', desc: 'Begge i samme dominerende element' },
+  dobbelt_kraft:  { icon: '\u2726', label: 'Dobbelt kraft', color: '#6B5F7B', desc: 'Begge har st\u00e6rkt signal samtidig' }
+};
 
-      const val = dateInput.value;
-      if (!val) { showActionToast('Vælg en dato først'); return; }
+function renderVindueKort(w, isRelation) {
+  var meta = VIN_TYPE_META[w.type] || VIN_TYPE_META.tredobbelt;
+  var elLabel = w.element ? Calculations.ELEMENT_LABELS[w.element] : '';
+  var dateStr = formatVindueDato(w.startDate);
+  if (w.days > 1) dateStr += ' \u2013 ' + formatVindueDato(w.endDate);
 
-      const targetDate = new Date(val);
-      const userCycles = cyclesAtDate(user.birthdate, targetDate, false);
-      const monthCycle = Calculations.calculateCalendarMonth(targetDate);
-      const elLabel = Calculations.ELEMENT_LABELS[userCycles.lifePhase.element];
-      const phase = userCycles.lifePhase;
-      const detail = LIVSFASE_DETAIL[phase.phase];
+  var daysLabel = '';
+  if (w.daysFromNow === 0) daysLabel = 'I dag';
+  else if (w.daysFromNow === 1) daysLabel = 'I morgen';
+  else daysLabel = 'Om ' + w.daysFromNow + ' dage';
+  if (w.days > 1) daysLabel += ' (' + w.days + ' dage)';
 
-      const today = new Date();
-      const isToday = val === toDateStr(today);
-      const isPast = targetDate < today && !isToday;
+  // Hent SJAELDNE_VINDUER-tekst hvis tilgaengelig
+  var vinduesTekst = '';
+  if (!isRelation && typeof SJAELDNE_VINDUER !== 'undefined') {
+    if (w.type === 'fuld_resonans' && SJAELDNE_VINDUER.fuld_resonans && SJAELDNE_VINDUER.fuld_resonans[w.element]) {
+      vinduesTekst = SJAELDNE_VINDUER.fuld_resonans[w.element];
+    } else if (w.type === 'tredobbelt' && SJAELDNE_VINDUER.tredobbelt && SJAELDNE_VINDUER.tredobbelt[w.element]) {
+      vinduesTekst = SJAELDNE_VINDUER.tredobbelt[w.element];
+    } else if (w.type === 'naerende_kaede') {
+      vinduesTekst = 'Dine elementer flyder i en naturlig n\u00e6ringscirkel \u2014 vand n\u00e6rer tr\u00e6, tr\u00e6 n\u00e6rer ild, ild n\u00e6rer jord. Alt str\u00f8mmer. F\u00f8lg impulsen.';
+    } else if (w.type === 'indre_storm') {
+      vinduesTekst = 'Flere af dine cyklusser udfordrer hinanden. Det er ikke konflikt \u2014 det er kreativ friktion. Stormen b\u00e6rer altid en gave.';
+    }
+  }
 
-      // Element climate (4 cycles: livsfase, årstid, ugedag, måned)
-      const cycleEls = [phase.element, userCycles.season.element, userCycles.weekday.element, monthCycle.element];
-      const elCount = {};
-      cycleEls.forEach(e => { elCount[e] = (elCount[e] || 0) + 1; });
-      const sortedEls = Object.entries(elCount).sort((a, b) => b[1] - a[1]);
-      const dominant = sortedEls[0][0];
-      const dominantLabel = Calculations.ELEMENT_LABELS[dominant];
-      const varEr = isPast ? 'var' : 'er';
+  if (isRelation) {
+    if (w.type === 'faelles_resonans') {
+      vinduesTekst = 'Begge har ' + elLabel + ' som dominerende element. En sj\u00e6lden dag hvor I m\u00e6rker den samme grundtone \u2014 stille genkendelse, dyb forst\u00e5else.';
+    } else if (w.type === 'dobbelt_kraft') {
+      vinduesTekst = 'Begge har et st\u00e6rkt signal \u2014 du i ' + Calculations.ELEMENT_LABELS[w.userEl] + ', ' + w.name + ' i ' + Calculations.ELEMENT_LABELS[w.relEl] + '. Kraftfuld dag for jer begge.';
+    }
+  }
 
-      let html = '';
+  var namePrefix = isRelation ? ('Dig og ' + w.name + ' \u00b7 ') : '';
+  var titleText = namePrefix + meta.label + (elLabel && !isRelation ? ' \u00b7 ' + elLabel : '');
 
-      // ── HEADER ──
-      html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">${formatDanishDate(targetDate)} ${targetDate.getFullYear()}</div>`;
-      html += `<div style="font-family:Georgia,serif;font-size:22px;font-weight:600;color:#6B5F7B;margin:4px 0 2px">Du ${varEr} ${userCycles.age} år</div>`;
+  var html = '<div style="padding:14px 18px;background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.10);border-radius:var(--radius)">';
+  html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
+  html += '<span style="font-size:16px">' + meta.icon + '</span>';
+  html += '<span style="font-family:var(--font-sans);font-size:12px;font-weight:500;color:' + meta.color + ';text-transform:uppercase;letter-spacing:1px">' + titleText + '</span>';
+  html += '</div>';
+  html += '<div style="font-family:var(--font-sans);font-size:14px;color:var(--text-dark);font-weight:400;margin-bottom:2px">' + dateStr + '</div>';
+  html += '<div style="font-family:var(--font-sans);font-size:12px;color:#a89bb3;margin-bottom:8px">' + daysLabel + '</div>';
+  if (vinduesTekst) {
+    html += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.55">' + vinduesTekst + '</div>';
+  }
+  html += '</div>';
+  return html;
+}
 
-      // ── FASE-KORT ──
-      html += `<div style="margin:14px 0;padding:14px 16px;background:rgba(107,95,123,0.06);border-radius:14px;border:1px solid rgba(107,95,123,0.10)">`;
-      html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase">Fase ${phase.phase} · ${elLabel}</div>`;
-      html += `<div style="font-family:Georgia,serif;font-size:19px;font-weight:600;color:#6B5F7B;margin:4px 0">${phase.name}</div>`;
-      html += `<div style="font-size:13px;color:#8B7D9B">${detail.organPar} · ${detail.aarstid}</div>`;
-      html += `<div style="font-family:Georgia,serif;font-size:14px;color:#6B5F7B;margin-top:10px;line-height:1.6;font-style:italic">${detail.introText}</div>`;
-      html += `</div>`;
+function initVinduer() {
+  var user = Storage.getUser();
+  var relations = Storage.getRelations();
 
-      // ── ELEMENT-KLIMA ──
-      html += `<div style="margin:16px 0 12px">`;
-      html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">${isPast ? 'Dit element-klima dengang' : 'Dit element-klima'}</div>`;
-      ['VAND','TRÆ','ILD','JORD','METAL'].forEach(el => {
-        const cnt = elCount[el] || 0;
-        if (cnt === 0) return;
-        const pct = (cnt / 4) * 100;
-        html += `<div style="display:flex;align-items:center;margin:4px 0;font-size:13px">`;
-        html += `<div style="width:42px;color:#8B7D9B">${Calculations.ELEMENT_LABELS[el]}</div>`;
-        html += `<div style="flex:1;height:6px;background:rgba(107,95,123,0.08);border-radius:3px;margin:0 8px"><div style="height:100%;width:${pct}%;background:rgba(107,95,123,0.35);border-radius:3px"></div></div>`;
-        html += `<div style="width:16px;text-align:right;color:#a89bb3">${cnt}</div>`;
-        html += `</div>`;
+  // ── LIGE NU — dit klima i dag ──
+  if (user && user.birthdate) {
+    var now = new Date();
+    var elements = getElementsAtDate(user.birthdate, now, false);
+    var counts = {};
+    elements.forEach(function(el) { counts[el] = (counts[el] || 0) + 1; });
+    var maxCount = 0, maxEl = '';
+    for (var el in counts) { if (counts[el] > maxCount) { maxCount = counts[el]; maxEl = el; } }
+    var elLabel = Calculations.ELEMENT_LABELS[maxEl];
+
+    var labels = elements.map(function(el) { return Calculations.ELEMENT_LABELS[el]; });
+    setText('vin-nu-label', labels.join(' \u00b7 '));
+
+    // Beskriv klimaet
+    if (maxCount >= 3) {
+      setText('vin-nu-tekst', maxCount + ' af dine 4 cyklusser er i ' + elLabel + ' lige nu. Det er sj\u00e6ldent \u2014 og kr\u00e6ver din opm\u00e6rksomhed.');
+    } else if (maxCount === 2) {
+      setText('vin-nu-tekst', 'To af dine cyklusser m\u00f8des i ' + elLabel + '. De \u00f8vrige tr\u00e6kker i andre retninger \u2014 en blanding af signal og balance.');
+    } else {
+      setText('vin-nu-tekst', 'Dine cyklusser er spredt i dag \u2014 ingen kraft dominerer. Det er en dag for stille balance og lytten indad.');
+    }
+
+    // Vis SJAELDNE_VINDUER tekst hvis relevant
+    var vinWrap = document.getElementById('vin-nu-vindue');
+    if (vinWrap && typeof SJAELDNE_VINDUER !== 'undefined') {
+      if (maxCount === 4 && SJAELDNE_VINDUER.fuld_resonans && SJAELDNE_VINDUER.fuld_resonans[maxEl]) {
+        setText('vin-nu-vindue-label', '\u2728 Fuld resonans \u2014 ekstremt sj\u00e6ldent');
+        setText('vin-nu-vindue-tekst', SJAELDNE_VINDUER.fuld_resonans[maxEl]);
+        vinWrap.style.display = '';
+      } else if (maxCount === 3 && SJAELDNE_VINDUER.tredobbelt && SJAELDNE_VINDUER.tredobbelt[maxEl]) {
+        setText('vin-nu-vindue-label', '\u25C6 Tredobbelt ' + elLabel);
+        setText('vin-nu-vindue-tekst', SJAELDNE_VINDUER.tredobbelt[maxEl]);
+        vinWrap.style.display = '';
+      } else if (maxCount === 2 && SJAELDNE_VINDUER.dobbelt && SJAELDNE_VINDUER.dobbelt[maxEl]) {
+        setText('vin-nu-vindue-label', 'Dobbelt ' + elLabel);
+        setText('vin-nu-vindue-tekst', SJAELDNE_VINDUER.dobbelt[maxEl]);
+        vinWrap.style.display = '';
+      } else {
+        vinWrap.style.display = 'none';
+      }
+    }
+
+    // ── KOMMENDE VINDUER — scan 2 aar frem ──
+    setText('vin-scanner-intro', 'Motoren scanner dine cyklusser 2 \u00e5r frem og finder de dage hvor noget sj\u00e6ldent sker.');
+    var windows = scanVinduer(user.birthdate, 730);
+    var kommende = document.getElementById('vin-kommende');
+    var empty = document.getElementById('vin-kommende-empty');
+
+    if (kommende) {
+      // Filtrer "i dag" fra (den vises allerede i Lige Nu)
+      var futureWindows = windows.filter(function(w) { return w.daysFromNow > 0; });
+      // Vis top 12
+      var topWindows = futureWindows.slice(0, 12);
+      if (topWindows.length > 0) {
+        kommende.innerHTML = topWindows.map(function(w) { return renderVindueKort(w, false); }).join('');
+        if (empty) empty.style.display = 'none';
+      } else {
+        kommende.innerHTML = '';
+        if (empty) { empty.style.display = ''; setText('vin-kommende-empty', 'Ingen sj\u00e6ldne vinduer fundet i de n\u00e6ste 2 \u00e5r. Dine cyklusser holder en rolig balance.'); }
+      }
+    }
+
+    // ── JERES VINDUER — relation-konstellationer ──
+    var jeresWrap = document.getElementById('vin-jeres-wrap');
+    var jeresEl = document.getElementById('vin-jeres');
+    if (jeresWrap && jeresEl && relations && relations.length > 0) {
+      var allRelWindows = [];
+      relations.forEach(function(rel) {
+        if (!rel.birthdate) return;
+        var rw = scanRelationVinduer(user.birthdate, rel.birthdate, rel.gender === 'male', rel.name, 730);
+        // Tag top 5 per relation
+        allRelWindows = allRelWindows.concat(rw.slice(0, 5));
       });
-      if (sortedEls[0][1] >= 3) {
-        html += `<div style="font-family:Georgia,serif;font-size:13px;color:#8B7D9B;margin-top:8px;font-style:italic">${dominantLabel} ${isPast ? 'dominerede' : 'dominerer'}. ${sortedEls[0][1]} af fire cyklusser ${isPast ? 'pegede' : 'peger'} mod ${dominantLabel}.</div>`;
-      } else if (sortedEls[0][1] === 2 && sortedEls.length > 1 && sortedEls[1][1] === 2) {
-        const el2 = Calculations.ELEMENT_LABELS[sortedEls[1][0]];
-        html += `<div style="font-family:Georgia,serif;font-size:13px;color:#8B7D9B;margin-top:8px;font-style:italic">${dominantLabel} og ${el2} ${isPast ? 'delte' : 'deler'} styrken — to kræfter i balance.</div>`;
+
+      if (allRelWindows.length > 0) {
+        // Sorter samlet: sjaeldnest foerst
+        allRelWindows.sort(function(a, b) { return b.rarity !== a.rarity ? b.rarity - a.rarity : a.daysFromNow - b.daysFromNow; });
+        var topRel = allRelWindows.slice(0, 8);
+        setText('vin-jeres-intro', 'Hvorn\u00e5r danser jeres cyklusser i takt? Motoren finder de dage hvor noget s\u00e6rligt sker mellem jer.');
+        jeresEl.innerHTML = topRel.map(function(w) { return renderVindueKort(w, true); }).join('');
+        jeresWrap.style.display = '';
+      } else {
+        jeresWrap.style.display = 'none';
       }
-      html += `</div>`;
+    }
 
-      // ── FØLELSER ──
-      if (detail.folelser) {
-        html += `<div style="margin:14px 0;padding:12px 14px;background:rgba(107,95,123,0.04);border-radius:12px">`;
-        html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">${isPast ? 'Hvad du måske mærkede' : 'Hvad du måske mærker'}</div>`;
-        html += `<div style="font-size:13px;color:#6B5F7B;line-height:1.5"><span style="color:#a89bb3">I balance:</span> ${detail.folelser.balance}</div>`;
-        html += `<div style="font-size:13px;color:#6B5F7B;line-height:1.5;margin-top:3px"><span style="color:#a89bb3">I ubalance:</span> ${detail.folelser.ubalance}</div>`;
-        html += `</div>`;
-      }
+    // ── REFLEKSION ──
+    var phaseNum = Math.min(Math.floor(ageAtDate(user.birthdate, now) / 7) + 1, 9);
+    var questions = typeof REFLEKSION_DATA !== 'undefined' ? REFLEKSION_DATA[phaseNum] : null;
+    var extraQ = typeof EKSTRA_REFLEKSIONER_NY !== 'undefined' ? EKSTRA_REFLEKSIONER_NY[phaseNum] : null;
+    var allQ = (questions || []).concat(extraQ || []);
+    if (allQ.length) {
+      var qi = Calculations.dayRotation(allQ.length);
+      setText('vin-refleksion', '\u00ab\u2009' + allQ[qi] + '\u2009\u00bb');
+    }
 
-      // ── KROPPEN ──
-      html += `<div style="margin:14px 0">`;
-      html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Kroppen</div>`;
-      html += `<div style="font-family:Georgia,serif;font-size:14px;color:#6B5F7B;line-height:1.6">${detail.kropTekst}</div>`;
-      html += `</div>`;
-
-      // ── SINDET ──
-      html += `<div style="margin:14px 0">`;
-      html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Sindet</div>`;
-      html += `<div style="font-family:Georgia,serif;font-size:14px;color:#6B5F7B;line-height:1.6">${detail.sindTekst}</div>`;
-      html += `</div>`;
-
-      // ── ÅRSTID + UGEDAG ──
-      html += `<div style="margin:14px 0;padding:10px 14px;background:rgba(107,95,123,0.03);border-radius:10px;border:1px solid rgba(107,95,123,0.06)">`;
-      html += `<div style="font-size:13px;color:#8B7D9B">${userCycles.season.season} · ${Calculations.ELEMENT_LABELS[userCycles.season.element]}-energi · ${userCycles.weekday.day}</div>`;
-      html += `</div>`;
-
-      // ── ANBEFALINGER ──
-      html += `<div style="margin:16px 0">`;
-      html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">${isPast ? 'Hvad der kunne have hjulpet' : 'Hvad du kan gøre'}</div>`;
-      if (detail.oevelse) {
-        html += `<div style="margin:6px 0;padding:10px 12px;background:rgba(107,95,123,0.04);border-radius:10px">`;
-        html += `<div style="font-size:12px;color:#a89bb3;margin-bottom:2px">Øvelse</div>`;
-        html += `<div style="font-size:14px;color:#6B5F7B;font-weight:500">${detail.oevelse.title}</div>`;
-        html += `<div style="font-size:13px;color:#8B7D9B;margin-top:2px">${detail.oevelse.desc}</div>`;
-        html += `</div>`;
-      }
-      if (detail.kost) {
-        html += `<div style="margin:6px 0;padding:10px 12px;background:rgba(107,95,123,0.04);border-radius:10px">`;
-        html += `<div style="font-size:12px;color:#a89bb3;margin-bottom:2px">Næring</div>`;
-        html += `<div style="font-size:14px;color:#6B5F7B;font-weight:500">${detail.kost.title}</div>`;
-        html += `<div style="font-size:13px;color:#8B7D9B;margin-top:2px">${detail.kost.desc}</div>`;
-        html += `</div>`;
-      }
-      if (detail.meridianStrygning) {
-        html += `<div style="margin:6px 0;padding:10px 12px;background:rgba(107,95,123,0.04);border-radius:10px">`;
-        html += `<div style="font-size:12px;color:#a89bb3;margin-bottom:2px">Meridianstrygning</div>`;
-        html += `<div style="font-size:14px;color:#6B5F7B;font-weight:500">${detail.meridianStrygning.title}</div>`;
-        html += `<div style="font-size:13px;color:#8B7D9B;margin-top:2px">${detail.meridianStrygning.desc}</div>`;
-        html += `</div>`;
-      }
-      html += `</div>`;
-
-      // ── REFLEKSION ──
-      if (detail.refleksioner && detail.refleksioner.length > 0) {
-        const rIdx = Math.floor(Math.random() * detail.refleksioner.length);
-        html += `<div style="margin:16px 0;padding:14px 16px;background:rgba(107,95,123,0.05);border-radius:14px;border-left:3px solid rgba(107,95,123,0.20)">`;
-        html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Refleksion</div>`;
-        html += `<div style="font-family:Georgia,serif;font-size:15px;color:#6B5F7B;line-height:1.5;font-style:italic">${detail.refleksioner[rIdx]}</div>`;
-        html += `</div>`;
-      }
-
-      // ── DENGANG VS NU ──
-      if (!isToday) {
-        const nowCycles = cyclesAtDate(user.birthdate, today, false);
-        const nowEl = Calculations.ELEMENT_LABELS[nowCycles.lifePhase.element];
-
-        html += `<div style="margin:16px 0;padding:14px 16px;background:rgba(107,95,123,0.06);border-radius:14px;border:1px solid rgba(107,95,123,0.10)">`;
-        html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">${isPast ? 'Dengang og nu' : 'Nu og da'}</div>`;
-        html += `<div style="display:flex;gap:12px">`;
-        html += `<div style="flex:1;padding:10px;background:rgba(107,95,123,0.04);border-radius:10px">`;
-        html += `<div style="font-size:11px;color:#a89bb3;margin-bottom:4px">${isPast ? 'Dengang' : 'Da'}</div>`;
-        html += `<div style="font-size:14px;color:#6B5F7B;font-weight:500">Fase ${phase.phase}: ${phase.name}</div>`;
-        html += `<div style="font-size:13px;color:#8B7D9B">${elLabel} · ${userCycles.age} år</div>`;
-        html += `</div>`;
-        html += `<div style="flex:1;padding:10px;background:rgba(107,95,123,0.04);border-radius:10px">`;
-        html += `<div style="font-size:11px;color:#a89bb3;margin-bottom:4px">Nu</div>`;
-        html += `<div style="font-size:14px;color:#6B5F7B;font-weight:500">Fase ${nowCycles.lifePhase.phase}: ${nowCycles.lifePhase.name}</div>`;
-        html += `<div style="font-size:13px;color:#8B7D9B">${nowEl} · ${nowCycles.age} år</div>`;
-        html += `</div>`;
-        html += `</div>`;
-
-        if (phase.element !== nowCycles.lifePhase.element) {
-          html += `<div style="font-family:Georgia,serif;font-size:13px;color:#8B7D9B;margin-top:8px;font-style:italic">Fra ${elLabel} til ${nowEl} — din energi har skiftet karakter. Det du ${isPast ? 'mærkede dengang' : 'vil mærke da'} og det du mærker nu hører til forskellige verdener.</div>`;
-        } else {
-          html += `<div style="font-family:Georgia,serif;font-size:13px;color:#8B7D9B;margin-top:8px;font-style:italic">Samme element ${isPast ? 'dengang' : 'da'} og nu — ${elLabel} følger dig. Måske kender du den energi bedre end du tror.</div>`;
-        }
-        html += `</div>`;
-      }
-
-      // ── RELATIONER ──
-      const activePills = pillsContainer ? pillsContainer.querySelectorAll('.person-pill') : [];
-      activePills.forEach((pill, i) => {
-        if (i === 0 || !pill.classList.contains('active')) return;
-        const pillText = pill.textContent.trim();
-        const rel = relations.find(r => r.name === pillText);
-        if (!rel || !rel.birthdate) return;
-        const isMale = rel.gender === 'male';
-        const rc = cyclesAtDate(rel.birthdate, targetDate, isMale);
-        const relEl = Calculations.ELEMENT_LABELS[rc.lifePhase.element];
-
-        const uEl = phase.element;
-        const rEl = rc.lifePhase.element;
-        let interaction = '';
-        if (uEl === rEl) interaction = `Begge i ${Calculations.ELEMENT_LABELS[uEl]} — dyb resonans. I ${isPast ? 'delte' : 'deler'} den samme grundenergi.`;
-        else if (nourishing[uEl] === rEl) interaction = `Dit ${Calculations.ELEMENT_LABELS[uEl]} ${isPast ? 'nærede' : 'nærer'} ${rel.name}s ${Calculations.ELEMENT_LABELS[rEl]}. Du ${isPast ? 'gav' : 'giver'} naturligt energi videre.`;
-        else if (nourishing[rEl] === uEl) interaction = `${rel.name}s ${Calculations.ELEMENT_LABELS[rEl]} ${isPast ? 'nærede' : 'nærer'} dit ${Calculations.ELEMENT_LABELS[uEl]}. Du ${isPast ? 'modtog' : 'modtager'} energi.`;
-        else interaction = `${Calculations.ELEMENT_LABELS[uEl]} ${isPast ? 'mødte' : 'møder'} ${Calculations.ELEMENT_LABELS[rEl]} — forskellige energier der kan udfordre og berige.`;
-
-        html += `<div style="margin:16px 0;padding:14px 16px;background:rgba(107,95,123,0.05);border-radius:14px;border:1px solid rgba(107,95,123,0.08)">`;
-        html += `<div style="font-family:sans-serif;font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">${rel.name}</div>`;
-        html += `<div style="font-size:14px;color:#6B5F7B;font-weight:500">${rc.age} år · Fase ${rc.lifePhase.phase}: ${rc.lifePhase.name}</div>`;
-        html += `<div style="font-size:13px;color:#8B7D9B;margin-top:2px">${relEl}</div>`;
-        html += `<div style="font-family:Georgia,serif;font-size:13px;color:#8B7D9B;margin-top:8px;font-style:italic">${interaction}</div>`;
-        html += `</div>`;
-      });
-
-      // Link to relationer if user has relations but none selected
-      const anyRelSelected = Array.from(activePills).some((p, i) => i > 0 && p.classList.contains('active'));
-      if (relations.length > 0 && !anyRelSelected) {
-        html += `<div style="text-align:center;margin-top:16px">`;
-        html += `<div style="padding:10px 16px;background:rgba(123,122,158,0.05);border:1px solid rgba(123,122,158,0.10);border-radius:12px;display:inline-block;cursor:pointer;font-family:Georgia,serif;font-size:13px;font-style:italic;color:#7b7a9e" onclick="document.querySelectorAll('#vin-person-pills .person-pill')[1].click()">Se med ${relations[0].name} →</div>`;
-        html += `</div>`;
-      }
-
-      // Show result and hide hint
-      if (resultEl) {
-        resultEl.style.cssText = 'display:block;margin-top:12px;padding:16px;background:rgba(255,255,255,0.6);border:1px solid rgba(107,95,123,0.12);border-radius:16px';
-        resultEl.innerHTML = html;
-        resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-      const hint = resultEl ? resultEl.parentElement.querySelector('.date-preview-hint') : null;
-      if (hint) hint.style.display = 'none';
-    });
-  }
-
-  // Auto-fill if navigated from forside chips
-  if (window._vinduerPresetDate && dateInput && btn) {
-    dateInput.value = window._vinduerPresetDate;
-    window._vinduerPresetDate = null;
-    setTimeout(() => btn.click(), 150);
-  }
-
-  // ── REFLEKSION — personlig ──
-  var phaseNum = currentPhase ? currentPhase.phase : 7;
-  var questions = typeof REFLEKSION_DATA !== 'undefined' ? REFLEKSION_DATA[phaseNum] : null;
-  if (questions && questions.length) {
-    var qi = Calculations.dayRotation(questions.length);
-    setText('vin-refleksion', '\u00ab\u2009' + questions[qi] + '\u2009\u00bb');
+  } else {
+    // Ingen brugerdata
+    setText('vin-nu-label', 'Dine vinduer');
+    setText('vin-nu-tekst', 'Tilf\u00f8j din f\u00f8dselsdato i indstillinger for at se dine personlige cyklusser og sj\u00e6ldne vinduer.');
+    var empty2 = document.getElementById('vin-kommende-empty');
+    if (empty2) empty2.style.display = '';
+    setText('vin-refleksion', '\u00ab\u2009Hvilket \u00f8jeblik i dit liv ville du gerne forst\u00e5 bedre?\u2009\u00bb');
   }
 }
 
