@@ -64,13 +64,17 @@ const Router = {
     'pra-healing':       { file: 'screens/pra-healing.html',       niveau: 2,  parent: 'min-praksis', tone: 'praksis',     init: 'initPraHealing' },
     'pra-inspiration':   { file: 'screens/pra-inspiration.html',   niveau: 2,  parent: 'min-praksis', tone: 'praksis',     init: 'initPraInspiration' },
 
+    // Min Rejse (sekundaer) + Din Dybere Rejse (dyb)
+    'min-rejse':         { file: 'screens/min-rejse.html',         niveau: 1,  parent: 'forside',     tone: 'rejse',       init: 'initMinRejse' },
+    'rej-dybere':        { file: 'screens/rej-dybere.html',        niveau: 2,  parent: 'min-rejse',   tone: 'rejse',       init: 'initRejDybere' },
+
     // Niveau 2 — Rejse undersider
-    'rej-udvikling':     { file: 'screens/rej-udvikling.html',     niveau: 2,  parent: 'rejse',       tone: 'rejse',       init: 'initRejUdvikling' },
-    'rej-journal':       { file: 'screens/rej-journal.html',       niveau: 2,  parent: 'rejse',       tone: 'rejse',       init: 'initRejJournal' },
-    'rej-favoritter':    { file: 'screens/rej-favoritter.html',    niveau: 2,  parent: 'rejse',       tone: 'rejse',       init: 'initRejFavoritter' },
-    'rej-opdagelser':    { file: 'screens/rej-opdagelser.html',    niveau: 2,  parent: 'rejse',       tone: 'rejse',       init: 'initRejOpdagelser' },
-    'rej-alle-faser':    { file: 'screens/rej-alle-faser.html',    niveau: 2,  parent: 'rejse',       tone: 'rejse',       init: 'initRejAlleFaser' },
-    'rej-baggrund':      { file: 'screens/rej-baggrund.html',      niveau: 2,  parent: 'rejse',       tone: 'rejse',       init: 'initRejBaggrund' },
+    'rej-udvikling':     { file: 'screens/rej-udvikling.html',     niveau: 2,  parent: 'min-rejse',   tone: 'rejse',       init: 'initRejUdvikling' },
+    'rej-journal':       { file: 'screens/rej-journal.html',       niveau: 2,  parent: 'min-rejse',   tone: 'rejse',       init: 'initRejJournal' },
+    'rej-favoritter':    { file: 'screens/rej-favoritter.html',    niveau: 2,  parent: 'min-rejse',   tone: 'rejse',       init: 'initRejFavoritter' },
+    'rej-opdagelser':    { file: 'screens/rej-opdagelser.html',    niveau: 2,  parent: 'min-rejse',   tone: 'rejse',       init: 'initRejOpdagelser' },
+    'rej-alle-faser':    { file: 'screens/rej-alle-faser.html',    niveau: 2,  parent: 'min-rejse',   tone: 'rejse',       init: 'initRejAlleFaser' },
+    'rej-baggrund':      { file: 'screens/rej-baggrund.html',      niveau: 2,  parent: 'min-rejse',   tone: 'rejse',       init: 'initRejBaggrund' },
 
     // Niveau 2 — Vinduer undersider
     'vin-tidslinje':     { file: 'screens/vin-tidslinje.html',     niveau: 2,  parent: 'vinduer',     tone: 'vinduer',     init: 'initVinTidslinje' },

@@ -2393,7 +2393,279 @@ function renderTidsrejseTemaer() {
   });
 }
 
-/* ---- Rejse (Section 4) ---- */
+/* ---- Min Rejse (sekundaer skaerm — golden standard) ---- */
+
+function initMinRejse() {
+  // 1. HERO — generel
+  setText('mr-title', 'Din historie skrives nu');
+  setText('mr-intro', 'Journal, m\u00f8nstre og den stille forandring');
+
+  // 2. ISABELLE TEKST — generel
+  setText('mr-isabelle-tekst', 'De fire f\u00f8rste sk\u00e6rme viser \u00f8jebliksbilleder. Denne sk\u00e6rm viser noget andet \u2014 den viser historien. Din historie.');
+
+  // 3. DIN UDVIKLING — boks med check-in data
+  var checkins = Storage.getCheckins();
+  var count = checkins.length;
+  var streak = 0;
+  if (count > 0) {
+    // Beregn streak
+    var today = Storage.getLocalDateStr();
+    var dates = checkins.map(function(c) { return c.date; }).filter(Boolean);
+    var uniqueDates = [];
+    dates.forEach(function(d) { if (uniqueDates.indexOf(d) === -1) uniqueDates.push(d); });
+    uniqueDates.sort().reverse();
+    if (uniqueDates[0] === today || uniqueDates[0] === Storage.getLocalDateStr(new Date(Date.now() - 86400000))) {
+      streak = 1;
+      for (var i = 1; i < uniqueDates.length; i++) {
+        var prev = new Date(uniqueDates[i - 1]);
+        var curr = new Date(uniqueDates[i]);
+        var diff = (prev - curr) / 86400000;
+        if (diff <= 1.5) streak++; else break;
+      }
+    }
+    setText('mr-udvikling-label', count + ' check-ins \u00b7 ' + streak + ' dages streak');
+    setText('mr-udvikling-text', 'Du har m\u00e6rket efter ' + count + ' gange. Hvert check-in er et lille spor i din historie.');
+  } else {
+    setText('mr-udvikling-label', 'Start din daglige tracking');
+    setText('mr-udvikling-text', 'N\u00e5r du begynder at m\u00e6rke efter, samler dine oplevelser sig langsomt til indsigt.');
+  }
+
+  // 4. SENESTE NOTAT — journal eller refleksion
+  var seneseteEl = document.getElementById('mr-seneste');
+  if (seneseteEl) {
+    var journal = [];
+    try { journal = JSON.parse(localStorage.getItem('livsfaser_journal') || '[]'); } catch(e) {}
+    var reflections = Storage.getReflections();
+    var seneste = null;
+
+    if (journal.length > 0) {
+      seneste = journal[journal.length - 1];
+      var tekst = seneste.text || '';
+      seneseteEl.innerHTML = formatExpandable(tekst, 15);
+    } else if (reflections.length > 0) {
+      seneste = reflections[reflections.length - 1];
+      var rTekst = (seneste.question ? seneste.question + ' \u2014 ' : '') + (seneste.text || '');
+      seneseteEl.innerHTML = formatExpandable(rTekst, 15);
+    } else {
+      seneseteEl.innerHTML = '<span style="font-family:var(--font-serif);font-style:italic;color:var(--text-light)">Din journal venter p\u00e5 dig. M\u00e5ske er i dag dagen.</span>';
+    }
+  }
+
+  // 5. DIN FASE-REJSE — personaliseret
+  var data = getUserCycles();
+  if (data) {
+    var phase = data.cycles.lifePhase;
+    var phaseNum = phase.phase;
+    var elLabel = Calculations.ELEMENT_LABELS[phase.element];
+    var age = data.cycles.age;
+    var yearInPhase = age - phase.startAge;
+    var detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[phaseNum] : null;
+
+    var faseTekst = 'Du er i fase ' + phaseNum + ' \u2014 ' + phase.name + '. \u00c5r ' + yearInPhase + ' af denne syv\u00e5rs cyklus.';
+    if (detail && detail.introText) {
+      faseTekst += ' ' + detail.introText.split('.').slice(0, 2).join('.') + '.';
+    }
+    var faseEl = document.getElementById('mr-fase-tekst');
+    if (faseEl) faseEl.innerHTML = formatExpandable(faseTekst, 15);
+
+    // 7. REFLEKSION — personlig
+    var questions = [];
+    if (typeof REFLEKSION_DATA !== 'undefined' && REFLEKSION_DATA[phaseNum]) {
+      questions = questions.concat(REFLEKSION_DATA[phaseNum]);
+    }
+    if (typeof EKSTRA_REFLEKSIONER_NY !== 'undefined' && EKSTRA_REFLEKSIONER_NY[phaseNum]) {
+      questions = questions.concat(EKSTRA_REFLEKSIONER_NY[phaseNum]);
+    }
+    if (questions.length) {
+      var qi = Calculations.dayRotation(questions.length);
+      setText('mr-refleksion', '\u00ab\u2009' + questions[qi] + '\u2009\u00bb');
+    } else {
+      setText('mr-refleksion', '\u00ab\u2009Hvad er du p\u00e5 vej mod?\u2009\u00bb');
+    }
+  } else {
+    var faseEl2 = document.getElementById('mr-fase-tekst');
+    if (faseEl2) faseEl2.innerHTML = '<span style="font-family:var(--font-serif);font-style:italic;color:var(--text-light)">Tilf\u00f8j din f\u00f8dselsdato i indstillinger for at se din personlige fase-rejse.</span>';
+    setText('mr-refleksion', '\u00ab\u2009Hvad er du p\u00e5 vej mod?\u2009\u00bb');
+  }
+
+  // 6. TEMAER — 5 foldbare kort
+  renderRejseTemaer();
+}
+
+/* Helper: byg 5 foldbare rejse-temaer */
+function renderRejseTemaer() {
+  var container = document.getElementById('mr-temaer');
+  if (!container) return;
+
+  var data = getUserCycles();
+  var checkins = Storage.getCheckins();
+  var reflections = Storage.getReflections();
+  var journal = [];
+  try { journal = JSON.parse(localStorage.getItem('livsfaser_journal') || '[]'); } catch(e) {}
+  var favorites = Storage.getFavorites();
+  var favCount = favorites && favorites.screens ? favorites.screens.length : 0;
+
+  var temaer = [];
+
+  // TEMA 1: Din check-in historie
+  var ciBody = '';
+  if (checkins.length > 0) {
+    // Element-fordeling
+    var elCounts = { VAND: 0, 'TR\u00c6': 0, ILD: 0, JORD: 0, METAL: 0 };
+    checkins.forEach(function(c) {
+      if (c.cycles && c.cycles.dominant && elCounts[c.cycles.dominant] !== undefined) {
+        elCounts[c.cycles.dominant]++;
+      }
+    });
+    var elParts = [];
+    Object.keys(elCounts).forEach(function(k) {
+      if (elCounts[k] > 0) {
+        var label = Calculations.ELEMENT_LABELS[k] || k;
+        elParts.push(label + ': ' + elCounts[k]);
+      }
+    });
+    ciBody = checkins.length + ' check-ins registreret.';
+    if (elParts.length) ciBody += '\n\nElement-fordeling: ' + elParts.join(' \u00b7 ');
+    // Seneste 3
+    var seneste3 = checkins.slice(-3).reverse();
+    if (seneste3.length) {
+      ciBody += '\n\nSeneste:';
+      seneste3.forEach(function(c) {
+        var mood = c.mood || '?';
+        var dato = c.date || '';
+        ciBody += '\n\u2022 ' + dato + ' \u2014 ' + mood;
+        if (c.note) ciBody += ' \u2014 ' + c.note;
+      });
+    }
+  } else {
+    ciBody = 'Du har endnu ingen check-ins. N\u00e5r du begynder at m\u00e6rke efter p\u00e5 forsiden, samler dine oplevelser sig her.';
+  }
+  temaer.push({
+    titel: 'Din check-in historie',
+    tekst: ciBody,
+    link: { label: 'Se hele din udvikling \u2192', route: 'rej-udvikling' }
+  });
+
+  // TEMA 2: Dine refleksioner
+  var reflBody = '';
+  var totalRefl = reflections.length + journal.length;
+  if (totalRefl > 0) {
+    reflBody = totalRefl + ' noter i din rejse';
+    if (reflections.length > 0) reflBody += ' (' + reflections.length + ' refleksioner';
+    if (journal.length > 0) reflBody += (reflections.length > 0 ? ', ' : ' (') + journal.length + ' journal-indl\u00e6g';
+    reflBody += ').';
+    // Seneste refleksion
+    var sr = reflections.length > 0 ? reflections[reflections.length - 1] : null;
+    if (sr) {
+      reflBody += '\n\nSeneste refleksion:';
+      if (sr.question) reflBody += '\n\u00ab ' + sr.question + ' \u00bb';
+      if (sr.text) reflBody += '\n' + sr.text.substring(0, 120) + (sr.text.length > 120 ? '\u2026' : '');
+    }
+  } else {
+    reflBody = 'Din journal venter p\u00e5 dig. At skrive er ikke at huske \u2014 det er at forst\u00e5. M\u00e5ske starter du i dag.';
+  }
+  temaer.push({
+    titel: 'Dine refleksioner',
+    tekst: reflBody,
+    link: { label: '\u00c5ben din journal \u2192', route: 'rej-journal' }
+  });
+
+  // TEMA 3: Dine gemte oejeblikke
+  var favBody = '';
+  if (favCount > 0) {
+    favBody = favCount + ' \u00f8jeblikke gemt.';
+    var favNames = favorites.screens.slice(0, 5);
+    if (favNames.length) {
+      favBody += '\n\n';
+      favNames.forEach(function(s) {
+        favBody += '\u2022 ' + s + '\n';
+      });
+    }
+  } else {
+    favBody = 'Du har endnu ikke gemt noget. Tryk p\u00e5 hjertet \u2665 p\u00e5 en side for at samle den her.';
+  }
+  temaer.push({
+    titel: 'Dine gemte \u00f8jeblikke',
+    tekst: favBody,
+    link: { label: 'Se alle favoritter \u2192', route: 'rej-favoritter' }
+  });
+
+  // TEMA 4: Dine opdagelser
+  var opdBody = '';
+  if (data) {
+    var phase = data.cycles.lifePhase;
+    var yearInPhase = data.cycles.age - phase.startAge;
+    opdBody = 'Du er i fase ' + phase.phase + ' \u2014 ' + phase.name + '. \u00c5r ' + yearInPhase + ' af syv.';
+    var detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[phase.phase] : null;
+    if (detail && detail.introText) {
+      opdBody += '\n\n' + detail.introText.split('.').slice(0, 3).join('.') + '.';
+    }
+  } else {
+    opdBody = 'Tilf\u00f8j din f\u00f8dselsdato for at se dine personlige milestones og opdagelser.';
+  }
+  temaer.push({
+    titel: 'Dine opdagelser',
+    tekst: opdBody,
+    link: { label: 'Udforsk dine opdagelser \u2192', route: 'rej-opdagelser' }
+  });
+
+  // TEMA 5: Dit element-moenster
+  var elBody = '';
+  if (data) {
+    var domEl = data.dominant.element;
+    var elLbl = Calculations.ELEMENT_LABELS[domEl];
+    var c = data.cycles;
+    elBody = 'Dit dominerende element er ' + elLbl + '.';
+    elBody += '\n\nDine fem cyklusser lige nu:';
+    elBody += '\n\u2022 Livsfase: ' + Calculations.ELEMENT_LABELS[c.lifePhase.element];
+    elBody += '\n\u2022 \u00c5rstid: ' + Calculations.ELEMENT_LABELS[c.season.element];
+    if (c.monthCycle) elBody += '\n\u2022 M\u00e5ned: ' + Calculations.ELEMENT_LABELS[c.monthCycle.element];
+    elBody += '\n\u2022 Ugedag: ' + Calculations.ELEMENT_LABELS[c.weekday.element];
+    elBody += '\n\u2022 Organur: ' + Calculations.ELEMENT_LABELS[c.organ.element];
+  } else {
+    elBody = 'Tilf\u00f8j din f\u00f8dselsdato for at se dit element-m\u00f8nster.';
+  }
+  temaer.push({
+    titel: 'Dit element-m\u00f8nster',
+    tekst: elBody,
+    link: { label: 'Se dit dybe billede \u2192', route: 'cir-dit-liv' }
+  });
+
+  // BUILD HTML — foldbare kort med rejse-tone
+  container.innerHTML = '<div class="eyebrow" style="color:#8a96a9">Temaer for din rejse</div>' +
+    temaer.map(function(t) {
+      var fullText = t.tekst.replace(/\n/g, '<br>');
+      return '<div class="tema" style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center">' +
+          '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">' + t.titel + '</div>' +
+          '<div class="tema-arr" style="font-size:18px;color:rgba(138,150,169,0.4);transition:transform 0.2s">\u203a</div>' +
+        '</div>' +
+        '<div class="tema-body" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease">' +
+          '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(138,150,169,0.06)">' + fullText + '</div>' +
+          (t.link ? '<a onclick="event.stopPropagation();Router.navigate(\'' + t.link.route + '\')" style="display:inline-block;margin-top:10px;font-family:var(--font-serif);font-size:13px;font-style:italic;color:#8a96a9;opacity:0.7;cursor:pointer">' + t.link.label + '</a>' : '') +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+  // INTERAKTIVITET — expand/collapse
+  container.querySelectorAll('.tema').forEach(function(tema) {
+    tema.addEventListener('click', function() {
+      var body = this.querySelector('.tema-body');
+      var arr = this.querySelector('.tema-arr');
+      if (body) {
+        if (body.style.maxHeight && body.style.maxHeight !== '0px') {
+          body.style.maxHeight = '0px';
+          if (arr) arr.style.transform = '';
+        } else {
+          body.style.maxHeight = body.scrollHeight + 'px';
+          if (arr) arr.style.transform = 'rotate(90deg)';
+        }
+      }
+    });
+  });
+}
+
+/* ---- Rejse (Section 4 — gammel hub) ---- */
 /* ---- Min Rejse (luftig hub — præsenterer konceptet, kort fører videre) ---- */
 function initRejse() {
   // ── 1. PRÆSENTATION — vises ALTID ──
@@ -4958,6 +5230,334 @@ function renderKonstellationFigur(people, pairs) {
 
   svg += `</svg>`;
   container.innerHTML = svg;
+}
+
+/* ============================================================
+   Din Dybere Rejse — dyb skaerm
+   ============================================================ */
+
+function initRejDybere() {
+  var data = getUserCycles();
+  if (!data) {
+    setText('rejdyb-title', 'Din rejse i dybden');
+    setText('rejdyb-intro', 'Tilf\u00f8j din f\u00f8dselsdato i indstillinger for at se din dybere rejse.');
+    return;
+  }
+
+  var cycles = data.cycles;
+  var dominant = data.dominant;
+  var phase = cycles.lifePhase;
+  var phaseNum = phase.phase;
+  var detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[phaseNum] : null;
+  var domEl = dominant.element;
+  var elLabel = Calculations.ELEMENT_LABELS[domEl] || domEl;
+  var phaseElLabel = Calculations.ELEMENT_LABELS[phase.element] || phase.element;
+  var yearInPhase = cycles.age - phase.startAge;
+
+  var checkins = Storage.getCheckins();
+  var reflections = Storage.getReflections();
+  var journal = [];
+  try { journal = JSON.parse(localStorage.getItem('livsfaser_journal') || '[]'); } catch(e) {}
+
+  // ── HERO ──
+  setText('rejdyb-title', 'Fase ' + phaseNum + ' \u00b7 ' + phaseElLabel);
+  var introTekst = detail && detail.introText ? detail.introText : 'Din rejse i dybden \u2014 alt samlet p\u00e5 \u00e9t sted.';
+  setText('rejdyb-intro', introTekst);
+
+  // ── 1. DENNE FASE I DIG ──
+  var denneFaseEl = document.getElementById('rejdyb-denne-fase');
+  if (denneFaseEl && detail && detail.denneFaseIDig) {
+    denneFaseEl.innerHTML = formatExpandable(detail.denneFaseIDig, 80);
+  }
+
+  // ── 2. DIN CENTRALE F\u00d8LELSE ──
+  if (detail && detail.centralFoelelse) {
+    setText('rejdyb-foelelse-title', detail.centralFoelelse.title);
+    var foelelseEl = document.getElementById('rejdyb-foelelse-tekst');
+    if (foelelseEl) foelelseEl.innerHTML = formatExpandable(detail.centralFoelelse.tekst, 80);
+  }
+
+  // ── 3. DIN DAGLIGE L\u00c6SNING ──
+  var dagligEl = document.getElementById('rejdyb-daglig');
+  if (dagligEl) {
+    var dagligTekst = '';
+    if (typeof ELEMENT_FASE_DAGLIG !== 'undefined' && ELEMENT_FASE_DAGLIG[domEl] && ELEMENT_FASE_DAGLIG[domEl][phaseNum]) {
+      dagligTekst = ELEMENT_FASE_DAGLIG[domEl][phaseNum];
+    }
+    // Tilfoej aarstid-element tekst
+    if (typeof AARSTID_ELEMENT_TEKST !== 'undefined') {
+      var seasonKey = cycles.season.season ? cycles.season.season.toLowerCase() : '';
+      // Map dansk to key
+      var seasonMap = { 'vinter': 'vinter', 'for\u00e5r': 'foraar', 'sommer': 'sommer', 'sensommer': 'sensommer', 'efter\u00e5r': 'efteraar' };
+      var sKey = seasonMap[seasonKey] || seasonKey;
+      if (AARSTID_ELEMENT_TEKST[sKey] && AARSTID_ELEMENT_TEKST[sKey][domEl]) {
+        if (dagligTekst) dagligTekst += '\n\n';
+        dagligTekst += AARSTID_ELEMENT_TEKST[sKey][domEl];
+      }
+    }
+    if (dagligTekst) {
+      dagligEl.innerHTML = formatExpandable(dagligTekst, 80);
+    } else {
+      dagligEl.innerHTML = '<p>Din daglige l\u00e6sning opdateres baseret p\u00e5 dit element og din fase.</p>';
+    }
+  }
+
+  // ── 4. DIN \u00c5RSTID ──
+  var aarstidEl = document.getElementById('rejdyb-aarstid');
+  if (aarstidEl) {
+    var aaTekst = '';
+    var seasonName = cycles.season.season || '';
+    var seasonEl = Calculations.ELEMENT_LABELS[cycles.season.element] || '';
+    aaTekst = seasonName + ' \u2014 ' + seasonEl + '-elementets \u00e5rstid.';
+    // Tilfoej aarstids-tekst fra detail
+    if (detail && detail.aaretsRytme) {
+      aaTekst += '\n\n' + detail.aaretsRytme;
+    }
+    // Tilfoej kommende cyklus-skift
+    if (typeof CYKLUS_SKIFT_TEKST !== 'undefined') {
+      var lifeEl = phase.element;
+      var seasonEl2 = cycles.season.element;
+      if (lifeEl !== seasonEl2) {
+        var skiftKey = lifeEl + '_' + seasonEl2;
+        if (CYKLUS_SKIFT_TEKST[skiftKey]) {
+          aaTekst += '\n\n' + CYKLUS_SKIFT_TEKST[skiftKey];
+        }
+      }
+    }
+    aarstidEl.innerHTML = formatExpandable(aaTekst, 80);
+  }
+
+  // ── 5. KROP & SIND ──
+  if (detail) {
+    var kropEl = document.getElementById('rejdyb-krop');
+    if (kropEl && detail.kropTekst) kropEl.innerHTML = formatExpandable(detail.kropTekst, 60);
+    var sindEl = document.getElementById('rejdyb-sind');
+    if (sindEl && detail.sindTekst) sindEl.innerHTML = formatExpandable(detail.sindTekst, 60);
+  }
+
+  // ── 6. BALANCE / UBALANCE ──
+  if (detail) {
+    var balanceEl = document.getElementById('rejdyb-balance');
+    if (balanceEl && detail.balanceTekst) balanceEl.innerHTML = formatExpandable(detail.balanceTekst, 80);
+    renderDybdeUbalance(document.getElementById('rejdyb-ubalance'), detail.ubalanceTegn);
+  }
+
+  // ── 7. DIN HISTORIE ──
+  var histEl = document.getElementById('rejdyb-historie');
+  if (histEl) {
+    var histTekst = '';
+    if (checkins.length > 0) {
+      var foerste = checkins[0].date || '';
+      var seneste = checkins[checkins.length - 1].date || '';
+      histTekst = 'Du begyndte at m\u00e6rke efter den ' + foerste + '. Siden da har du registreret ' + checkins.length + ' check-ins.';
+      if (foerste !== seneste) histTekst += ' Din seneste var den ' + seneste + '.';
+
+      // Streak
+      var today = Storage.getLocalDateStr();
+      var dates = checkins.map(function(c) { return c.date; }).filter(Boolean);
+      var uniqueDates = [];
+      dates.forEach(function(d) { if (uniqueDates.indexOf(d) === -1) uniqueDates.push(d); });
+      uniqueDates.sort().reverse();
+      var streak = 0;
+      if (uniqueDates[0] === today || uniqueDates[0] === Storage.getLocalDateStr(new Date(Date.now() - 86400000))) {
+        streak = 1;
+        for (var i = 1; i < uniqueDates.length; i++) {
+          var prev = new Date(uniqueDates[i - 1]);
+          var curr = new Date(uniqueDates[i]);
+          var diff = (prev - curr) / 86400000;
+          if (diff <= 1.5) streak++; else break;
+        }
+      }
+      if (streak > 1) histTekst += '\n\nDin nuv\u00e6rende streak er ' + streak + ' dage i tr\u00e6k.';
+
+      // Element-fordeling
+      var elCounts = {};
+      checkins.forEach(function(ci) {
+        if (ci.cycles && ci.cycles.dominant) {
+          var k = ci.cycles.dominant;
+          elCounts[k] = (elCounts[k] || 0) + 1;
+        }
+      });
+      var parts = [];
+      Object.keys(elCounts).forEach(function(k) {
+        parts.push(Calculations.ELEMENT_LABELS[k] + ': ' + elCounts[k]);
+      });
+      if (parts.length) histTekst += '\n\nElement-fordeling i dine check-ins:\n' + parts.join(' \u00b7 ');
+
+      histTekst += '\n\nHvert check-in er et lille aftryk. Tilsammen tegner de et billede af, hvordan din energi har bev\u00e6get sig.';
+    } else {
+      histTekst = 'Din historie begynder, n\u00e5r du begynder at m\u00e6rke efter. Hvert check-in p\u00e5 forsiden bliver en del af din rejse \u2014 et stille aftryk af den du var i det \u00f8jeblik. M\u00e5ske starter du i dag.';
+    }
+    histEl.innerHTML = formatExpandable(histTekst, 80);
+  }
+
+  // ── 8. DINE M\u00d8NSTRE ──
+  var moenstreEl = document.getElementById('rejdyb-moenstre');
+  if (moenstreEl) {
+    var c = cycles;
+    var mTekst = 'Dit dominerende element lige nu er ' + elLabel + '.';
+    mTekst += '\n\nDine fem cyklusser:';
+    mTekst += '\n\u2022 Livsfase: ' + Calculations.ELEMENT_LABELS[c.lifePhase.element] + ' (fase ' + phaseNum + ' \u2014 ' + c.lifePhase.name + ')';
+    mTekst += '\n\u2022 \u00c5rstid: ' + Calculations.ELEMENT_LABELS[c.season.element] + ' (' + c.season.season + ')';
+    if (c.monthCycle) mTekst += '\n\u2022 M\u00e5ned: ' + Calculations.ELEMENT_LABELS[c.monthCycle.element];
+    mTekst += '\n\u2022 Ugedag: ' + Calculations.ELEMENT_LABELS[c.weekday.element] + ' (' + c.weekday.day + ')';
+    mTekst += '\n\u2022 Organur: ' + Calculations.ELEMENT_LABELS[c.organ.element] + ' (' + c.organ.organ + ' \u00b7 kl. ' + c.organ.hours + ')';
+
+    // Sjaeldne vinduer
+    if (typeof SJAELDNE_VINDUER !== 'undefined') {
+      var elArr = c.elements || [];
+      var elFreq = {};
+      elArr.forEach(function(e) { elFreq[e] = (elFreq[e] || 0) + 1; });
+      var maxCount = 0;
+      var maxEl = '';
+      Object.keys(elFreq).forEach(function(k) { if (elFreq[k] > maxCount) { maxCount = elFreq[k]; maxEl = k; } });
+      if (maxCount >= 4 && SJAELDNE_VINDUER.fuld_resonans && SJAELDNE_VINDUER.fuld_resonans[maxEl]) {
+        mTekst += '\n\n' + SJAELDNE_VINDUER.fuld_resonans[maxEl];
+      } else if (maxCount === 3 && SJAELDNE_VINDUER.tredobbelt && SJAELDNE_VINDUER.tredobbelt[maxEl]) {
+        mTekst += '\n\n' + SJAELDNE_VINDUER.tredobbelt[maxEl];
+      } else if (maxCount === 2 && SJAELDNE_VINDUER.dobbelt && SJAELDNE_VINDUER.dobbelt[maxEl]) {
+        mTekst += '\n\n' + SJAELDNE_VINDUER.dobbelt[maxEl];
+      }
+    }
+
+    mTekst += '\n\nDu er ' + cycles.age + ' \u00e5r. \u00c5r ' + yearInPhase + ' af din syv\u00e5rs cyklus i ' + c.lifePhase.name + '.';
+    mTekst += '\n\nDin rejse er ikke en lige linje. Den er en spiral \u2014 du vender tilbage til de samme temaer, men fra et nyt sted. Dybere. Mere bevidst.';
+    moenstreEl.innerHTML = formatExpandable(mTekst, 80);
+  }
+
+  // ── 9. FASENS TEMAER ──
+  if (detail && detail.temaerNarrativer) {
+    renderDybdeTemaer(document.getElementById('rejdyb-temaer'), detail.temaerNarrativer);
+  }
+
+  // ── 10. N\u00c5R LIVET PRESSER ──
+  var hjaelpEl = document.getElementById('rejdyb-hjaelp');
+  if (hjaelpEl && typeof UDVIDET_HJAELP !== 'undefined') {
+    var topicLabels = {
+      stress: 'Stress og pres',
+      depression: 'Nedtrykthed',
+      ensomhed: 'Ensomhed',
+      angst: 'Angst og uro',
+      udbraendthed: 'Udbr\u00e6ndthed'
+    };
+    var hjaelpHTML = '';
+    Object.keys(UDVIDET_HJAELP).forEach(function(topic) {
+      var entry = UDVIDET_HJAELP[topic] && UDVIDET_HJAELP[topic][domEl];
+      if (!entry) return;
+      var label = topicLabels[topic] || topic;
+      var bodyHTML = '';
+      if (entry.dyb) bodyHTML += entry.dyb.split('\n\n').filter(function(p) { return p.trim(); }).map(function(p) { return '<p>' + p.trim() + '</p>'; }).join('');
+      if (entry.oevelse) bodyHTML += '<p style="margin-top:10px"><strong style="font-family:var(--font-sans);font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#8a96a9">\u00d8velse:</strong><br>' + entry.oevelse + '</p>';
+      if (entry.kost_raad) bodyHTML += '<p style="margin-top:8px"><strong style="font-family:var(--font-sans);font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#8a96a9">Kost:</strong><br>' + entry.kost_raad + '</p>';
+      hjaelpHTML += '<div class="dybde-tema-card" onclick="toggleDybdeTema(this)">' +
+        '<div class="dybde-tema-header">' +
+          '<span class="dybde-tema-title">' + label + ' \u00b7 ' + elLabel + '</span>' +
+          '<span class="dybde-tema-arrow">\u2193</span>' +
+        '</div>' +
+        '<div class="dybde-tema-body">' + bodyHTML + '</div>' +
+      '</div>';
+    });
+    hjaelpEl.innerHTML = hjaelpHTML;
+  }
+
+  // ── 11. DYBE TEMAER ──
+  var dybeTemaerEl = document.getElementById('rejdyb-dybe-temaer');
+  if (dybeTemaerEl && typeof TEMA_DYBDE !== 'undefined') {
+    var temaLabels = {
+      overgangsalder: 'Overgangsalder',
+      graviditet_og_fertilitet: 'Graviditet og fertilitet',
+      stress_og_udbraendthed: 'Stress og udbr\u00e6ndthed',
+      sorg_og_tab: 'Sorg og tab',
+      ensomhed_og_isolation: 'Ensomhed og isolation',
+      forandring_og_overgang: 'Forandring og overgang'
+    };
+    var temaHTML = '';
+    Object.keys(TEMA_DYBDE).forEach(function(tema) {
+      var tekst = TEMA_DYBDE[tema] && TEMA_DYBDE[tema][domEl];
+      if (!tekst) return;
+      var label = temaLabels[tema] || tema;
+      var bodyHTML = tekst.split('\n\n').filter(function(p) { return p.trim(); }).map(function(p) { return '<p>' + p.trim() + '</p>'; }).join('');
+      temaHTML += '<div class="dybde-tema-card" onclick="toggleDybdeTema(this)">' +
+        '<div class="dybde-tema-header">' +
+          '<span class="dybde-tema-title">' + label + '</span>' +
+          '<span class="dybde-tema-arrow">\u2193</span>' +
+        '</div>' +
+        '<div class="dybde-tema-body">' + bodyHTML + '</div>' +
+      '</div>';
+    });
+    dybeTemaerEl.innerHTML = temaHTML;
+  }
+
+  // ── 12. FASENS \u00d8VELSER ──
+  if (detail && detail.oevelser) {
+    renderDybdeOevelser(document.getElementById('rejdyb-oevelser'), detail.oevelser);
+  }
+
+  // ── 13. DINE REFLEKSIONER ──
+  var reflEl = document.getElementById('rejdyb-refleksioner');
+  if (reflEl) {
+    var rTekst = '';
+    var totalNotes = reflections.length + journal.length;
+    if (totalNotes > 0) {
+      rTekst = totalNotes + ' noter i din rejse.';
+      if (reflections.length > 0) rTekst += ' ' + reflections.length + ' refleksioner.';
+      if (journal.length > 0) rTekst += ' ' + journal.length + ' journal-indl\u00e6g.';
+
+      var sr = reflections.slice(-3).reverse();
+      if (sr.length > 0) {
+        rTekst += '\n\nSeneste refleksioner:';
+        sr.forEach(function(r) {
+          if (r.question) rTekst += '\n\n\u00ab ' + r.question + ' \u00bb';
+          if (r.text) rTekst += '\n' + r.text.substring(0, 150) + (r.text.length > 150 ? '\u2026' : '');
+        });
+      }
+
+      if (journal.length > 0) {
+        var sj = journal[journal.length - 1];
+        rTekst += '\n\nSeneste journal-indl\u00e6g:';
+        if (sj.date) rTekst += '\n' + sj.date;
+        if (sj.text) rTekst += '\n' + sj.text.substring(0, 150) + (sj.text.length > 150 ? '\u2026' : '');
+      }
+    } else {
+      rTekst = 'Du har endnu ikke skrevet noget. Din journal venter p\u00e5 dig \u2014 et stille rum, hvor tankerne kan lande. At skrive er ikke at huske. Det er at forst\u00e5.';
+    }
+    reflEl.innerHTML = formatExpandable(rTekst, 80);
+  }
+
+  // ── 14. FASENS R\u00c5D ──
+  if (detail && detail.fasensRaad) {
+    renderDybdeRaad(document.getElementById('rejdyb-raad'), detail.fasensRaad);
+  }
+
+  // ── 15. DIT ELEMENT ──
+  var essayEl = document.getElementById('rejdyb-element-essay');
+  if (essayEl && detail && detail.elementEssay) {
+    essayEl.innerHTML = formatExpandable(detail.elementEssay, 80);
+  }
+
+  // ── 16. OVERGANGEN ──
+  var overgangEl = document.getElementById('rejdyb-overgang');
+  if (overgangEl && detail && detail.overgangTekst) {
+    overgangEl.innerHTML = formatExpandable(detail.overgangTekst, 80);
+  }
+
+  // ── 17. REFLEKSION ──
+  var questions = [];
+  if (typeof REFLEKSION_DATA !== 'undefined' && REFLEKSION_DATA[phaseNum]) {
+    questions = questions.concat(REFLEKSION_DATA[phaseNum]);
+  }
+  if (typeof EKSTRA_REFLEKSIONER_NY !== 'undefined' && EKSTRA_REFLEKSIONER_NY[phaseNum]) {
+    questions = questions.concat(EKSTRA_REFLEKSIONER_NY[phaseNum]);
+  }
+  if (detail && detail.ekstraRefleksioner) {
+    questions = questions.concat(detail.ekstraRefleksioner);
+  }
+  if (questions.length) {
+    var qi = Calculations.dayRotation(questions.length);
+    setText('rejdyb-refleksion', '\u00ab\u2009' + questions[qi] + '\u2009\u00bb');
+  } else {
+    setText('rejdyb-refleksion', '\u00ab\u2009Hvad fort\u00e6ller din rejse dig?\u2009\u00bb');
+  }
 }
 
 /* ============================================================

@@ -1,0 +1,74 @@
+<!-- MIN REJSE — Sekundaer skaerm (Golden Standard) -->
+
+<!-- HERO: Titel + figur 1 -->
+<div class="s" style="padding-bottom:0">
+  <div class="eyebrow" style="color:#8a96a9">Min Rejse</div>
+  <div style="text-align:center;margin:16px 0 8px">
+    <div id="mr-title" style="font-family:var(--font-serif);font-size:28px;color:var(--text-dark)">Din historie skrives nu</div>
+    <div id="mr-intro" style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:var(--text-light);margin-top:6px;line-height:1.6;max-width:320px;margin-left:auto;margin-right:auto">Journal, m&oslash;nstre og den stille forandring</div>
+  </div>
+  <div class="fig" style="padding:0 20px">
+    <img src="assets/images/journal-cirkler.png" alt="Min Rejse" style="max-width:300px;margin:0 auto;border-radius:14px">
+  </div>
+</div>
+
+<!-- INTRO TEKST (hoerer visuelt til hero, derfor pt:0) -->
+<div class="s" style="padding-top:0">
+  <div class="isa" id="mr-isabelle-tekst">
+    De fire f&oslash;rste skaerme viser &oslash;jebliksbilleder. Denne skaerm viser noget andet &mdash; den viser historien. Din historie.
+  </div>
+</div>
+
+<!-- DIN UDVIKLING — personaliseret boks -->
+<div class="s">
+  <div class="eyebrow" style="color:#8a96a9">Din udvikling</div>
+  <div id="mr-udvikling" style="background:rgba(138,150,169,0.04);border:1px solid rgba(138,150,169,0.08);border-radius:var(--radius);padding:16px 18px;margin-top:10px">
+    <div id="mr-udvikling-label" style="font-family:var(--font-sans);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:#8a96a9;margin-bottom:6px"></div>
+    <div id="mr-udvikling-text" style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6"></div>
+  </div>
+</div>
+
+<!-- SENESTE NOTAT — expandable -->
+<div class="s">
+  <div class="isa isa-sm" id="mr-seneste"></div>
+  <div style="text-align:center;margin-top:10px">
+    <a onclick="Router.navigate('rej-journal')" style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#8a96a9;opacity:0.7;cursor:pointer">Skriv i din journal &rarr;</a>
+  </div>
+</div>
+
+<!-- FIGUR 2 — visuelt break -->
+<div class="s">
+  <div class="fig">
+    <img src="assets/images/oejeblikke-blomst.png" alt="&Oslash;jeblikke" style="max-width:220px;margin:0 auto;opacity:0.85">
+  </div>
+</div>
+
+<!-- DIN FASE-REJSE — expandable -->
+<div class="s">
+  <div class="isa isa-sm" id="mr-fase-tekst"></div>
+</div>
+
+<!-- TEMAER — 5 foldbare kort -->
+<div class="s" id="mr-temaer"></div>
+
+<!-- REFLEKSION -->
+<div class="s">
+  <div class="eyebrow" style="color:#8a96a9">Refleksion</div>
+  <div class="isa" id="mr-refleksion" style="font-size:17px;margin-bottom:12px"></div>
+  <div style="text-align:center">
+    <a onclick="Router.navigate('rej-journal')" style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#8a96a9;opacity:0.7;cursor:pointer">Skriv i din journal &rarr;</a>
+  </div>
+</div>
+
+<!-- DYK DYBERE -->
+<div class="s" style="padding-bottom:32px">
+  <div class="eyebrow" style="color:#8a96a9">Dyk dybere</div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px">
+    <a onclick="Router.navigate('rej-dybere')" class="explore-link" style="color:#8a96a9;border-color:rgba(138,150,169,0.15);cursor:pointer">Din Dybere Rejse</a>
+    <a onclick="Router.navigate('rej-udvikling')" class="explore-link" style="color:#8a96a9;border-color:rgba(138,150,169,0.15);cursor:pointer">Min Udvikling</a>
+    <a onclick="Router.navigate('rej-journal')" class="explore-link" style="color:#8a96a9;border-color:rgba(138,150,169,0.15);cursor:pointer">Min Journal</a>
+    <a onclick="Router.navigate('rej-opdagelser')" class="explore-link" style="color:#8a96a9;border-color:rgba(138,150,169,0.15);cursor:pointer">Mine Opdagelser</a>
+  </div>
+</div>
+
+<div class="section-closer"></div>
