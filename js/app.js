@@ -1041,7 +1041,13 @@ function renderElementFaseDaglig(domEl, phase) {
     wrap.style.display = 'none';
     return;
   }
-  setText('lige-nu-daglig', ELEMENT_FASE_DAGLIG[domEl][phase.phase]);
+  // Saml base-tekst + rotationstekster og vaelg via dayRotation
+  var allTexts = [ELEMENT_FASE_DAGLIG[domEl][phase.phase]];
+  if (typeof ELEMENT_FASE_ROTATION !== 'undefined' && ELEMENT_FASE_ROTATION[domEl] && ELEMENT_FASE_ROTATION[domEl][phase.phase]) {
+    allTexts = allTexts.concat(ELEMENT_FASE_ROTATION[domEl][phase.phase]);
+  }
+  var idx = Calculations.dayRotation(allTexts.length);
+  setText('lige-nu-daglig', allTexts[idx]);
   wrap.style.display = '';
 }
 
@@ -5538,7 +5544,11 @@ function initRejDybere() {
   if (dagligEl) {
     var dagligTekst = '';
     if (typeof ELEMENT_FASE_DAGLIG !== 'undefined' && ELEMENT_FASE_DAGLIG[domEl] && ELEMENT_FASE_DAGLIG[domEl][phaseNum]) {
-      dagligTekst = ELEMENT_FASE_DAGLIG[domEl][phaseNum];
+      var allDaglig = [ELEMENT_FASE_DAGLIG[domEl][phaseNum]];
+      if (typeof ELEMENT_FASE_ROTATION !== 'undefined' && ELEMENT_FASE_ROTATION[domEl] && ELEMENT_FASE_ROTATION[domEl][phaseNum]) {
+        allDaglig = allDaglig.concat(ELEMENT_FASE_ROTATION[domEl][phaseNum]);
+      }
+      dagligTekst = allDaglig[Calculations.dayRotation(allDaglig.length)];
     }
     // Tilfoej aarstid-element tekst
     if (typeof AARSTID_ELEMENT_TEKST !== 'undefined') {
