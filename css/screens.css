@@ -499,3 +499,80 @@
   font-weight: 500;
 }
 .rel-deep-chip:active { background: rgba(123,122,158,0.18); }
+
+/* ── Relation modal ── */
+.rel-modal-overlay {
+  position: fixed; inset: 0; z-index: 900;
+  background: rgba(0,0,0,0.35);
+  animation: fadeIn 0.2s ease;
+}
+.rel-modal {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 910;
+  background: var(--bg); border-radius: 20px 20px 0 0;
+  padding: 0 24px 32px; max-height: 85vh; overflow-y: auto;
+  box-shadow: 0 -4px 30px rgba(0,0,0,0.10);
+  animation: slideUp 0.25s ease;
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.rel-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 0 12px; border-bottom: 1px solid rgba(123,122,158,0.10);
+  margin-bottom: 18px;
+}
+.rel-modal-title {
+  font-family: var(--font-serif); font-size: 20px; color: var(--text-dark);
+}
+.rel-modal-close {
+  background: none; border: none; font-size: 24px; color: var(--text-light);
+  cursor: pointer; padding: 4px 8px; line-height: 1;
+}
+.rel-modal-body { padding-bottom: 8px; }
+.rel-modal-label {
+  display: block; font-family: var(--font-sans); font-size: 11px;
+  letter-spacing: 2px; text-transform: uppercase; color: #88839e;
+  margin: 16px 0 6px;
+}
+.rel-modal-label:first-child { margin-top: 0; }
+.rel-modal-input {
+  width: 100%; padding: 12px 16px; border: 1px solid rgba(123,122,158,0.15);
+  border-radius: 12px; font-family: var(--font-sans); font-size: 15px;
+  color: var(--text-body); font-weight: 300; background: rgba(123,122,158,0.02);
+  box-sizing: border-box;
+}
+.rel-modal-input:focus { outline: none; border-color: rgba(123,122,158,0.35); }
+.rel-modal-chips {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.rel-modal-chip {
+  padding: 8px 16px; font-family: var(--font-sans); font-size: 14px;
+  color: #7b7a9e; background: rgba(123,122,158,0.06);
+  border: 1px solid rgba(123,122,158,0.12); border-radius: 20px;
+  cursor: pointer; transition: all 0.15s;
+}
+.rel-modal-chip.active {
+  background: rgba(123,122,158,0.14); border-color: rgba(123,122,158,0.25);
+  font-weight: 500;
+}
+.rel-modal-save {
+  display: block; width: 100%; margin-top: 24px; padding: 14px;
+  background: #7b7a9e; color: white; border: none; border-radius: 14px;
+  font-family: var(--font-sans); font-size: 16px; font-weight: 500;
+  cursor: pointer; transition: opacity 0.15s;
+}
+.rel-modal-save:active { opacity: 0.85; }
+.rel-modal-delete {
+  display: block; width: 100%; margin-top: 10px; padding: 12px;
+  background: none; color: var(--error); border: 1px solid rgba(200,90,84,0.20);
+  border-radius: 14px; font-family: var(--font-sans); font-size: 14px;
+  cursor: pointer;
+}
+.rel-modal-delete:active { background: rgba(200,90,84,0.05); }
+
+/* + pill for adding relation */
+.rel-add-pill {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; font-size: 18px; color: #7b7a9e;
+  background: rgba(123,122,158,0.06); border: 1.5px dashed rgba(123,122,158,0.25);
+  border-radius: 20px; cursor: pointer; transition: all 0.15s;
+}
+.rel-add-pill:active { background: rgba(123,122,158,0.15); }

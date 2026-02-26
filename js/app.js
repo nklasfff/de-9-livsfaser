@@ -577,6 +577,128 @@ function toggleDrawer() {
   if (overlay) overlay.classList.toggle('open', !isOpen);
 }
 
+/* ============================================================
+   RELATION MODAL — tilfoej / rediger / slet relationer
+   ============================================================ */
+var _relModalEditIndex = -1; // -1 = ny, >= 0 = rediger eksisterende
+
+function openRelationModal(editIndex) {
+  var modal = document.getElementById('rel-modal');
+  var overlay = document.getElementById('rel-modal-overlay');
+  if (!modal || !overlay) return;
+
+  _relModalEditIndex = (typeof editIndex === 'number') ? editIndex : -1;
+  var isEdit = _relModalEditIndex >= 0;
+
+  // Titel
+  setText('rel-modal-title', isEdit ? 'Rediger relation' : 'Tilf\u00f8j relation');
+
+  // Slet-knap
+  var delBtn = document.getElementById('rel-modal-delete');
+  if (delBtn) delBtn.style.display = isEdit ? 'block' : 'none';
+
+  // Udfyld felter
+  var nameInput = document.getElementById('rel-modal-name');
+  var birthInput = document.getElementById('rel-modal-birth');
+  if (isEdit) {
+    var rels = Storage.getRelations();
+    var rel = rels[_relModalEditIndex];
+    if (rel) {
+      if (nameInput) nameInput.value = rel.name || '';
+      if (birthInput) birthInput.value = rel.birthdate || '';
+      // Saet koen-chip
+      setRelModalChipByVal('rel-modal-gender', rel.gender || 'female');
+      // Saet type-chip
+      setRelModalChipByVal('rel-modal-type', rel.type || 'partner');
+    }
+  } else {
+    if (nameInput) nameInput.value = '';
+    if (birthInput) birthInput.value = '';
+    setRelModalChipByVal('rel-modal-gender', 'female');
+    setRelModalChipByVal('rel-modal-type', 'partner');
+  }
+
+  overlay.style.display = 'block';
+  modal.style.display = 'block';
+
+  // Focus navn-felt efter animation
+  setTimeout(function() { if (nameInput) nameInput.focus(); }, 300);
+}
+
+function closeRelationModal() {
+  var modal = document.getElementById('rel-modal');
+  var overlay = document.getElementById('rel-modal-overlay');
+  if (modal) modal.style.display = 'none';
+  if (overlay) overlay.style.display = 'none';
+  _relModalEditIndex = -1;
+}
+
+function setRelModalChip(chipEl, groupId) {
+  var group = document.getElementById(groupId);
+  if (!group) return;
+  group.querySelectorAll('.rel-modal-chip').forEach(function(c) { c.classList.remove('active'); });
+  chipEl.classList.add('active');
+}
+
+function setRelModalChipByVal(groupId, val) {
+  var group = document.getElementById(groupId);
+  if (!group) return;
+  group.querySelectorAll('.rel-modal-chip').forEach(function(c) {
+    c.classList.toggle('active', c.getAttribute('data-val') === val);
+  });
+}
+
+function getRelModalChipVal(groupId) {
+  var group = document.getElementById(groupId);
+  if (!group) return '';
+  var active = group.querySelector('.rel-modal-chip.active');
+  return active ? active.getAttribute('data-val') : '';
+}
+
+function saveRelationFromModal() {
+  var name = (document.getElementById('rel-modal-name').value || '').trim();
+  var birthdate = (document.getElementById('rel-modal-birth').value || '').trim();
+  var gender = getRelModalChipVal('rel-modal-gender');
+  var type = getRelModalChipVal('rel-modal-type');
+
+  if (!name) { document.getElementById('rel-modal-name').focus(); return; }
+  if (!birthdate) { document.getElementById('rel-modal-birth').focus(); return; }
+
+  var rels = Storage.getRelations();
+  var entry = { name: name, birthdate: birthdate, gender: gender || 'female', type: type || 'partner' };
+
+  if (_relModalEditIndex >= 0 && _relModalEditIndex < rels.length) {
+    rels[_relModalEditIndex] = entry;
+  } else {
+    rels.push(entry);
+  }
+  Storage.saveRelations(rels);
+  closeRelationModal();
+  refreshCurrentScreen();
+}
+
+function deleteRelationFromModal() {
+  if (_relModalEditIndex < 0) return;
+  var rels = Storage.getRelations();
+  if (_relModalEditIndex < rels.length) {
+    var name = rels[_relModalEditIndex].name;
+    if (!confirm('Slet ' + name + '?')) return;
+    rels.splice(_relModalEditIndex, 1);
+    Storage.saveRelations(rels);
+  }
+  closeRelationModal();
+  refreshCurrentScreen();
+}
+
+function refreshCurrentScreen() {
+  // Re-init nuvaerende skaerm efter relation-aendring
+  var currentRoute = Router.currentScreen || '';
+  var screen = Router.screens && Router.screens[currentRoute];
+  if (screen && screen.init && typeof window[screen.init] === 'function') {
+    window[screen.init]();
+  }
+}
+
 function toggleSection(header) {
   const section = header.closest('.drawer-section');
   if (!section) return;
@@ -1128,7 +1250,7 @@ function renderForsideRelation(userCycles, userDominant) {
 
   // Prefer partner, then first relation — fallback to example
   const rel = useExample
-    ? { name: 'Partner', birthdate: '1983-04-15', gender: 'male', type: 'partner' }
+    ? { name: 'Partner (eksempel)', birthdate: '1983-04-15', gender: 'male', type: 'partner', _isExample: true }
     : (relations.find(r => r.type === 'partner') || relations[0]);
   if (!rel || !rel.birthdate) {
     container.innerHTML = '';
@@ -1167,7 +1289,7 @@ function renderForsideRelation(userCycles, userDominant) {
   }
 
   const exampleNote = useExample
-    ? '<div style="font-size:11px;color:#aaa;margin-top:6px;font-style:italic">Eksempel — tilføj dine relationer i Mine Relationer</div>'
+    ? '<div style="font-size:12px;color:#7b7a9e;margin-top:8px;font-style:italic;cursor:pointer" onclick="event.stopPropagation();openRelationModal()">Eksempel \u2014 <u>tilf\u00f8j din partner</u> for at se jeres rigtige dynamik</div>'
     : '';
 
   container.innerHTML = `
@@ -1375,8 +1497,8 @@ function initRelationer() {
   // Use real relations or example data
   const useExample = !relations || relations.length === 0;
   const rels = useExample
-    ? [{ name: 'Partner', birthdate: '1983-04-15', gender: 'male', type: 'partner' },
-       { name: 'Mor', birthdate: '1958-03-22', gender: 'female', type: 'mor' }]
+    ? [{ name: 'Partner (eksempel)', birthdate: '1983-04-15', gender: 'male', type: 'partner', _isExample: true },
+       { name: 'Mor (eksempel)', birthdate: '1958-03-22', gender: 'female', type: 'mor', _isExample: true }]
     : relations;
 
   // Calculate cycles for all relations
@@ -2133,12 +2255,16 @@ function initTidsrejse() {
   // ── 5. PERSON PILLS (valgfrit) ──
   var personWrap = document.getElementById('tids-person-wrap');
   var pillsContainer = document.getElementById('tids-person-pills');
-  if (personWrap && pillsContainer && relations && relations.length > 0) {
+  if (personWrap && pillsContainer) {
     personWrap.style.display = '';
     var pHtml = '';
-    relations.forEach(function(r) {
-      pHtml += '<div class="person-pill" style="cursor:pointer"><span class="person-pill-dot"></span>' + r.name + '</div>';
-    });
+    if (relations && relations.length > 0) {
+      relations.forEach(function(r) {
+        pHtml += '<div class="person-pill" style="cursor:pointer"><span class="person-pill-dot"></span>' + r.name + '</div>';
+      });
+    }
+    // Tilfoej "+" knap altid
+    pHtml += '<span class="rel-add-pill" onclick="openRelationModal()" title="Tilf\u00f8j relation" style="vertical-align:middle">+</span>';
     pillsContainer.innerHTML = pHtml;
 
     if (!pillsContainer._bound) {
@@ -3115,15 +3241,14 @@ function initVinduer() {
   // Render person pills dynamically (only if user has relations)
   const pillsContainer = document.getElementById('vin-person-pills');
   if (pillsContainer) {
+    let pillsHtml = '<div class="person-pill active"><span class="person-pill-dot"></span>Dig</div>';
     if (relations.length > 0) {
-      let pillsHtml = '<div class="person-pill active"><span class="person-pill-dot"></span>Dig</div>';
       relations.forEach(r => {
         pillsHtml += `<div class="person-pill"><span class="person-pill-dot"></span>${r.name}</div>`;
       });
-      pillsContainer.innerHTML = pillsHtml;
-    } else {
-      pillsContainer.innerHTML = '<div style="font-size:13px;color:#8B7D9B">Ingen relationer tilf&oslash;jet. <span style="color:#6c82a9;cursor:pointer;text-decoration:underline" onclick="Router.navigate(\'relationer\')">Tilf&oslash;j &rarr;</span></div>';
     }
+    pillsHtml += '<span class="rel-add-pill" onclick="openRelationModal()" title="Tilf\u00f8j relation" style="vertical-align:middle">+</span>';
+    pillsContainer.innerHTML = pillsHtml;
   }
 
   // Render time-shift section dynamically (about YOUR next changes)
@@ -4426,8 +4551,8 @@ function initDinRelation() {
   const useExample = !relations || relations.length === 0;
   const rels = useExample
     ? [
-        { name: 'Partner', birthdate: '1983-04-15', gender: 'male', type: 'partner' },
-        { name: 'Mor', birthdate: '1958-03-22', gender: 'female', type: 'mor' }
+        { name: 'Partner (eksempel)', birthdate: '1983-04-15', gender: 'male', type: 'partner', _isExample: true },
+        { name: 'Mor (eksempel)', birthdate: '1958-03-22', gender: 'female', type: 'mor', _isExample: true }
       ]
     : relations;
 
@@ -4444,9 +4569,12 @@ function initDinRelation() {
 
   const pillsEl = document.getElementById('rel-pills');
   if (pillsEl) {
-    pillsEl.innerHTML = rels.map((r, i) =>
-      `<span class="rel-deep-pill${i === defaultIndex ? ' active' : ''}" onclick="selectRelDeepPerson(${i}, this)">${r.name}</span>`
+    var pillsHtml = rels.map((r, i) =>
+      `<span class="rel-deep-pill${i === defaultIndex ? ' active' : ''}" onclick="selectRelDeepPerson(${i}, this)">${r.name}${r._isExample ? '' : '<span class="rel-pill-edit" onclick="event.stopPropagation();openRelationModal('+i+')" style="margin-left:5px;font-size:11px;opacity:0.5">\u270E</span>'}</span>`
     ).join('');
+    // Tilfoej "+" knap til at oprette ny relation
+    pillsHtml += '<span class="rel-add-pill" onclick="openRelationModal()" title="Tilf\u00f8j relation">+</span>';
+    pillsEl.innerHTML = pillsHtml;
   }
 
   // Dato-chips
@@ -4702,7 +4830,7 @@ function initRelDybere() {
     // Fallback: brug foerste relation eller eksempel
     var rels = Storage.getRelations();
     if (rels && rels.length) { rel = rels[0]; }
-    else { rel = { name: 'Partner', birthdate: '1983-04-15', gender: 'male', type: 'partner' }; }
+    else { rel = { name: 'Partner (eksempel)', birthdate: '1983-04-15', gender: 'male', type: 'partner', _isExample: true }; }
   }
 
   var targetDate = RelDeepState.targetDate || new Date();
@@ -4864,8 +4992,8 @@ function initRelLigeNu() {
   const relations = Storage.getRelations();
   const useExample = !relations || relations.length === 0;
   const rels = useExample
-    ? [{ name: 'Partner', birthdate: '1983-04-15', gender: 'male', type: 'partner' },
-       { name: 'Mor', birthdate: '1958-03-22', gender: 'female', type: 'mor' }]
+    ? [{ name: 'Partner (eksempel)', birthdate: '1983-04-15', gender: 'male', type: 'partner', _isExample: true },
+       { name: 'Mor (eksempel)', birthdate: '1958-03-22', gender: 'female', type: 'mor', _isExample: true }]
     : relations;
 
   const relData = rels.map(r => {
@@ -5204,9 +5332,9 @@ function initRelKonstellation() {
   const relations = Storage.getRelations();
   const useExample = !relations || relations.length === 0;
   const rels = useExample
-    ? [{ name: 'Partner', birthdate: '1983-04-15', gender: 'male', type: 'partner' },
-       { name: 'Mor', birthdate: '1958-03-22', gender: 'female', type: 'mor' },
-       { name: 'Datter', birthdate: '1994-07-10', gender: 'female', type: 'barn' }]
+    ? [{ name: 'Partner (eksempel)', birthdate: '1983-04-15', gender: 'male', type: 'partner', _isExample: true },
+       { name: 'Mor (eksempel)', birthdate: '1958-03-22', gender: 'female', type: 'mor', _isExample: true },
+       { name: 'Datter (eksempel)', birthdate: '1994-07-10', gender: 'female', type: 'barn', _isExample: true }]
     : relations;
 
   // Track selected state (Dig always selected, first 2 others selected by default)
@@ -6149,9 +6277,29 @@ function initIndstillinger() {
     }
   }
 
-  // --- Relations count ---
+  // --- Relations list + count ---
   const relations = Storage.getRelations ? Storage.getRelations() : [];
-  setText('ind-relations-count', `Du har ${relations.length} relation${relations.length !== 1 ? 'er' : ''} tilføjet.`);
+  var relListEl = document.getElementById('ind-relations-list');
+  if (relListEl) {
+    if (relations.length === 0) {
+      relListEl.innerHTML = '<div style="font-family:var(--font-sans);font-size:14px;color:var(--text-light);font-weight:300;padding:8px 0;font-style:italic">Ingen relationer endnu. Tilf\u00f8j en person herunder.</div>';
+    } else {
+      relListEl.innerHTML = relations.map(function(r, i) {
+        var bd = r.birthdate ? new Date(r.birthdate) : null;
+        var bdStr = bd ? (bd.getDate() + '. ' + MONTHS_DA[bd.getMonth()] + ' ' + bd.getFullYear()) : 'Ingen dato';
+        var typeLabel = { partner: 'Partner', mor: 'Mor', barn: 'Datter/S\u00f8n', friend: 'Veninde' }[r.type] || r.type;
+        return '<div class="ind-link" onclick="openRelationModal(' + i + ')" style="margin-bottom:6px">'
+          + '<div class="ind-link-icon" style="font-size:14px">\u2665</div>'
+          + '<div class="ind-link-body">'
+          + '<div class="ind-link-name">' + r.name + '</div>'
+          + '<div class="ind-link-desc">' + typeLabel + ' \u00b7 ' + bdStr + '</div>'
+          + '</div>'
+          + '<div class="ind-link-arrow" style="font-size:12px;opacity:0.5">\u270E</div>'
+          + '</div>';
+      }).join('');
+    }
+  }
+  setText('ind-relations-count', 'Du har ' + relations.length + ' relation' + (relations.length !== 1 ? 'er' : '') + ' tilf\u00f8jet.');
 
   // --- Export ---
   const exportBtn = document.getElementById('ind-export');

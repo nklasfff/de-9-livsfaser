@@ -98,6 +98,39 @@
   <!-- SCREEN CONTENT -->
   <main id="screen-content"></main>
 
+  <!-- RELATION MODAL — tilfoej/rediger relationer -->
+  <div id="rel-modal-overlay" class="rel-modal-overlay" onclick="closeRelationModal()" style="display:none"></div>
+  <div id="rel-modal" class="rel-modal" style="display:none">
+    <div class="rel-modal-header">
+      <span class="rel-modal-title" id="rel-modal-title">Tilf&oslash;j relation</span>
+      <button class="rel-modal-close" onclick="closeRelationModal()">&times;</button>
+    </div>
+    <div class="rel-modal-body">
+      <label class="rel-modal-label">Navn</label>
+      <input type="text" id="rel-modal-name" class="rel-modal-input" placeholder="F.eks. Maria, Peter, Mor&hellip;">
+
+      <label class="rel-modal-label">F&oslash;dselsdato</label>
+      <input type="date" id="rel-modal-birth" class="rel-modal-input">
+
+      <label class="rel-modal-label">K&oslash;n</label>
+      <div id="rel-modal-gender" class="rel-modal-chips">
+        <span class="rel-modal-chip active" data-val="female" onclick="setRelModalChip(this,'rel-modal-gender')">Kvinde</span>
+        <span class="rel-modal-chip" data-val="male" onclick="setRelModalChip(this,'rel-modal-gender')">Mand</span>
+      </div>
+
+      <label class="rel-modal-label">Relation</label>
+      <div id="rel-modal-type" class="rel-modal-chips">
+        <span class="rel-modal-chip active" data-val="partner" onclick="setRelModalChip(this,'rel-modal-type')">Partner</span>
+        <span class="rel-modal-chip" data-val="mor" onclick="setRelModalChip(this,'rel-modal-type')">Mor</span>
+        <span class="rel-modal-chip" data-val="barn" onclick="setRelModalChip(this,'rel-modal-type')">Datter/S&oslash;n</span>
+        <span class="rel-modal-chip" data-val="friend" onclick="setRelModalChip(this,'rel-modal-type')">Veninde</span>
+      </div>
+
+      <button class="rel-modal-save" id="rel-modal-save" onclick="saveRelationFromModal()">Gem relation</button>
+      <button class="rel-modal-delete" id="rel-modal-delete" onclick="deleteRelationFromModal()" style="display:none">Slet denne relation</button>
+    </div>
+  </div>
+
   <!-- BOTTOM TAB BAR -->
   <nav id="tab-bar" class="tab-bar" style="display:none">
     <button class="tab active" data-route="forside" onclick="Router.navigate('forside',{direction:'fade'})">
