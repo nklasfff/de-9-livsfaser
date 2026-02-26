@@ -22,6 +22,7 @@ const Router = {
     'praksis':           { file: 'screens/praksis.html',           niveau: 1,  parent: 'forside',     tone: 'praksis',     init: 'initPraksis' },
     'rejse':             { file: 'screens/rejse.html',             niveau: 1,  parent: 'forside',     tone: 'rejse',       init: 'initRejse' },
     'tidsrejse':         { file: 'screens/tidsrejse.html',         niveau: 1,  parent: 'forside',     tone: null,          init: 'initTidsrejse' },
+    'tids-dybere':       { file: 'screens/tids-dybere.html',       niveau: 2,  parent: 'tidsrejse',   tone: null,          init: 'initTidsDybere' },
     'vinduer':           { file: 'screens/vinduer.html',           niveau: 1,  parent: 'forside',     tone: 'vinduer',     init: 'initVinduer' },
 
     // Niveau 2 — Cirkel-detaljer (0B-0G fra forside koncentriske cirkler)

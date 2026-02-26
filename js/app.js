@@ -2393,6 +2393,256 @@ function renderTidsrejseTemaer() {
   });
 }
 
+/* ---- Din Dybere Tidsrejse (dyb skaerm for Tidsrejse tab 3) ---- */
+
+function initTidsDybere() {
+  var data = getUserCycles();
+  if (!data) {
+    setText('tdyb-title', 'Rejsen gennem tid');
+    setText('tdyb-intro', 'Tilf\u00f8j din f\u00f8dselsdato i indstillinger for at se din dybere tidsrejse.');
+    return;
+  }
+
+  var cycles = data.cycles;
+  var dominant = data.dominant;
+  var phase = cycles.lifePhase;
+  var phaseNum = phase.phase;
+  var detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[phaseNum] : null;
+  var domEl = dominant.element;
+  var elLabel = Calculations.ELEMENT_LABELS[phase.element] || phase.element;
+  var domElLabel = Calculations.ELEMENT_LABELS[domEl] || domEl;
+  var age = cycles.age;
+  var yearInPhase = age - phase.startAge;
+  var relations = Storage.getRelations();
+
+  // \u2500\u2500 1. HERO \u2500\u2500
+  setText('tdyb-title', 'Fase ' + phaseNum + ' \u00b7 ' + elLabel);
+  var introTekst = 'Din krop og sj\u00e6l har rejst gennem ' + (phaseNum - 1) + ' faser. Hvert element har sat sit aftryk \u2014 og det n\u00e6ste venter allerede. Her udfolder vi rejsen i dybden.';
+  if (detail && detail.introText) {
+    introTekst = detail.introText.split('.').slice(0, 2).join('.') + '. V\u00e6lg et \u00f8jeblik i dit liv \u2014 og se hvad der var p\u00e5 spil.';
+  }
+  setText('tdyb-intro', introTekst);
+
+  // \u2500\u2500 2. TID SOM SPIRAL \u2500\u2500
+  var spiralEl = document.getElementById('tdyb-spiral');
+  if (spiralEl) {
+    var spiralTekst = 'Tiden bev\u00e6ger sig ikke line\u00e6rt. Den vender tilbage til de samme temaer \u2014 men fra et nyt sted. Den fase du er i nu, gentager m\u00e5ske noget fra din barndom eller ungdom. Men du m\u00f8der det med andre \u00f8jne, en anden krop, en anden visdom. Det er spiralens gave.\n\n';
+    spiralTekst += 'T\u00e6nk p\u00e5 de \u00f8jeblikke i dit liv der f\u00f8les velkendte \u2014 temaer der vender tilbage. M\u00e5ske er det et tab, en forelskelse, en beslutning der minder om noget du har st\u00e5et i f\u00f8r. Det er ikke gentagelse. Det er spiralen der drejer, og du der ser det fra h\u00f8jere oppe.\n\n';
+    spiralTekst += 'Hvert element du har levet igennem har givet dig noget. Vandets dybde, tr\u00e6ets retning, ildens varme, jordens fundament, metallets klarhed. De lever alle i dig \u2014 ogs\u00e5 de elementer du endnu ikke har m\u00f8dt. Tidsrejsen handler om at se det m\u00f8nster.';
+    spiralEl.innerHTML = formatExpandable(spiralTekst, 80);
+  }
+
+  // \u2500\u2500 3. DIN TIDSLINJE \u2014 DE NI FASER \u2500\u2500
+  var tidslinjeEl = document.getElementById('tdyb-tidslinje');
+  if (tidslinjeEl) {
+    var tlHtml = '<p class="dybde-body-p" style="margin-bottom:16px">Du er ' + age + ' \u00e5r og ' + yearInPhase + ' \u00e5r inde i fase ' + phaseNum + '. Du har levet igennem ' + (phaseNum - 1) + ' faser.</p>';
+    for (var i = 1; i <= 9; i++) {
+      var pd = Calculations.PHASE_DATA[i];
+      var pdEl = Calculations.ELEMENT_LABELS[pd.element];
+      var isCurrent = i === phaseNum;
+      var isPast = i < phaseNum;
+      var bg = isCurrent ? 'rgba(107,95,123,0.08)' : 'rgba(107,95,123,0.02)';
+      var border = isCurrent ? '1px solid rgba(107,95,123,0.18)' : '1px solid rgba(107,95,123,0.06)';
+      var opacity = isPast ? '0.6' : '1';
+      tlHtml += '<div style="padding:10px 14px;margin:6px 0;border-radius:10px;background:' + bg + ';border:' + border + ';opacity:' + opacity + '">';
+      tlHtml += '<div style="display:flex;justify-content:space-between;align-items:center">';
+      tlHtml += '<div>';
+      tlHtml += '<span style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase">Fase ' + i + ' \u00b7 ' + pd.startAge + '\u2013' + pd.endAge + ' \u00e5r</span>';
+      tlHtml += '<div style="font-family:var(--font-serif);font-size:15px;color:var(--text-dark);margin-top:2px">' + pd.name + ' <span style="color:#8B7D9B;font-size:13px">\u00b7 ' + pdEl + '</span></div>';
+      tlHtml += '</div>';
+      if (isCurrent) {
+        tlHtml += '<div style="font-size:10px;color:#6B5F7B;font-weight:500;text-transform:uppercase;letter-spacing:1px;background:rgba(107,95,123,0.1);padding:3px 8px;border-radius:6px">Nu</div>';
+      }
+      tlHtml += '</div></div>';
+    }
+    tidslinjeEl.innerHTML = tlHtml;
+  }
+
+  // \u2500\u2500 4. DINE ELEMENT-SKIFT \u2500\u2500
+  var skiftEl = document.getElementById('tdyb-skift');
+  if (skiftEl) {
+    var skiftHtml = '';
+
+    // Forrige skift
+    if (phaseNum > 1) {
+      var prevPhase = Calculations.PHASE_DATA[phaseNum - 1];
+      var prevEl = prevPhase.element;
+      var prevElLabel = Calculations.ELEMENT_LABELS[prevEl];
+      if (prevEl !== phase.element) {
+        var prevTransKey = prevEl + '_' + phase.element;
+        skiftHtml += '<div style="margin-bottom:20px">';
+        skiftHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Dit seneste skift: ' + prevElLabel + ' \u2192 ' + elLabel + '</div>';
+        if (typeof CYKLUS_SKIFT_TEKST !== 'undefined' && CYKLUS_SKIFT_TEKST[prevTransKey]) {
+          skiftHtml += formatExpandable(CYKLUS_SKIFT_TEKST[prevTransKey], 80);
+        }
+        skiftHtml += '</div>';
+      }
+    }
+
+    // N\u00e6ste skift
+    var yearsLeft = phase.endAge - age;
+    if (phaseNum < 9 && yearsLeft > 0) {
+      var nextPhase = Calculations.PHASE_DATA[phaseNum + 1];
+      var nextEl = nextPhase.element;
+      var nextElLabel = Calculations.ELEMENT_LABELS[nextEl];
+      if (nextEl !== phase.element) {
+        var nextTransKey = phase.element + '_' + nextEl;
+        skiftHtml += '<div style="margin-bottom:12px">';
+        skiftHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Dit n\u00e6ste skift om ' + Math.round(yearsLeft) + ' \u00e5r: ' + elLabel + ' \u2192 ' + nextElLabel + '</div>';
+        if (typeof CYKLUS_SKIFT_TEKST !== 'undefined' && CYKLUS_SKIFT_TEKST[nextTransKey]) {
+          skiftHtml += formatExpandable(CYKLUS_SKIFT_TEKST[nextTransKey], 80);
+        }
+        skiftHtml += '</div>';
+      }
+    } else if (phaseNum === 9) {
+      skiftHtml += '<p class="dybde-body-p">Du er i din niende og sidste fase. Der er ikke flere element-skift \u2014 kun dybden i det element du allerede er.</p>';
+    }
+
+    if (!skiftHtml) {
+      skiftHtml = '<p class="dybde-body-p">Dit element skifter mellem faserne. Hvert skift b\u00e6rer en ny energi med sig.</p>';
+    }
+    skiftEl.innerHTML = skiftHtml;
+  }
+
+  // \u2500\u2500 5. RELATIONER I TID \u2500\u2500
+  var relEl = document.getElementById('tdyb-relationer');
+  if (relEl) {
+    var relHtml = '';
+
+    if (relations && relations.length > 0) {
+      relations.forEach(function(rel) {
+        if (!rel.birthdate) return;
+        var isMale = rel.gender === 'male';
+        var relCycles = typeof cyclesAtDate !== 'undefined' ? cyclesAtDate(rel.birthdate, new Date(), isMale) : null;
+        if (!relCycles) return;
+        var relPhaseEl = relCycles.lifePhase.element;
+        var relElLabel = Calculations.ELEMENT_LABELS[relPhaseEl];
+        var parKey = phase.element + '_' + relPhaseEl;
+        var parData = typeof TIDSREJSE_PAR !== 'undefined' ? TIDSREJSE_PAR[parKey] : null;
+
+        relHtml += '<div style="margin-bottom:20px;padding:14px 16px;background:rgba(107,95,123,0.03);border:1px solid rgba(107,95,123,0.08);border-radius:var(--radius)">';
+        relHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">' + rel.name + ' \u00b7 Fase ' + relCycles.lifePhase.phase + ' \u00b7 ' + relElLabel + '</div>';
+        if (parData) {
+          var introText = parData.intro.replace(/\{navn\}/g, rel.name);
+          relHtml += '<div style="margin:8px 0">' + formatExpandable(introText, 40) + '</div>';
+          if (parData.raad) {
+            var raadText = parData.raad.replace(/\{navn\}/g, rel.name);
+            relHtml += '<div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#8B7D9B;margin-top:8px">' + raadText + '</div>';
+          }
+        } else {
+          relHtml += '<div class="dybde-body-p">Dit ' + elLabel + ' m\u00f8der ' + rel.name + 's ' + relElLabel + '.</div>';
+        }
+        relHtml += '</div>';
+      });
+    }
+
+    if (!relHtml) {
+      relHtml = '<p class="dybde-body-p">Relationer \u00e6ndrer sig, n\u00e5r elementer skifter. Det par der m\u00f8dtes i ild-fasen, er ikke det samme par i jord-fasen. Energien mellem jer forandres \u2014 ikke fordi k\u00e6rligheden g\u00f8r det, men fordi I g\u00f8r det.</p>';
+      relHtml += '<p class="dybde-body-p">N\u00e5r du rejser i tid med en anden person, kan du se hvordan jeres elementer m\u00f8dtes dengang \u2014 og hvordan de m\u00f8des nu. Det forklarer m\u00e5ske noget om de \u00e5r der f\u00f8ltes lette, og de \u00e5r der f\u00f8ltes tunge.</p>';
+      relHtml += '<div style="text-align:center;margin-top:14px"><a onclick="Router.navigate(\'indstillinger\')" style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#6B5F7B;opacity:0.7;cursor:pointer">Tilf\u00f8j en relation i indstillinger \u2192</a></div>';
+    }
+    relEl.innerHTML = relHtml;
+  }
+
+  // \u2500\u2500 6. AARSTIDERNES CYKLUS \u2500\u2500
+  var aarstiderEl = document.getElementById('tdyb-aarstider');
+  if (aarstiderEl && typeof AARSTID_ELEMENT_TEKST !== 'undefined') {
+    var seasonOrder = [
+      { key: 'vinter', label: 'Vinter' },
+      { key: 'foraar', label: 'For\u00e5r' },
+      { key: 'sommer', label: 'Sommer' },
+      { key: 'sensommer', label: 'Sensommer' },
+      { key: 'efteraar', label: 'Efter\u00e5r' }
+    ];
+    var seasonMap = { 'Vinter': 'vinter', 'For\u00e5r': 'foraar', 'Sommer': 'sommer', 'Sensommer': 'sensommer', 'Efter\u00e5r': 'efteraar' };
+    var currentSeasonKey = seasonMap[cycles.season.season] || 'vinter';
+
+    var aaHtml = '<p class="dybde-body-p" style="margin-bottom:14px">\u00c5rstiderne p\u00e5virker dit element p\u00e5 forskellige m\u00e5der. Her er alle fem \u00e5rstider set gennem dit ' + domElLabel + '-element.</p>';
+
+    seasonOrder.forEach(function(s) {
+      var tekst = AARSTID_ELEMENT_TEKST[s.key] ? AARSTID_ELEMENT_TEKST[s.key][domEl] : null;
+      if (!tekst) return;
+      var isCurrent = s.key === currentSeasonKey;
+      var bg = isCurrent ? 'rgba(107,95,123,0.06)' : 'rgba(107,95,123,0.02)';
+      var border = isCurrent ? '1px solid rgba(107,95,123,0.15)' : '1px solid rgba(107,95,123,0.06)';
+      aaHtml += '<div style="padding:12px 14px;margin:8px 0;border-radius:10px;background:' + bg + ';border:' + border + '">';
+      aaHtml += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
+      aaHtml += '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">' + s.label + ' og ' + domElLabel + '</div>';
+      if (isCurrent) {
+        aaHtml += '<div style="font-size:10px;color:#6B5F7B;font-weight:500;text-transform:uppercase;letter-spacing:1px;background:rgba(107,95,123,0.1);padding:3px 8px;border-radius:6px">Nu</div>';
+      }
+      aaHtml += '</div>';
+      aaHtml += '<div>' + formatExpandable(tekst, 40) + '</div>';
+      aaHtml += '</div>';
+    });
+    aarstiderEl.innerHTML = aaHtml;
+  }
+
+  // \u2500\u2500 7. KROPPEN GENNEM TID \u2500\u2500
+  var kropEl = document.getElementById('tdyb-krop');
+  if (kropEl && detail && detail.kropTekst) {
+    kropEl.innerHTML = formatExpandable(detail.kropTekst, 80);
+  }
+
+  // \u2500\u2500 8. SINDET GENNEM TID \u2500\u2500
+  var sindEl = document.getElementById('tdyb-sind');
+  if (sindEl && detail && detail.sindTekst) {
+    sindEl.innerHTML = formatExpandable(detail.sindTekst, 80);
+  }
+
+  // \u2500\u2500 9. OVERGANGEN \u2500\u2500
+  var overgangEl = document.getElementById('tdyb-overgang');
+  if (overgangEl && detail && detail.overgangTekst) {
+    overgangEl.innerHTML = formatExpandable(detail.overgangTekst, 80);
+  } else if (overgangEl) {
+    overgangEl.innerHTML = '<p class="dybde-body-p">Du er i din sidste fase. Der er ikke en overgang der venter \u2014 kun en fordybelse i det du allerede er.</p>';
+  }
+
+  // \u2500\u2500 10. OEVELSE: REJSEN \u2500\u2500
+  var oevelseEl = document.getElementById('tdyb-oevelse');
+  if (oevelseEl) {
+    var oevHtml = '';
+    // Proeved TIDSREJSE_PAR oevelse hvis relation
+    var parOevelse = null;
+    if (relations && relations.length > 0 && relations[0].birthdate) {
+      var firstRel = relations[0];
+      var isMale = firstRel.gender === 'male';
+      var rc = typeof cyclesAtDate !== 'undefined' ? cyclesAtDate(firstRel.birthdate, new Date(), isMale) : null;
+      if (rc) {
+        var pk = phase.element + '_' + rc.lifePhase.element;
+        var pd = typeof TIDSREJSE_PAR !== 'undefined' ? TIDSREJSE_PAR[pk] : null;
+        if (pd && pd.oevelse) {
+          parOevelse = pd.oevelse.replace(/\{navn\}/g, firstRel.name);
+        }
+      }
+    }
+    if (parOevelse) {
+      oevHtml = '<p class="dybde-body-p">' + parOevelse + '</p>';
+    } else if (detail && detail.oevelse) {
+      oevHtml = '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark);margin-bottom:8px">' + detail.oevelse.title + '</div>';
+      oevHtml += '<p class="dybde-body-p">' + detail.oevelse.desc + '</p>';
+    } else {
+      oevHtml = '<p class="dybde-body-p">Luk \u00f8jnene. T\u00e6nk p\u00e5 et \u00f8jeblik fra din fortid \u2014 et \u00f8jeblik der \u00e6ndrede noget. M\u00e6rk hvad du f\u00f8lte dengang. M\u00e6rk hvad du f\u00f8ler nu, n\u00e5r du t\u00e6nker p\u00e5 det. Forskellen er din rejse.</p>';
+    }
+    oevelseEl.innerHTML = oevHtml;
+  }
+
+  // \u2500\u2500 11. REFLEKSION \u2500\u2500
+  var tidsQuestions = [
+    'Hvilket \u00f8jeblik i dit liv ville du gerne forst\u00e5 bedre?',
+    'Hvorn\u00e5r f\u00f8lte du sidst at tiden gentog sig?',
+    'Hvilket element fra din fortid savner du mest?',
+    'Hvad ville du fort\u00e6lle dit yngre jeg?',
+    'Hvilken fase i dit liv f\u00f8les mest levende i din erindring?',
+    'Hvad har du l\u00e6rt af de skift du har v\u00e6ret igennem?',
+    'Hvem var du dengang \u2014 og hvem er du nu?'
+  ];
+  var extraQ = typeof EKSTRA_REFLEKSIONER_NY !== 'undefined' ? EKSTRA_REFLEKSIONER_NY[phaseNum] : null;
+  var allQ = tidsQuestions.concat(extraQ || []);
+  var qi = Calculations.dayRotation(allQ.length);
+  setText('tdyb-refleksion', '\u00ab\u2009' + allQ[qi] + '\u2009\u00bb');
+}
+
 /* ---- Min Rejse (sekundaer skaerm — golden standard) ---- */
 
 function initMinRejse() {
