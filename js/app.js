@@ -2436,6 +2436,7 @@ function initTidsDybere() {
   var tidslinjeEl = document.getElementById('tdyb-tidslinje');
   if (tidslinjeEl) {
     var tlHtml = '<p class="dybde-body-p" style="margin-bottom:16px">Du er ' + age + ' \u00e5r og ' + yearInPhase + ' \u00e5r inde i fase ' + phaseNum + '. Du har levet igennem ' + (phaseNum - 1) + ' faser.</p>';
+    tlHtml += '<div class="dybde-expand-more">';
     for (var i = 1; i <= 9; i++) {
       var pd = Calculations.PHASE_DATA[i];
       var pdEl = Calculations.ELEMENT_LABELS[pd.element];
@@ -2455,6 +2456,8 @@ function initTidsDybere() {
       }
       tlHtml += '</div></div>';
     }
+    tlHtml += '</div>';
+    tlHtml += '<a class="dybde-expand-btn" onclick="toggleDybdeExpand(this)">L\u00e6s mere \u2193</a>';
     tidslinjeEl.innerHTML = tlHtml;
   }
 
@@ -2559,6 +2562,7 @@ function initTidsDybere() {
 
     var aaHtml = '<p class="dybde-body-p" style="margin-bottom:14px">\u00c5rstiderne p\u00e5virker dit element p\u00e5 forskellige m\u00e5der. Her er alle fem \u00e5rstider set gennem dit ' + domElLabel + '-element.</p>';
 
+    aaHtml += '<div class="dybde-expand-more">';
     seasonOrder.forEach(function(s) {
       var tekst = AARSTID_ELEMENT_TEKST[s.key] ? AARSTID_ELEMENT_TEKST[s.key][domEl] : null;
       if (!tekst) return;
@@ -2575,6 +2579,8 @@ function initTidsDybere() {
       aaHtml += '<div>' + formatExpandable(tekst, 40) + '</div>';
       aaHtml += '</div>';
     });
+    aaHtml += '</div>';
+    aaHtml += '<a class="dybde-expand-btn" onclick="toggleDybdeExpand(this)">L\u00e6s mere \u2193</a>';
     aarstiderEl.innerHTML = aaHtml;
   }
 

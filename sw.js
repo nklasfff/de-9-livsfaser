@@ -1,4 +1,4 @@
-const CACHE_NAME = 'livsfaser-v122';
+const CACHE_NAME = 'livsfaser-v123';
 const urlsToCache = [
   './',
   './index.html',
@@ -42,6 +42,8 @@ const urlsToCache = [
   './assets/images/opdagelser_cirkler_HQ.png',
   './assets/images/tidslinje-livets-bue.png',
   './assets/images/tidslinje-tre-lag.png',
+  './assets/images/tidslinje-figur-2.png',
+  './assets/images/lilla-lotus.png',
   // Screens — Onboarding + Forside
   './screens/onboarding.html',
   './screens/onboarding-result.html',
@@ -79,6 +81,7 @@ const urlsToCache = [
   // Screens — Vinduer undersider
   './screens/vin-tidslinje.html',
   './screens/vin-oejeblikke.html',
+  './screens/tids-dybere.html',
   // Screens — Relationer undersider
   './screens/rel-lige-nu.html',
   './screens/rel-to-rytmer.html',
