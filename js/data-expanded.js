@@ -11,60 +11,180 @@ const MORGEN_AFTEN_TEKST = {
     morgen: [
       'Morgenen h\u00f8rer til stilheden. Dit vand-element inviterer dig til at starte langsomt \u2014 lad verden vente lidt endnu.',
       'Nyrernes energi samler sig i de tidlige timer. M\u00e5ske en kop varmt vand, f\u00f8r du giver dig til dagens krav.',
-      'Vand str\u00f8mmer nedad. Lad din morgen starte i f\u00f8dderne \u2014 m\u00e6rk gulvet, m\u00e6rk tyngden, m\u00e6rk at du er her.'
+      'Vand str\u00f8mmer nedad. Lad din morgen starte i f\u00f8dderne \u2014 m\u00e6rk gulvet, m\u00e6rk tyngden, m\u00e6rk at du er her.',
+      'Din krop husker noget fra natten. Vand-elementet samler visdom i s\u00f8vnen \u2014 lyt efter den f\u00f8rste stille tanke, f\u00f8r dagens st\u00f8j tager over.',
+      'Der er en r\u00f8 i dig i morges som h\u00f8rer til. Nyrerne har arbejdet i m\u00f8rket. Lad morgenen v\u00e6re blid \u2014 du beh\u00f8ver ikke v\u00e6re klar endnu.',
+      'Noget i dig s\u00f8ger dybde allerede nu. M\u00e5ske er det nyrerne der minder dig om at denne dag ogs\u00e5 har en stille side. Find den.',
+      'Morgenens f\u00f8rste \u00e5ndedrag er vandets. Dybt, langsomt, ned i maven. Start der \u2014 resten af dagen kan vente p\u00e5 den ro.',
+      'Dit vand-element kender forskel p\u00e5 hastighed og retning. I morgen beh\u00f8ver du ikke l\u00f8be \u2014 bare vide hvorn\u00e5r du er klar.',
+      'Bl\u00e6rens meridian l\u00f8ber langs ryggen. Str\u00e6k dig bl\u00f8dt bagud og m\u00e6rk morgenens f\u00f8rste bev\u00e6gelse finde vej ned gennem kroppen.',
+      'Der er dage hvor stilheden er svaret. Dit vand-element ved det allerede. M\u00e5ske er dette s\u00e5dan en morgen.',
+      'Nyrerne b\u00e6rer din essens. Giv dem en god morgen \u2014 varme f\u00f8dder, langsom start, ingen pludselige krav. Du fortjener den bl\u00f8dhed.',
+      'Vandet i dig er t\u00e5lmodigt. Det venter p\u00e5 at du lytter. Morgenen er det bedste tidspunkt \u2014 f\u00f8r du glemmer at m\u00e6rke efter.',
+      'M\u00e5ske v\u00e5gnede du med en dr\u00f8m eller en fornemmelse. Vand-elementet taler tydeligst i overgangen mellem s\u00f8vn og v\u00e5gen. Hvad sagde det?',
+      'Den f\u00f8rste time s\u00e6tter tonen for hele dagen. Lad dit vand-element v\u00e6lge: langsomhed, varme, stilhed. Det er ikke dovenskab \u2014 det er klogt.',
+      'Kroppen er klogere end planen. Dit vand-element m\u00e6rker hvad dagen kr\u00e6ver, f\u00f8r hovedet n\u00e5r at t\u00e6nke det. F\u00f8lg den f\u00f8rste fornemmelse.'
     ],
     aften: [
       'Aftenen er vandets naturlige tid. Lad tankerne synke som sten i en stille s\u00f8. De finder selv deres plads.',
       'Nyrerne hviler sig bedst mellem 17 og 19. Giv dig selv lov til at tr\u00e6kke dig \u2014 det er ikke dovenskab, det er biologi.',
-      'M\u00f8rket h\u00f8rer til vand-elementet. Sluk lyset lidt tidligere i aften. Lad kroppen m\u00e6rke at dagen er ved at v\u00e6re omme.'
+      'M\u00f8rket h\u00f8rer til vand-elementet. Sluk lyset lidt tidligere i aften. Lad kroppen m\u00e6rke at dagen er ved at v\u00e6re omme.',
+      'Natten n\u00e6rmer sig, og dit element finder hjem. Vandet s\u00f8ger altid det laveste punkt \u2014 lad dig selv synke ned i aftenen.',
+      'Der er en form for tryghed i at lade dagen g\u00e5. Nyrerne samler essens i hvilen. Giv dem det de beder om: stilhed og varme.',
+      'Aftenmaden beh\u00f8ver ikke v\u00e6re kompliceret. Noget varmt, noget salt, noget der minder kroppen om at den er holdt. Det er nok.',
+      'M\u00e5ske m\u00e6rker du en uro i kroppen nu. Det er nyrernes m\u00e5de at sige: dagen var for meget. Tr\u00e6k dig tilbage uden d\u00e5rlig samvittighed.',
+      'Vand-elementet renser i m\u00f8rket. Lad aftenen v\u00e6re den tid hvor du slipper det, der ikke l\u00e6ngere er dit at b\u00e6re.',
+      'Et varmt fodbad kan \u00e6ndre hele aftenen. Nyrernes meridian begynder under foden \u2014 varmen stiger op og bringer ro til hele systemet.',
+      'Du har givet nok i dag. Dit vand-element beder ikke om mere. Det beder om lov til at v\u00e6re stille, v\u00e6re dyb, v\u00e6re i fred.',
+      'Stilheden mellem tankerne er ogs\u00e5 en form for visdom. Lad den v\u00e6re der i aften. Nyrerne lytter bedst n\u00e5r du holder op med at tale.',
+      'Der er en s\u00f8 i dig der venter p\u00e5 at falde til ro. Lad de sidste timers b\u00f8lger l\u00e6gge sig. I morgen ser du klarere.',
+      'Frygten kommer m\u00e5ske om aftenen. Det er nyrernes sprog. Den beh\u00f8ver ikke l\u00f8ses \u2014 bare m\u00e6rkes, holdes, b\u00e6res med bl\u00f8dhed.',
+      'Lad sengetiden v\u00e6re en overgivelse, ikke en pligt. Dit vand-element hviler dybest n\u00e5r du giver dig selv lov til at forsvinde ind i m\u00f8rket.',
+      'Kroppen har sin egen aftenbøn. Den hedder ud\u00e5nding. Lang, langsom, ned i b\u00e6kkenet. Nyrerne takker dig for den ro.'
     ]
   },
   'TR\u00c6': {
     morgen: [
       'Morgenen er tr\u00e6ets tid til at r\u00e6kke ud. Noget i dig vil fremad i dag \u2014 giv det plads, ogs\u00e5 f\u00f8r du har en plan.',
       'Leveren har arbejdet hele natten. Dit tr\u00e6-element v\u00e5gner med retning og appetit p\u00e5 dagen. F\u00f8lg den f\u00f8rste impuls.',
-      'For\u00e5ret bor i din morgen lige nu. Str\u00e6k dig, \u00e5bn vinduet, lad den friske luft minde kroppen om at v\u00e6kst begynder med \u00e5ndedr\u00e6t.'
+      'For\u00e5ret bor i din morgen lige nu. Str\u00e6k dig, \u00e5bn vinduet, lad den friske luft minde kroppen om at v\u00e6kst begynder med \u00e5ndedr\u00e6t.',
+      'Galdebl\u00e6ren har truffet sine valg i nattens stilhed. M\u00e6rk efter \u2014 m\u00e5ske ved du allerede hvad der er vigtigt i dag.',
+      'Tr\u00e6-energien presser opad som saft i en stamme. Giv den et udl\u00f8b \u2014 en morgengåtur, et str\u00e6k, en beslutning der har ventet.',
+      'Der er en gr\u00f8n kraft i dig i morges. Leveren har samlet den. Brug den f\u00f8r middagen \u2014 det er der den er st\u00e6rkest.',
+      'Din krop vil bev\u00e6ge sig. Tr\u00e6-elementet stagnerer af stilstand \u2014 selv fem minutters str\u00e6k \u00e5bner for dagens energi.',
+      'Noget i dig ved allerede retningen. Leveren er din indre kompas. F\u00f8lg den \u2014 ogs\u00e5 n\u00e5r hovedet endnu ikke har en plan.',
+      'Morgenens lys er tr\u00e6ets signal. \u00d8jnene \u00e5bner sig, kroppen str\u00e6kker sig \u2014 det er v\u00e6kstens f\u00f8rste bev\u00e6gelse. Lad den komme.',
+      'Lever-meridianen l\u00f8ber langs kroppens sider. Str\u00e6k armene over hovedet og l\u00e6n til siden \u2014 det er tr\u00e6ets morgenritual.',
+      'M\u00e5ske m\u00e6rker du en utålmodighed allerede nu. Det er leverens energi der siger: lad os komme i gang. Kanalis\u00e9r den med omhu.',
+      'Der er forskel p\u00e5 at handle og at reagere. Dit tr\u00e6-element kan b\u00e5de. V\u00e6lg i morgen den handling der kommer fra klarhed, ikke fra uro.',
+      'Naturen v\u00e5gner f\u00f8r vi g\u00f8r. Dit tr\u00e6-element m\u00e6rker det \u2014 det stille skift fra m\u00f8rke til lys. Der er en retning i det. F\u00f8lg den.',
+      'Din frustration fra ig\u00e5r er m\u00e5ske v\u00e6k i morges. Leveren har arbejdet med den i natten. Se hvad der er tilbage \u2014 m\u00e5ske bare klarhed.',
+      'Tr\u00e6et gror ikke af at t\u00e6nke p\u00e5 at gro. Det gror af lys, vand og retning. Giv dig selv det i morgen \u2014 resten sker af sig selv.'
     ],
     aften: [
       'Tr\u00e6et hviler ogs\u00e5. Leveren regenererer sig mellem kl. 1 og 3 \u2014 din aften er forberedelsen. Lad frustrationerne fra dagen falde som blade.',
       'Din tr\u00e6-energi har givet alt i dag. Nu m\u00e5 du lade grenene synke. En stille g\u00e5tur eller et par sider i en bog kan v\u00e6re nok.',
-      'Galdebl\u00e6ren sorterer mellem 23 og 01. Giv den ro til at arbejde \u2014 l\u00e6g beslutningerne fra dig, de venter til i morgen.'
+      'Galdebl\u00e6ren sorterer mellem 23 og 01. Giv den ro til at arbejde \u2014 l\u00e6g beslutningerne fra dig, de venter til i morgen.',
+      'Din lever har b\u00e5ret dagens frustationer. Lad dem falde nu \u2014 som blade fra et tr\u00e6 i vinden. De beh\u00f8ver ikke samles op.',
+      'Aftenen er ikke tr\u00e6ets naturlige tid. Det kan f\u00f8les som uro, en rastl\u00f8shed der ikke finder hvile. Pr\u00f8v at g\u00e5 \u2014 bare ti minutter.',
+      'Galdebl\u00e6ren forbereder sig p\u00e5 nattens arbejde. Hj\u00e6lp den ved at l\u00e6gge de store valg v\u00e6k. I morgen ser tingene klarere ud.',
+      'Der er en vis visdom i at lade v\u00e6ksten hvile. Tr\u00e6et mister bladene for at overleve vinteren. Hvad kan du give slip p\u00e5 i aften?',
+      'Leveren elsker sur smag. En kop varm citronvand f\u00f8r sengetid st\u00f8tter nattens rensning og forbereder morgendagens retning.',
+      'Din k\u00e6be holder m\u00e5ske fast. M\u00e6rk det. \u00c5bn munden bl\u00f8dt, lad underk\u00e6ben falde. Tr\u00e6-elementets sp\u00e6nding bor der \u2014 slip den f\u00f8r du sover.',
+      'Tr\u00e6-energien s\u00f8ger retning, ogs\u00e5 om aftenen. Men retning kr\u00e6ver hvile. Lad natten v\u00e6re den jord dit tr\u00e6 sl\u00e5r rod i.',
+      'Aftenen er besk\u00e6ring. Hvad gav mening i dag, og hvad var overfl\u00f8digt? Dit tr\u00e6-element har brug for den sortering f\u00f8r det sover.',
+      'M\u00e5ske var der noget du ikke n\u00e5ede. Det er leverens frustration. L\u00e6g den i morgen-bunken \u2014 den har mere energi end aften-bunken.',
+      'Nakken sp\u00e6nder, skuldrene kryber op. Det er stagneret tr\u00e6-energi. Ryst armene l\u00f8s, lad hovedet rulle. Fem sekunder kan v\u00e6re nok.',
+      'Galdebl\u00e6ren tr\u00e6ffer de bedste beslutninger efter en god nats s\u00f8vn. Giv den den gave \u2014 g\u00e5 i seng f\u00f8r midnat, hvis du kan.',
+      'Dit tr\u00e6-element har b\u00e5ret dig fremad hele dagen. Nu m\u00e5 det hvile. R\u00f8dderne arbejder i m\u00f8rket \u2014 stol p\u00e5 at v\u00e6ksten forts\u00e6tter.'
     ]
   },
   'ILD': {
     morgen: [
       'Ilden v\u00e5gner med gl\u00e6de. Dit hjerte \u00e5bner sig mod dagen \u2014 hvem skal du m\u00f8de, hvad skal du m\u00e6rke? Lad varmen brede sig.',
       'Morgenens lys n\u00e6rer dit ild-element. Hjertet arbejder bedst n\u00e5r du begynder dagen med noget der forbinder dig \u2014 en samtale, en ber\u00f8ring, et smil.',
-      'Din ild br\u00e6nder klarest om morgenen. Brug de f\u00f8rste timer p\u00e5 det der virkelig betyder noget \u2014 forbindelse og n\u00e6rv\u00e6r f\u00f8r pligt.'
+      'Din ild br\u00e6nder klarest om morgenen. Brug de f\u00f8rste timer p\u00e5 det der virkelig betyder noget \u2014 forbindelse og n\u00e6rv\u00e6r f\u00f8r pligt.',
+      'Hjertet er allerede v\u00e5gent. Det m\u00e6rkede lyset f\u00f8r du \u00e5bnede \u00f8jnene. Giv det noget smukt at v\u00e5gne til \u2014 musik, duft, et ansigt du elsker.',
+      'Der er en varme i dig i morges der s\u00f8ger udad. Dit ild-element vil forbinde. F\u00f8lg den impuls \u2014 skriv til en veninde, ring til nogen, sig godmorgen h\u00f8jt.',
+      'Shen \u2014 din bevidsthed \u2014 vender hjem med morgenens lys. M\u00e6rk at du er til stede. M\u00e6rk at du er her. Det er ildens gave: at v\u00e6re fuldt v\u00e5gen.',
+      'Dit hjerte banker for nogen i dag. M\u00e5ske ved du allerede hvem. Ild-elementet kender forskellen p\u00e5 pligt og passion \u2014 v\u00e6lg passionen f\u00f8rst.',
+      'Morgenens f\u00f8rste smil er gratis og virker som medicin. Dit ild-element ved det instinktivt \u2014 forbindelse heler, ogs\u00e5 den helt enkle.',
+      'Tyndtarmens tid er mellem 13 og 15, men forberedelsen sker nu. \u00c6d noget der varmer \u2014 din ild har brug for br\u00e6ndstof, ikke bare koffein.',
+      'Der er gl\u00e6de gemt i morgenens rutine, hvis du kigger efter. En kop te, solens vinkel, fuglesang. Dit ild-element m\u00e6rker sk\u00f8nheden f\u00f8r hovedet analyserer den.',
+      'Dit hjerte har sovet roligt. Nu v\u00e5gner det med appetit p\u00e5 dagen. F\u00f8lg den appetit \u2014 den ved hvad du har brug for.',
+      'Forbindelse er ikke noget du g\u00f8r. Det er noget du er. Dit ild-element minder dig om det hver morgen \u2014 n\u00e5r du m\u00e6rker verden v\u00e5gne.',
+      'Ilden br\u00e6nder bedst med det rette br\u00e6ndstof. Giv dit hjerte noget n\u00e6rende i morgen \u2014 ikke nyheder og notifikationer, men n\u00e6rv\u00e6r og ro.',
+      'Der er en varme i dine h\u00e6nder i morges. M\u00e6rk den. Det er hjerteenergien der str\u00f8mmer. Brug de h\u00e6nder til noget k\u00e6rligt i dag.',
+      'Morgenens lys og dit ild-element taler samme sprog. Lad lyset komme ind \u2014 \u00e5bn gardinet, \u00e5bn \u00f8jnene, \u00e5bn hjertet. Dagen er din.'
     ],
     aften: [
       'Aftenen beder ilden om at d\u00e6mpe sig. Hjertet har brug for at falde til ro. M\u00e5ske en kop urtete, m\u00e5ske bare stilhed.',
       'Pericardium beskytter hjertet om aftenen. Lad sk\u00e6rmene sl\u00e6nge og giv dig selv lov til at v\u00e6re uden at pr\u00e6stere.',
-      'Ilden k\u00f8ler naturligt ned med m\u00f8rket. F\u00f8lg den bev\u00e6gelse \u2014 t\u00e6nd et stearinlys i stedet for loftslampen. Lad hjertet hvile.'
+      'Ilden k\u00f8ler naturligt ned med m\u00f8rket. F\u00f8lg den bev\u00e6gelse \u2014 t\u00e6nd et stearinlys i stedet for loftslampen. Lad hjertet hvile.',
+      'Dit hjerte har v\u00e6ret \u00e5bent hele dagen. Nu m\u00e5 det lukke bl\u00f8dt i. Pericardiums tid er mellem 19 og 21 \u2014 lad den beskytte dig.',
+      'Ilden s\u00f8ger gl\u00f8derne om aftenen. Ikke den h\u00f8je flamme, men den stille varme. Et t\u00e6ppe, en samtale, en n\u00e6rv\u00e6rende stilhed.',
+      'M\u00e5ske f\u00f8ler du en uro i brystet nu. Det er hjerteild der endnu ikke har fundet ro. En h\u00e5nd p\u00e5 brystet, tre dybe \u00e5ndedrag \u2014 det hjælper.',
+      'Den Tredobbelte Varmer arbejder mellem 21 og 23. Den regulerer din indre temperatur. Hj\u00e6lp den \u2014 ingen sk\u00e6rme, ingen stærke indtryk, bare ro.',
+      'Aftenen er for de samtaler der g\u00e5r langsomt. Dit ild-element tr\u00e6nger til dybde, ikke hastighed. \u00c9n ærlig sætning er mere v\u00e6rd end hundrede hurtige.',
+      'Hjertet b\u00e6rer dagens forbindelser med sig ind i aftenen. Nogle var n\u00e6rende, andre var for meget. Lad de tunge glide af \u2014 behold de varme.',
+      'Stearinlysets flamme er dit ild-elements aftenbøn. T\u00e6nd \u00e9t og sid med det. Flammen danser som dine tanker \u2014 og finder til sidst ro.',
+      'Gl\u00e6den er m\u00e5ske stille i aften. Det er ogs\u00e5 ild \u2014 bare den rolige slags. Den der varmer uden at br\u00e6nde. Lad den v\u00e6re nok.',
+      'Dit hjerte husker alle det m\u00f8dte i dag. Giv det tid til at sortere. Hvem varmede dig? Hvem t\u00e6rede? Ilden ved det allerede.',
+      'Forbindelsen med dig selv er ogs\u00e5 en forbindelse. Dit ild-element glemmer det sommetider. I aften handler det ikke om andre. Det handler om dig.',
+      'Bitter smag k\u00f8ler hjerteild. En kop kamillte eller gr\u00f8n te er din aftenritual. Lad den k\u00f8le de dele af dig der stadig br\u00e6nder.',
+      'Natten er ikke ildens tid, og det er okay. Lad hjertet give stafetten til nyrerne. Slip varmen, find dybden. Du m\u00e5 hvile nu.'
     ]
   },
   'JORD': {
     morgen: [
       'Mavens tid er mellem 7 og 9. Dit jord-element beder om en rolig morgen med varm mad \u2014 gr\u00f8d, te, noget der n\u00e6rer fra bunden.',
       'Jorden v\u00e5gner langsomt. Giv dig selv en stabil start \u2014 de samme ritualer, den samme rytme. Din krop elsker forudsigelighed.',
-      'Miltens energi samler sig om morgenen. M\u00e6rk dine f\u00f8dder p\u00e5 gulvet og dit \u00e5ndedr\u00e6t i maven. Du er her. Det er nok.'
+      'Miltens energi samler sig om morgenen. M\u00e6rk dine f\u00f8dder p\u00e5 gulvet og dit \u00e5ndedr\u00e6t i maven. Du er her. Det er nok.',
+      'Morgenmaden er dit jord-elements vigtigste ritual. Noget varmt, noget n\u00e6rende, noget der siger til kroppen: du er holdt. Start der.',
+      'Milten transformer bedst om formiddagen. Giv den noget at arbejde med \u2014 ikke sukker og kaffe, men \u00e6gte n\u00e6ring. Gr\u00f8d med kanel er guld.',
+      'Dit jord-element v\u00e5gner med sp\u00f8rgsm\u00e5let: hvad har nogen brug for i dag? Men lad det f\u00f8rste svar v\u00e6re: hvad har JEG brug for?',
+      'Der er en styrke i den rolige morgen. Mens andre haster, forankrer du. Dit jord-element ved at stabilitet er en superkraft.',
+      'Morgenens ritualer er som r\u00f8dder. De holder dig fast n\u00e5r dagen rykker. Lad de f\u00f8rste tredive minutter v\u00e6re hellige \u2014 kun for dig.',
+      'Maven er klar til at modtage. Dit jord-element beder om omsorg nu \u2014 ikke ydeevne, ikke plan, bare n\u00e6ring. F\u00f8d dig selv f\u00f8rst.',
+      'Bekymringerne kan m\u00e6lde sig allerede i morges. M\u00e6rk dem, men lad v\u00e6re med at f\u00f8lge dem. Milten grublerer \u2014 det er dens vane, ikke din virkelighed.',
+      'Der er tryghed i det kendte. Lad din morgenrutine v\u00e6re det anker der holder dig, ogs\u00e5 p\u00e5 dage hvor alt andet f\u00f8les usikkert.',
+      'Dit jord-element kender forskel p\u00e5 sult og tomhed. M\u00e6rk efter: er det maven der kalder, eller er det noget andet? B\u00e5de fortjener svar.',
+      'Morgenens varme te er en samtale med milten. Den siger: jeg er her, jeg n\u00e6rer dig, alt er som det skal v\u00e6re. Drik langsomt.',
+      'Jordkvaliteten i dig s\u00f8ger fundament. I morgen handler det om at stå godt \u2014 f\u00f8dderne p\u00e5 gulvet, maden i maven, r\u00f8dderne i jorden.',
+      'Du er fundamentet. For dig selv, for dem du elsker. Men ogs\u00e5 fundamenter har brug for vedligeholdelse. Start med at n\u00e6re dig selv i morgen.'
     ],
     aften: [
       'Jord-elementet s\u00f8ger hjem om aftenen. Lad bekymringerne ligge \u2014 de er der stadig i morgen, men lige nu m\u00e5 du hvile.',
       'Milten n\u00e6res af varme og ro. En let aftensmad, en blid samtale, en f\u00f8lelse af at h\u00f8re til. Det er din medicin i aften.',
-      'Grubleriet kommer ofte med m\u00f8rket. L\u00e6g en h\u00e5nd p\u00e5 maven og m\u00e6rk varmen. Tankerne er bare tanker \u2014 de beh\u00f8ver ikke l\u00f8ses nu.'
+      'Grubleriet kommer ofte med m\u00f8rket. L\u00e6g en h\u00e5nd p\u00e5 maven og m\u00e6rk varmen. Tankerne er bare tanker \u2014 de beh\u00f8ver ikke l\u00f8ses nu.',
+      'Din milt har b\u00e5ret dagens bekymringer. Lad dem ligge nu \u2014 som sten du l\u00e6gger fra dig ved d\u00f8ren. De venter trofast til i morgen.',
+      'Aftenmaden er jord-elementets afsked med dagen. Lad den v\u00e6re enkel og varm. Ikke r\u00e5 salat, ikke kolde rester \u2014 noget der varmer indefra.',
+      'Jord-elementet s\u00f8ger tryghed om aftenen. Hvad f\u00e5r dig til at f\u00f8le dig hjemme? Lad det v\u00e6re dit aftenritual.',
+      'Bekymringen er miltens m\u00e5de at sige: jeg har ikke nok information. Men om aftenen beh\u00f8ver du ikke vide. Du beh\u00f8ver bare v\u00e6re.',
+      'En varm kop te med honning er miltens aftenbøn. S\u00f8d smag i sin naturlige form \u2014 den beroer systemet og inviterer s\u00f8vnen.',
+      'Dit jord-element har n\u00e6ret alle i dag. Hvem n\u00e6rer dig i aften? Hvis svaret er ingen, s\u00e5 start med dig selv. Du fortjener den omsorg.',
+      'Milten hviler bedst i faste rytmer. G\u00e5 i seng p\u00e5 samme tid, i den samme seng, med de samme ritualer. Det er ikke kedeligt \u2014 det er helende.',
+      'Tankerne k\u00f8rer m\u00e5ske i ring. Det er miltens spiral. Afbryd den med kroppen: f\u00f8dderne p\u00e5 gulvet, h\u00e6nderne p\u00e5 maven, \u00e5ndedr\u00e6ttet i ro.',
+      'Du har givet nok i dag. Dit jord-element glemmer sommetider at t\u00e6lle hvad det giver v\u00e6k. I aften handler det om at fylde op.',
+      'Aftenen er hjemkomst. Dit jord-element kender den f\u00f8lelse \u2014 at l\u00e6gge n\u00f8glen, t\u00e6nde lyset, v\u00e6re der hvor tingene er kendte og trygge.',
+      'Ford\u00f8jelsen s\u00e6nker sig om aftenen. Spis tidligt og let, s\u00e5 milten ikke skal arbejde mens du sover. Den har ogs\u00e5 brug for hvile.',
+      'Jord-elementets smukkeste kvalitet er tryghed. Giv den til dig selv i aften. Du beh\u00f8ver ikke l\u00f8se noget, bare v\u00e6re der du er.'
     ]
   },
   'METAL': {
     morgen: [
       'Lungerne fylder sig i de tidlige timer. Dit metal-element inviterer til en dyb ind\u00e5nding \u2014 frisk luft, klart sind, en ren begyndelse.',
       'Metal-energien er sk\u00e6rpet om morgenen. Brug den klarhed til at m\u00e6rke efter: hvad er det vigtigste i dag? Lad resten v\u00e6re.',
-      'Tyktarmens tid er mellem 5 og 7. Kroppen renser sig selv. Drik varmt vand, \u00e5bn vinduet, og lad morgenens luft minde dig om essens.'
+      'Tyktarmens tid er mellem 5 og 7. Kroppen renser sig selv. Drik varmt vand, \u00e5bn vinduet, og lad morgenens luft minde dig om essens.',
+      'Der er en renhed i morgenluften som dit metal-element genkender. \u00c5nd den ind \u2014 dybt, langsomt, bevidst. Det er din f\u00f8rste handling.',
+      'Dit metal-element v\u00e5gner med sk\u00e6rpet blik. Brug de f\u00f8rste minutter p\u00e5 at se hvad der er v\u00e6sentligt. Resten er st\u00f8j.',
+      'Lungerne samler morgenens Qi. En dyb ind\u00e5nding gennem n\u00e6sen, en lang ud\u00e5nding gennem munden. Tre gange. Din dag begynder rent.',
+      'Morgenens klarhed er en gave fra dit metal-element. Verden er tydelig nu \u2014 f\u00f8r middagens kompromiser. Hvad ser du?',
+      'Tyktarmen renser, lungerne fylder. Morgenens to metal-organer arbejder i harmoni. St\u00f8t dem med varmt vand og frisk luft.',
+      'Der er noget smukt ved en ren begyndelse. Dit metal-element m\u00e6rker det \u2014 det \u00f8jeblik hvor alt endnu er muligt og intet er sp\u00e6ndt.',
+      'Din perfektionisme kan v\u00e6re en byrde. Men om morgenen er den en styrke: den sk\u00e6rer igennem st\u00f8jen og finder essensen. Brug den klogt.',
+      'Metal-elementet elsker struktur. Lad din morgen have en orden der bringer ro \u2014 ikke som kontrol, men som omsorg for dig selv.',
+      'Huden v\u00e5gner med dig. Dit metal-element m\u00e6rker senget\u00f8jet, luften, vandets temperatur. Lad sanserne v\u00e6re din morgens f\u00f8rste forf\u00f8rer.',
+      'Klarheden er st\u00e6rkest f\u00f8r f\u00f8lelserne tager over. Dit metal-element kan se livet som det er lige nu \u2014 brug den indsigt, f\u00f8r dagen farver den.',
+      'Der er en stille kraft i at vide hvad man ikke beh\u00f8ver. Dit metal-element sorterer allerede. Lad det g\u00f8re sit arbejde \u2014 stol p\u00e5 den sans.',
+      'Lungernes f\u00f8rste dybe \u00e5ndedrag s\u00e6tter tonen. Lad den v\u00e6re langsom og fuld. Hele dagen hviler p\u00e5 det fundament. Du er klar.'
     ],
     aften: [
       'Aftenen er metals tid til at give slip. Hvad kan du l\u00e6gge fra dig i aften? Ikke alt beh\u00f8ver f\u00f8lge med ind i natten.',
       'Lungerne holder p\u00e5 det v\u00e6sentlige og slipper det overfl\u00f8dige. Lad ud\u00e5ndingen v\u00e6re l\u00e6ngere end ind\u00e5ndingen. Det er kroppens m\u00e5de at l\u00f8sne.',
-      'Metal-elementets sorg kan m\u00e6lde sig i de stille timer. Lad den v\u00e6re der uden at jage den v\u00e6k \u2014 den b\u00e6rer ogs\u00e5 en klarhed.'
+      'Metal-elementets sorg kan m\u00e6lde sig i de stille timer. Lad den v\u00e6re der uden at jage den v\u00e6k \u2014 den b\u00e6rer ogs\u00e5 en klarhed.',
+      'Dit metal-element renser ogs\u00e5 om aftenen. Hvad bar du med dig i dag, som du kan l\u00e6gge fra dig nu? Lad ud\u00e5ndingen tage det.',
+      'Lungerne tr\u00e6kker sig sammen i kulden og m\u00f8rket. Hold dem varme \u2014 en kop te, et t\u00e6ppe om skuldrene, en dyb og bevidst ind\u00e5nding.',
+      'Sorgen er m\u00e5ske t\u00e6ttere p\u00e5 i aften. Det er naturligt for dit metal-element. Den beh\u00f8ver ikke forklares \u2014 bare v\u00e6re der.',
+      'Aftenen er metals tid til revision. Ikke d\u00f8mmende, men klar: hvad var \u00e6gte i dag? Hvad var overfl\u00f8digt? Den sortering er en gave.',
+      'Huden er metals sanseorgan. Giv den noget bl\u00f8dt i aften \u2014 en creme, en varm klud, en ber\u00f8ring. Den har brug for fugtighed og n\u00e6rhed.',
+      'Dit metal-element kan holde fast for l\u00e6nge. Aftenen er en \u00f8velse i at slippe. Ikke fordi du m\u00e5, men fordi det er befriende.',
+      'Lungernes kapacitet falder om aftenen. Kompens\u00e9r med dybde \u2014 f\u00e6rre \u00e5ndedrag, men dybere. M\u00e6rk brystkassen udvide sig i stilheden.',
+      'M\u00e5ske f\u00f8ler du dig alene i aften. Metal-elementets klarhed kan isolere. Men ensomheden b\u00e6rer ogs\u00e5 en stilhed der er v\u00e6rd at lytte til.',
+      'Perfektionismen hviler aldrig, men du m\u00e5 gerne. Dit metal-element beh\u00f8ver ikke l\u00f8se alt i dag. Noget kan vente. Noget skal vente.',
+      'En lang ud\u00e5nding er metals aftenbøn. Fire t\u00e6l ind, syv t\u00e6l hold, otte t\u00e6l ud. Gentag tre gange. Lad natten overtage.',
+      'Aftenen reducerer. Den skr\u00e6ller laget v\u00e6k \u2014 og det der st\u00e5r tilbage er det v\u00e6sentlige. Dit metal-element kender den \u00f8velse. Stol p\u00e5 den.',
+      'Du beh\u00f8ver ikke v\u00e6re stærk i aften. Metal-elementets h\u00e5rdhed er en maske \u2014 under den er der en s\u00e5rbarhed der har brug for luft. Giv den plads.'
     ]
   }
 };
@@ -709,63 +829,153 @@ const EKSTRA_REFLEKSIONER_NY = {
     'Hvem holdt dig, da du var bange? Og hvem holder dig nu?',
     'Hvad ville dit barn-jeg sige, hvis det kunne se dig i dag?',
     'Er der en frygt fra din barndom, du stadig b\u00e6rer med dig?',
-    'Hvad betyder tryghed for dig \u2014 helt konkret, helt kropsligt?'
+    'Hvad betyder tryghed for dig \u2014 helt konkret, helt kropsligt?',
+    'Hvilken duft minder dig om at v\u00e6re lille? Hvad gemmer den sig i?',
+    'Hvad var det f\u00f8rste du nogensinde var bange for? B\u00e6rer du den frygt endnu?',
+    'Hvem var den voksne der fik verden til at f\u00f8les sikker? Hvad gjorde de?',
+    'Er der et sted fra din barndom, du stadig kan m\u00e6rke i kroppen?',
+    'Hvad var den f\u00f8rste f\u00f8lelse du l\u00e6rte at skjule?',
+    'Hvilken sansning tr\u00f8stede dig som barn \u2014 en lyd, en ber\u00f8ring, et lys?',
+    'Hvad sagde de voksne, som du stadig tror p\u00e5 \u2014 p\u00e5 godt eller ondt?',
+    'Er der en stilhed fra barndommen, du savner? Eller en du frygter?',
+    'Hvad l\u00e6rte din krop f\u00f8r dine ord \u2014 om verden, om k\u00e6rlighed, om fare?',
+    'Hvis du kunne give dit barn-jeg \u00e9n gave, hvad ville det v\u00e6re?'
   ],
   2: [
     'Hvad var du mest nysgerrig p\u00e5 som barn?',
     'Hvorn\u00e5r holdt du op med at lege \u2014 og savner du det?',
     'Hvem var din bedste ven, da du var ti \u2014 og hvad l\u00e6rte I hinanden?',
     'Hvilket eventyr eller historie fangede dig som barn \u2014 og hvad siger det om dig?',
-    'Hvad turde du dengang, som du ikke t\u00f8r i dag?'
+    'Hvad turde du dengang, som du ikke t\u00f8r i dag?',
+    'Hvad opdagede du som barn, der stadig overrasker dig?',
+    'Hvilken leg glemte du tiden i \u2014 og hvad siger det om din natur?',
+    'Hvem ville du v\u00e6re, da du var otte? Og hvem blev du?',
+    'Hvad var den f\u00f8rste ting du samlede p\u00e5 \u2014 og hvad siger det om dig?',
+    'Er der en skov, en strand eller en baggård der stadig lever i dig?',
+    'Hvad l\u00e6rte du om venskab f\u00f8r du vidste hvad det hed?',
+    'Hvorn\u00e5r f\u00f8lte du dig f\u00f8rst udenfor \u2014 og hvad l\u00e6rte det dig?',
+    'Hvilken voksen troede p\u00e5 dig, da du ikke troede p\u00e5 dig selv?',
+    'Hvad lavede du, n\u00e5r ingen kiggede \u2014 og g\u00f8r du det stadig?',
+    'Hvad ville det tiårige barn i dig gerne have at du gjorde i dag?'
   ],
   3: [
     'Hvad var det modigste du gjorde som teenager?',
     'Hvorn\u00e5r f\u00f8lte du dig mest misforst\u00e5et \u2014 og er den f\u00f8lelse stadig der?',
     'Hvad ville du sige til den unge pige du var, hvis du m\u00f8dte hende?',
     'Hvilken musik formede dig i de \u00e5r \u2014 og hvad fortalte den dig?',
-    'Er der en vrede fra ungdommen, du aldrig har givet plads?'
+    'Er der en vrede fra ungdommen, du aldrig har givet plads?',
+    'Hvem var du mest jaloux p\u00e5 som teenager \u2014 og hvad sagde det om dine dr\u00f8mme?',
+    'Hvad var den f\u00f8rste store skuffelse \u2014 og hvordan formede den dig?',
+    'Hvilken hemmelighed bar du p\u00e5 i de \u00e5r? B\u00e6rer du den stadig?',
+    'Hvad l\u00e6rte du om din krop som teenager, som du stadig k\u00e6mper med?',
+    'Hvorn\u00e5r f\u00f8lte du for f\u00f8rste gang: JEG VED HVEM JEG ER?',
+    'Hvem s\u00e5rede dig f\u00f8rst \u2014 og har du tilgivet dem? Og dig selv?',
+    'Hvad dr\u00f8mte du om at flygte fra \u2014 og flygtede du?',
+    'Hvilken regel br\u00f8d du, som du stadig er glad for at du br\u00f8d?',
+    'Er der noget fra de \u00e5r, du aldrig har fortalt nogen?',
+    'Hvad ville din teenage-udgave t\u00e6nke om det liv du lever nu?'
   ],
   4: [
     'Hvad dr\u00f8mte du om at skabe, da du var i tyverne?',
     'Hvilket valg fra den tid \u00e6ndrede din retning mest?',
     'Hvorn\u00e5r sagde du ja med hele hjertet \u2014 og hvad f\u00f8lte det?',
     'Er der en ambition du lagde v\u00e6k, som stadig banker p\u00e5?',
-    'Hvad ville du g\u00f8re anderledes, hvis du vidste det var godt nok?'
+    'Hvad ville du g\u00f8re anderledes, hvis du vidste det var godt nok?',
+    'Hvilken k\u00e6rlighed formede dig mest i de \u00e5r \u2014 den du fik eller den du mistede?',
+    'Hvad sagde du ja til, som du burde have sagt nej til?',
+    'Hvad var din st\u00f8rste frygt i tyverne \u2014 og blev den til virkelighed?',
+    'Hvem troede du at du var dengang \u2014 og hvem viste du dig at v\u00e6re?',
+    'Hvad plantede du i de \u00e5r, som stadig b\u00e6rer frugt?',
+    'Hvorn\u00e5r opdagede du din egen styrke for f\u00f8rste gang?',
+    'Er der et kompromis fra den tid, du stadig lever med?',
+    'Hvad l\u00e6rte du om penge, magt eller status der \u00e6ndrede dig?',
+    'Hvilken risiko fortryder du at du IKKE tog?',
+    'Hvad var den smukkeste dag i dine tyvere \u2014 og hvad gjorde den s\u00e6rlig?'
   ],
   5: [
     'Hvad ville der ske, hvis du sagde nej til \u00e9n ting i morgen?',
     'Hvem tager sig af dig, n\u00e5r du tager dig af alle andre?',
     'Hvad har du brug for, som du aldrig beder om?',
     'Hvorn\u00e5r f\u00f8lte du sidst at tiden var helt din egen?',
-    'Hvad ville din krop sige, hvis den kunne tale?'
+    'Hvad ville din krop sige, hvis den kunne tale?',
+    'Hvad br\u00e6nder du for lige nu \u2014 og hvad br\u00e6nder du p\u00e5?',
+    'Er der forskel p\u00e5 det du g\u00f8r og det du dr\u00f8mmer om? Hvad st\u00e5r i vejen?',
+    'Hvorn\u00e5r sagde du sidst: dette er nok. Jeg er nok?',
+    'Hvad ville du g\u00f8re, hvis du vidste at ingen dømte dig?',
+    'Hvilket m\u00f8nster gentager sig i dine relationer \u2014 og hvad pr\u00f8ver det at fort\u00e6lle dig?',
+    'Hvad er den tungeste byrde du b\u00e6rer lige nu \u2014 og hvem kan hj\u00e6lpe dig med den?',
+    'Er der en samtale du undg\u00e5r? Hvad er du bange for at h\u00f8re?',
+    'Hvad giver dig energi \u2014 faktisk, kropsligt, m\u00e6rkbart?',
+    'Hvad ville du stoppe med, hvis du turde?',
+    'Hvad er forskellen p\u00e5 den du er hjemme og den du er ude? Hvem er mest dig?'
   ],
   6: [
     'Hvad ved du nu, som du gerne ville have vidst for ti \u00e5r siden?',
     'Hvilket m\u00f8nster i dit liv er du klar til at bryde?',
     'Hvad har du lyst til at g\u00f8re, som ikke giver mening for andre?',
     'Hvorn\u00e5r f\u00f8ler du dig mest som dig selv \u2014 helt uden roller?',
-    'Hvad er det vigtigste du har l\u00e6rt af at leve?'
+    'Hvad er det vigtigste du har l\u00e6rt af at leve?',
+    'Hvad har du givet afkald p\u00e5 for andres skyld \u2014 og savner du det?',
+    'Hvorn\u00e5r opdagede du at du var blevet voksen p\u00e5 en m\u00e5de du ikke forventede?',
+    'Er der en del af dig der v\u00e5gner igen nu \u2014 noget du troede var v\u00e6k?',
+    'Hvad ville du sige til dig selv om fem \u00e5r, hvis du kunne?',
+    'Hvilken rolle er du tr\u00e6t af at spille \u2014 og hvem er du uden den?',
+    'Hvad er den mest overraskende ting du har l\u00e6rt om dig selv det sidste \u00e5r?',
+    'Er der et tab du aldrig rigtig har s\u00f8rget over? Hvad holdt dig fra det?',
+    'Hvad ville du g\u00f8re med en hel dag uden forpligtelser?',
+    'Hvorn\u00e5r f\u00f8lte du sidst at noget var helt rigtigt \u2014 uden tvivl, uden forbehold?',
+    'Hvad er den smukkeste ting ved at blive \u00e6ldre?'
   ],
   7: [
     'Hvad kan du give slip p\u00e5, som du troede du havde brug for?',
     'Hvilken version af dig selv savner du mest?',
     'Hvad er den gave, din alder giver dig, som ungdommen ikke kunne?',
     'Er der en sandhed om dig selv, du f\u00f8rst nu t\u00f8r se?',
-    'Hvad ville du g\u00f8re med dit liv, hvis du startede forfra i morgen?'
+    'Hvad ville du g\u00f8re med dit liv, hvis du startede forfra i morgen?',
+    'Hvad har du mistet, som du nu kan se var n\u00f8dvendigt at miste?',
+    'Hvorn\u00e5r f\u00f8ler du dig mest levende nu \u2014 anderledes end f\u00f8r?',
+    'Er der en gr\u00e6nse du endelig har sat, som du burde have sat for l\u00e6nge siden?',
+    'Hvad er den st\u00f8rste forandring i dig de sidste ti \u00e5r?',
+    'Hvem har du tilgivet \u2014 og hvem venter stadig?',
+    'Hvad ville du g\u00f8re, hvis du ikke var bange for at skuffe nogen?',
+    'Er din krop ved at fort\u00e6lle dig noget, du endnu ikke har lyttet til?',
+    'Hvad er den frihed du l\u00e6nges efter \u2014 og hvad holder dig fra den?',
+    'Hvilken visdom har smerten givet dig, som gl\u00e6den ikke kunne?',
+    'Hvad st\u00e5r tilbage, n\u00e5r du fjerner alt det du g\u00f8r for andres skyld?'
   ],
   8: [
     'Hvad er det v\u00e6sentligste du nogensinde har l\u00e6rt?',
     'Hvem har formet dig mest \u2014 og har du fortalt dem det?',
     'Hvad betyder frihed for dig nu \u2014 anderledes end for tyve \u00e5r siden?',
     'Er der en sorg du b\u00e6rer, som fortjener at blive set?',
-    'Hvad ville du sige til den unge kvinde du var, fra det sted du st\u00e5r nu?'
+    'Hvad ville du sige til den unge kvinde du var, fra det sted du st\u00e5r nu?',
+    'Hvad er den klareste erkendelse du er n\u00e5et til om dit liv?',
+    'Hvorn\u00e5r har du f\u00f8lt dig mest fri \u2014 og hvad skabte den frihed?',
+    'Er der en person du savner p\u00e5 en m\u00e5de der har \u00e6ndret sig med \u00e5rene?',
+    'Hvad har du l\u00e6rt om ensomhed, som du gerne ville have vidst f\u00f8r?',
+    'Hvad er den mest modige ting du har gjort efter fyrre?',
+    'Er der en sandhed du nu kan rumme, som du ikke kunne f\u00f8r?',
+    'Hvad er din dybeste tak \u2014 til hvem, for hvad?',
+    'Hvorn\u00e5r m\u00e6rkede du at visdom ikke er det samme som viden?',
+    'Hvad ville du sige til verden, hvis du vidste den lyttede?',
+    'Hvad er det smukkeste du har skabt \u2014 ikke med h\u00e6nderne, men med dit liv?'
   ],
   9: [
     'Hvad er din vigtigste arv \u2014 ikke materielt, men menneskeligt?',
     'Hvad har dit liv l\u00e6rt dig om k\u00e6rlighed?',
     'Hvad ville du \u00f8nske at de der kommer efter dig, vidste?',
     'Hvorn\u00e5r f\u00f8ler du dig mest hel \u2014 mest fuldst\u00e6ndig?',
-    'Hvad er det smukkeste ved det liv du har levet?'
+    'Hvad er det smukkeste ved det liv du har levet?',
+    'Hvad ved du om gl\u00e6de nu, som du ikke vidste da du var ung?',
+    'Hvilket \u00f8jeblik ville du genopleve, hvis du kunne?',
+    'Hvad har livet l\u00e6rt dig om at give slip?',
+    'Er der et menneske du skylder en tak, du aldrig gav?',
+    'Hvad er den vigtigste samtale du nogensinde har haft?',
+    'Hvad ville du g\u00f8re anderledes, hvis du vidste det endte godt?',
+    'Hvad er den st\u00f8rste overraskelse dit liv har givet dig?',
+    'Hvorn\u00e5r opdagede du at sårbarhed er en styrke?',
+    'Hvad er det du har givet videre, uden at vide det?',
+    'Hvis dit liv var en bog, hvad ville det sidste kapitel hedde?'
   ]
 };
 
