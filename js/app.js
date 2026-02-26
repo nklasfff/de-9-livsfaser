@@ -1847,7 +1847,7 @@ function initDinPraksis() {
     ];
     var bHtml = '';
     bTegn.forEach(function(t) {
-      bHtml += '<div style="display:flex;align-items:baseline;gap:8px;margin-top:6px"><div style="color:#7a908b;font-size:10px">\u25cf</div><div style="font-size:14px;color:var(--text-body);line-height:1.5;font-weight:300">' + t + '</div></div>';
+      bHtml += '<div style="display:flex;align-items:baseline;gap:8px;margin-top:6px"><div style="color:var(--blaa);font-size:10px">\u25cf</div><div style="font-size:14px;color:var(--text-body);line-height:1.5;font-weight:300">' + t + '</div></div>';
     });
     balanceEl.innerHTML = bHtml;
   }
@@ -2542,7 +2542,7 @@ function initTidsDybere() {
     if (!relHtml) {
       relHtml = '<p class="dybde-body-p">Relationer \u00e6ndrer sig, n\u00e5r elementer skifter. Det par der m\u00f8dtes i ild-fasen, er ikke det samme par i jord-fasen. Energien mellem jer forandres \u2014 ikke fordi k\u00e6rligheden g\u00f8r det, men fordi I g\u00f8r det.</p>';
       relHtml += '<p class="dybde-body-p">N\u00e5r du rejser i tid med en anden person, kan du se hvordan jeres elementer m\u00f8dtes dengang \u2014 og hvordan de m\u00f8des nu. Det forklarer m\u00e5ske noget om de \u00e5r der f\u00f8ltes lette, og de \u00e5r der f\u00f8ltes tunge.</p>';
-      relHtml += '<div style="text-align:center;margin-top:14px"><a onclick="Router.navigate(\'indstillinger\')" style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#6B5F7B;opacity:0.7;cursor:pointer">Tilf\u00f8j en relation i indstillinger \u2192</a></div>';
+      relHtml += '<div style="text-align:center;margin-top:14px"><a onclick="Router.navigate(\'indstillinger\')" style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--blaa);opacity:0.7;cursor:pointer">Tilf\u00f8j en relation i indstillinger \u2192</a></div>';
     }
     relEl.innerHTML = relHtml;
   }
@@ -4747,15 +4747,15 @@ function initRelDybere() {
     if (samtale) {
       var sHtml = '';
       sHtml += '<div style="margin-bottom:16px">';
-      sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Sp\u00f8rg</div>';
+      sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:var(--text-light);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Sp\u00f8rg</div>';
       sHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.6">\u00ab\u2009' + samtale.spoerg + '\u2009\u00bb</div>';
       sHtml += '</div>';
       sHtml += '<div style="margin-bottom:16px">';
-      sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Sig</div>';
+      sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:var(--text-light);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Sig</div>';
       sHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.6">\u00ab\u2009' + samtale.sig + '\u2009\u00bb</div>';
       sHtml += '</div>';
       sHtml += '<div>';
-      sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:#88839e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Sammen</div>';
+      sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:var(--text-light);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Sammen</div>';
       sHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.6">\u00ab\u2009' + samtale.sammen + '\u2009\u00bb</div>';
       sHtml += '</div>';
       samEl.innerHTML = sHtml;
@@ -5594,7 +5594,7 @@ function initRejDybere() {
   // ── 6. BALANCE / UBALANCE ──
   if (detail) {
     var balanceEl = document.getElementById('rejdyb-balance');
-    if (balanceEl && detail.balanceTekst) balanceEl.innerHTML = formatExpandable(detail.balanceTekst, 30);
+    if (balanceEl && detail.balanceTekst) balanceEl.innerHTML = formatExpandable(detail.balanceTekst, 80);
 
     var ubalanceEl = document.getElementById('rejdyb-ubalance');
     if (ubalanceEl && detail.ubalanceTegn) {
