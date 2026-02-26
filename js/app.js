@@ -3158,7 +3158,7 @@ function cyclesAtDate(birthdate, targetDate, isMale) {
 }
 
 /* ============================================================
-   VINDUER — Sjaeldne Vinduer scanner + orakel
+   VINDUER — Kraftperioder, faseovergange & relations-vinduer (V3)
    ============================================================ */
 
 // Hjælper: 4 elementer paa en given dato (uden organur — for daglig scanning)
@@ -3178,82 +3178,115 @@ function getElementsAtDate(birthdate, date, isMale) {
   return [phaseEl, season.element, month.element, weekday.element];
 }
 
-// Scanner: find sjaeldne vinduer i de naeste N dage
-function scanVinduer(birthdate, daysAhead) {
-  var NOURISH = { 'VAND': 'TRÆ', 'TRÆ': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
-  var CONTROL = { 'VAND': 'ILD', 'TRÆ': 'JORD', 'ILD': 'METAL', 'JORD': 'VAND', 'METAL': 'TRÆ' };
-  var results = [];
-  var today = new Date();
-  today.setHours(12, 0, 0, 0);
+// Find faseovergange — ren beregning, ingen scanning (hvert 7./8. aar!)
+function findPhaseTransitions(birthdate, isMale, maxYears) {
+  var birth = new Date(birthdate);
+  var now = new Date();
+  var currentAge = ageAtDate(birthdate, now);
+  var cycleLen = isMale ? 8 : 7;
+  var maxPhase = isMale ? 8 : 9;
+  var phaseData = isMale ? Calculations.MALE_PHASE_DATA : Calculations.PHASE_DATA;
+  var transitions = [];
+  var currentPhase = Math.min(Math.floor(currentAge / cycleLen) + 1, maxPhase);
+  if (currentPhase >= maxPhase) return transitions;
+
+  for (var p = currentPhase; p < maxPhase; p++) {
+    var boundaryAge = p * cycleLen;
+    var transDate = new Date(birth.getFullYear() + boundaryAge, birth.getMonth(), birth.getDate());
+    if (transDate <= now) continue;
+    var daysFromNow = Math.ceil((transDate - now) / 86400000);
+    if (daysFromNow > maxYears * 365) break;
+    var fromP = phaseData[p];
+    var toP = phaseData[p + 1];
+    transitions.push({
+      type: 'faseovergang', date: transDate, startDate: transDate, endDate: transDate,
+      daysFromNow: daysFromNow, days: 1,
+      fromPhase: p, toPhase: p + 1,
+      fromName: fromP.name, toName: toP.name,
+      fromElement: fromP.element, toElement: toP.element,
+      elementChange: fromP.element !== toP.element,
+      element: toP.element,
+      rarity: fromP.element !== toP.element ? 10 : 8
+    });
+  }
+  return transitions;
+}
+
+// Scanner: find kraftperioder — kun 3/4 eller 4/4 HVOR livsfasen er med
+// Grupperer spredte dage (f.eks. ugentligt moenster) til perioder
+function scanKraftperioder(birthdate, daysAhead) {
+  var now = new Date();
+  now.setHours(12, 0, 0, 0);
+  var rawDays = [];
 
   for (var i = 0; i <= daysAhead; i++) {
-    var d = new Date(today.getTime() + i * 86400000);
+    var d = new Date(now.getTime() + i * 86400000);
     var elements = getElementsAtDate(birthdate, d, false);
-
-    // Tael elementer
     var counts = {};
     elements.forEach(function(el) { counts[el] = (counts[el] || 0) + 1; });
     var maxCount = 0, maxEl = '';
-    for (var el in counts) {
-      if (counts[el] > maxCount) { maxCount = counts[el]; maxEl = el; }
-    }
-
-    // Tael TCM-par
-    var nourishCount = 0, challengeCount = 0;
-    for (var a = 0; a < elements.length; a++) {
-      for (var b = a + 1; b < elements.length; b++) {
-        if (NOURISH[elements[a]] === elements[b] || NOURISH[elements[b]] === elements[a]) nourishCount++;
-        if (CONTROL[elements[a]] === elements[b] || CONTROL[elements[b]] === elements[a]) challengeCount++;
-      }
-    }
-
-    var type = null, rarity = 0;
-    if (maxCount === 4) { type = 'fuld_resonans'; rarity = 10; }
-    else if (maxCount === 3) { type = 'tredobbelt'; rarity = 7; }
-    else if (Object.keys(counts).length >= 4 && nourishCount >= 3) { type = 'naerende_kaede'; rarity = 5; }
-    else if (challengeCount >= 2) { type = 'indre_storm'; rarity = 4; }
-
-    if (type) {
-      results.push({ date: d, type: type, element: maxEl, rarity: rarity, daysFromNow: i });
+    for (var el in counts) { if (counts[el] > maxCount) { maxCount = counts[el]; maxEl = el; } }
+    // Livsfasen SKAL vaere med i resonansen — ellers er det bare kalendermatematik
+    if (elements[0] !== maxEl) continue;
+    if (maxCount >= 3) {
+      rawDays.push({ date: d, count: maxCount, element: maxEl, daysFromNow: i });
     }
   }
 
-  // Grupper sammenhængende dage med same type+element til vinduer
-  var windows = [];
+  // Grupper: dage inden for 8 dages gap med same element = same periode
+  var periods = [];
   var cur = null;
-  for (var j = 0; j < results.length; j++) {
-    var r = results[j];
-    if (cur && r.type === cur.type && r.element === cur.element && r.daysFromNow === cur.endDay + 1) {
+  for (var j = 0; j < rawDays.length; j++) {
+    var r = rawDays[j];
+    if (cur && r.element === cur.element && r.daysFromNow <= cur.endDay + 8) {
       cur.endDate = r.date;
       cur.endDay = r.daysFromNow;
       cur.days++;
+      cur.peakCount = Math.max(cur.peakCount, r.count);
     } else {
-      if (cur) windows.push(cur);
-      cur = { startDate: r.date, endDate: r.date, type: r.type, element: r.element, rarity: r.rarity, daysFromNow: r.daysFromNow, endDay: r.daysFromNow, days: 1 };
+      if (cur) periods.push(cur);
+      cur = {
+        type: 'kraftperiode', startDate: r.date, endDate: r.date,
+        element: r.element, daysFromNow: r.daysFromNow, endDay: r.daysFromNow,
+        days: 1, peakCount: r.count, rarity: 5
+      };
     }
   }
-  if (cur) windows.push(cur);
+  if (cur) periods.push(cur);
 
-  // Sorter: sjaeldnest foerst, derefter naermest
-  windows.sort(function(a, b) {
+  // Perioder med 4/4-dage faar hoejere rarity
+  periods.forEach(function(p) {
+    if (p.peakCount === 4) { p.type = 'fuld_resonans'; p.rarity = 8; }
+  });
+
+  periods.sort(function(a, b) {
     if (b.rarity !== a.rarity) return b.rarity - a.rarity;
     return a.daysFromNow - b.daysFromNow;
   });
-  return windows;
+  return periods;
 }
 
-// Scanner: find sjaeldne relation-vinduer
+// Scanner: find relation-vinduer (overgange + faelles kraft)
 function scanRelationVinduer(userBirth, relBirth, relIsMale, relName, daysAhead) {
-  var results = [];
-  var today = new Date();
-  today.setHours(12, 0, 0, 0);
+  var NOURISH = { 'VAND': 'TR\u00c6', 'TR\u00c6': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
+
+  // 1. Relationens faseovergange (scan op til 10 aar)
+  var relTrans = findPhaseTransitions(relBirth, relIsMale, 10);
+  relTrans.forEach(function(t) {
+    t.type = 'rel_faseovergang';
+    t.name = relName;
+    t.rarity = t.elementChange ? 9 : 7;
+  });
+
+  // 2. Scan for dage med faelles kraftsignal
+  var now = new Date();
+  now.setHours(12, 0, 0, 0);
+  var sharedDays = [];
 
   for (var i = 0; i <= daysAhead; i++) {
-    var d = new Date(today.getTime() + i * 86400000);
+    var d = new Date(now.getTime() + i * 86400000);
     var userEls = getElementsAtDate(userBirth, d, false);
     var relEls = getElementsAtDate(relBirth, d, relIsMale);
-
-    // Begges dominerende element
     var uCounts = {}, rCounts = {};
     userEls.forEach(function(el) { uCounts[el] = (uCounts[el] || 0) + 1; });
     relEls.forEach(function(el) { rCounts[el] = (rCounts[el] || 0) + 1; });
@@ -3261,33 +3294,37 @@ function scanRelationVinduer(userBirth, relBirth, relIsMale, relName, daysAhead)
     for (var e in uCounts) { if (uCounts[e] > uMax) { uMax = uCounts[e]; uEl = e; } }
     for (var f in rCounts) { if (rCounts[f] > rMax) { rMax = rCounts[f]; rEl = f; } }
 
-    // Faelles resonans: begge har 2+ i samme element
-    if (uEl === rEl && uMax >= 2 && rMax >= 2) {
-      results.push({ date: d, type: 'faelles_resonans', element: uEl, name: relName, daysFromNow: i, rarity: 8 });
+    // Faelles dyb resonans: begge har 3+ i SAMME element (streng tærskel)
+    if (uEl === rEl && uMax >= 3 && rMax >= 3) {
+      sharedDays.push({ date: d, type: 'faelles_resonans', element: uEl, name: relName, daysFromNow: i, rarity: 8 });
     }
-    // Begge har tredobbelt (uanset element)
-    else if (uMax >= 3 && rMax >= 3) {
-      results.push({ date: d, type: 'dobbelt_kraft', userEl: uEl, relEl: rEl, name: relName, daysFromNow: i, rarity: 6 });
+    // Naerende flow: dit dominant naerer deres (begge har 2+, livsfase med)
+    else if (uMax >= 2 && rMax >= 2 && NOURISH[uEl] === rEl && userEls[0] === uEl) {
+      sharedDays.push({ date: d, type: 'naerende_flow', element: uEl, relEl: rEl, name: relName, daysFromNow: i, rarity: 5 });
     }
   }
 
-  // Grupper sammenhængende dage
-  var windows = [];
-  var cur = null;
-  for (var j = 0; j < results.length; j++) {
-    var r = results[j];
-    if (cur && r.type === cur.type && r.element === cur.element && r.daysFromNow === cur.endDay + 1) {
-      cur.endDate = r.date;
-      cur.endDay = r.daysFromNow;
-      cur.days++;
+  // Grupper til perioder (8 dages gap)
+  var sharedPeriods = [];
+  var cur2 = null;
+  for (var k = 0; k < sharedDays.length; k++) {
+    var s = sharedDays[k];
+    if (cur2 && s.type === cur2.type && s.element === cur2.element && s.daysFromNow <= cur2.endDay + 8) {
+      cur2.endDate = s.date; cur2.endDay = s.daysFromNow; cur2.days++;
     } else {
-      if (cur) windows.push(cur);
-      cur = { startDate: r.date, endDate: r.date, type: r.type, element: r.element || '', userEl: r.userEl, relEl: r.relEl, name: r.name, rarity: r.rarity, daysFromNow: r.daysFromNow, endDay: r.daysFromNow, days: 1 };
+      if (cur2) sharedPeriods.push(cur2);
+      cur2 = {
+        type: s.type, startDate: s.date, endDate: s.date,
+        element: s.element, relEl: s.relEl, name: s.name,
+        rarity: s.rarity, daysFromNow: s.daysFromNow, endDay: s.daysFromNow, days: 1
+      };
     }
   }
-  if (cur) windows.push(cur);
-  windows.sort(function(a, b) { return b.rarity !== a.rarity ? b.rarity - a.rarity : a.daysFromNow - b.daysFromNow; });
-  return windows;
+  if (cur2) sharedPeriods.push(cur2);
+
+  var all = relTrans.concat(sharedPeriods);
+  all.sort(function(a, b) { return b.rarity !== a.rarity ? b.rarity - a.rarity : a.daysFromNow - b.daysFromNow; });
+  return all;
 }
 
 // Formater dansk dato
@@ -3298,60 +3335,93 @@ function formatVindueDato(date) {
 
 // Vinduer type-labels og ikoner
 var VIN_TYPE_META = {
-  fuld_resonans:  { icon: '\u2728', label: 'Fuld resonans', color: '#6B5F7B', desc: 'Alle fire cyklusser i samme element' },
-  tredobbelt:     { icon: '\u25C6', label: 'Tredobbelt', color: '#7b7a9e', desc: 'Tre cyklusser i samme element' },
-  naerende_kaede: { icon: '\u223F', label: 'N\u00e6rende k\u00e6de', color: '#7a908b', desc: 'Elementerne danner en komplet n\u00e6ringscirkel' },
-  indre_storm:    { icon: '\u26A1', label: 'Indre storm', color: '#8a7a6e', desc: 'Flere elementer udfordrer hinanden' },
-  faelles_resonans: { icon: '\u2665', label: 'F\u00e6lles resonans', color: '#7b7a9e', desc: 'Begge i samme dominerende element' },
-  dobbelt_kraft:  { icon: '\u2726', label: 'Dobbelt kraft', color: '#6B5F7B', desc: 'Begge har st\u00e6rkt signal samtidig' }
+  faseovergang:     { icon: '\u2726', label: 'Faseovergang', color: '#6B5F7B' },
+  fuld_resonans:    { icon: '\u2728', label: 'Fuld resonans', color: '#6B5F7B' },
+  kraftperiode:     { icon: '\u25C6', label: 'Kraftperiode', color: '#7b7a9e' },
+  rel_faseovergang: { icon: '\u2726', label: 'Faseovergang', color: '#7b7a9e' },
+  faelles_resonans: { icon: '\u2665', label: 'F\u00e6lles resonans', color: '#7b7a9e' },
+  naerende_flow:    { icon: '\u223F', label: 'N\u00e6rende flow', color: '#7a908b' }
 };
 
-function renderVindueKort(w, isRelation) {
-  var meta = VIN_TYPE_META[w.type] || VIN_TYPE_META.tredobbelt;
+// Render et vinduer-kort (personligt eller relation)
+function renderVindueKort(w) {
+  var meta = VIN_TYPE_META[w.type] || VIN_TYPE_META.kraftperiode;
   var elLabel = w.element ? Calculations.ELEMENT_LABELS[w.element] : '';
+  var html = '<div style="padding:14px 18px;background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.10);border-radius:var(--radius)">';
+
+  // ── Faseovergang-kort (personlig) ──
+  if (w.type === 'faseovergang') {
+    var fromLabel = Calculations.ELEMENT_LABELS[w.fromElement];
+    var toLabel = Calculations.ELEMENT_LABELS[w.toElement];
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
+    html += '<span style="font-size:16px">' + meta.icon + '</span>';
+    html += '<span style="font-family:var(--font-sans);font-size:12px;font-weight:500;color:' + meta.color + ';text-transform:uppercase;letter-spacing:1px">Dit n\u00e6ste livsskift</span>';
+    html += '</div>';
+    html += '<div style="font-family:var(--font-sans);font-size:14px;color:var(--text-dark);margin-bottom:2px">' + formatVindueDato(w.date) + ' \u00b7 om ' + w.daysFromNow + ' dage</div>';
+    html += '<div style="font-family:var(--font-serif);font-size:15px;color:#6B5F7B;margin:6px 0">Fase ' + w.fromPhase + ' \u2192 Fase ' + w.toPhase + '</div>';
+    html += '<div style="font-family:var(--font-sans);font-size:13px;color:#8B7D9B">' + w.fromName + ' \u2192 ' + w.toName + '</div>';
+    if (w.elementChange) {
+      html += '<div style="margin-top:8px;padding:8px 12px;background:rgba(107,95,123,0.06);border-radius:10px">';
+      html += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:#6B5F7B">Dit element skifter fra ' + fromLabel + ' til ' + toLabel + '. Det er en dyb overgang \u2014 m\u00e5ske den vigtigste i mange \u00e5r.</div>';
+      html += '</div>';
+    } else {
+      html += '<div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#8B7D9B;margin-top:6px">Du forbliver i ' + fromLabel + ' \u2014 men fasens karakter skifter.</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  // ── Relation faseovergang ──
+  if (w.type === 'rel_faseovergang') {
+    var fromL = Calculations.ELEMENT_LABELS[w.fromElement];
+    var toL = Calculations.ELEMENT_LABELS[w.toElement];
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
+    html += '<span style="font-size:16px">' + meta.icon + '</span>';
+    html += '<span style="font-family:var(--font-sans);font-size:12px;font-weight:500;color:' + meta.color + ';text-transform:uppercase;letter-spacing:1px">' + w.name + 's livsskift</span>';
+    html += '</div>';
+    html += '<div style="font-family:var(--font-sans);font-size:14px;color:var(--text-dark);margin-bottom:2px">' + formatVindueDato(w.date) + ' \u00b7 om ' + w.daysFromNow + ' dage</div>';
+    html += '<div style="font-family:var(--font-sans);font-size:13px;color:#8B7D9B">' + w.fromName + ' \u2192 ' + w.toName + '</div>';
+    if (w.elementChange) {
+      html += '<div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#6B5F7B;margin-top:6px">' + w.name + 's element skifter fra ' + fromL + ' til ' + toL + '. Det vil m\u00e6rkes i jeres relation.</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  // ── Kraftperiode / fuld resonans / faelles / naerende flow ──
   var dateStr = formatVindueDato(w.startDate);
   if (w.days > 1) dateStr += ' \u2013 ' + formatVindueDato(w.endDate);
-
   var daysLabel = '';
-  if (w.daysFromNow === 0) daysLabel = 'I dag';
+  if (w.daysFromNow === 0) daysLabel = 'Nu';
   else if (w.daysFromNow === 1) daysLabel = 'I morgen';
   else daysLabel = 'Om ' + w.daysFromNow + ' dage';
-  if (w.days > 1) daysLabel += ' (' + w.days + ' dage)';
 
-  // Hent SJAELDNE_VINDUER-tekst hvis tilgaengelig
-  var vinduesTekst = '';
-  if (!isRelation && typeof SJAELDNE_VINDUER !== 'undefined') {
-    if (w.type === 'fuld_resonans' && SJAELDNE_VINDUER.fuld_resonans && SJAELDNE_VINDUER.fuld_resonans[w.element]) {
-      vinduesTekst = SJAELDNE_VINDUER.fuld_resonans[w.element];
-    } else if (w.type === 'tredobbelt' && SJAELDNE_VINDUER.tredobbelt && SJAELDNE_VINDUER.tredobbelt[w.element]) {
-      vinduesTekst = SJAELDNE_VINDUER.tredobbelt[w.element];
-    } else if (w.type === 'naerende_kaede') {
-      vinduesTekst = 'Dine elementer flyder i en naturlig n\u00e6ringscirkel \u2014 vand n\u00e6rer tr\u00e6, tr\u00e6 n\u00e6rer ild, ild n\u00e6rer jord. Alt str\u00f8mmer. F\u00f8lg impulsen.';
-    } else if (w.type === 'indre_storm') {
-      vinduesTekst = 'Flere af dine cyklusser udfordrer hinanden. Det er ikke konflikt \u2014 det er kreativ friktion. Stormen b\u00e6rer altid en gave.';
-    }
-  }
+  var titleParts = [];
+  if (w.name) titleParts.push('Dig og ' + w.name);
+  titleParts.push(meta.label);
+  if (elLabel) titleParts.push(elLabel);
 
-  if (isRelation) {
-    if (w.type === 'faelles_resonans') {
-      vinduesTekst = 'Begge har ' + elLabel + ' som dominerende element. En sj\u00e6lden dag hvor I m\u00e6rker den samme grundtone \u2014 stille genkendelse, dyb forst\u00e5else.';
-    } else if (w.type === 'dobbelt_kraft') {
-      vinduesTekst = 'Begge har et st\u00e6rkt signal \u2014 du i ' + Calculations.ELEMENT_LABELS[w.userEl] + ', ' + w.name + ' i ' + Calculations.ELEMENT_LABELS[w.relEl] + '. Kraftfuld dag for jer begge.';
-    }
-  }
-
-  var namePrefix = isRelation ? ('Dig og ' + w.name + ' \u00b7 ') : '';
-  var titleText = namePrefix + meta.label + (elLabel && !isRelation ? ' \u00b7 ' + elLabel : '');
-
-  var html = '<div style="padding:14px 18px;background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.10);border-radius:var(--radius)">';
   html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
   html += '<span style="font-size:16px">' + meta.icon + '</span>';
-  html += '<span style="font-family:var(--font-sans);font-size:12px;font-weight:500;color:' + meta.color + ';text-transform:uppercase;letter-spacing:1px">' + titleText + '</span>';
+  html += '<span style="font-family:var(--font-sans);font-size:12px;font-weight:500;color:' + meta.color + ';text-transform:uppercase;letter-spacing:1px">' + titleParts.join(' \u00b7 ') + '</span>';
   html += '</div>';
   html += '<div style="font-family:var(--font-sans);font-size:14px;color:var(--text-dark);font-weight:400;margin-bottom:2px">' + dateStr + '</div>';
   html += '<div style="font-family:var(--font-sans);font-size:12px;color:#a89bb3;margin-bottom:8px">' + daysLabel + '</div>';
-  if (vinduesTekst) {
-    html += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.55">' + vinduesTekst + '</div>';
+
+  // Tekst baseret paa type
+  var tekst = '';
+  if (w.type === 'fuld_resonans' && typeof SJAELDNE_VINDUER !== 'undefined' && SJAELDNE_VINDUER.fuld_resonans && SJAELDNE_VINDUER.fuld_resonans[w.element]) {
+    tekst = SJAELDNE_VINDUER.fuld_resonans[w.element];
+  } else if (w.type === 'kraftperiode' && typeof SJAELDNE_VINDUER !== 'undefined' && SJAELDNE_VINDUER.tredobbelt && SJAELDNE_VINDUER.tredobbelt[w.element]) {
+    tekst = SJAELDNE_VINDUER.tredobbelt[w.element];
+  } else if (w.type === 'faelles_resonans') {
+    tekst = 'Begge har st\u00e6rkt ' + elLabel + '-signal. I m\u00e6rker den samme grundtone \u2014 en periode for dyb genkendelighed.';
+  } else if (w.type === 'naerende_flow') {
+    var relElLabel = w.relEl ? Calculations.ELEMENT_LABELS[w.relEl] : '';
+    tekst = 'Dit ' + elLabel + ' n\u00e6rer ' + (w.name || '') + 's ' + relElLabel + '. En periode hvor du naturligt giver energi videre.';
+  }
+  if (tekst) {
+    html += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.55">' + tekst + '</div>';
   }
   html += '</div>';
   return html;
@@ -3359,11 +3429,12 @@ function renderVindueKort(w, isRelation) {
 
 function initVinduer() {
   var user = Storage.getUser();
-  var relations = Storage.getRelations();
+  var relations = Storage.getRelations() || [];
 
-  // ── LIGE NU — dit klima i dag ──
   if (user && user.birthdate) {
     var now = new Date();
+
+    // ── LIGE NU — dit element-klima i dag ──
     var elements = getElementsAtDate(user.birthdate, now, false);
     var counts = {};
     elements.forEach(function(el) { counts[el] = (counts[el] || 0) + 1; });
@@ -3374,9 +3445,8 @@ function initVinduer() {
     var labels = elements.map(function(el) { return Calculations.ELEMENT_LABELS[el]; });
     setText('vin-nu-label', labels.join(' \u00b7 '));
 
-    // Beskriv klimaet
     if (maxCount >= 3) {
-      setText('vin-nu-tekst', maxCount + ' af dine 4 cyklusser er i ' + elLabel + ' lige nu. Det er sj\u00e6ldent \u2014 og kr\u00e6ver din opm\u00e6rksomhed.');
+      setText('vin-nu-tekst', maxCount + ' af dine 4 cyklusser er i ' + elLabel + ' lige nu. Din ' + elLabel + '-energi er forst\u00e6rket \u2014 m\u00e6rk efter hvad det kalder p\u00e5.');
     } else if (maxCount === 2) {
       setText('vin-nu-tekst', 'To af dine cyklusser m\u00f8des i ' + elLabel + '. De \u00f8vrige tr\u00e6kker i andre retninger \u2014 en blanding af signal og balance.');
     } else {
@@ -3387,7 +3457,7 @@ function initVinduer() {
     var vinWrap = document.getElementById('vin-nu-vindue');
     if (vinWrap && typeof SJAELDNE_VINDUER !== 'undefined') {
       if (maxCount === 4 && SJAELDNE_VINDUER.fuld_resonans && SJAELDNE_VINDUER.fuld_resonans[maxEl]) {
-        setText('vin-nu-vindue-label', '\u2728 Fuld resonans \u2014 ekstremt sj\u00e6ldent');
+        setText('vin-nu-vindue-label', '\u2728 Fuld resonans');
         setText('vin-nu-vindue-tekst', SJAELDNE_VINDUER.fuld_resonans[maxEl]);
         vinWrap.style.display = '';
       } else if (maxCount === 3 && SJAELDNE_VINDUER.tredobbelt && SJAELDNE_VINDUER.tredobbelt[maxEl]) {
@@ -3403,47 +3473,63 @@ function initVinduer() {
       }
     }
 
-    // ── KOMMENDE VINDUER — scan 2 aar frem ──
-    setText('vin-scanner-intro', 'Motoren scanner dine cyklusser 2 \u00e5r frem og finder de dage hvor noget sj\u00e6ldent sker.');
-    var windows = scanVinduer(user.birthdate, 730);
+    // ── DIT NAESTE SKIFT — faseovergang ──
+    var skiftWrap = document.getElementById('vin-skift-wrap');
+    var skiftEl = document.getElementById('vin-skift');
+    if (skiftWrap && skiftEl) {
+      var transitions = findPhaseTransitions(user.birthdate, false, 10);
+      if (transitions.length > 0) {
+        skiftEl.innerHTML = renderVindueKort(transitions[0]);
+        skiftWrap.style.display = '';
+      } else {
+        skiftWrap.style.display = 'none';
+      }
+    }
+
+    // ── DINE KRAFTPERIODER — grupperede perioder ──
+    setText('vin-scanner-intro', 'Perioder hvor dine cyklusser samler sig og dit element forst\u00e6rkes.');
+    var kraft = scanKraftperioder(user.birthdate, 730);
     var kommende = document.getElementById('vin-kommende');
     var empty = document.getElementById('vin-kommende-empty');
 
     if (kommende) {
-      // Filtrer "i dag" fra (den vises allerede i Lige Nu)
-      var futureWindows = windows.filter(function(w) { return w.daysFromNow > 0; });
-      // Vis top 12
-      var topWindows = futureWindows.slice(0, 12);
-      if (topWindows.length > 0) {
-        kommende.innerHTML = topWindows.map(function(w) { return renderVindueKort(w, false); }).join('');
+      var futureKraft = kraft.filter(function(w) { return w.daysFromNow > 0; });
+      var topKraft = futureKraft.slice(0, 6);
+      if (topKraft.length > 0) {
+        kommende.innerHTML = topKraft.map(function(w) { return renderVindueKort(w); }).join('');
         if (empty) empty.style.display = 'none';
       } else {
         kommende.innerHTML = '';
-        if (empty) { empty.style.display = ''; setText('vin-kommende-empty', 'Ingen sj\u00e6ldne vinduer fundet i de n\u00e6ste 2 \u00e5r. Dine cyklusser holder en rolig balance.'); }
+        if (empty) { empty.style.display = ''; setText('vin-kommende-empty', 'Ingen kraftperioder fundet i de n\u00e6ste 2 \u00e5r. Dine cyklusser holder en rolig balance.'); }
       }
     }
 
-    // ── JERES VINDUER — relation-konstellationer ──
+    // ── JERES VINDUER — relation-overgange + faelles kraft ──
     var jeresWrap = document.getElementById('vin-jeres-wrap');
     var jeresEl = document.getElementById('vin-jeres');
-    if (jeresWrap && jeresEl && relations && relations.length > 0) {
-      var allRelWindows = [];
-      relations.forEach(function(rel) {
-        if (!rel.birthdate) return;
-        var rw = scanRelationVinduer(user.birthdate, rel.birthdate, rel.gender === 'male', rel.name, 730);
-        // Tag top 5 per relation
-        allRelWindows = allRelWindows.concat(rw.slice(0, 5));
-      });
+    if (jeresWrap && jeresEl) {
+      var realRelations = relations.filter(function(r) { return r.birthdate && !r._isExample; });
+      if (realRelations.length > 0) {
+        var allRelWindows = [];
+        realRelations.forEach(function(rel) {
+          var rw = scanRelationVinduer(user.birthdate, rel.birthdate, rel.gender === 'male', rel.name, 730);
+          allRelWindows = allRelWindows.concat(rw.slice(0, 4));
+        });
 
-      if (allRelWindows.length > 0) {
-        // Sorter samlet: sjaeldnest foerst
-        allRelWindows.sort(function(a, b) { return b.rarity !== a.rarity ? b.rarity - a.rarity : a.daysFromNow - b.daysFromNow; });
-        var topRel = allRelWindows.slice(0, 8);
-        setText('vin-jeres-intro', 'Hvorn\u00e5r danser jeres cyklusser i takt? Motoren finder de dage hvor noget s\u00e6rligt sker mellem jer.');
-        jeresEl.innerHTML = topRel.map(function(w) { return renderVindueKort(w, true); }).join('');
-        jeresWrap.style.display = '';
+        if (allRelWindows.length > 0) {
+          allRelWindows.sort(function(a, b) { return b.rarity !== a.rarity ? b.rarity - a.rarity : a.daysFromNow - b.daysFromNow; });
+          var topRel = allRelWindows.slice(0, 6);
+          setText('vin-jeres-intro', 'Faseovergange og kraftperioder for dem du har t\u00e6ttest p\u00e5.');
+          jeresEl.innerHTML = topRel.map(function(w) { return renderVindueKort(w); }).join('');
+          jeresWrap.style.display = '';
+        } else {
+          jeresWrap.style.display = 'none';
+        }
       } else {
-        jeresWrap.style.display = 'none';
+        // Ingen relationer — vis hint
+        setText('vin-jeres-intro', '');
+        jeresEl.innerHTML = '<div style="text-align:center;padding:16px 0"><div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-light);margin-bottom:10px">Tilf\u00f8j en relation for at se hvorn\u00e5r jeres cyklusser m\u00f8des.</div><a onclick="openRelationModal()" style="color:#7b7a9e;font-size:13px;cursor:pointer;text-decoration:underline">+ Tilf\u00f8j relation</a></div>';
+        jeresWrap.style.display = '';
       }
     }
 
@@ -3460,7 +3546,7 @@ function initVinduer() {
   } else {
     // Ingen brugerdata
     setText('vin-nu-label', 'Dine vinduer');
-    setText('vin-nu-tekst', 'Tilf\u00f8j din f\u00f8dselsdato i indstillinger for at se dine personlige cyklusser og sj\u00e6ldne vinduer.');
+    setText('vin-nu-tekst', 'Tilf\u00f8j din f\u00f8dselsdato i indstillinger for at se dine personlige cyklusser og kraftperioder.');
     var empty2 = document.getElementById('vin-kommende-empty');
     if (empty2) empty2.style.display = '';
     setText('vin-refleksion', '\u00ab\u2009Hvilket \u00f8jeblik i dit liv ville du gerne forst\u00e5 bedre?\u2009\u00bb');
