@@ -1837,8 +1837,18 @@ function initDinPraksis() {
 
   // 11. Balance / Ubalance — generelt
   var balanceEl = document.getElementById('prak-balance');
-  if (balanceEl) {
-    balanceEl.innerHTML = formatExpandable('Tegn p\u00e5 balance: du sover godt, fordoejelsen fungerer, du m\u00e6rker gl\u00e6de i hverdagen, kroppen f\u00f8les som din. Du har overskud til andre uden at t\u00f8mme dig selv. Du kan sige nej uden skyld. Du kan sige ja uden angst.', 40);
+  if (balanceEl && typeof LIVSFASE_DETAIL !== 'undefined') {
+    var bHtml = formatExpandable('Tegn p\u00e5 balance: du sover godt, fordoejelsen fungerer, du m\u00e6rker gl\u00e6de i hverdagen, kroppen f\u00f8les som din. Du har overskud til andre uden at t\u00f8mme dig selv. Du kan sige nej uden skyld. Du kan sige ja uden angst.', 30);
+    [1, 3, 5, 7, 9].forEach(function(p) {
+      var d = LIVSFASE_DETAIL[p];
+      if (d && d.balanceTekst) {
+        var phaseEl = Calculations.PHASE_DATA[p] ? Calculations.PHASE_DATA[p].element : '';
+        bHtml += '<div class="dybde-tema-card" onclick="toggleDybdeTema(this)">';
+        bHtml += '<div class="dybde-tema-header"><span class="dybde-tema-title">Fase ' + p + ' \u00b7 ' + (Calculations.ELEMENT_LABELS[phaseEl] || '') + '</span><span class="dybde-tema-arrow">\u2193</span></div>';
+        bHtml += '<div class="dybde-tema-body">' + formatExpandable(d.balanceTekst, 40) + '</div></div>';
+      }
+    });
+    balanceEl.innerHTML = bHtml;
   }
   var ubalanceEl = document.getElementById('prak-ubalance');
   if (ubalanceEl) {
