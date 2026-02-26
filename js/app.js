@@ -5338,8 +5338,30 @@ function initRejDybere() {
   // ── 6. BALANCE / UBALANCE ──
   if (detail) {
     var balanceEl = document.getElementById('rejdyb-balance');
-    if (balanceEl && detail.balanceTekst) balanceEl.innerHTML = formatExpandable(detail.balanceTekst, 80);
-    renderDybdeUbalance(document.getElementById('rejdyb-ubalance'), detail.ubalanceTegn);
+    if (balanceEl && detail.balanceTekst) balanceEl.innerHTML = formatExpandable(detail.balanceTekst, 30);
+
+    var ubalanceEl = document.getElementById('rejdyb-ubalance');
+    if (ubalanceEl && detail.ubalanceTegn) {
+      var ut = detail.ubalanceTegn;
+      var uIntro = 'N\u00e5r ' + elLabel.toLowerCase() + '-energien er ude af balance, kan det m\u00e6rkes i b\u00e5de krop og sind.';
+      var bulletHTML = '';
+      if (ut.fysiske && ut.fysiske.length) {
+        bulletHTML += '<div class="dybde-ubalance-group"><div class="dybde-ubalance-label">Fysiske tegn</div>';
+        bulletHTML += '<ul class="dybde-ubalance-list">' + ut.fysiske.map(function(f) { return '<li>' + f + '</li>'; }).join('') + '</ul></div>';
+      }
+      if (ut.mentale && ut.mentale.length) {
+        bulletHTML += '<div class="dybde-ubalance-group"><div class="dybde-ubalance-label">Mentale tegn</div>';
+        bulletHTML += '<ul class="dybde-ubalance-list">' + ut.mentale.map(function(m) { return '<li>' + m + '</li>'; }).join('') + '</ul></div>';
+      }
+      if (ut.aarsag) {
+        bulletHTML += '<div class="dybde-ubalance-group" style="margin-top:12px"><div class="dybde-ubalance-label">\u00c5rsager</div>';
+        ut.aarsag.split('\n\n').filter(function(p) { return p.trim(); }).forEach(function(p) { bulletHTML += '<p class="dybde-body-p">' + p.trim() + '</p>'; });
+        bulletHTML += '</div>';
+      }
+      ubalanceEl.innerHTML = '<p class="dybde-body-p">' + uIntro + '</p>' +
+        '<div class="dybde-expand-more">' + bulletHTML + '</div>' +
+        '<a class="dybde-expand-btn" onclick="toggleDybdeExpand(this)">L\u00e6s mere \u2193</a>';
+    }
   }
 
   // ── 7. DIN HISTORIE ──
