@@ -1837,16 +1837,17 @@ function initDinPraksis() {
 
   // 11. Balance / Ubalance — generelt
   var balanceEl = document.getElementById('prak-balance');
-  if (balanceEl && typeof LIVSFASE_DETAIL !== 'undefined') {
-    var bHtml = formatExpandable('Tegn p\u00e5 balance: du sover godt, fordoejelsen fungerer, du m\u00e6rker gl\u00e6de i hverdagen, kroppen f\u00f8les som din. Du har overskud til andre uden at t\u00f8mme dig selv. Du kan sige nej uden skyld. Du kan sige ja uden angst.', 30);
-    [1, 3, 5, 7, 9].forEach(function(p) {
-      var d = LIVSFASE_DETAIL[p];
-      if (d && d.balanceTekst) {
-        var phaseEl = Calculations.PHASE_DATA[p] ? Calculations.PHASE_DATA[p].element : '';
-        bHtml += '<div class="dybde-tema-card" onclick="toggleDybdeTema(this)">';
-        bHtml += '<div class="dybde-tema-header"><span class="dybde-tema-title">Fase ' + p + ' \u00b7 ' + (Calculations.ELEMENT_LABELS[phaseEl] || '') + '</span><span class="dybde-tema-arrow">\u2193</span></div>';
-        bHtml += '<div class="dybde-tema-body">' + formatExpandable(d.balanceTekst, 40) + '</div></div>';
-      }
+  if (balanceEl) {
+    var bTegn = [
+      'Du sover godt og v\u00e5gner udhvilet',
+      'Fordoejelsen fungerer uden bev\u00e5r',
+      'Du m\u00e6rker gl\u00e6de i hverdagen',
+      'Du har overskud til andre uden at t\u00f8mme dig selv',
+      'Du kan sige nej uden skyld og ja uden angst'
+    ];
+    var bHtml = '';
+    bTegn.forEach(function(t) {
+      bHtml += '<div style="display:flex;align-items:baseline;gap:8px;margin-top:6px"><div style="color:#7a908b;font-size:10px">\u25cf</div><div style="font-size:14px;color:var(--text-body);line-height:1.5;font-weight:300">' + t + '</div></div>';
     });
     balanceEl.innerHTML = bHtml;
   }
