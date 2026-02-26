@@ -1521,130 +1521,378 @@ function initRelationer() {
   }
 }
 
-/* ---- Din Praksis (luftig hub — præsenterer konceptet, kort fører videre) ---- */
+/* ============================================================
+   MIN PRAKSIS — Sekundaer skaerm (golden standard)
+   ============================================================ */
+function initMinPraksis() {
+  if (typeof initBreathBoxes === 'function') setTimeout(initBreathBoxes, 100);
+
+  // 1. HERO — generel
+  setText('mp-title', 'Din praksis');
+  setText('mp-intro', 'Metoder der kan st\u00f8tte dig \u2014 uanset hvor du er i livet');
+
+  // 2. ISABELLE TEKST — generel
+  setText('mp-isabelle-tekst', 'Kroppen lyver aldrig. Den taler bare et sprog vi har glemt at lytte til. Her finder du metoder til at lytte igen.');
+
+  // 3. INSIGHT BOKS — kort personaliseret kontekst
+  var data = getUserCycles();
+  if (data) {
+    var domEl = data.dominant.element;
+    var elLabel = Calculations.ELEMENT_LABELS[domEl];
+    setText('mp-insight-label', 'Dit element lige nu');
+    setText('mp-insight-text', 'Dit dominerende element er ' + elLabel + '. Metoderne herunder kan alle tilpasses dit element \u2014 tryk p\u00e5 en metode for at g\u00e5 dybere.');
+  }
+
+  // 4. FEELING — generel introduktion
+  var feelingEl = document.getElementById('mp-feeling');
+  if (feelingEl) feelingEl.innerHTML = formatExpandable('Hver metode taler til kroppen p\u00e5 sin m\u00e5de. Yin yoga \u00e5bner meridianer. EFT l\u00f8sner f\u00f8lelsesm\u00e6ssige blokeringer. Meridianstrygning hj\u00e6lper energien med at flyde. Kost n\u00e6rer organerne. Mindfulness skaber n\u00e6rv\u00e6r. Og f\u00f8lelsernes hjul hj\u00e6lper dig med at forst\u00e5 hvad kroppen fortaeller dig.', 15);
+
+  // 5. METODE-CARDS — generelle beskrivelser af hvad hver metode ER
+  renderPraksisMetoder();
+
+  // 6. AANDEDRAET — generel
+  setText('mp-breath-text', 'Tre vejrtr\u00e6kninger. Ind gennem n\u00e6sen, hold et \u00f8jeblik, ud gennem munden. S\u00e5 enkelt. S\u00e5 kraftfuldt.');
+
+  // 7. TEMAER — generelle emner
+  renderPraksisTemaer();
+
+  // 8. REFLEKSION — generel
+  var reflQuestions = [
+    'Hvad beder din krop om lige nu?',
+    'Hvilken metode kalder p\u00e5 dig i dag?',
+    'Hvorn\u00e5r gav du sidst din krop det den bad om?',
+    'Hvad ville du g\u00f8re for dig selv, hvis du turde?',
+    'Hvad har du brug for \u2014 ikke hvad du b\u00f8r, men hvad du m\u00e6rker?'
+  ];
+  var ri = Calculations.dayRotation(reflQuestions.length);
+  setText('mp-refleksion', '\u00ab ' + reflQuestions[ri] + ' \u00bb');
+}
+
+function renderPraksisMetoder() {
+  var container1 = document.getElementById('mp-metoder-1');
+  var container2 = document.getElementById('mp-metoder-2');
+  if (!container1 && !container2) return;
+
+  var methods = [
+    {
+      label: 'Yin Yoga',
+      title: 'Langsomme stillinger, dybe \u00e5bninger',
+      desc: 'Stillinger du holder i 3\u20135 minutter. Tyngdekraft, tid og tillid.',
+      route: 'pra-yin-yoga'
+    },
+    {
+      label: 'EFT Tapping',
+      title: 'Bank p\u00e5 meridianpunkter for ro',
+      desc: 'Let banking p\u00e5 akupunkturpunkter mens du s\u00e6tter ord p\u00e5 det du m\u00e6rker.',
+      route: 'pra-eft'
+    },
+    {
+      label: 'Meridianstrygning',
+      title: 'F\u00f8lg energiens veje med h\u00e6nderne',
+      desc: 'H\u00e6nderne f\u00f8lger meridianernes forl\u00f8b og hj\u00e6lper energien med at flyde.',
+      route: 'pra-healing'
+    },
+    {
+      label: 'Kost & N\u00e6ring',
+      title: 'Mad som samtale med dine organer',
+      desc: 'Hvert element har sine f\u00f8devarer, smage og urter.',
+      route: 'pra-kost'
+    },
+    {
+      label: 'F\u00f8lelsernes Hjul',
+      title: 'Fem elementer, fem f\u00f8lelsesfelter',
+      desc: 'F\u00f8lelser er signaler fra elementerne. Lyt til dem.',
+      route: 'pra-foelelser'
+    },
+    {
+      label: 'Mindfulness',
+      title: 'Fem veje til n\u00e6rv\u00e6r',
+      desc: 'Hvert element har sin egen stilhed. Find den der passer dig.',
+      route: 'pra-mindfulness'
+    },
+    {
+      label: 'Refleksion',
+      title: 'De rigtige sp\u00f8rgsm\u00e5l \u00e5bner d\u00f8re',
+      desc: 'At t\u00e6nke anderledes \u2014 langsommere, med krop og hjerte.',
+      route: 'pra-refleksion'
+    }
+  ];
+
+  function renderCard(m) {
+    var html = '<div style="background:rgba(122,144,139,0.03);border:1px solid rgba(122,144,139,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer" onclick="Router.navigate(\'' + m.route + '\')">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:flex-start">';
+    html += '<div style="flex:1">';
+    html += '<div style="font-family:var(--font-sans);font-size:11px;color:#83938e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">' + m.label + '</div>';
+    html += '<div style="font-family:var(--font-serif);font-size:17px;color:var(--text-dark);margin-bottom:4px">' + m.title + '</div>';
+    html += '<div style="font-family:var(--font-sans);font-size:13.5px;color:var(--text-body);line-height:1.5;font-weight:300">' + m.desc + '</div>';
+    html += '</div>';
+    html += '<div style="font-size:18px;color:rgba(122,144,139,0.4);margin-left:12px;margin-top:14px">\u2192</div>';
+    html += '</div></div>';
+    return html;
+  }
+
+  // Foerste 3: krop-baserede metoder (yoga, EFT, meridian)
+  if (container1) {
+    var html1 = '';
+    methods.slice(0, 3).forEach(function(m) { html1 += renderCard(m); });
+    container1.innerHTML = html1;
+  }
+  // Sidste 4: sind-baserede metoder (kost, foelelser, mindfulness, refleksion)
+  if (container2) {
+    var html2 = '';
+    methods.slice(3).forEach(function(m) { html2 += renderCard(m); });
+    container2.innerHTML = html2;
+  }
+}
+
+function renderPraksisTemaer() {
+  var container = document.getElementById('mp-temaer');
+  if (!container) return;
+
+  var temaer = [
+    { titel: 'N\u00e5r stress fylder', tekst: 'Stress sidder i kroppen f\u00f8r den n\u00e5r tankerne. Hvert element m\u00e6rker stress p\u00e5 sin m\u00e5de \u2014 Vand som udmattelse, Tr\u00e6 som rastl\u00f8shed, Ild som uro, Jord som bekymring, Metal som str\u00e6ben efter kontrol. At finde dit elements stresssignal er f\u00f8rste skridt.' },
+    { titel: 'N\u00e5r angsten melder sig', tekst: 'Angst er ikke svaghed. Den er et signal fra nervesystemet. I kinesisk medicin knytter angst sig til alle fem elementer p\u00e5 forskellige m\u00e5der. EFT, \u00e5ndedr\u00e6t og meridianstrygning kan hj\u00e6lpe med at berolige systemet.' },
+    { titel: 'Krop og n\u00e6ring', tekst: 'Mad er en samtale med dine organer. Suk efter s\u00f8dt fortaeller at Jord-elementet beder om n\u00e6ring. Salt-trang er Vand der kalder p\u00e5 dybde. N\u00e5r du spiser med \u00e5rstiden og dit element, st\u00f8tter du kroppen indefra.' },
+    { titel: 'Bevaegelse og stilhed', tekst: 'Nogle dage beder kroppen om at bev\u00e6ge sig. Andre dage om at v\u00e6re stille. Yin yoga giver b\u00e5de \u2014 langsom bev\u00e6gelse der ender i stilhed. Mindfulness giver stilhed der ender i klarhed. Lyt til hvad der kalder.' },
+    { titel: 'F\u00f8lelser som vejvisere', tekst: 'I kinesisk medicin er f\u00f8lelser ikke problemer \u2014 de er signaler. Frygt siger noget om Vand. Vrede om Tr\u00e6. Gl\u00e6de om Ild. Bekymring om Jord. Sorg om Metal. N\u00e5r du lytter til f\u00f8lelsen, finder du det element der har brug for opm\u00e6rksomhed.' }
+  ];
+
+  var html = '<div class="eyebrow" style="color:#83938e">Temaer</div>';
+  temaer.forEach(function(t) {
+    html += '<div class="tema" style="background:rgba(122,144,139,0.03);border:1px solid rgba(122,144,139,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center">';
+    html += '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">' + t.titel + '</div>';
+    html += '<div class="tema-arr" style="font-size:18px;color:rgba(122,144,139,0.5);transition:transform 0.2s">\u203a</div>';
+    html += '</div>';
+    html += '<div class="tema-body" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease">';
+    html += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(122,144,139,0.06)">' + t.tekst + '</div>';
+    html += '</div></div>';
+  });
+  container.innerHTML = html;
+
+  container.querySelectorAll('.tema').forEach(function(tema) {
+    tema.addEventListener('click', function() {
+      var body = this.querySelector('.tema-body');
+      var arr = this.querySelector('.tema-arr');
+      if (body) {
+        if (body.style.maxHeight && body.style.maxHeight !== '0px') {
+          body.style.maxHeight = '0px';
+          if (arr) arr.style.transform = '';
+        } else {
+          body.style.maxHeight = body.scrollHeight + 'px';
+          if (arr) arr.style.transform = 'rotate(90deg)';
+        }
+      }
+    });
+  });
+}
+
+/* ---- Din Praksis (dyb skaerm — alt materialet udfoldet) ---- */
 function initDinPraksis() {
-  // Statisk fallback
-  setText('prak-intro', '\u00d8velser, kost, meridianstrygninger og refleksion. Alt er valgt ud fra det element der dominerer dit liv lige nu.');
+  setText('prak-fase-label', 'Din praksis i dybden');
+  setText('prak-intro', 'Alle metoder udfoldet. Yin yoga, EFT, meridianstrygning, kost, mindfulness og mere. V\u00e6lg det der kalder, eller lad v\u00e6re.');
   setText('prak-refleksion', '\u00ab\u2009Hvad beder din krop om lige nu?\u2009\u00bb');
   if (typeof initBreathBoxes === 'function') setTimeout(function() { initBreathBoxes(); }, 100);
 
-  const data = getUserCycles();
-  if (!data) return;
-  const { cycles, dominant } = data;
-  const phase = cycles.lifePhase;
-  const phaseNum = phase.phase;
-  const domEl = dominant.element;
-  const elLabel = Calculations.ELEMENT_LABELS[domEl];
-  const detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[phaseNum] : null;
-  if (!detail) return;
+  var allElements = ['VAND', 'TR\u00c6', 'ILD', 'JORD', 'METAL'];
 
-  // 1. Hero
-  setText('prak-fase-label', elLabel + ' \u00b7 Fase ' + phaseNum);
-  setText('prak-intro', '\u00d8velser, kost, meridianstrygninger og refleksion. Alt er valgt ud fra det element der dominerer dit liv lige nu \u2014 ' + elLabel + '. V\u00e6lg det der kalder, eller lad v\u00e6re.');
-
-  // 2. Det kroppen pr\u00f8ver at fort\u00e6lle dig
-  var feelingMap = {
-    'VAND': 'N\u00e5r Vand dominerer, m\u00e6rker du det m\u00e5ske som tr\u00e6thed der ikke forsvinder med s\u00f8vn. Eller som en l\u00e6nden der er \u00f8m, en bl\u00e6re der presser, en uro i knoglerne. Kroppen beder ikke om mere. Den beder om dybere.',
-    'TR\u00c6': 'N\u00e5r Tr\u00e6 dominerer, m\u00e6rker du det m\u00e5ske som en rastl\u00f8shed i kroppen. En trang til at komme videre, str\u00e6kke dig, bryde fri. Kroppen beder om retning \u2014 ikke om stilstand.',
-    'ILD': 'N\u00e5r Ild dominerer, m\u00e6rker du det m\u00e5ske som en uro i brystet. En l\u00e6ngsel efter forbindelse, en f\u00f8lsomhed der svinger hurtigt. Kroppen beder om varme \u2014 ikke om tempo.',
-    'JORD': 'N\u00e5r Jord dominerer, m\u00e6rker du det m\u00e5ske som tyngde i maven. Tanker der k\u00f8rer i ring, en bekymring der ikke slipper. Kroppen beder om forankring \u2014 ikke om l\u00f8sninger.',
-    'METAL': 'N\u00e5r Metal dominerer, m\u00e6rker du det m\u00e5ske som en str\u00e6ben efter orden. En sorg der ligger under overfladen. Kroppen beder om slip \u2014 ikke om kontrol.'
-  };
+  // 1. Det kroppen proever at fortaelle dig — generel intro
   var feelingEl = document.getElementById('prak-feeling');
-  if (feelingEl) feelingEl.innerHTML = formatExpandable(feelingMap[domEl] || '', 60);
+  if (feelingEl) {
+    feelingEl.innerHTML = formatExpandable('Kroppen taler altid. Vandmennesket m\u00e6rker det som tr\u00e6thed der ikke forsvinder. Tr\u00e6mennesket som rastl\u00f8shed. Ildmennesket som uro i brystet. Jordmennesket som tyngde i maven. Metalmennesket som en str\u00e6ben efter orden. Uanset dit element \u2014 kroppen beder ikke om mere. Den beder om at blive lyttet til.', 60);
+  }
 
-  // 3. Central f\u00f8lelse
-  setText('prak-foelelse-title', detail.centralFoelelse.title);
+  // 2. Central foelelse — generel om de fem foelelser
+  setText('prak-foelelse-title', 'De fem f\u00f8lelsesfelter');
   var foelelseEl = document.getElementById('prak-foelelse-tekst');
-  if (foelelseEl) foelelseEl.innerHTML = formatExpandable(detail.centralFoelelse.tekst, 80);
+  if (foelelseEl) {
+    foelelseEl.innerHTML = formatExpandable('I kinesisk medicin h\u00f8rer f\u00f8lelser til elementer. Frygt til Vand \u2014 den bor i nyrerne og kan v\u00e6re b\u00e5de visdom og l\u00e6ngsel. Vrede til Tr\u00e6 \u2014 den bor i leveren og kan v\u00e6re b\u00e5de handlekraft og frustration. Gl\u00e6de til Ild \u2014 den bor i hjertet og kan v\u00e6re b\u00e5de varme og uro. Bekymring til Jord \u2014 den bor i milten og kan v\u00e6re b\u00e5de omsorg og overt\u00e6nkning. Sorg til Metal \u2014 den bor i lungerne og kan v\u00e6re b\u00e5de slip og fastholdelse. Ingen f\u00f8lelse er forkert. De er alle signaler.', 80);
+  }
 
-  // 4. Krop & Sind
+  // 3. Krop & Sind — generelt om de fem elementers krop/sind
   var kropEl = document.getElementById('prak-krop');
-  if (kropEl) kropEl.innerHTML = formatExpandable(detail.kropTekst, 60);
+  if (kropEl) {
+    kropEl.innerHTML = formatExpandable('Hvert element m\u00e6rkes i kroppen p\u00e5 sin m\u00e5de. Vand: l\u00e6nden, knoglerne, nh\u00f8relsen. Tr\u00e6: sener, \u00f8jne, skuldrene. Ild: brystet, kredslobet, pulsen. Jord: maven, fordoejelsen, musklerne. Metal: huden, lungerne, tyktarmen. N\u00e5r du kender dit elements krop, kan du m\u00e6rke hvad det beder om.', 60);
+  }
   var sindEl = document.getElementById('prak-sind');
-  if (sindEl) sindEl.innerHTML = formatExpandable(detail.sindTekst, 60);
+  if (sindEl) {
+    sindEl.innerHTML = formatExpandable('Sindet f\u00f8lger elementet. Vand giver dybde og refleksion \u2014 men ogs\u00e5 isolation. Tr\u00e6 giver handlekraft og retning \u2014 men ogs\u00e5 utaalmodighed. Ild giver forbindelse og gl\u00e6de \u2014 men ogs\u00e5 s\u00e5rbarhed. Jord giver stabilitet og omsorg \u2014 men ogs\u00e5 bekymring. Metal giver klarhed og struktur \u2014 men ogs\u00e5 sorg. At kende din mentale signatur er at kende dig selv.', 60);
+  }
 
-  // 5. Yin Yoga
+  // 4. Yin Yoga — alle 5 elementers stillinger, grupperet med luft
   var yogaEl = document.getElementById('prak-yoga');
-  if (yogaEl && typeof YIN_YOGA_FULL !== 'undefined' && YIN_YOGA_FULL[domEl]) {
-    var yHtml = '';
-    YIN_YOGA_FULL[domEl].forEach(function(pose) {
-      yHtml += '<div class="dybde-oevelse-card">';
-      yHtml += '<div class="dybde-oevelse-type">Yin Yoga \u00b7 ' + elLabel + '</div>';
-      yHtml += '<div class="dybde-oevelse-title">' + pose.pose + '</div>';
-      yHtml += '<div class="dybde-oevelse-desc">' + pose.desc + '</div>';
-      if (pose.tid) yHtml += '<div style="font-size:12px;color:#83938e;margin-top:4px">' + pose.tid + (pose.meridian ? ' \u00b7 ' + pose.meridian : '') + '</div>';
-      yHtml += '</div>';
+  if (yogaEl && typeof YIN_YOGA_FULL !== 'undefined') {
+    var yHtml = '<div class="dybde-body" style="margin-bottom:20px">' + formatExpandable('Yin yoga er langsomme, stille stillinger du holder i 3\u20135 minutter. Ingen kraft, ingen ambition. Bare tyngdekraft, tid og tillid. Hver stilling \u00e5bner bestemte meridianer og taler til bestemte elementer.', 40) + '</div>';
+    var yFirst = true;
+    allElements.forEach(function(el) {
+      if (YIN_YOGA_FULL[el]) {
+        var elName = Calculations.ELEMENT_LABELS[el];
+        if (!yFirst) yHtml += '<div style="text-align:center;padding:18px 0;color:#9cb5b0;font-size:13px;letter-spacing:4px">\u00b7 \u00b7 \u00b7</div>';
+        yHtml += '<div style="font-family:var(--font-serif);font-size:17px;font-style:italic;color:var(--text-mid);margin-bottom:10px">' + elName + '</div>';
+        YIN_YOGA_FULL[el].forEach(function(pose) {
+          yHtml += '<div class="dybde-oevelse-card">';
+          yHtml += '<div class="dybde-oevelse-type">' + elName + '</div>';
+          yHtml += '<div class="dybde-oevelse-title">' + pose.pose + '</div>';
+          yHtml += '<div class="dybde-oevelse-desc">' + pose.desc + '</div>';
+          if (pose.tid) yHtml += '<div style="font-size:12px;color:#83938e;margin-top:4px">' + pose.tid + (pose.meridian ? ' \u00b7 ' + pose.meridian : '') + '</div>';
+          yHtml += '</div>';
+        });
+        yFirst = false;
+      }
     });
     yogaEl.innerHTML = yHtml;
   }
 
-  // 6. Meridianstrygning
+  // 5. Meridianstrygning — alle 5 elementers meridianer, grupperet med luft
   var meridianEl = document.getElementById('prak-meridian');
-  if (meridianEl && typeof MERIDIAN_STRYGNINGER !== 'undefined' && MERIDIAN_STRYGNINGER[domEl]) {
-    var mHtml = '';
-    MERIDIAN_STRYGNINGER[domEl].forEach(function(m) {
-      mHtml += '<div class="dybde-oevelse-card">';
-      mHtml += '<div class="dybde-oevelse-type">' + m.organ + '</div>';
-      mHtml += '<div class="dybde-oevelse-title">' + m.meridian + '</div>';
-      mHtml += '<div class="dybde-oevelse-desc">' + m.desc + '</div>';
-      if (m.retning) mHtml += '<div style="font-size:13px;color:#6b7f79;margin-top:6px;font-style:italic">Retning: ' + m.retning + '</div>';
-      if (m.vejledning) mHtml += '<div style="font-size:13px;color:#7a908b;margin-top:4px;line-height:1.5">' + m.vejledning + '</div>';
-      mHtml += '</div>';
+  if (meridianEl && typeof MERIDIAN_STRYGNINGER !== 'undefined') {
+    var mHtml = '<div class="dybde-body" style="margin-bottom:20px">' + formatExpandable('H\u00e6nderne f\u00f8lger meridianernes forl\u00f8b og hj\u00e6lper energien med at flyde frit. Brug flad h\u00e5nd, stryg langsomt med let tryk, f\u00f8lg meridianens retning. Gentag 5\u20137 gange p\u00e5 hver side.', 40) + '</div>';
+    var mFirst = true;
+    allElements.forEach(function(el) {
+      if (MERIDIAN_STRYGNINGER[el]) {
+        var elName = Calculations.ELEMENT_LABELS[el];
+        if (!mFirst) mHtml += '<div style="text-align:center;padding:18px 0;color:#9cb5b0;font-size:13px;letter-spacing:4px">\u00b7 \u00b7 \u00b7</div>';
+        mHtml += '<div style="font-family:var(--font-serif);font-size:17px;font-style:italic;color:var(--text-mid);margin-bottom:10px">' + elName + '</div>';
+        MERIDIAN_STRYGNINGER[el].forEach(function(m) {
+          mHtml += '<div class="dybde-oevelse-card">';
+          mHtml += '<div class="dybde-oevelse-type">' + elName + ' \u00b7 ' + m.organ + '</div>';
+          mHtml += '<div class="dybde-oevelse-title">' + m.meridian + '</div>';
+          mHtml += '<div class="dybde-oevelse-desc">' + m.desc + '</div>';
+          if (m.retning) mHtml += '<div style="font-size:13px;color:#6b7f79;margin-top:6px;font-style:italic">Retning: ' + m.retning + '</div>';
+          if (m.vejledning) mHtml += '<div style="font-size:13px;color:#7a908b;margin-top:4px;line-height:1.5">' + m.vejledning + '</div>';
+          mHtml += '</div>';
+        });
+        mFirst = false;
+      }
     });
     meridianEl.innerHTML = mHtml;
   }
 
-  // 7. \u00c5ndedr\u00e6t
-  var breathTextMap = {
-    'VAND': 'Vandets \u00e5ndedr\u00e6t. Langsomt og dybt \u2014 som b\u00f8lger der tr\u00e6kker sig tilbage.',
-    'TR\u00c6': 'Tr\u00e6ets \u00e5ndedr\u00e6t. Frit og opadg\u00e5ende \u2014 som en stamme der vokser mod lyset.',
-    'ILD': 'Ildens \u00e5ndedr\u00e6t. Varmt og \u00e5bnet \u2014 som en flamme der lyser op.',
-    'JORD': 'Jordens \u00e5ndedr\u00e6t. Roligt og forankret \u2014 som r\u00f8dder der breder sig.',
-    'METAL': 'Metallets \u00e5ndedr\u00e6t. Klart og fuldst\u00e6ndigt \u2014 som et spejl der renses.'
-  };
-  setText('prak-breath-text', breathTextMap[domEl] || '');
+  // 6. Aandedraet — generelt
+  setText('prak-breath-text', 'Tre vejrtr\u00e6kninger. Ind 4 sekunder, hold 4, ud 6. Hvert element har sin egen kvalitet \u2014 Vand er dybt, Tr\u00e6 er frit, Ild er varmt, Jord er forankret, Metal er klart.');
 
-  // 8. N\u00e6ring
+  // 7. Naering — alle 5 elementers foedevarer, grupperet med luft
   var naeringEl = document.getElementById('prak-naering');
-  if (naeringEl && typeof INSIGHT_FOOD !== 'undefined' && INSIGHT_FOOD[domEl]) {
-    var nHtml = '';
-    if (detail.kostDetaljer) {
-      nHtml += '<div class="dybde-body" style="margin-bottom:16px">' + formatExpandable(detail.kostDetaljer, 60) + '</div>';
-    }
-    INSIGHT_FOOD[domEl].forEach(function(food) {
-      nHtml += '<div class="dybde-oevelse-card">';
-      nHtml += '<div class="dybde-oevelse-type">' + elLabel + '</div>';
-      nHtml += '<div class="dybde-oevelse-title">' + food.item + '</div>';
-      nHtml += '<div class="dybde-oevelse-desc">' + food.desc + '</div>';
-      nHtml += '</div>';
+  if (naeringEl && typeof INSIGHT_FOOD !== 'undefined') {
+    var nHtml = '<div class="dybde-body" style="margin-bottom:20px">' + formatExpandable('I kinesisk medicin er mad medicin. Hvert element har sine f\u00f8devarer, smage og urter. N\u00e5r du er sulten efter noget bestemt, er det organerne der taler. Lyt til appetitten \u2014 den er visdom forklaedt som sult.', 40) + '</div>';
+    var nFirst = true;
+    allElements.forEach(function(el) {
+      if (INSIGHT_FOOD[el]) {
+        var elName = Calculations.ELEMENT_LABELS[el];
+        if (!nFirst) nHtml += '<div style="text-align:center;padding:18px 0;color:#9cb5b0;font-size:13px;letter-spacing:4px">\u00b7 \u00b7 \u00b7</div>';
+        nHtml += '<div style="font-family:var(--font-serif);font-size:17px;font-style:italic;color:var(--text-mid);margin-bottom:10px">' + elName + '</div>';
+        INSIGHT_FOOD[el].forEach(function(food) {
+          nHtml += '<div class="dybde-oevelse-card">';
+          nHtml += '<div class="dybde-oevelse-type">' + elName + '</div>';
+          nHtml += '<div class="dybde-oevelse-title">' + food.item + '</div>';
+          nHtml += '<div class="dybde-oevelse-desc">' + food.desc + '</div>';
+          nHtml += '</div>';
+        });
+        nFirst = false;
+      }
     });
     naeringEl.innerHTML = nHtml;
   }
 
-  // 9. Fasens \u00f8velser
-  renderDybdeOevelser(document.getElementById('prak-oevelser'), detail.oevelser);
-
-  // 10. Refleksion
-  if (detail.ekstraRefleksioner && detail.ekstraRefleksioner.length) {
-    var ri = Calculations.dayRotation(detail.ekstraRefleksioner.length);
-    setText('prak-refleksion', detail.ekstraRefleksioner[ri]);
-  } else if (detail.refleksioner && detail.refleksioner.length) {
-    var ri2 = Calculations.dayRotation(detail.refleksioner.length);
-    setText('prak-refleksion', detail.refleksioner[ri2]);
+  // 8. Oevelser — grupperet efter fase med luft
+  var oevelserEl = document.getElementById('prak-oevelser');
+  if (oevelserEl && typeof LIVSFASE_DETAIL !== 'undefined') {
+    var oHtml = '<div class="dybde-body" style="margin-bottom:20px">' + formatExpandable('Hver livsfase har sine egne \u00f8velser \u2014 valgt ud fra den energi der pr\u00e6ger fasen. Ikke som pligt, men som invitation.', 30) + '</div>';
+    var shownPhases = [1, 3, 5, 7, 9];
+    var oFirst = true;
+    shownPhases.forEach(function(p) {
+      var d = LIVSFASE_DETAIL[p];
+      if (d && d.oevelser) {
+        if (!oFirst) oHtml += '<div style="text-align:center;padding:14px 0;color:#9cb5b0;font-size:13px;letter-spacing:4px">\u00b7 \u00b7 \u00b7</div>';
+        oHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-mid);margin-bottom:8px">Fase ' + p + ' \u00b7 ' + Calculations.ELEMENT_LABELS[d.element] + '</div>';
+        d.oevelser.slice(0, 1).forEach(function(ov) {
+          oHtml += '<div class="dybde-oevelse-card">';
+          oHtml += '<div class="dybde-oevelse-title">' + ov.title + '</div>';
+          oHtml += '<div class="dybde-oevelse-desc">' + ov.desc + '</div>';
+          oHtml += '</div>';
+        });
+        oFirst = false;
+      }
+    });
+    oevelserEl.innerHTML = oHtml;
   }
 
-  // 11. Fasens r\u00e5d
-  renderDybdeRaad(document.getElementById('prak-raad'), detail.fasensRaad);
+  // 9. Refleksion
+  var reflQuestions = [
+    'Hvad beder din krop om lige nu?',
+    'Hvilken f\u00f8lelse b\u00e6rer du i dag?',
+    'Hvad ville du g\u00f8re for dig selv, hvis du turde?',
+    'Hvorn\u00e5r m\u00e6rkede du sidst din krop tydeligt?',
+    'Hvad har du brug for \u2014 ikke hvad du b\u00f8r, men hvad du m\u00e6rker?'
+  ];
+  var ri = Calculations.dayRotation(reflQuestions.length);
+  setText('prak-refleksion', '\u00ab ' + reflQuestions[ri] + ' \u00bb');
 
-  // 12. Balance / Ubalance
+  // 10. Raad — som flydende Isabelle-tekst, ikke cards
+  var raadEl = document.getElementById('prak-raad');
+  if (raadEl) {
+    raadEl.innerHTML = formatExpandable('Start med det der kalder. Ikke det du b\u00f8r, men det du m\u00e6rker.\n\nFem minutter er nok. Bedre kort og \u00e6gte end langt og pligtf\u00f8lt.\n\nKroppen husker det sindet glemmer. Giv den tid.\n\nDer er ingen rigtig r\u00e6kkef\u00f8lge. V\u00e6lg frit.\n\nHvis intet kalder, s\u00e5 er det ogs\u00e5 et svar. Hvile er praksis.', 40);
+  }
+
+  // 11. Balance / Ubalance — generelt
   var balanceEl = document.getElementById('prak-balance');
-  if (balanceEl) balanceEl.innerHTML = formatExpandable(detail.balanceTekst, 80);
-  renderDybdeUbalance(document.getElementById('prak-ubalance'), detail.ubalanceTegn);
+  if (balanceEl) {
+    balanceEl.innerHTML = formatExpandable('Tegn p\u00e5 balance: du sover godt, fordoejelsen fungerer, du m\u00e6rker gl\u00e6de i hverdagen, kroppen f\u00f8les som din. Du har overskud til andre uden at t\u00f8mme dig selv. Du kan sige nej uden skyld. Du kan sige ja uden angst.', 40);
+  }
+  var ubalanceEl = document.getElementById('prak-ubalance');
+  if (ubalanceEl) {
+    var uHtml = '';
+    var tegn = [
+      'Tr\u00e6thed der ikke forsvinder med s\u00f8vn',
+      'Tanker der k\u00f8rer i ring uden l\u00f8sning',
+      'Irritation over sm\u00e5ting',
+      'F\u00f8lelse af at v\u00e6re afkoblet fra kroppen',
+      'Appetitaendringer \u2014 for meget eller for lidt'
+    ];
+    tegn.forEach(function(t) {
+      uHtml += '<div style="display:flex;align-items:baseline;gap:8px;margin-top:6px"><div style="color:#C85A54;font-size:10px">\u25cf</div><div style="font-size:14px;color:var(--text-body);line-height:1.5;font-weight:300">' + t + '</div></div>';
+    });
+    ubalanceEl.innerHTML = uHtml;
+  }
 
-  // 13. Element essay
+  // 12. Element essay — generelt om de fem elementer
   var essayEl = document.getElementById('prak-element-essay');
-  if (essayEl) essayEl.innerHTML = formatExpandable(detail.elementEssay, 80);
+  if (essayEl) {
+    essayEl.innerHTML = formatExpandable('De fem elementer \u2014 Vand, Tr\u00e6, Ild, Jord og Metal \u2014 er ikke kategorier du passer ind i. De er kr\u00e6fter der alle lever i dig, hele tiden. \u00c9t dominerer. Men de andre er der ogs\u00e5. N\u00e5r du kender alle fem, kender du hele paletten. Og s\u00e5 kan du v\u00e6lge den praksis der passer til lige pr\u00e6cis der hvor du er.', 80);
+  }
+
+  // 13. UDVIDET HJAELP — grupperet efter emne med luft og adskillere
+  var hjelpEl = document.getElementById('prak-udvidet-hjaelp');
+  if (hjelpEl && typeof UDVIDET_HJAELP !== 'undefined') {
+    var hHtml = '<div class="dybde-body" style="margin-bottom:20px">' + formatExpandable('N\u00e5r livet presser, reagerer hvert element p\u00e5 sin m\u00e5de. Her er fem emner set gennem alle fem elementer. Find det der taler til dig.', 30) + '</div>';
+    var topics = [
+      { key: 'stress', label: 'Stress' },
+      { key: 'angst', label: 'Angst' },
+      { key: 'depression', label: 'Depression' },
+      { key: 'ensomhed', label: 'Ensomhed' },
+      { key: 'udbraendthed', label: 'Udbr\u00e6ndthed' }
+    ];
+    var hFirst = true;
+    topics.forEach(function(topic) {
+      if (UDVIDET_HJAELP[topic.key]) {
+        if (!hFirst) hHtml += '<div style="text-align:center;padding:24px 0"><img src="assets/images/groen-lotus.png" alt="" style="width:32px;height:32px;opacity:0.6"></div>';
+        hHtml += '<div style="font-family:var(--font-serif);font-size:20px;color:var(--text-dark);margin-bottom:14px">' + topic.label + '</div>';
+        allElements.forEach(function(el) {
+          if (UDVIDET_HJAELP[topic.key][el]) {
+            var h = UDVIDET_HJAELP[topic.key][el];
+            hHtml += '<div class="dybde-oevelse-card">';
+            hHtml += '<div class="dybde-oevelse-type">' + topic.label + ' \u00b7 ' + Calculations.ELEMENT_LABELS[el] + '</div>';
+            hHtml += '<div class="dybde-oevelse-desc">' + formatExpandable(h.dyb, 40) + '</div>';
+            if (h.oevelse) hHtml += '<div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(122,144,139,0.06)"><div style="font-size:11px;color:#83938e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">\u00d8velse</div><div style="font-size:14px;color:var(--text-body);line-height:1.55;font-weight:300">' + h.oevelse + '</div></div>';
+            if (h.kost_raad) hHtml += '<div style="margin-top:8px;font-size:13px;color:#6b7f79;font-style:italic">' + h.kost_raad + '</div>';
+            hHtml += '</div>';
+          }
+        });
+        hFirst = false;
+      }
+    });
+    hjelpEl.innerHTML = hHtml;
+  }
 }
 
 /* ---- Praksis (Section 3) ---- */
@@ -1791,6 +2039,346 @@ function initPraksis() {
 
   // Init breathing boxes on this page too
   initBreathBoxes();
+}
+
+/* ============================================================
+   TIDSREJSE — Primær skærm 3 (tab 3)
+   ============================================================ */
+
+function initTidsrejse() {
+  // ── 1. BRUGERDATA ──
+  const data = getUserCycles();
+  const user = Storage.getUser();
+  const relations = Storage.getRelations();
+  const now = new Date();
+
+  // ── 2. FASE-REJSE INSIGHT ──
+  if (data) {
+    const { cycles } = data;
+    const phase = cycles.lifePhase;
+    const elLabel = Calculations.ELEMENT_LABELS[phase.element];
+    const age = cycles.age;
+    const yearInPhase = age - phase.startAge;
+    const yearsLeft = phase.endAge - age;
+    const detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[phase.phase] : null;
+
+    setText('tids-insight-label', 'Fase ' + phase.phase + ' · ' + phase.name + ' · ' + elLabel);
+    if (yearsLeft > 0) {
+      setText('tids-insight-text', 'Du er ' + yearInPhase + ' år inde i denne fase. Om ' + Math.round(yearsLeft) + ' år skifter du element.');
+    } else {
+      setText('tids-insight-text', 'Du er i din niende og sidste fase — Visdom. ' + elLabel + '-energien samler alt det du har lært.');
+    }
+
+    // ── 3. ISABELLE TEKST — personlig ──
+    if (detail) {
+      var introSentence = detail.introText.split('.').slice(0, 1).join('.') + '.';
+      setText('tids-nu-tekst', introSentence + ' Vælg et øjeblik — og se hvad der var på spil.');
+    }
+  } else {
+    setText('tids-insight-label', 'Din tidsrejse');
+    setText('tids-insight-text', 'Tilføj din fødselsdato i indstillinger for at se dine personlige cyklusser.');
+  }
+
+  // ── 4. DATO-CHIPS (personlige) ──
+  var chipsEl = document.getElementById('tids-chips');
+  if (chipsEl && user && user.birthdate) {
+    var bd = new Date(user.birthdate);
+    var pad2 = function(n) { return String(n).padStart(2, '0'); };
+    var toDS = function(d) { return d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate()); };
+
+    var chipData = [
+      { label: 'Da du var 14', date: toDS(new Date(bd.getFullYear() + 14, bd.getMonth(), bd.getDate())) },
+      { label: 'Da du var 21', date: toDS(new Date(bd.getFullYear() + 21, bd.getMonth(), bd.getDate())) },
+      { label: 'Om 5 år', date: toDS(new Date(now.getFullYear() + 5, now.getMonth(), now.getDate())) },
+      { label: 'Næste jul', date: now.getFullYear() + '-12-24' }
+    ];
+
+    var cHtml = '';
+    chipData.forEach(function(c) {
+      cHtml += '<span class="date-chip" data-date="' + c.date + '">' + c.label + '</span>';
+    });
+    chipsEl.innerHTML = cHtml;
+
+    // Wire chips
+    var dateInput = document.getElementById('tids-date');
+    chipsEl.querySelectorAll('.date-chip').forEach(function(chip) {
+      if (chip._bound) return;
+      chip._bound = true;
+      chip.addEventListener('click', function() {
+        chipsEl.querySelectorAll('.date-chip').forEach(function(c) { c.classList.remove('active'); });
+        this.classList.add('active');
+        if (dateInput) dateInput.value = this.getAttribute('data-date');
+      });
+    });
+  }
+
+  // ── 5. PERSON PILLS (valgfrit) ──
+  var personWrap = document.getElementById('tids-person-wrap');
+  var pillsContainer = document.getElementById('tids-person-pills');
+  if (personWrap && pillsContainer && relations && relations.length > 0) {
+    personWrap.style.display = '';
+    var pHtml = '';
+    relations.forEach(function(r) {
+      pHtml += '<div class="person-pill" style="cursor:pointer"><span class="person-pill-dot"></span>' + r.name + '</div>';
+    });
+    pillsContainer.innerHTML = pHtml;
+
+    if (!pillsContainer._bound) {
+      pillsContainer._bound = true;
+      pillsContainer.addEventListener('click', function(e) {
+        var pill = e.target.closest('.person-pill');
+        if (!pill) return;
+        pill.classList.toggle('active');
+      });
+    }
+  }
+
+  // ── 6. DATO-MOTOR — beregn og vis resultat ──
+  var btn = document.getElementById('tids-btn');
+  var dateInput = document.getElementById('tids-date');
+  var resultWrap = document.getElementById('tids-result-wrap');
+  var resultEl = document.getElementById('tids-result');
+
+  if (btn && dateInput && !btn._bound) {
+    btn._bound = true;
+    btn.addEventListener('click', function() {
+      var val = dateInput.value;
+      if (!val) { if (typeof showActionToast === 'function') showActionToast('Vælg en dato først'); return; }
+      if (!user || !user.birthdate) { if (typeof showActionToast === 'function') showActionToast('Tilføj fødselsdato i indstillinger'); return; }
+
+      var targetDate = new Date(val);
+      var userCycles = cyclesAtDate(user.birthdate, targetDate, false);
+      var phase = userCycles.lifePhase;
+      var elLabel = Calculations.ELEMENT_LABELS[phase.element];
+      var detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[phase.phase] : null;
+
+      var today = new Date();
+      var isPast = targetDate < today;
+      var varEr = isPast ? 'var' : 'er';
+
+      var html = '';
+
+      // ── Dato + alder ──
+      html += '<div style="text-align:center">';
+      html += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">' + formatDanishDate(targetDate) + ' ' + targetDate.getFullYear() + '</div>';
+      html += '<div style="font-family:var(--font-serif);font-size:22px;color:#6B5F7B;margin:4px 0 2px">Du ' + varEr + ' ' + userCycles.age + ' år</div>';
+      html += '</div>';
+
+      // ── Fase-kort (kompakt) ──
+      html += '<div style="margin:14px 0;padding:12px 16px;background:rgba(107,95,123,0.06);border-radius:12px">';
+      html += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase">Fase ' + phase.phase + ' · ' + elLabel + '</div>';
+      html += '<div style="font-family:var(--font-serif);font-size:18px;color:#6B5F7B;margin:3px 0">' + phase.name + '</div>';
+      html += '<div style="font-size:13px;color:#8B7D9B">' + userCycles.season.season + ' (' + Calculations.ELEMENT_LABELS[userCycles.season.element] + ') · ' + userCycles.weekday.day + '</div>';
+      html += '</div>';
+
+      // ── Isabelle-intro (kort) ──
+      if (detail) {
+        var introShort = detail.introText.split('.').slice(0, 2).join('.') + '.';
+        html += '<div style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:var(--text-body);line-height:1.6;margin:12px 0">' + formatExpandable(introShort, 15) + '</div>';
+      }
+
+      // ── Dengang vs nu ──
+      if (data) {
+        var nowPhase = data.cycles.lifePhase;
+        var nowEl = Calculations.ELEMENT_LABELS[nowPhase.element];
+        if (phase.phase !== nowPhase.phase) {
+          html += '<div style="display:flex;gap:10px;margin:14px 0">';
+          html += '<div style="flex:1;padding:10px;background:rgba(107,95,123,0.04);border-radius:10px;text-align:center">';
+          html += '<div style="font-size:11px;color:#a89bb3;margin-bottom:3px">' + (isPast ? 'Dengang' : 'Da') + '</div>';
+          html += '<div style="font-size:14px;color:#6B5F7B;font-weight:500">Fase ' + phase.phase + '</div>';
+          html += '<div style="font-size:12px;color:#8B7D9B">' + elLabel + '</div>';
+          html += '</div>';
+          html += '<div style="flex:1;padding:10px;background:rgba(107,95,123,0.04);border-radius:10px;text-align:center">';
+          html += '<div style="font-size:11px;color:#a89bb3;margin-bottom:3px">Nu</div>';
+          html += '<div style="font-size:14px;color:#6B5F7B;font-weight:500">Fase ' + nowPhase.phase + '</div>';
+          html += '<div style="font-size:12px;color:#8B7D9B">' + nowEl + '</div>';
+          html += '</div>';
+          html += '</div>';
+
+          // Transition tekst
+          var transKey = phase.element + '_' + nowPhase.element;
+          if (typeof CYKLUS_SKIFT_TEKST !== 'undefined' && CYKLUS_SKIFT_TEKST[transKey]) {
+            html += '<div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#8B7D9B;line-height:1.5">' + formatExpandable(CYKLUS_SKIFT_TEKST[transKey], 15) + '</div>';
+          }
+        }
+      }
+
+      // ── Relation (hvis valgt) ──
+      var nourishing = { 'VAND': 'TRÆ', 'TRÆ': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
+      if (pillsContainer) {
+        pillsContainer.querySelectorAll('.person-pill.active').forEach(function(pill) {
+          var pillName = pill.textContent.trim();
+          var rel = relations.find(function(r) { return r.name === pillName; });
+          if (!rel || !rel.birthdate) return;
+          var isMale = rel.gender === 'male';
+          var rc = cyclesAtDate(rel.birthdate, targetDate, isMale);
+          var relEl = rc.lifePhase.element;
+          var relElLabel = Calculations.ELEMENT_LABELS[relEl];
+
+          html += '<div style="margin-top:14px;padding:12px 16px;background:rgba(123,122,158,0.05);border-radius:12px;border:1px solid rgba(123,122,158,0.08)">';
+          html += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase">' + rel.name + '</div>';
+          html += '<div style="font-size:14px;color:#6B5F7B;font-weight:500;margin:3px 0">' + rc.age + ' år · Fase ' + rc.lifePhase.phase + ': ' + rc.lifePhase.name + ' (' + relElLabel + ')</div>';
+
+          // Element-interaktion
+          var uEl = phase.element;
+          var interaction = '';
+          if (uEl === relEl) interaction = 'Begge i ' + elLabel + ' — dyb resonans.';
+          else if (nourishing[uEl] === relEl) interaction = 'Dit ' + elLabel + ' ' + (isPast ? 'nærede' : 'nærer') + ' ' + rel.name + 's ' + relElLabel + '.';
+          else if (nourishing[relEl] === uEl) interaction = rel.name + 's ' + relElLabel + ' ' + (isPast ? 'nærede' : 'nærer') + ' dit ' + elLabel + '.';
+          else interaction = elLabel + ' ' + (isPast ? 'mødte' : 'møder') + ' ' + relElLabel + ' — forskellige energier.';
+          html += '<div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#8B7D9B;margin-top:6px">' + interaction + '</div>';
+          html += '</div>';
+        });
+      }
+
+      // ── Link til fuld tidsvindue ──
+      html += '<div style="text-align:center;margin-top:16px">';
+      html += '<a style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#6B5F7B;opacity:0.7;cursor:pointer" onclick="window._vinduerPresetDate=\'' + val + '\';Router.navigate(\'vinduer\')">Se hele tidsvinduet →</a>';
+      html += '</div>';
+
+      if (resultWrap) resultWrap.style.display = '';
+      if (resultEl) {
+        resultEl.innerHTML = html;
+        resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
+  }
+
+  // ── 7. TEMAER (5 foldbare kort) ──
+  renderTidsrejseTemaer();
+
+  // ── 8. REFLEKSION ──
+  var phaseNum = data ? data.cycles.lifePhase.phase : 5;
+  var questions = typeof REFLEKSION_DATA !== 'undefined' ? REFLEKSION_DATA[phaseNum] : null;
+  var extraQ = typeof EKSTRA_REFLEKSIONER_NY !== 'undefined' ? EKSTRA_REFLEKSIONER_NY[phaseNum] : null;
+  var allQ = (questions || []).concat(extraQ || []);
+  if (allQ.length > 0) {
+    var qi = Calculations.dayRotation(allQ.length);
+    setText('tids-refleksion', '«\u2009' + allQ[qi] + '\u2009»');
+  } else {
+    setText('tids-refleksion', '«\u2009Hvilket øjeblik i dit liv ville du gerne forstå bedre?\u2009»');
+  }
+
+  // Auto-fill if preset date passed from another screen
+  if (window._tidsrejsePresetDate && dateInput && btn) {
+    dateInput.value = window._tidsrejsePresetDate;
+    window._tidsrejsePresetDate = null;
+    setTimeout(function() { btn.click(); }, 150);
+  }
+}
+
+/* ---- Tidsrejse helper: 5 foldbare temaer ---- */
+function renderTidsrejseTemaer() {
+  var container = document.getElementById('tids-temaer');
+  if (!container) return;
+
+  var data = getUserCycles();
+  var phase = data ? data.cycles.lifePhase : null;
+  var phaseNum = phase ? phase.phase : 5;
+  var domEl = data ? data.dominant.element : 'VAND';
+  var elLabel = Calculations.ELEMENT_LABELS[domEl];
+  var detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[phaseNum] : null;
+
+  var temaer = [];
+
+  // 1. Dine kommende skift
+  var skiftContent = '';
+  if (data) {
+    var age = data.cycles.age;
+    var yearsLeft = phase.endAge - age;
+    if (yearsLeft > 0) {
+      var nextPhase = Calculations.calculateLifePhase(phase.endAge);
+      var nextEl = nextPhase ? Calculations.ELEMENT_LABELS[nextPhase.element] : '';
+      skiftContent += 'Om ' + Math.round(yearsLeft) + ' år skifter du fra ' + elLabel + ' til ' + nextEl + '. ';
+      var transKey = phase.element + '_' + (nextPhase ? nextPhase.element : 'VAND');
+      if (typeof CYKLUS_SKIFT_TEKST !== 'undefined' && CYKLUS_SKIFT_TEKST[transKey]) {
+        skiftContent += CYKLUS_SKIFT_TEKST[transKey];
+      }
+    } else {
+      skiftContent = 'Du er i din niende og sidste fase. ' + elLabel + '-energien bærer alt det du har samlet gennem livet.';
+    }
+  }
+  if (skiftContent) {
+    temaer.push({ title: 'Dine kommende skift', icon: '◷', content: skiftContent });
+  }
+
+  // 2. Sjældne vinduer
+  var sjContent = '';
+  if (data && typeof SJAELDNE_VINDUER !== 'undefined') {
+    var cycleEls = [phase.element, data.cycles.season.element, data.cycles.weekday.element];
+    var elCount = {};
+    cycleEls.forEach(function(e) { elCount[e] = (elCount[e] || 0) + 1; });
+    var maxEl = null; var maxCount = 0;
+    Object.keys(elCount).forEach(function(e) { if (elCount[e] > maxCount) { maxEl = e; maxCount = elCount[e]; } });
+    if (maxCount >= 3 && SJAELDNE_VINDUER.tredobbelt && SJAELDNE_VINDUER.tredobbelt[maxEl]) {
+      sjContent = SJAELDNE_VINDUER.tredobbelt[maxEl];
+    } else if (maxCount >= 2 && SJAELDNE_VINDUER.dobbelt && SJAELDNE_VINDUER.dobbelt[maxEl]) {
+      sjContent = SJAELDNE_VINDUER.dobbelt[maxEl];
+    } else {
+      sjContent = 'Sjældne vinduer opstår når to eller tre af dine cyklusser mødes i det samme element. Det forstærker energien — og åbner for noget usædvanligt. Hold øje med dine cyklusser.';
+    }
+  } else {
+    sjContent = 'Sjældne vinduer er øjeblikke hvor flere af dine cyklusser peger i samme retning. De er kraftfulde — og de varer ikke længe.';
+  }
+  temaer.push({ title: 'Sjældne vinduer', icon: '✧', content: sjContent });
+
+  // 3. Kroppen i din fase
+  if (detail && detail.kropTekst) {
+    temaer.push({ title: 'Kroppen i din fase', icon: '❋', content: detail.kropTekst });
+  }
+
+  // 4. Årstid og element
+  var aarstidContent = '';
+  if (data && typeof AARSTID_ELEMENT_TEKST !== 'undefined') {
+    var seasonMap = { 'Vinter': 'vinter', 'Forår': 'foraar', 'Sommer': 'sommer', 'Sensommer': 'sensommer', 'Efterår': 'efteraar' };
+    var sKey = seasonMap[data.cycles.season.season] || 'vinter';
+    if (AARSTID_ELEMENT_TEKST[sKey] && AARSTID_ELEMENT_TEKST[sKey][domEl]) {
+      aarstidContent = AARSTID_ELEMENT_TEKST[sKey][domEl];
+    }
+  }
+  if (aarstidContent) {
+    temaer.push({ title: data.cycles.season.season + ' og ' + elLabel, icon: '◌', content: aarstidContent });
+  }
+
+  // 5. Tid som spiral
+  temaer.push({
+    title: 'Tid som spiral',
+    icon: '∞',
+    content: 'Tiden bevæger sig ikke lineært. Den vender tilbage til de samme temaer — men fra et nyt sted. Den fase du er i nu, gentager måske noget fra din barndom eller ungdom. Men du møder det med andre øjne, en anden krop, en anden visdom. Det er spiralens gave.'
+  });
+
+  // Render (max 5) — præcis som forsidens renderTemaer
+  var html = '<div class="eyebrow" style="color:#8B7D9B">Temaer</div>';
+  temaer.slice(0, 5).forEach(function(tema) {
+    var fullText = tema.content.replace(/\n/g, '<br>');
+    html += '<div class="tema" style="background:rgba(107,95,123,0.03);border:1px solid rgba(107,95,123,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center">';
+    html += '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">' + tema.title + '</div>';
+    html += '<div class="tema-arr" style="font-size:18px;color:#a89bb3;transition:transform 0.2s">›</div>';
+    html += '</div>';
+    html += '<div class="tema-body" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease">';
+    html += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(107,95,123,0.06)">' + fullText + '</div>';
+    html += '</div>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+
+  // Wire fold-ud animation (præcis som forside)
+  container.querySelectorAll('.tema').forEach(function(tema) {
+    tema.addEventListener('click', function() {
+      var body = this.querySelector('.tema-body');
+      var arr = this.querySelector('.tema-arr');
+      if (body) {
+        if (body.style.maxHeight && body.style.maxHeight !== '0px') {
+          body.style.maxHeight = '0px';
+          if (arr) arr.style.transform = '';
+        } else {
+          body.style.maxHeight = body.scrollHeight + 'px';
+          if (arr) arr.style.transform = 'rotate(90deg)';
+        }
+      }
+    });
+  });
 }
 
 /* ---- Rejse (Section 4) ---- */

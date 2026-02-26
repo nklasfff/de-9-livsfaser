@@ -1,0 +1,85 @@
+<!-- TIDSREJSE — Primaer skaerm 3 -->
+
+<!-- HERO: Titel + figur 1 -->
+<div class="s" style="padding-bottom:0">
+  <div class="eyebrow" style="color:#8B7D9B">Tidsrejse</div>
+  <div style="text-align:center;margin:16px 0 8px">
+    <div id="tids-title" style="font-family:var(--font-serif);font-size:28px;color:var(--text-dark)">Din rejse gennem tid</div>
+    <div id="tids-intro" style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:var(--text-light);margin-top:6px;line-height:1.6;max-width:320px;margin-left:auto;margin-right:auto">Hvert &oslash;jeblik i dit liv b&aelig;rer sine cyklusser</div>
+  </div>
+  <div class="fig" style="padding:0 20px">
+    <img src="assets/images/vinduer-tid-lilla.png" alt="Tidsrejse" style="max-width:300px;margin:0 auto">
+  </div>
+</div>
+
+<!-- INTRO TEKST (h&oslash;rer visuelt til hero, derfor pt:0) -->
+<div class="s" style="padding-top:0">
+  <div class="isa" id="tids-nu-tekst">
+    Din krop og sj&aelig;l har bev&aelig;get sig gennem mange faser. V&aelig;lg et &oslash;jeblik &mdash; og se hvad der var p&aring; spil.
+  </div>
+</div>
+
+<!-- DIN FASE-REJSE — insight boks -->
+<div class="s">
+  <div class="eyebrow" style="color:#8B7D9B">Din fase-rejse</div>
+  <div id="tids-insight" style="background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.08);border-radius:var(--radius);padding:16px 18px;margin-top:10px">
+    <div id="tids-insight-label" style="font-family:var(--font-sans);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:#8B7D9B;margin-bottom:6px"></div>
+    <div id="tids-insight-text" style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6"></div>
+  </div>
+</div>
+
+<!-- V&AElig;LG EN DATO — motoren -->
+<div class="s">
+  <div class="eyebrow" style="color:#8B7D9B">V&aelig;lg en dato</div>
+  <div id="tids-chips" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0 12px"></div>
+  <div style="display:flex;gap:10px;align-items:center">
+    <input type="date" id="tids-date" style="flex:1;padding:10px 12px;border:1px solid rgba(107,95,123,0.15);border-radius:10px;font-family:var(--font-sans);font-size:15px;color:#6B5F7B;background:rgba(107,95,123,0.03);outline:none;box-sizing:border-box">
+    <div class="quick-action-btn" style="border-color:rgba(107,95,123,0.25);color:#6B5F7B;cursor:pointer;white-space:nowrap;margin:0" id="tids-btn">Se &rarr;</div>
+  </div>
+  <!-- Person-valg (valgfrit, vises kun med relationer) -->
+  <div id="tids-person-wrap" style="display:none;margin-top:14px;padding-top:12px;border-top:1px solid rgba(107,95,123,0.08)">
+    <div style="font-size:12px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Tilf&oslash;j en person (valgfrit)</div>
+    <div id="tids-person-pills" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center"></div>
+  </div>
+</div>
+
+<!-- RESULTAT — kompakt (skjult f&oslash;r dato-valg) -->
+<div class="s" id="tids-result-wrap" style="display:none">
+  <div id="tids-result" style="background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.08);border-radius:var(--radius);padding:16px 18px"></div>
+</div>
+
+<!-- FIGUR 2 — tidsspiralen -->
+<div class="s">
+  <div class="fig">
+    <img src="assets/images/vinduer-tidsspiral.png" alt="Tidsspiralen" style="max-width:220px;margin:0 auto;opacity:0.85">
+  </div>
+</div>
+
+<!-- ISABELLE TEKST — kort poetisk -->
+<div class="s">
+  <div class="isa isa-sm" id="tids-isabelle">Tiden er ikke en linje. Den er en spiral &mdash; og de steder der g&oslash;r ondt, er de steder der vil forst&aring;s.</div>
+</div>
+
+<!-- TEMAER — foldbare -->
+<div class="s" id="tids-temaer"></div>
+
+<!-- REFLEKSION -->
+<div class="s">
+  <div class="eyebrow" style="color:#8B7D9B">Refleksion</div>
+  <div class="isa" id="tids-refleksion" style="font-size:17px;margin-bottom:12px"></div>
+  <div style="text-align:center">
+    <a onclick="Router.navigate('rej-journal')" style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#6B5F7B;opacity:0.7;cursor:pointer">Skriv i din journal &rarr;</a>
+  </div>
+</div>
+
+<!-- DYK DYBERE -->
+<div class="s" style="padding-bottom:32px">
+  <div class="eyebrow" style="color:#8B7D9B">Dyk dybere</div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px">
+    <a onclick="Router.navigate('vinduer')" class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15);cursor:pointer">Tidsvinduet</a>
+    <a onclick="Router.navigate('vin-tidslinje')" class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15);cursor:pointer">Mit livs tidslinje</a>
+    <a onclick="Router.navigate('vin-oejeblikke')" class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15);cursor:pointer">Vigtige &oslash;jeblikke</a>
+  </div>
+</div>
+
+<div class="section-closer"></div>

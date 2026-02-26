@@ -21,6 +21,7 @@ const Router = {
     'relationer':        { file: 'screens/relationer.html',        niveau: 1,  parent: 'forside',     tone: 'relationer',  init: 'initRelationer' },
     'praksis':           { file: 'screens/praksis.html',           niveau: 1,  parent: 'forside',     tone: 'praksis',     init: 'initPraksis' },
     'rejse':             { file: 'screens/rejse.html',             niveau: 1,  parent: 'forside',     tone: 'rejse',       init: 'initRejse' },
+    'tidsrejse':         { file: 'screens/tidsrejse.html',         niveau: 1,  parent: 'forside',     tone: null,          init: 'initTidsrejse' },
     'vinduer':           { file: 'screens/vinduer.html',           niveau: 1,  parent: 'forside',     tone: 'vinduer',     init: 'initVinduer' },
 
     // Niveau 2 — Cirkel-detaljer (0B-0G fra forside koncentriske cirkler)
@@ -49,18 +50,19 @@ const Router = {
     'rel-konstellation': { file: 'screens/rel-konstellation.html', niveau: 2,  parent: 'relationer',  tone: 'relationer',  init: 'initRelKonstellation' },
     'rel-dybere':        { file: 'screens/rel-dybere.html',        niveau: 2,  parent: 'din-relation', tone: 'relationer',  init: 'initRelDybere' },
 
-    // Din Praksis (konsolideret)
-    'din-praksis':       { file: 'screens/din-praksis.html',       niveau: 1,  parent: 'forside',     tone: 'praksis',     init: 'initDinPraksis' },
+    // Min Praksis (sekundaer) + Din Dybere Praksis (dyb)
+    'min-praksis':       { file: 'screens/min-praksis.html',       niveau: 1,  parent: 'forside',      tone: 'praksis',     init: 'initMinPraksis' },
+    'din-praksis':       { file: 'screens/din-praksis.html',       niveau: 2,  parent: 'min-praksis',  tone: 'praksis',     init: 'initDinPraksis' },
 
-    // Niveau 2 — Praksis undersider (legacy)
-    'pra-yin-yoga':      { file: 'screens/pra-yin-yoga.html',      niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraYinYoga' },
-    'pra-eft':           { file: 'screens/pra-eft.html',           niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraEft' },
-    'pra-foelelser':     { file: 'screens/pra-foelelser.html',     niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraFoelelser' },
-    'pra-mindfulness':   { file: 'screens/pra-mindfulness.html',   niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraMindfulness' },
-    'pra-refleksion':    { file: 'screens/pra-refleksion.html',    niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraRefleksion' },
-    'pra-kost':          { file: 'screens/pra-kost.html',          niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraKost' },
-    'pra-healing':       { file: 'screens/pra-healing.html',       niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraHealing' },
-    'pra-inspiration':   { file: 'screens/pra-inspiration.html',   niveau: 2,  parent: 'praksis',     tone: 'praksis',     init: 'initPraInspiration' },
+    // Niveau 2 — Praksis undersider
+    'pra-yin-yoga':      { file: 'screens/pra-yin-yoga.html',      niveau: 2,  parent: 'min-praksis', tone: 'praksis',     init: 'initPraYinYoga' },
+    'pra-eft':           { file: 'screens/pra-eft.html',           niveau: 2,  parent: 'min-praksis', tone: 'praksis',     init: 'initPraEft' },
+    'pra-foelelser':     { file: 'screens/pra-foelelser.html',     niveau: 2,  parent: 'min-praksis', tone: 'praksis',     init: 'initPraFoelelser' },
+    'pra-mindfulness':   { file: 'screens/pra-mindfulness.html',   niveau: 2,  parent: 'min-praksis', tone: 'praksis',     init: 'initPraMindfulness' },
+    'pra-refleksion':    { file: 'screens/pra-refleksion.html',    niveau: 2,  parent: 'min-praksis', tone: 'praksis',     init: 'initPraRefleksion' },
+    'pra-kost':          { file: 'screens/pra-kost.html',          niveau: 2,  parent: 'min-praksis', tone: 'praksis',     init: 'initPraKost' },
+    'pra-healing':       { file: 'screens/pra-healing.html',       niveau: 2,  parent: 'min-praksis', tone: 'praksis',     init: 'initPraHealing' },
+    'pra-inspiration':   { file: 'screens/pra-inspiration.html',   niveau: 2,  parent: 'min-praksis', tone: 'praksis',     init: 'initPraInspiration' },
 
     // Niveau 2 — Rejse undersider
     'rej-udvikling':     { file: 'screens/rej-udvikling.html',     niveau: 2,  parent: 'rejse',       tone: 'rejse',       init: 'initRejUdvikling' },
