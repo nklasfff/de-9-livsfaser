@@ -158,11 +158,16 @@ Router.navigate('livsfase-detail');
 | Forside (Lige Nu) | DONE — GOLDEN STANDARD | `forside` | initForside |
 | Relationer (primaer) | DONE | `din-relation` | initDinRelation |
 | Dine Dybere Relationer | DONE | `rel-dybere` | initRelDybere |
-| Dit Dybe Billede | DONE (older) | `cir-dit-liv` | initCirDitLiv |
-| Tidsrejse | NOT BUILT | — | — |
+| Dit Dybe Billede | DONE — DYB GOLDEN STANDARD | `cir-dit-liv` | initCirDitLiv |
+| Tidsrejse (primaer) | DONE | `tidsrejse` | initTidsrejse |
+| Din Dybere Tidsrejse | DONE | `tids-dybere` | initTidsDybere |
+| Min Praksis (sekundaer) | DONE | `min-praksis` | initMinPraksis |
+| Din Dybere Praksis | DONE | `din-praksis` | initDinPraksis |
+| Min Rejse (sekundaer) | DONE | `min-rejse` | initMinRejse |
+| Din Dybere Rejse | DONE | `rej-dybere` | initRejDybere |
 | Vinduer | NOT BUILT | — | — |
 
-**Cache versions:** index.html `?v=105`, sw.js `livsfaser-v114`
+**Cache versions:** index.html `?v=110`, sw.js `livsfaser-v124`
 
 ---
 
@@ -186,11 +191,11 @@ sig foerst ud naar brugeren aktivt trykker "Dyk dybere" paa en skaerm.
 ```
 Forside (primaer, let)     → Dit Dybe Billede (cir-dit-liv)        FAERDIG
 Relationer (primaer, let)  → Dine Dybere Relationer (rel-dybere)   FAERDIG
-Tidsrejse (primaer, let)   → [dyb skaerm — skal bygges]
+Tidsrejse (primaer, let)   → Din Dybere Tidsrejse (tids-dybere)    FAERDIG
 Vinduer (primaer, let)     → [dyb skaerm — skal bygges]
 De Ni Faser (sekundaer)    → [dyb skaerm — skal bygges]
-Min Praksis (sekundaer)    → [dyb skaerm — skal bygges]
-Min Rejse (sekundaer)      → [dyb skaerm — skal bygges]
+Min Praksis (sekundaer)    → Din Dybere Praksis (din-praksis)       FAERDIG
+Min Rejse (sekundaer)      → Din Dybere Rejse (rej-dybere)         FAERDIG
 Tre Generationer (sekund.) → [dyb skaerm — skal bygges]
 Baggrund (sekundaer)       → [dyb skaerm — skal bygges]
 ```
@@ -207,22 +212,53 @@ Rytme: BILLEDE → kort tekst → BOKS → kort tekst → BILLEDE → kort tekst
 - "Dyk dybere" pills i bunden (pb:32) — FOERSTE pill = den dybe skaerm
 - Afslut med `<div class="section-closer"></div>`
 
-### Dyb skaerm-moenster (`.dybde-section`)
+### Dyb skaerm-moenster (`.dybde-section`) — STANDARDISERET
+
+**Golden standard for dybe skaerme: `cir-dit-liv` (Dit Dybe Billede)**
+Alle dybe skaerme foelger PRAECIS samme skabelon.
+
 ```
-HERO + mockup_forbydelse_figur_1.png → SEKTION + lotus-divider → ... → closer + "Tilbage til toppen"
+HERO — eyebrow + titel (serif 28px) + intro (serif 16px italic) + UNIK figur
+  ↓
+SEKTION — eyebrow (INGEN inline farve) + formatExpandable(tekst, 80)
+  ↓
+LOTUS-DIVIDER — unik per skaerm, ALTID 36x36px
+  ↓
+SEKTION — eyebrow + formatExpandable(tekst, 80)
+  ↓
+DOTS — <div class="dots"> UDEN inline farve
+  ↓
+... (8-12 sektioner)
+  ↓
+REFLEKSION — serif 17px italic + journal-link (color:var(--blaa))
+  ↓
+SECTION-CLOSER + "Tilbage til toppen"
 ```
 
+**Regler for ALLE dybe skaerme:**
 - Brug `<div class="dybde-section">` (IKKE `.s`)
-- Her bor ALT materialet — 8-12 sektioner med `formatExpandable(tekst, 80)`
-- Adskillere: `mockup_fordybelse_lotus.png` (40px) mellem tunge sektioner
-- Lette adskillere: `<div class="dots">· · ·</div>` mellem lette sektioner
-- Afslut med lotus-closer + back-to-top link
+- `.eyebrow` labels: INGEN inline `style="color:..."` — brug CSS default
+- `formatExpandable(tekst, 80)` for broedtekst, `(tekst, 60)` kun for krop/sind
+- Lotus-divider: `<div class="lotus-divider"><img ... style="width:36px;height:36px">`
+- Dots: `<div class="dots">` — INGEN inline farve
+- Expand-knapper: `.dybde-expand-btn` class — farve fra CSS (`var(--blaa)`)
+- Journal-link: ALTID til stede, `color:var(--blaa);opacity:0.7`
+- Sidste sektion: `padding-bottom:32px`
+- Section closer: `lotus-adskiller.png` (83px, 0.45 opacity)
+- Hero-billeder: INGEN `border-radius`
+
+**Unikke lotus-billeder per skaerm (beholdes):**
+- cir-dit-liv: `lotus-maerk-efter.png`
+- rel-dybere: `mockup_fordybelse_lotus.png`
+- din-praksis: `groen-lotus.png`
+- rej-dybere: `lotus-graa.png`
+- tids-dybere: `lilla-lotus.png`
 
 ### Vigtige konventioner
 - **formatExpandable(tekst, wordLimit)** — splitter MID-afsnit, viser "Laes mere ↓"
 - **Visuel rytme** — ALDRIG to tekst-sektioner i traek uden billede/boks/divider imellem
 - **Foldbare temaer** — brug renderRelationTemaer() moenster (titel + ikon + fold-ud)
-- **Tone-farver** — Forside: `--blaa` (#6c82a9), Relationer: `#7b7a9e`
+- **Farver paa dybe skaerme** — ALT bruger `var(--blaa)` for links/expand/accenter (IKKE tone-farver)
 
 ---
 
