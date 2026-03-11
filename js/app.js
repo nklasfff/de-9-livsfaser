@@ -25,7 +25,15 @@ function setHTML(id, html) {
 function getUserCycles() {
   const user = Storage.getUser();
   if (!user || !user.birthdate) return null;
-  const cycles = Calculations.allCycles(user.birthdate, new Date());
+  // Send menstruel-data til motoren (Lag 4) hvis brugeren tracker
+  const options = {};
+  if (user.tracksMenstruation && user.menstrualStart) {
+    options.tracksMenstruation = true;
+    options.menstrualStart = user.menstrualStart;
+    const settings = Storage.getSettings ? Storage.getSettings() : null;
+    if (settings && settings.cycleLength) options.cycleLength = settings.cycleLength;
+  }
+  const cycles = Calculations.allCycles(user.birthdate, new Date(), options);
   const dominant = Calculations.getWeightedDominant(cycles);
   return { user, cycles, dominant };
 }
@@ -87,7 +95,9 @@ function selectMood(id, el) {
       note: '',
       cycles: data ? {
         lifePhase: data.cycles.lifePhase.element,
+        innerSeason: data.cycles.innerSeason ? data.cycles.innerSeason.element : null,
         season: data.cycles.season.element,
+        monthCycle: data.cycles.monthCycle ? data.cycles.monthCycle.element : null,
         weekday: data.cycles.weekday.element,
         organ: data.cycles.organ.element,
         dominant: data.dominant.element
@@ -201,7 +211,9 @@ function saveCheckin() {
     note: note,
     cycles: data ? {
       lifePhase: data.cycles.lifePhase.element,
+      innerSeason: data.cycles.innerSeason ? data.cycles.innerSeason.element : null,
       season: data.cycles.season.element,
+      monthCycle: data.cycles.monthCycle ? data.cycles.monthCycle.element : null,
       weekday: data.cycles.weekday.element,
       organ: data.cycles.organ.element,
       dominant: data.dominant.element
@@ -675,13 +687,14 @@ function initOnboardingResult() {
   setText('result-sub-text', subTexts[dominant.element] || '');
 
   // Profile rows
+  const innerS = cycles.innerSeason;
   const rows = [
     { label: 'Livsfase', value: `Fase ${phase.phase} \u2013 ${phase.name} (${elLabel})` },
+    innerS ? { label: 'Indre \u00e5rstid', value: `${innerS.innerSeason} \u2013 ${Calculations.ELEMENT_LABELS[innerS.element]}` } : null,
     { label: '\u00c5rstid', value: `${cycles.season.season} \u2013 ${Calculations.ELEMENT_LABELS[cycles.season.element]}` },
     { label: 'M\u00e5ned', value: `${MONTHS_DA[new Date().getMonth()]} \u2013 ${Calculations.ELEMENT_LABELS[cycles.monthCycle.element]}` },
-    { label: 'Ugedag', value: `${cycles.weekday.day} \u2013 ${Calculations.ELEMENT_LABELS[cycles.weekday.element]}` },
     { label: 'Organur', value: `${cycles.organ.hours} \u2013 ${cycles.organ.organ} (${Calculations.ELEMENT_LABELS[cycles.organ.element]})` }
-  ];
+  ].filter(Boolean);
   const profilEl = document.getElementById('result-profil-rows');
   if (profilEl) {
     profilEl.innerHTML = rows.map(r =>
@@ -736,9 +749,9 @@ function buildDailyReading(cycles, dominant) {
   // Build concrete cycle references
   const cykNavne = [];
   if (phase.element === domEl) cykNavne.push('din livsfase');
-  if (cycles.season.element === domEl) cykNavne.push('\u00e5rstiden');
-  if (cycles.monthCycle.element === domEl) cykNavne.push('m\u00e5neden');
-  if (cycles.weekday.element === domEl) cykNavne.push('ugedagen');
+  if (cycles.innerSeason && cycles.innerSeason.element === domEl) cykNavne.push('din indre årstid');
+  if (cycles.season.element === domEl) cykNavne.push('årstiden');
+  if (cycles.monthCycle && cycles.monthCycle.element === domEl) cykNavne.push('måneden');
   if (cycles.organ.element === domEl) cykNavne.push('dit organur');
 
   const cykStr = cykNavne.length > 0 ? cykNavne.join(', ') : 'dine cyklusser';
@@ -2317,7 +2330,7 @@ function renderTidsrejseTemaer() {
   // 2. Sjældne vinduer
   var sjContent = '';
   if (data && typeof SJAELDNE_VINDUER !== 'undefined') {
-    var cycleEls = [phase.element, data.cycles.season.element, data.cycles.weekday.element];
+    var cycleEls = data.cycles.elements || [phase.element, data.cycles.innerSeason ? data.cycles.innerSeason.element : phase.element, data.cycles.season.element, data.cycles.monthCycle ? data.cycles.monthCycle.element : data.cycles.season.element, data.cycles.organ.element];
     var elCount = {};
     cycleEls.forEach(function(e) { elCount[e] = (elCount[e] || 0) + 1; });
     var maxEl = null; var maxCount = 0;
@@ -3020,9 +3033,10 @@ function cyclesAtDate(birthdate, targetDate, isMale) {
   const lifePhase = isMale
     ? Calculations.calculateMalePhase(age)
     : Calculations.calculateLifePhase(age);
+  const innerSeason = isMale ? null : Calculations.calculateInnerSeason(birthdate, date);
   const season = Calculations.calculateSeason(date);
   const weekday = Calculations.calculateWeekday(date);
-  return { age, lifePhase, season, weekday, date };
+  return { age, lifePhase, innerSeason, season, weekday, date };
 }
 
 /* ---- Sj\u00e6ldne Vinduer — motor + rendering ---- */
@@ -3030,8 +3044,7 @@ function cyclesAtDate(birthdate, targetDate, isMale) {
 function scanUpcomingWindows(birthdate, relations, days) {
   if (!birthdate) return [];
   days = days || 90;
-  var windows = [];
-  var now = new Date();
+  var windows = [];  var now = new Date();
   var pad2 = function(n) { return String(n).padStart(2, '0'); };
   var toDateStr = function(d) { return d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate()); };
   var nourishing = { 'VAND': 'TR\u00c6', 'TR\u00c6': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
@@ -5579,11 +5592,11 @@ function initRelLigeNu() {
       html += `<div style="font-size:12px;color:#88839e;margin-bottom:4px">Livsfase</div>`;
       html += `<div style="font-size:13px;color:#6B5F7B;margin-bottom:8px">Du: Fase ${cycles.lifePhase.phase} (${elLabel}) · ${r.name}: Fase ${r.cycles.lifePhase.phase} (${r.elLabel})</div>`;
 
-      // Årstid + ugedag (shared)
+      // Årstid + indre årstid (shared)
       const userSeason = Calculations.ELEMENT_LABELS[cycles.season.element];
-      const userWeekday = Calculations.ELEMENT_LABELS[cycles.weekday.element];
+      const userInner = cycles.innerSeason ? Calculations.ELEMENT_LABELS[cycles.innerSeason.element] : null;
       html += `<div style="font-size:12px;color:#88839e;margin-bottom:4px">Fælles cyklusser</div>`;
-      html += `<div style="font-size:13px;color:#6B5F7B;margin-bottom:8px">I deler årstid (${userSeason}) og ugedag (${userWeekday}) — det er det fælles fundament.</div>`;
+      html += `<div style="font-size:13px;color:#6B5F7B;margin-bottom:8px">I deler årstid (${userSeason})${userInner ? ` — din indre årstid er ${userInner}` : ''} — det er det fælles fundament.</div>`;
 
       html += `</div>`;
 

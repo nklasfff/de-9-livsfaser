@@ -10,9 +10,9 @@ const Calculations = {
     3: { element: 'TRÆ',  startAge: 14, endAge: 21, name: 'Forvandling' },
     4: { element: 'TRÆ',  startAge: 21, endAge: 28, name: 'Blomstring' },
     5: { element: 'ILD',  startAge: 28, endAge: 35, name: 'Ansvar' },
-    6: { element: 'JORD', startAge: 35, endAge: 42, name: 'Modning' },
-    7: { element: 'JORD', startAge: 42, endAge: 49, name: 'Høst' },
-    8: { element: 'METAL',startAge: 49, endAge: 56, name: 'Frigørelse' },
+    6: { element: 'METAL', startAge: 35, endAge: 42, name: 'Klarhed' },
+    7: { element: 'METAL', startAge: 42, endAge: 49, name: 'Frigørelse' },
+    8: { element: 'VAND',  startAge: 49, endAge: 56, name: 'Dybde' },
     9: { element: 'VAND', startAge: 56, endAge: 63, name: 'Visdom' }
   },
 
@@ -136,17 +136,56 @@ const Calculations = {
     return { ...organ };
   },
 
-  calculateMenstrualDay(startDate, currentDate) {
+  calculateMenstrualDay(startDate, currentDate, cycleLength) {
     const start = new Date(startDate);
     const current = currentDate || new Date();
     const diffTime = current - start;
+    const len = cycleLength || 28;
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    const cycleDay = ((diffDays % 28) + 28) % 28 + 1;
+    const cycleDay = ((diffDays % len) + len) % len + 1;
 
-    if (cycleDay <= 7) return { week: 1, day: cycleDay, element: 'VAND', phase: 'Menstruation', range: '1-7' };
-    if (cycleDay <= 14) return { week: 2, day: cycleDay, element: 'TRÆ', phase: 'Follikulær', range: '8-14' };
-    if (cycleDay <= 21) return { week: 3, day: cycleDay, element: 'ILD', phase: 'Ægløsning', range: '15-21' };
-    return { week: 4, day: cycleDay, element: 'JORD', phase: 'Luteal', range: '22-28' };
+    // Manifestet: Menstruation=Vand, Follikulær=Træ, Ægløsning=Ild, Luteal=Jord+Metal
+    const mensDays = Math.round(len * 0.18);       // ~5 dage
+    const folDays = Math.round(len * 0.25);         // ~7 dage
+    const ovDays = Math.round(len * 0.14);           // ~4 dage
+    const lutealMid = Math.round(len * 0.71);        // ~dag 20
+
+    if (cycleDay <= mensDays) return { week: 1, day: cycleDay, element: 'VAND', phase: 'Menstruation', range: `1-${mensDays}` };
+    if (cycleDay <= mensDays + folDays) return { week: 2, day: cycleDay, element: 'TRÆ', phase: 'Follikulær', range: `${mensDays+1}-${mensDays+folDays}` };
+    if (cycleDay <= mensDays + folDays + ovDays) return { week: 3, day: cycleDay, element: 'ILD', phase: 'Ægløsning', range: `${mensDays+folDays+1}-${mensDays+folDays+ovDays}` };
+    if (cycleDay <= lutealMid) return { week: 4, day: cycleDay, element: 'JORD', phase: 'Luteal (Jord)', range: `${mensDays+folDays+ovDays+1}-${lutealMid}` };
+    return { week: 4, day: cycleDay, element: 'METAL', phase: 'Luteal (Metal)', range: `${lutealMid+1}-${len}` };
+  },
+
+  /* ---- Lag 2: Fasens indre rytme ---- */
+  /*  Hver 7-års fase har 5 indre årstider à 1,4 år.
+      Vinter/Vand → Forår/Træ → Sommer/Ild → Sensommer/Jord → Efterår/Metal
+      Her lever Jord-elementet — som sensommer i ALLE faser. */
+  calculateInnerSeason(birthdate, date) {
+    const birth = new Date(birthdate);
+    const d = date || new Date();
+    const exactAge = (d - birth) / (365.25 * 24 * 60 * 60 * 1000);
+    const age = Math.floor(exactAge);
+    const phase = this.calculateLifePhase(age);
+    const yearsInPhase = exactAge - phase.startAge;
+    const seasonLength = 7 / 5; // 1,4 år per indre årstid
+
+    const INNER_SEASONS = [
+      { innerSeason: 'Vinter', element: 'VAND',  quality: 'Ankomst, orientering' },
+      { innerSeason: 'Forår',  element: 'TRÆ',   quality: 'Retning viser sig' },
+      { innerSeason: 'Sommer', element: 'ILD',   quality: 'Fasens energi topper' },
+      { innerSeason: 'Sensommer', element: 'JORD', quality: 'Integration' },
+      { innerSeason: 'Efterår', element: 'METAL', quality: 'Forberedelse på næste fase' }
+    ];
+
+    const seasonIndex = Math.min(Math.floor(yearsInPhase / seasonLength), 4);
+    const progress = (yearsInPhase - (seasonIndex * seasonLength)) / seasonLength;
+
+    return {
+      ...INNER_SEASONS[seasonIndex],
+      progress: Math.min(Math.max(progress, 0), 1),
+      yearsInPhase: Math.round(yearsInPhase * 10) / 10
+    };
   },
 
   calculateCalendarMonth(date) {
@@ -155,21 +194,37 @@ const Calculations = {
     return { month, ...this.MONTH_DATA[month] };
   },
 
-  /* ---- Combined calculation ---- */
-  allCycles(birthdate, targetDate) {
+  /* ---- Combined calculation — De 5 Lag ---- */
+  /*  Lag 1: Livsfase (DOMINERER)
+      Lag 2: Fasens indre rytme (NUANCERER)
+      Lag 3: Årets årstid (MODULERER)
+      Lag 4: Månedscyklus — menstruel eller kalendermåned (FININDSTILLER)
+      Lag 5: Organur (TIDSPUNKTS-VEJLEDER)
+      Ugedag bevares som data men indgår IKKE i de 5 lag. */
+  allCycles(birthdate, targetDate, options) {
     const date = targetDate || new Date();
     const age = this.calculateAge(birthdate);
     const lifePhase = this.calculateLifePhase(age);
+    const innerSeason = this.calculateInnerSeason(birthdate, date);
     const season = this.calculateSeason(date);
     const weekday = this.calculateWeekday(date);
     const organ = this.calculateOrganClock(date);
-    const monthCycle = this.calculateCalendarMonth(date);
 
-    const elements = [lifePhase.element, season.element, weekday.element, organ.element, monthCycle.element];
+    // Lag 4: Menstruel cyklus hvis brugeren tracker, ellers kalendermåned
+    let monthCycle;
+    if (options && options.tracksMenstruation && options.menstrualStart) {
+      monthCycle = this.calculateMenstrualDay(options.menstrualStart, date, options.cycleLength);
+    } else {
+      monthCycle = this.calculateCalendarMonth(date);
+    }
+
+    // De 5 lag — manifestets hierarki
+    const elements = [lifePhase.element, innerSeason.element, season.element, monthCycle.element, organ.element];
 
     return {
       age,
       lifePhase,
+      innerSeason,
       season,
       weekday,
       organ,
@@ -205,24 +260,27 @@ const Calculations = {
     return { element: dominant, count: max, counts };
   },
 
-  /* ---- Weighted dominant element ---- */
-  /*  Livsfasen (7 år) vejer tungere end organur (2 timer).
-      Returnerer SAMME format som getDominant() for bagudkompatibilitet. */
+  /* ---- Weighted dominant element — De 5 Lags hierarki ---- */
+  /*  Lag 1: Livsfase (7 år)     → DOMINERER     → weight 3
+      Lag 2: Indre årstid (1,4 år) → NUANCERER   → weight 2
+      Lag 3: Årets årstid (3 mdr)  → MODULERER   → weight 1.5
+      Lag 4: Månedscyklus (1 mdr)  → FININDSTILLER → weight 1
+      Lag 5: Organur (2 timer)     → VEJLEDER    → weight 0.5 */
   getWeightedDominant(cycles) {
     const WEIGHTS = {
-      lifePhase: 3,     // 7 år — stærkeste signal
-      season: 2,        // ~3 måneder
-      monthCycle: 1.5,  // 1 måned
-      weekday: 1,       // 1 dag
-      organ: 0.5        // 2 timer — svageste
+      lifePhase: 3,       // Lag 1: 7 år — DOMINERER
+      innerSeason: 2,     // Lag 2: ~1,4 år — NUANCERER
+      season: 1.5,        // Lag 3: ~3 måneder — MODULERER
+      monthCycle: 1,      // Lag 4: ~1 måned — FININDSTILLER
+      organ: 0.5          // Lag 5: 2 timer — TIDSPUNKTS-VEJLEDER
     };
 
     const scores = { 'VAND': 0, 'TRÆ': 0, 'ILD': 0, 'JORD': 0, 'METAL': 0 };
 
     scores[cycles.lifePhase.element]  += WEIGHTS.lifePhase;
+    if (cycles.innerSeason) scores[cycles.innerSeason.element] += WEIGHTS.innerSeason;
     scores[cycles.season.element]     += WEIGHTS.season;
     scores[cycles.monthCycle.element] += WEIGHTS.monthCycle;
-    scores[cycles.weekday.element]    += WEIGHTS.weekday;
     scores[cycles.organ.element]      += WEIGHTS.organ;
 
     let max = 0, dominant = 'VAND';

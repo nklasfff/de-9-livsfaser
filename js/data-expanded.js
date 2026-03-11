@@ -79,9 +79,9 @@ const ELEMENT_FASE_DAGLIG = {
     3: 'Vand-elementet i opv\u00e5gningens fase. Der er en stille str\u00f8m under den st\u00f8jende overflade. M\u00e5ske er din styrke ikke at r\u00e5be h\u00f8jest, men at lytte dybest. Stol p\u00e5 det du m\u00e6rker, ogs\u00e5 n\u00e5r ordene mangler.',
     4: 'Vand i blomstringens tid. Hvor andre br\u00e6nder fremad, str\u00f8mmer du dybt. Din intuition er sk\u00e6rpet i disse \u00e5r \u2014 brug den som kompas n\u00e5r valg presser sig p\u00e5. Du beh\u00f8ver ikke vide alt, bare m\u00e6rke retningen.',
     5: 'Vand-elementet i ildens fase. Du m\u00e6rker m\u00e5ske en sp\u00e6nding mellem behovet for stilhed og livets krav om handling. B\u00e5de kan v\u00e6re sandt. Find de sm\u00e5 lommer af ro midt i intensiteten \u2014 de er din redning.',
-    6: 'Vand og jordens modning. Noget dybt i dig s\u00f8ger fundament. Nyrernes visdom hviler i dig som grundvand \u2014 stille, men altid til stede. M\u00e6rk den ro der kommer af at vide, at du allerede har det du har brug for.',
-    7: 'Vand i forvandlingens fase. Du kender allerede d\u00f8den og genf\u00f8dslen \u2014 dit element har altid vidst at alt er cyklisk. Lad denne overgang v\u00e6re som tidevand: naturlig, uundg\u00e5elig, og i sidste ende befriende.',
-    8: 'Vand-elementet i essensens tid. Du n\u00e6rmer dig dit elements kerne. Stilheden, visdommen og den dybe hvile er ikke l\u00e6ngere noget du s\u00f8ger \u2014 det er noget du er. Lad den erkendelse synke ind.',
+    6: 'Vand og metallets klarhed. Noget i dig s\u00f8ger mod essensen nu \u2014 det rene, det \u00e6gte. Din dybde hj\u00e6lper dig med at skelne det v\u00e6sentlige fra det overfl\u00f8dige. Lad stilheden guide det, metallets skarphed sorterer.',
+    7: 'Vand i frig\u00f8relsens fase. Dit element kender allerede det at slippe \u2014 vand holder aldrig fast. Lad den viden b\u00e6re dig gennem overgangsalderens forvandling. Du ved mere om at flyde end de fleste.',
+    8: 'Dobbelt vand i dybdens fase. Du er kommet hjem. Dit element og din livsfase synger den samme tone \u2014 dybde, stilhed, intuition. Nyrernes visdom er nu b\u00e5de dit element og din alder. M\u00e6rk den samklang.',
     9: 'Dobbelt vand i livets fuldendelse. Alt vender hjem. Din dybde, din intuition, din evne til at rumme stilhed \u2014 det er gaver, der kun vokser med tiden. Du er kilden og havet p\u00e5 \u00e9n gang.'
   },
   'TR\u00c6': {
@@ -90,9 +90,9 @@ const ELEMENT_FASE_DAGLIG = {
     3: 'Dobbelt tr\u00e6-energi i opv\u00e5gningens fase. Kraften i dig er enorm. Brug den med omhu \u2014 din vrede er v\u00e6kst der s\u00f8ger retning, og din frustration er et tegn p\u00e5 at du vil mere end rammerne tillader.',
     4: 'Tr\u00e6 i blomstringens tid. Du st\u00e5r midt i din fulde kraft \u2014 retning, ambition, handlekraft. Leveren driver dig fremad med en energi der kan flytte bjerge. Husk ogs\u00e5 r\u00f8dderne. De har brug for vand.',
     5: 'Tr\u00e6-element i ildens fase. Din handlekraft m\u00f8der livets varme. Du kan let g\u00f8re for meget, for hurtigt. S\u00e6nk tempoet en anelse \u2014 tr\u00e6et gror bedst n\u00e5r det ogs\u00e5 hviler om vinteren.',
-    6: 'Tr\u00e6 og jordens modning. Din drift fremad m\u00f8der en invitation til at sl\u00e5 rod. M\u00e5ske handler det ikke om at n\u00e5 mere, men om at st\u00e5 fastere. Fleksibilitet er tr\u00e6ets styrke \u2014 brug den nu.',
-    7: 'Tr\u00e6-energi i forvandlingens fase. Nogle grene m\u00e5 sk\u00e6res v\u00e6k for at nye kan gro. Det f\u00f8les m\u00e5ske som tab, men det er besk\u00e6ring. Dit tr\u00e6 bliver st\u00e6rkere af det.',
-    8: 'Tr\u00e6 i essensens tid. Den v\u00e6kst du har givet plads til hele livet, b\u00e6rer nu frugt. M\u00e5ske ikke den slags du forventede \u2014 men se efter. Der er visdom i det du har skabt.',
+    6: 'Tr\u00e6 og metallets klarhed. Din v\u00e6kstkraft m\u00f8der en tid for sortering. Metallets skarphed besk\u00e6rer det overfl\u00f8dige \u2014 og dit tr\u00e6 bliver st\u00e6rkere af det. Lad de un\u00f8dvendige grene falde.',
+    7: 'Tr\u00e6-energi i frig\u00f8relsens fase. Nogle grene m\u00e5 sk\u00e6res v\u00e6k for at stammen kan st\u00e5 frit. Overgangsalderen er besk\u00e6ring. Dit tr\u00e6 mister blade, men r\u00f8dderne er dybere end nogensinde.',
+    8: 'Tr\u00e6 i dybdens fase. Din v\u00e6kstkraft m\u00f8der vandets stilhed. Nu handler det ikke om at vokse opad, men om at sl\u00e5 r\u00f8dder nedad. Der er en ny kraft i at g\u00e5 i dybden \u2014 lad tr\u00e6et finde grundvandet.',
     9: 'Tr\u00e6-element i fuldendelsens fase. Tr\u00e6et har v\u00e6ret fr\u00f8, spire, stamme og krone. Nu er det ogs\u00e5 r\u00f8dder \u2014 dybt forankret, stille og st\u00e6rkt. Din livskraft er ikke forsvundet. Den har fundet et roligere udtryk.'
   },
   'ILD': {
@@ -101,9 +101,9 @@ const ELEMENT_FASE_DAGLIG = {
     3: 'Ild i opv\u00e5gningens fase. Passionen br\u00e6nder i dig med fuld styrke. Du vil m\u00e6rke alt, dele alt, forbinde med alle. Det er smukt og udmattende. Lad hjertet hvile ind imellem.',
     4: 'Dobbelt ild-energi. Blomstering og forbindelse smelter sammen. Dit hjerte er \u00e5bent som en sommermark \u2014 varmt, generøst, modtageligt. Men pas p\u00e5 at ilden ikke br\u00e6nder hurtigere end du kan n\u00e6re den.',
     5: 'Ild-element i sin egen fase. Alt i dig synger den samme tone \u2014 forbindelse, gl\u00e6de, varme. Brug den kraft til det der virkelig betyder noget. Og husk: selv solen g\u00e5r ned for at lade op.',
-    6: 'Ild i jordens modning. Din varme m\u00f8der et behov for fundament. M\u00e5ske handler det om at lade ilden br\u00e6nde langsommere og dybere \u2014 ikke som et bl\u00e5lys, men som gløder der holder hele natten.',
-    7: 'Ild-energi i forvandlingens fase. Flammen \u00e6ndrer karakter. Den br\u00e6nder m\u00e5ske ikke s\u00e5 h\u00f8jt l\u00e6ngere, men varmen er dybere. Din forbindelsesevne er modnere nu \u2014 og mere v\u00e6rdifuld end nogensinde.',
-    8: 'Ild i essensens tid. Hjertet har b\u00e5ret s\u00e5 meget \u2014 gl\u00e6de og sorg, forbindelse og tab. Nu kender det forskellen p\u00e5 det v\u00e6sentlige og det overfl\u00f8dige. Den viden er ren guld.',
+    6: 'Ild og metallets klarhed. Din varme m\u00f8der en tid for klarhed. Metallets skarphed hj\u00e6lper dig med at se, hvad der virkelig varmer \u2014 og hvad der bare br\u00e6nder. Lad flammen finde sin essens.',
+    7: 'Ild-energi i frig\u00f8relsens fase. Flammen \u00e6ndrer karakter. Den br\u00e6nder m\u00e5ske ikke s\u00e5 h\u00f8jt l\u00e6ngere, men varmen er dybere. Overgangsalderen frig\u00f8r din ild fra det overfl\u00f8dige \u2014 og det der bliver, er gl\u00f8der.',
+    8: 'Ild i dybdens fase. Hjertet m\u00f8der vandet \u2014 varme m\u00f8der stilhed. Der er en s\u00e6rlig kraft i den kombination: evnen til at forbinde dybt, stille, uden de store armbev\u00e6gelser. Din varme n\u00e6rer nu indefra.',
     9: 'Ild-element i fuldendelsens fase. Din varme er blevet til en indre ild der ikke beh\u00f8ver ydre br\u00e6ndstof. Den n\u00e6rer sig selv. Du er forbindelsen \u2014 mellem generationer, mellem mennesker, mellem det der var og det der kommer.'
   },
   'JORD': {
@@ -112,9 +112,9 @@ const ELEMENT_FASE_DAGLIG = {
     3: 'Jord-energi i opv\u00e5gningens fase. Mens andre stormer fremad, s\u00f8ger du stabilitet. Det er ikke langsomhed \u2014 det er visdom. Din evne til at skabe tryghed er en styrke, ogs\u00e5 i kaos.',
     4: 'Jord i blomstringens tid. Du bygger fundament \u2014 hjem, karriere, relationer. Alt i dig vil skabe noget b\u00e6redygtigt. Milten n\u00e6rer langsomt og st\u00f8t. Stol p\u00e5 den rytme, ogs\u00e5 n\u00e5r verden presses.',
     5: 'Jord-element i ildens fase. Din stabilitet er uvurderlig midt i intensiteten. Du er den der holder sammen p\u00e5 tingene n\u00e5r andre flammer op. Men hvem holder sammen p\u00e5 dig? Det sp\u00f8rgsm\u00e5l fortjener et svar.',
-    6: 'Dobbelt jord-energi. Modning og fundament smelter sammen. Du er i dit elements hjemsted \u2014 rodf\u00e6stet, n\u00e6rende, stabil. M\u00e6rk den styrke. Og m\u00e6rk ogs\u00e5 bekymringens skygge \u2014 den har brug for lys.',
-    7: 'Jord i forvandlingens fase. Fundamentet ryster m\u00e5ske, og det kan v\u00e6re skr\u00e6mmende for dig der elsker stabilitet. Men jorden er stadig under dig. Den er bare ved at finde en ny form.',
-    8: 'Jord-element i essensens tid. \u00c5revis af omsorg og n\u00e6ring har skabt noget dybt i dig. Din evne til at holde rum for andre er modnere nu. M\u00e6rk ogs\u00e5 den n\u00e6ring du kan give dig selv.',
+    6: 'Jord og metallets klarhed. Din stabilitet m\u00f8der en tid for sortering. Metallets skarphed hj\u00e6lper dig med at se, hvad der virkelig n\u00e6rer \u2014 og hvad der bare fylder. Lad det overfl\u00f8dige g\u00e5, s\u00e5 fundamentet st\u00e5r klarere.',
+    7: 'Jord i frig\u00f8relsens fase. Fundamentet \u00e6ndrer form, og det kan v\u00e6re skr\u00e6mmende for dig der elsker stabilitet. Men metal-elementet l\u00e6rer dig at give slip p\u00e5 det tunge. Jorden under dig er stadig der \u2014 den er bare lettere nu.',
+    8: 'Jord-element i dybdens fase. Din omsorg m\u00f8der vandets stilhed. Nu handler det om at n\u00e6re fra dybden \u2014 ikke fra overfladen. \u00c5revis af at holde rum for andre har givet dig en visdom, der nu kan vende indad.',
     9: 'Jord i fuldendelsens fase. Du er blevet til selve fundamentet \u2014 ikke bare for dig selv, men for dem der kommer efter. Din omsorg, din stabilitet og din varme er en arv der b\u00e6rer videre.'
   },
   'METAL': {
@@ -123,10 +123,297 @@ const ELEMENT_FASE_DAGLIG = {
     3: 'Metal-energi i opv\u00e5gningens fase. Mens andre br\u00e6nder med tr\u00e6ets vrede, s\u00f8ger du mening og struktur. Din evne til at se hvad der er v\u00e6sentligt er en styrke \u2014 ogs\u00e5 n\u00e5r den f\u00f8les som ensomhed.',
     4: 'Metal i blomstringens tid. Du sorterer naturligt \u2014 mennesker, muligheder, retninger. Lungerne skelner det rene fra det urene. Stol p\u00e5 den sans. Ikke alt der glimter er v\u00e6rd at f\u00f8lge.',
     5: 'Metal-element i ildens fase. Din klarhed er en modv\u00e6gt til intensiteten. Mens andre l\u00f8ber hurtigere, standser du og sp\u00f8rger: er det her v\u00e6sentligt? Den evne er sjælden og v\u00e6rdifuld.',
-    6: 'Metal og jordens modning. Klarhed m\u00f8der fundament. Du finder essensen i det levede liv \u2014 hvad der var \u00e6gte, hvad der kan sl\u00e6nges. Det er metals naturlige bev\u00e6gelse, og den er smuk.',
-    7: 'Dobbelt metal-energi. Forvandling og essens smelter sammen. Du er i dit elements hjemsted \u2014 klar, ren, til tider sk\u00e6rende. Sorgen er m\u00e5ske n\u00e6rmere overfladen nu. Lad den v\u00e6re. Den renser.',
-    8: 'Metal i essensens tid. Alt det overfl\u00f8dige er ved at falde v\u00e6k. Tilbage st\u00e5r det du virkelig er \u2014 det der ikke kan tages fra dig. Der er en frihed i den reduktion, ogs\u00e5 n\u00e5r den g\u00f8r ondt.',
+    6: 'Dobbelt metal-energi i klarhedens fase. Du er i dit elements hjemsted \u2014 klar, ren, skelnen de. Livsfasens metal og dit eget element synger sammen. Brug den klarhed til at se, hvad der virkelig betyder noget.',
+    7: 'Dobbelt metal i frig\u00f8relsens fase. Metallets kraft er p\u00e5 sit h\u00f8jeste. Du slipper naturligt det overfl\u00f8dige \u2014 roller, forventninger, ting. Sorgen er m\u00e5ske n\u00e6rmere overfladen nu. Lad den v\u00e6re. Den renser.',
+    8: 'Metal i dybdens fase. Din klarhed m\u00f8der vandets stilhed. Fra at sortere og slippe bevæger du dig mod noget dybere \u2014 en stilhed, der ikke kr\u00e6ver handling. Lad metallets skarphed hvile i vandets ro.',
     9: 'Metal-element i fuldendelsens fase. Du ser klart nu. Livets essens ligger \u00e5ben for dig som en stille eftermiddag i november \u2014 k\u00f8lig luft, klart lys, kun det n\u00f8dvendige. Det er nok. Det er smukt.'
+  }
+};
+
+// ---- BLOK 2b: ELEMENT_FASE_ROTATION ----
+// Ekstra rotationstekster per element × fase kombination.
+// Bruges sammen med ELEMENT_FASE_DAGLIG via dayRotation for daglig variation.
+
+const ELEMENT_FASE_ROTATION = {
+  'VAND': {
+    1: [
+      'I dit barns hjerte bor vandets stille sprog. Den dybde du m\u00e6rker er ikke usikkerhed \u2014 det er en gammel visdom der allerede kender vejen.',
+      'Dobbelt vand i den f\u00f8rste fase. Du b\u00e6rer en sj\u00e6l der altid har vidst mere end ordene r\u00e6kker til. Lad det stille rum i dig vokse.',
+      'Vandets barn. Der er en s\u00f8 i dig der aldrig helt fryser til. Selv i de travleste dage finder din krop vej til stilheden. Stol p\u00e5 det.',
+      'Nyrernes essens er st\u00e6rkest i begyndelsen. Du husker m\u00e5ske ikke med ord, men din krop husker alt \u2014 n\u00e6rhed, ber\u00f8ring, stilhed. Det er dit fundament.'
+    ],
+    2: [
+      'Dit vand-element s\u00f8ger dybde i alt det nye. Mens andre l\u00f8ber fremad, dykker du ned. Den nysgerrighed der g\u00e5r indad er lige s\u00e5 modig som den der g\u00e5r udad.',
+      'Vand i v\u00e6kstens tid. Du udforsker verden gennem fornemmelser mere end fakta. Det er en gave \u2014 lad intuition og logik arbejde sammen.',
+      'Noget i dig vil forst\u00e5 f\u00f8r det vil handle. Det er vandets rytme i tr\u00e6ets fase \u2014 t\u00e5lmodighed der ligner langsomhed men er visdom.',
+      'Din dybde g\u00f8r dig til en unik opdagelsesrejsende. Du finder skatte andre overser, fordi du kigger under overfladen. Stol p\u00e5 den metode.'
+    ],
+    3: [
+      'Stilheden i dig er en styrke midt i opv\u00e5gningens larm. Dit vand-element lytter dybere end ordene r\u00e6kker \u2014 det er din superevne.',
+      'Vand i den tredje fase. Hvor andre r\u00e5ber sig til rette, finder du din stemme i stilheden. Den er ikke svagere \u2014 den er bare dybere.',
+      'Der er en underjordisk flod i dig der ikke lader sig forstyrre af overfladen. Lad den v\u00e6re din guide n\u00e5r identiteten s\u00f8ger form.',
+      'Din intuition er skarpere end du tror. I opv\u00e5gningens fase kan vand-elementet f\u00f8les som en mods\u00e6tning til verdens tempo. Men det er din gave.'
+    ],
+    4: [
+      'Vand i blomstringen. Du m\u00e6rker retning uden at kunne forklare den. Det er nyrernes stille kompas der arbejder \u2014 stol p\u00e5 det, ogs\u00e5 n\u00e5r logikken ikke kan f\u00f8lge med.',
+      'Din dybde giver dine valg en tyngde som andre misunder. I disse \u00e5r er din intuition det skarpeste instrument du har. Brug det.',
+      'Noget i dig ved at blomstering ogs\u00e5 handler om r\u00f8dder. Mens andre r\u00e6kker ud, r\u00e6kker du ned. Begge retninger er n\u00f8dvendige.',
+      'Vand-elementet i sin skarpeste \u00e5rv\u00e5genhed. Du m\u00e6rker hvad der er \u00e6gte, og hvad der bare er st\u00f8j. Lad den skelneevne guide dine valg nu.'
+    ],
+    5: [
+      'Intensiteten i denne fase kan f\u00f8les som en storm over din stille s\u00f8. Find de rolige lommer \u2014 de er dit element, og de forsvinder aldrig helt.',
+      'Vand og ild danser i dig lige nu. Sp\u00e6ndingen er reel, men det er balancen ogs\u00e5. Du beh\u00f8ver ikke v\u00e6lge mellem handling og stilhed.',
+      'Midt i livets travleste \u00e5r er din dybde en anker. Andre driver med str\u00f8mmen \u2014 du kender bunden. Det er ikke dovenskab, det er forankring.',
+      'Nyrerne b\u00e6rer en tr\u00e6thed som ikke handler om s\u00f8vn. Det handler om at holde dybde i en overfladisk tid. V\u00e6r blid ved dig selv.'
+    ],
+    6: [
+      'Vand og metallets klarhed. Din dybde hj\u00e6lper dig med at skelne det v\u00e6sentlige \u2014 metallets sortering f\u00f8les naturlig for dig, fordi vand allerede kender essensen.',
+      'Din stilhed er en gave i klarhedens tid. Mens andre k\u00e6mper med at give slip, fl\u00f8d du allerede. Metallets klarhed forst\u00e6rker din naturlige visdom.',
+      'Grundvandet i dig m\u00f8der metallets skarpe luft. Der er en renhed i den kombination \u2014 som vintermorgen over en stille s\u00f8. Klar, kold, smuk.',
+      'Nyrernes essens og metallets klarhed m\u00f8des i dig. Det f\u00f8les m\u00e5ske som en langsommere tid, men det er en klarere tid. Der er forskel.'
+    ],
+    7: [
+      'Dit element har altid vidst at alt er cyklisk. Denne frig\u00f8relse er ikke fremmed for dig \u2014 den er en gammel ven i ny forkl\u00e6dning.',
+      'Vand i metallets frig\u00f8relse. Noget renses bort, og tilbage st\u00e5r essensen. Du kender den proces \u2014 den har altid boet i dig som tidevand.',
+      'Frig\u00f8relsen beder dig om at slippe det du troede var dig. Men dit vand-element ved: det der er \u00e6gte kan ikke skylles v\u00e6k. Det synker bare dybere.',
+      'Nyrernes Jing \u00e6ndrer udtryk i denne fase. Ikke mindre energi \u2014 bare en anden slags. Som en flod der bliver bredere og langsommere n\u00e6r havet.'
+    ],
+    8: [
+      'Du n\u00e6rmer dig dit elements rene form. Stilheden er ikke l\u00e6ngere noget du s\u00f8ger \u2014 den er noget du er. Dobbelt vand i dybdens fase. M\u00e6rk den samklang.',
+      'Vand-elementet i dybdens tid kender forskellen p\u00e5 ro og tomhed. Din ro er fyldt med viden, erfaring og en intuition der aldrig har svigtet dig.',
+      'Nyrerne hviler dybere nu. Ikke fordi de er svagere, men fordi de har fundet en rytme der ikke kr\u00e6ver anstrengelse. Du har ogs\u00e5.',
+      'Din visdom er som grundvand \u2014 usynlig for de fleste, men den n\u00e6rer alt der gror i din n\u00e6rhed. Det er en stille magt.'
+    ],
+    9: [
+      'Cirklen lukker sig med vand. Du er kilden der blev til flod, blev til hav, og nu vender hjem til stilheden. Alt du har levet bor i den dybde.',
+      'Dobbelt vand i livets fuldendelse. Der er intet der mangler. Din dybde, din ro, din evne til at rumme \u2014 det er gaver der bare vokser.',
+      'Alt vand finder hjem til havet. I denne fase er du havet \u2014 roligt, dybt, uendeligt. Andre finder hvile bare ved at v\u00e6re n\u00e6r dig.',
+      'Nyrernes essens har b\u00e5ret dig hele vejen. Nu b\u00e6rer du den med en lethed der kun kommer af at have levet fuldt og dybt.'
+    ]
+  },
+  'TR\u00c6': {
+    1: [
+      'Den lille spire i dig kender allerede lyset. Tr\u00e6-energi i den tidligste fase er som en knop der venter \u2014 t\u00e5lmodig men fuld af fremtid.',
+      'Noget i dig presser opad, selv i stilheden. Det er tr\u00e6ets natur i vandets fase \u2014 v\u00e6kst der begynder i det skjulte, l\u00e6nge f\u00f8r verden ser den.',
+      'Din fremadrettede kraft er en gave. Lad den spire i sit eget tempo \u2014 ogs\u00e5 de st\u00e6rkeste tr\u00e6er begyndte som usynlige fr\u00f8 i m\u00f8rket.',
+      'Tr\u00e6-elementet i barndommens vand. Du b\u00e6rer en retningssans der er medf\u00f8dt. Den beh\u00f8ver ikke logik endnu \u2014 bare lys og plads.'
+    ],
+    2: [
+      'Dit tr\u00e6-element blomstrer i udforskningens fase. Alt tr\u00e6kker i dig \u2014 retninger, muligheder, oplevelser. F\u00f8lg det der giver energi, ikke det der dr\u00e6ner.',
+      'Nysgerrighed med retning \u2014 det er tr\u00e6ets gave i den anden fase. Du s\u00f8ger ikke bare tilf\u00e6ldigt; du s\u00f8ger det der passer til din v\u00e6kst.',
+      'Leveren guider din appetit p\u00e5 livet. I denne fase er den um\u00e6ttelig. Lad den f\u00f8re dig, men husk ogs\u00e5 at sl\u00e5 r\u00f8dder undervejs.',
+      'Tr\u00e6-energi i sin naturlige habitat. Alt i dig vil udforske, udvide, erobre. Det er smukt. Husk bare at v\u00e6kst ogs\u00e5 handler om dybde, ikke kun h\u00f8jde.'
+    ],
+    3: [
+      'Den kraft du m\u00e6rker er ikke farlig \u2014 den er n\u00f8dvendig. Dobbelt tr\u00e6 i opv\u00e5gningstiden er som en storm der rydder plads til noget nyt.',
+      'Din frustration er et kompas. Den peger mod det du vil \u00e6ndre, det du vil skabe, det du n\u00e6gter at acceptere. Lyt til den med omhu.',
+      'Vrede der s\u00f8ger retning er ikke destruktiv \u2014 den er kreativ. Dit tr\u00e6-element ved det. Denne fase handler om at l\u00e6re at bruge kraften, ikke at d\u00e6mpe den.',
+      'To gange tr\u00e6-energi br\u00e6nder i dig. Det kan f\u00f8les som for meget \u2014 men se hvad du allerede har skabt med den kraft. Der er mere at komme.'
+    ],
+    4: [
+      'Leverens energi er p\u00e5 sit h\u00f8jeste. Du st\u00e5r som et tr\u00e6 i fuld blomst \u2014 synlig, st\u00e6rk, i bev\u00e6gelse. Men husk at r\u00f8dder ogs\u00e5 har brug for opm\u00e6rksomhed.',
+      'Din handlekraft kan flytte bjerge i denne fase. Sp\u00f8rgsm\u00e5let er ikke om du kan \u2014 det er hvilke bjerge der er v\u00e6rd at flytte. V\u00e6lg med omhu.',
+      'Tr\u00e6 i blomstering. Alt i dig r\u00e6kker ud \u2014 mod m\u00e5l, mod mennesker, mod mening. Det er livets fuldeste udtryk. Nyd det, og hvil n\u00e5r du kan.',
+      'Galdebl\u00e6ren tr\u00e6ffer klare valg nu. Din evne til at skelne mellem muligheder er skarp. Stol p\u00e5 den f\u00f8rste impuls \u2014 den er ofte den rigtige.'
+    ],
+    5: [
+      'Tr\u00e6 og ild sammen kan br\u00e6nde for hurtigt. Du m\u00e6rker det m\u00e5ske som en rastl\u00f8shed der aldrig helt finder ro. Bev\u00e6gelse hj\u00e6lper \u2014 men ikke hastighed.',
+      'Din handlekraft m\u00f8der intensitetens fase. Det er en potent kombination \u2014 brug den klogt. Ikke alt beh\u00f8ver g\u00f8res nu. Noget kan vente til i morgen.',
+      'Leveren arbejder h\u00e5rdere i denne fase. Hj\u00e6lp den med bev\u00e6gelse, frisk luft og \u00f8jeblikke hvor du bare st\u00e5r stille og tr\u00e6kker vejret.',
+      'Tr\u00e6-elementet i ildens varme. Der er en risiko for at br\u00e6nde ud \u2014 men der er ogs\u00e5 en mulighed for at br\u00e6nde igennem. Kend forskellen.'
+    ],
+    6: [
+      'V\u00e6kst m\u00f8der klarhed. Dit tr\u00e6-element l\u00e6rer nu at skelne det v\u00e6sentlige fra det overfl\u00f8dige. Metallets skarphed besk\u00e6rer \u2014 og dit tr\u00e6 vokser st\u00e6rkere.',
+      'Fleksibilitet er tr\u00e6ets overlevelse. I metallets fase handler det om at lade de un\u00f8dvendige grene falde \u2014 s\u00e5 stammen st\u00e5r klarere.',
+      'Din v\u00e6kst \u00e6ndrer karakter nu. Ikke mere, men mere pr\u00e6cist. Metallets klarhed hj\u00e6lper dig med at finde retning i det essentielle.',
+      'Leveren m\u00f8der metallets sortering. I denne fase handler det om at fokusere din kraft \u2014 ikke sprede den, men rette den mod det der virkelig betyder noget.'
+    ],
+    7: [
+      'Frig\u00f8relsens fase besk\u00e6rer h\u00e5rdt, men dit tr\u00e6-element ved det \u2014 hver gren du slipper frig\u00f8r energi til ny v\u00e6kst.',
+      'Metallets frig\u00f8relse sk\u00e6rer v\u00e6k det un\u00f8dvendige. For dit tr\u00e6-element kan det f\u00f8les som tab. Men se efter \u2014 stammen st\u00e5r friere nu.',
+      'Galdebl\u00e6ren sorterer med ny skarphed nu. Hvad var dit, og hvad var andres forventninger? Metallets klarhed giver plads til den skelnen.',
+      'Tr\u00e6 i frig\u00f8relsens fase. Du l\u00e6rer at give slip \u2014 ikke fordi du er svag, men fordi du er klog nok til at vide hvad der virkelig er dit.'
+    ],
+    8: [
+      'Tr\u00e6 i dybdens fase. Din v\u00e6kst m\u00f8der vandets stilhed \u2014 og r\u00f8dderne s\u00f8ger nedad. Der er en ny kraft i at g\u00e5 i dybden.',
+      'Tr\u00e6-energi i vandets tilbagevenden. Som et gammelt egetr\u00e6 hvis r\u00f8dder n\u00e5r grundvandet \u2014 stille, rodf\u00e6stet, trofaste.',
+      'Leverens visdom m\u00f8der nyrernes dybde. Du kender forskel p\u00e5 handling og reaktion, p\u00e5 vilje og vane. Den viden synker nu dybere ind.',
+      'Din kraft har fundet et stille udtryk. Ikke mindre levende \u2014 bare dybere. Som r\u00f8dder der finder grundvand i m\u00f8rket.'
+    ],
+    9: [
+      'Tr\u00e6et har v\u00e6ret alt \u2014 fr\u00f8, spire, stamme, krone. Nu er det ogs\u00e5 rod. Der er en stille stolthed i at vide hvad du har skabt og b\u00e5ret.',
+      'Livskraften finder nye veje nu. Den er ikke forsvundet \u2014 den er bare blevet underjordisk, som et rodnet der n\u00e6rer alt i det skjulte.',
+      'Tr\u00e6 i vandets fuldendelse. Cirklen lukker sig med en stille kraft. Dine r\u00f8dder er dybere end nogensinde, og det du giver videre er levende.',
+      'Galdebl\u00e6ren hviler i sin klarhed. De valg der var sv\u00e6re engang er simple nu. Du ved hvad der er dit \u2014 og hvad der aldrig var.'
+    ]
+  },
+  'ILD': {
+    1: [
+      'Den lille flamme i dig er medf\u00f8dt. Selv i den stille barndom br\u00e6nder ildens varme \u2014 i smil, i nysgerrighed, i den m\u00e5de du s\u00f8ger forbindelse.',
+      'Ild-element i vandets fase. Du b\u00e6rer en varme der ikke beh\u00f8ver store ord. Den m\u00e6rkes i din ber\u00f8ring, dit blik, din evne til at se andre.',
+      'Hjertets energi er allerede til stede. I den f\u00f8rste fase er din ild som et stearinlys \u2014 lille, men nok til at oplyse et helt rum.',
+      'Din forbindelsesevne er dyb fra begyndelsen. Ild i vand-fasen skaber en varme der er blid og gennemtr\u00e6ngende \u2014 som solskin gennem vand.'
+    ],
+    2: [
+      'Dit ild-element g\u00f8r dig til en naturlig centrum. I udforskningen tiltr\u00e6kker du andre \u2014 lad den gave ogs\u00e5 give dig lov til at udforske alene.',
+      'Hjertet s\u00f8ger forbindelse i alt det nye. Din varme \u00e5bner d\u00f8re som andres mod ikke kan. Men husk ogs\u00e5 at beskytte din flamme.',
+      'Ild og udforskning. Du finder mening i relationer mere end i fakta. Det er en anden slags viden \u2014 lige s\u00e5 vigtig, men sv\u00e6rere at s\u00e6tte ord p\u00e5.',
+      'Din evne til at m\u00e6rke andres f\u00f8lelser er en gave der kr\u00e6ver gr\u00e6nser. I denne fase handler det om at l\u00e6re hvorn\u00e5r du giver, og hvorn\u00e5r du fylder op.'
+    ],
+    3: [
+      'Passionen br\u00e6nder frit i opv\u00e5gningstiden. Alt i dig vil forbinde, m\u00e6rke, dele. Det er ild-elementets smukkeste udtryk \u2014 og det mest s\u00e5rbare.',
+      'Din ild flammer op i denne fase. Lad den br\u00e6nde \u2014 men s\u00f8rg for at du har br\u00e6ndstof. Forbindelser n\u00e6rer, men ensomhed t\u00e6rer p\u00e5 ildens flamme.',
+      'Ild i den tredje fase er som midsommernat \u2014 alt er t\u00e6ndt, alt er muligt. Nyd intensiteten, men find ogs\u00e5 de stille steder.',
+      'Hjertets meridian banker med fuld kraft. Du m\u00e6rker alt st\u00e6rkere nu \u2014 gl\u00e6de, sorg, l\u00e6ngsel, h\u00e5b. Det er din ild der fort\u00e6ller dig at du lever.'
+    ],
+    4: [
+      'Dobbelt ild i blomsttiden. Dit hjerte er en sommermark \u2014 \u00e5bent, modtageligt, gener\u00f8st. Pas p\u00e5 at du ikke giver mere end du har.',
+      'Forbindelsen til andre er din styrke nu. Men hvem forbinder du til dig selv? Dit hjerte fortjener den samme varme som du giver alle andre.',
+      'Ildens blomstring er synlig for alle. Du str\u00e5ler i denne fase \u2014 lad det ske, men s\u00f8rg for at str\u00e5lingen n\u00e6res indefra, ikke kun udefra.',
+      'Du er i dit elements hjemland. Alt f\u00f8les naturligt \u2014 varmen, forbindelsen, gl\u00e6den. Nyd det, og vid at denne ild er din at beholde.'
+    ],
+    5: [
+      'Alt synger den samme tone \u2014 forbindelse, varme, gl\u00e6de. Det er smukt og kan v\u00e6re overv\u00e6ldende. Find de stille \u00f8jeblikke midt i harmonien.',
+      'Ild i sin fulde kraft. Du er en sol der varmer alt i din n\u00e6rhed. Husk bare at solen ogs\u00e5 g\u00e5r ned \u2014 og at det ikke er et tab, men en naturlig rytme.',
+      'Din varme kan hele i denne fase. Brug den med intention \u2014 ikke tilf\u00e6ldigt. Hjertet ved hvem der virkelig har brug for din ild.',
+      'Ildens intensitet matcher livets krav. Du br\u00e6nder for det rigtige nu \u2014 lad bare ikke andres behov overd\u00f8ve din egen flammes stemme.'
+    ],
+    6: [
+      'Ilden m\u00f8der metallets klarhed. Den br\u00e6nder ikke mindre \u2014 den br\u00e6nder mere pr\u00e6cist. Metallets sortering hj\u00e6lper din ild med at finde sit fokus.',
+      'Din varme har fundet klarhed. I metallets fase l\u00e6rer ilden at skelne det v\u00e6sentlige fra det overfl\u00f8dige \u2014 og det er en sj\u00e6lden og smuk ting.',
+      'Hjertet har l\u00e6rt noget om pr\u00e6cision. Ikke den slags der k\u00f8ler, men den slags der fokuserer. Din ild i klarhedens fase er skarpere og varmere.',
+      'Ild og metal. Din varme m\u00f8der klarhed. De mennesker du varmer nu, f\u00e5r din reneste ild \u2014 fordi du har l\u00e6rt hvad der virkelig er v\u00e6rd at br\u00e6nde for.'
+    ],
+    7: [
+      'Flammen \u00e6ndrer farve. Fra gult til dybt orange, fra overflade til kerne. Din ild i frig\u00f8relsens fase er ikke svagere \u2014 den er mere \u00e6gte.',
+      'Frig\u00f8relsen renser din ild. Det der br\u00e6nder nu er ikke vane eller pligt \u2014 det er det du virkelig elsker, det der virkelig varmer.',
+      'Hjertets visdom i metallets frig\u00f8relse. Du ved nu hvad der er v\u00e6rd at br\u00e6nde for \u2014 og hvad der bare er st\u00f8j. Den skelnen er guld v\u00e6rd.',
+      'Din forbindelsesevne er modnere nu. Ikke alle mennesker fortjener din ild \u2014 og den erkendelse er ikke kold. Den er klog.'
+    ],
+    8: [
+      'Hjertet m\u00f8der vandets dybde. I dybdens fase finder din varme et stille udtryk \u2014 dyb forbindelse uden de store armbev\u00e6gelser.',
+      'Ildens varme i vandets stilhed. Ikke betinget, ikke kr\u00e6vende \u2014 bare varme der str\u00f8mmer fra dybet. Du er den varme nu.',
+      'Din forbindelsesevne har n\u00e5et en dybde der ikke beh\u00f8ver ord. Et blik, en ber\u00f8ring, en stilhed \u2014 vandets og ildens f\u00e6lles sprog.',
+      'I dybdens fase br\u00e6nder ilden med en stille klarhed. Du ser mennesker tydeligt nu \u2014 og holder af dem alligevel. Det er mesterskab.'
+    ],
+    9: [
+      'Din ild er blevet selvn\u00e6rende. Den beh\u00f8ver ikke br\u00e6ndstof udefra \u2014 den br\u00e6nder af en indre varme der aldrig g\u00e5r ud.',
+      'Ild i fuldendelsens fase er som en evig flamme. Stille, stabil, varm. Du er forbindelsen \u2014 mellem det der var og det der kommer.',
+      'Hjertet har fundet sin endelige hvile \u2014 ikke i stilstand, men i en rytme der er helt din egen. Din varme er arven du giver videre.',
+      'Ild og vand m\u00f8des i slutningen som i begyndelsen. Cirklen lukker sig med en varme der er dyb som havet og stille som en nat ved s\u00f8en.'
+    ]
+  },
+  'JORD': {
+    1: [
+      'Jordens barn s\u00f8ger tryghed fra f\u00f8rste \u00f8jeblik. Din evne til at m\u00e6rke hvad der er sikkert er medf\u00f8dt \u2014 stol p\u00e5 den, ogs\u00e5 i det ukendte.',
+      'Jord i vandets fase. Du bygger allerede fundament \u2014 i relationer, i vaner, i den m\u00e5de du husker det vigtige. Det er en sj\u00e6lden gave.',
+      'Miltens energi er stille men b\u00e6rende. Fra begyndelsen har du en fornemmelse for hvad der holder og hvad der vakler. Lyt til den sans.',
+      'Din omsorg er medf\u00f8dt. I den f\u00f8rste fase viser jord-elementet sig som en instinktiv evne til at samle, dele og holde sammen. Det er dit fundament.'
+    ],
+    2: [
+      'Jord-element i udforskningens tid. Din nysgerrighed har en praktisk retning \u2014 du vil forst\u00e5 for at skabe, ikke bare for at vide.',
+      'Mens andre udforsker med hovedet, udforsker du med h\u00e6nderne. Dit jord-element s\u00f8ger det konkrete, det h\u00e5ndgribelige, det der kan bruges.',
+      'Din omsorg vokser med din verden. I den anden fase finder du gl\u00e6de i at dele \u2014 madpakke, hemmeligheder, tr\u00f8st. Det er jordens naturlige sprog.',
+      'Miltens visdom i den unge krop. Du m\u00e6rker allerede hvad der n\u00e6rer og hvad der t\u00e6rer \u2014 p\u00e5 krop, sind og sj\u00e6l. Stol p\u00e5 den fornemmelse.'
+    ],
+    3: [
+      'Stabilitet i stormen. Mens andre br\u00e6nder og brager, s\u00f8ger du det faste. Det er ikke langsomhed \u2014 det er en slags mod som verden har brug for.',
+      'Din jord-energi i opv\u00e5gningens fase skaber tryghed for andre. Men hvem skaber den for dig? Husk at fundamentet ogs\u00e5 har brug for pleje.',
+      'Jord i den tredje fase. Din evne til at rumme er enorm \u2014 men den kan ogs\u00e5 blive en byrde. L\u00e6r at s\u00e6tte gr\u00e6nser for din omsorg.',
+      'Bekymringen kan komme tidligt med jord-elementet. Det er jordens skygge \u2014 en omsorg der vender sig indad og bliver til uro. M\u00e6rk forskellen.'
+    ],
+    4: [
+      'Du bygger noget varigt nu. Hjem, relationer, karriere \u2014 alt b\u00e6rer dit jord-elements fingeraftryk: solidt, omsorgsfuldt, gennemtænkt.',
+      'Miltens n\u00e6rende kraft er p\u00e5 sit h\u00f8jeste. Du fodrer ikke bare kroppen men hele dit liv med det der er godt, sundt og b\u00e6redygtigt.',
+      'Jord i blomstringen. Andre bygger luftkasteller \u2014 du bygger med sten. Det tager l\u00e6ngere tid, men det holder. Stol p\u00e5 din metode.',
+      'Din stabilitet er ikke bare for dig selv. I denne fase b\u00e6rer du andre \u2014 b\u00f8rn, partnere, kolleger. Men hvem b\u00e6rer dig? Det sp\u00f8rgsm\u00e5l er vigtigt.'
+    ],
+    5: [
+      'Jord i ildens intensitet. Du er den stille kraft midt i stormene. Andre falder til ro bare ved at v\u00e6re n\u00e6r dig \u2014 det er en gave og et ansvar.',
+      'Hvem holder sammen p\u00e5 dig? I denne fase giver du ofte mere end du modtager. Miltens energi kan t\u00f8mmes \u2014 fyld den op med omsorg for dig selv.',
+      'Din stabilitet er uvurderlig nu. Men pas p\u00e5 at den ikke bliver til et f\u00e6ngsel. Jord-elementet har ogs\u00e5 brug for bev\u00e6gelse \u2014 bare langsomt.',
+      'Bekymringen kaster skygger i den intense fase. Det er jordens naturlige reaktion p\u00e5 kaos. M\u00e6rk den, anerkend den \u2014 og slip den s\u00e5 blidt.'
+    ],
+    6: [
+      'Jord m\u00f8der metallets klarhed. Din stabilitet hj\u00e6lper dig med at st\u00e5 fast mens det overfl\u00f8dige falder v\u00e6k. M\u00e6rk den styrke i at skelne hvad der virkelig n\u00e6rer.',
+      'Omsorg og klarhed m\u00f8des. Metallets sortering hj\u00e6lper dig med at se, hvad der virkelig har v\u00e6rdi \u2014 og hvad der bare fyldte. Din t\u00e5lmodighed b\u00e6rer frugt.',
+      'Miltens visdom m\u00f8der metallets pr\u00e6cision. Du ved hvad der n\u00e6rer \u2014 og hvad der ikke g\u00f8r. Klarhedens fase sk\u00e6rper den skelneevne.',
+      'Din omsorg har n\u00e5et en modenhed der er sj\u00e6lden. Metallets klarhed hj\u00e6lper dig med at give pr\u00e6cist \u2014 ikke mere end n\u00f8dvendigt, men altid det rigtige.'
+    ],
+    7: [
+      'Frig\u00f8relsen ryster fundamentet, og det er sv\u00e6rt for dig der elsker stabilitet. Men m\u00e6rk efter \u2014 jorden er stadig under dig. Den finder bare en ny form.',
+      'Frig\u00f8relse er ikke jordens naturlige element. Men metallets klarhed hj\u00e6lper dig med at se hvad der kan sl\u00e6nges \u2014 og hvad der skal beholdes.',
+      'Din evne til at holde fast bliver nu en evne til at give slip. Det er jordens modige bev\u00e6gelse i metallets tid \u2014 at stole p\u00e5 at fundamentet holder.',
+      'Jord i frig\u00f8relsens fase. Noget af det du troede var n\u00f8dvendigt, viser sig at v\u00e6re overfl\u00f8digt. Lad det falde. Det der virkelig b\u00e6rer, bliver.'
+    ],
+    8: [
+      '\u00c5revis af omsorg m\u00f8der vandets dybde. Din evne til at holde rum n\u00e6res nu af en ny stilhed \u2014 dybere og mere kostbar end nogensinde.',
+      'Miltens visdom i dybdens fase. Du ved hvad der n\u00e6rer, hvad der heler, hvad der holder. Nu synker den viden ned i vandets stille ro.',
+      'Din omsorg m\u00f8der vandets intuition. Den beh\u00f8ver ikke l\u00e6ngere at bevise sig \u2014 den str\u00f8mmer som grundvand, stille og n\u00e6rende.',
+      'Jord-elementet finder dybde i vandets fase. Ikke mere, ikke mindre \u2014 bare dybere. Den f\u00f8lelse af at synke ned i ro er vandets gave til dig.'
+    ],
+    9: [
+      'Du er blevet til selve fundamentet. Andre tr\u00e6der p\u00e5 dig uden at vide det \u2014 og du b\u00e6rer dem med k\u00e6rlighed. Det er jordens h\u00f8jeste udtryk.',
+      'Jord i fuldendelsens fase. Alt det du har bygget, n\u00e6ret og holdt sammen lever videre. Din omsorg er en arv der b\u00e6rer generationer.',
+      'Miltens essens har n\u00e5et sin fuldendelse. Du ved hvad livet kr\u00e6ver \u2014 og du ved hvad det giver. Den balance er din gave til verden.',
+      'Jordens cirkel lukker sig med tryghed. Du er den tryghed nu \u2014 for dig selv og for alle der kender din varme, din stabilitet, din omsorg.'
+    ]
+  },
+  'METAL': {
+    1: [
+      'Metallets barn ser essensen fra begyndelsen. Du kigger gennem overfladen og finder det der er \u00e6gte \u2014 det er en sj\u00e6lden og vigtig evne.',
+      'Klarhed i vandets fase. Din evne til at skelne er medf\u00f8dt. Lungerne tr\u00e6kker det rene ind og puster det urene ud \u2014 du g\u00f8r det samme med oplevelser.',
+      'Metal og vand i den f\u00f8rste fase. Du b\u00e6rer en alvor der kan f\u00f8les ensom. Men den alvor er ogs\u00e5 en form for respekt for livets dybde.',
+      'Din sans for det v\u00e6sentlige er et kompas. I barndommens kaos finder du altid det ene punkt der er vigtigt. Stol p\u00e5 den evne.'
+    ],
+    2: [
+      'Metal i udforskningen. Du sorterer naturligt \u2014 hvad er v\u00e6rd at vide, hvem er v\u00e6rd at kende, hvad er \u00e6gte. Den evne sparer dig for meget.',
+      'Din nysgerrighed har et filter. Ikke alt er lige interessant \u2014 og det er okay. Dit metal-element ved hvad der passer til dig.',
+      'Lungerne tr\u00e6kker vejret i udforskningens fase. Hvert \u00e5ndedrag er en sortering \u2014 ind med det rene, ud med det overfl\u00f8dige. Lad det m\u00f8nster guide dig.',
+      'Metal og tr\u00e6-energi m\u00f8des i dig. Klarhed og v\u00e6kst kan v\u00e6re gode partnere \u2014 n\u00e5r du lader retningen komme fra essensen, ikke fra rastl\u00f8sheden.'
+    ],
+    3: [
+      'Mens andre stormer fremad med tr\u00e6ets kraft, s\u00f8ger du mening bag handlingen. Det er metallets gave i opv\u00e5gningens fase \u2014 dybde fremfor fart.',
+      'Din klarhed kan f\u00f8les som ensomhed i en larmende verden. Men det er en ensomhed der er fyldt med indsigt. Lad den v\u00e6re din styrke.',
+      'Metal i den tredje fase. Du stiller de sv\u00e6re sp\u00f8rgsm\u00e5l mens andre bare handler. Det kr\u00e6ver mod \u2014 mere end de fleste forst\u00e5r.',
+      'Lungernes sorg er ikke svaghed. Det er en dyb forst\u00e5else for at alt har en pris, og at det v\u00e6sentlige koster mest. Den viden er din gave.'
+    ],
+    4: [
+      'Du sorterer med kirurgisk pr\u00e6cision nu. Mennesker, muligheder, retninger \u2014 alt passerer gennem dit metal-elements filter. Stol p\u00e5 det.',
+      'Metal i blomsttiden. Mens andre samler op, l\u00e6gger du fra dig. Det er ikke afvisning \u2014 det er en dyb forst\u00e5else for hvad der virkelig t\u00e6ller.',
+      'Lungerne skelner renhed fra urenhed. I disse \u00e5r er den evne din bedste ven \u2014 brug den p\u00e5 relationer, valg og den retning du v\u00e6lger.',
+      'Din klarhed er en modv\u00e6gt til blomstringens overflod. Ikke alt der tilbydes er n\u00f8dvendigt. Din evne til at sige nej er lige s\u00e5 vigtig som ja.'
+    ],
+    5: [
+      'Metal i ildens fase. Din klarhed er en k\u00f8lig brise i sommerens varme. Mens andre l\u00f8ber, standser du og sp\u00f8rger det vigtige sp\u00f8rgsm\u00e5l.',
+      'Den evne til at se essensen er sj\u00e6lden i intensitetens tid. Andre mister overblikket \u2014 du finder det. Det er metallets gave til verden.',
+      'Lungerne tr\u00e6kker renere vejret nu. Du ved hvad der er \u00e6gte, hvad der er st\u00f8j, og hvad der bare er vane. Den skelnen er guld v\u00e6rd.',
+      'Metal og ild. Klarhed og varme kan leve sammen \u2014 n\u00e5r du lader hjertet varme og lungerne sortere. Balancen er din at finde.'
+    ],
+    6: [
+      'Dobbelt metal i klarhedens fase. Du er i dit elements hjemsted \u2014 klar, pr\u00e6cis, skelnen de. Alt i dig synger den samme tone: essens, renhed, sandhed.',
+      'Metal i sin egen fase. Din evne til at sortere er p\u00e5 sit h\u00f8jeste. De valg du tr\u00e6ffer nu er de klareste i dit liv \u2014 fordi livsfasen og dit element er i samklang.',
+      'Lungerne \u00e5nder frit i metallets egen tid. Din klarhed er ikke l\u00e6ngere skarp men blid \u2014 som efter\u00e5rsluft der renser uden at sk\u00e6re.',
+      'Dit metal-element hviler i sig selv. Klarhed og essens er gode venner \u2014 og i denne fase er de uadskillelige i dig.'
+    ],
+    7: [
+      'Dobbelt metal i frig\u00f8relsen. Du er stadig i dit elements hjemsted \u2014 klar, ren, til tider sk\u00e6rende. Sorgen er m\u00e5ske n\u00e6rmere overfladen nu. Lad den komme.',
+      'Frig\u00f8relsens fase er metallets naturlige tid. Du ved allerede at noget m\u00e5 slippes for at essensen tr\u00e6der frem. Lad processen ske.',
+      'Lungerne slipper ud med hvert \u00e5ndedrag. I frig\u00f8relsens fase handler det om at slippe mere end du holder. Det er metallets mod.',
+      'Din sorg er ikke svaghed \u2014 den er en anerkendelse af det du har elsket. I dobbelt metal-energi er den sorg ogs\u00e5 en kilde til frig\u00f8relse.'
+    ],
+    8: [
+      'Din klarhed m\u00f8der vandets dybde. I dybdens fase finder metallets skarphed hvile i en stilhed, der er st\u00f8rre end den selv. Lad dig synke ned.',
+      'Metal i vandets tilbagevenden. Du beh\u00f8ver ikke l\u00e6ngere sortere \u2014 vandet b\u00e6rer det v\u00e6sentlige til overfladen af sig selv. Stol p\u00e5 den str\u00f8m.',
+      'Lungerne m\u00f8der nyrernes stilhed. Din klarhed f\u00e5r en ny dimension \u2014 ikke bare hvad der er v\u00e6sentligt, men hvad der er dybt. Det er en forskel der m\u00e6rkes.',
+      'Dit metal-element finder ro i vandets dybde. Fra klarhed til stilhed \u2014 som en vinterhimmel der spejler sig i en stille s\u00f8. B\u00e5de himmel og vand er klare.'
+    ],
+    9: [
+      'Metal i vandets fuldendelse. Alt er klart nu \u2014 som en novembereftermiddag med k\u00f8lig luft og rent lys. Kun det n\u00f8dvendige. Det er nok.',
+      'Din klarhed er en gave til dem der kommer efter. I fuldendelsens fase er dit metal-element en ren klokke \u2014 den ringer sandt.',
+      'Lungerne hviler i en rytme der er helt din. Ind, ud. \u00c6gte, u\u00e6gte. Essens, overflod. Hele livets sortering samlet i hvert \u00e5ndedrag.',
+      'Cirklen lukker sig med klarhed. Dit metal-element har l\u00e6rt dig at se \u2014 virkelig se \u2014 hvad der er vigtigt. Den gave lyser videre.'
+    ]
   }
 };
 
