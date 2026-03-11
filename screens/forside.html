@@ -13,6 +13,9 @@
   </div>
 </div>
 
+<!-- STREAK (kun synlig ved 2+ dage) -->
+<div id="forside-streak" style="display:none;text-align:center;padding:6px 0 0;font-family:var(--font-sans);font-size:12px;font-weight:400;letter-spacing:0.5px;color:var(--text-light)"></div>
+
 <!-- MORGEN/AFTEN-TEKST (hoerer visuelt til hero, derfor padding-top:0) -->
 <div class="s" style="padding-top:0">
   <div class="isa" id="lige-nu-tidstekst">
@@ -100,6 +103,11 @@
 
 <!-- TIDSREJSE CHIPS -->
 <div class="s" id="forside-tidsrejse-chips" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center"></div>
+
+<!-- DEL DIT ELEMENT -->
+<div class="s" style="text-align:center;padding-top:8px;padding-bottom:0">
+  <a id="forside-del" onclick="shareElement()" style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--blaa);opacity:0.6;cursor:pointer">Del dit element &rarr;</a>
+</div>
 
 <!-- DYK DYBERE -->
 <div class="s" style="padding-bottom:32px">

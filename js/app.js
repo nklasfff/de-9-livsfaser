@@ -515,6 +515,25 @@ function actionShare() {
   }
 }
 
+/* ---- Del dit element — deler nuværende fase og element ---- */
+function shareElement() {
+  var data = getUserCycles();
+  if (!data) return;
+  var elLabel = Calculations.ELEMENT_LABELS[data.dominant.element] || data.dominant.element;
+  var phase = data.cycles.lifePhase.phase;
+  var kvaliteter = (typeof ELEMENT_KVALITETER !== 'undefined' && ELEMENT_KVALITETER[data.dominant.element]) || '';
+  var tekst = 'Jeg er i Fase ' + phase + ' \u00b7 ' + elLabel + (kvaliteter ? ' \u00b7 ' + kvaliteter : '') + '. Hvilken energi b\u00e6rer du?';
+  var url = 'https://nklasfff.github.io/de-9-livsfaser/';
+
+  if (navigator.share) {
+    navigator.share({ title: 'De 9 Livsfasers Energi', text: tekst, url: url }).catch(function() {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(tekst + '\n' + url).then(function() {
+      showActionToast('Kopieret til udklipsholder');
+    });
+  }
+}
+
 function actionCopyLink() {
   const url = window.location.href;
   if (navigator.clipboard) {
@@ -623,6 +642,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize router (determines first screen)
   Router.init();
+
+  // Schedule local notifications (if permission granted + settings enabled)
+  scheduleLocalNotifications();
 });
 
 /* ============================================================
@@ -778,6 +800,23 @@ function buildDailyReading(cycles, dominant) {
   return template.replace('{cyklusser}', cykStr).replace('{konkret}', konkret);
 }
 
+/* ---- Streak: Render på forsiden (kun ved 2+ dage) ---- */
+function renderStreak() {
+  var el = document.getElementById('forside-streak');
+  if (!el) return;
+  var checkins = Storage.getCheckins();
+  var streak = calculateStreak(checkins);
+  if (streak < 2) { el.style.display = 'none'; return; }
+  var varianter = [
+    streak + '. dag i stille kontinuitet',
+    streak + ' dage i rolig forbindelse',
+    streak + ' dage med dig selv'
+  ];
+  var tekst = varianter[Calculations.dayRotation(varianter.length)];
+  el.textContent = tekst;
+  el.style.display = '';
+}
+
 function initForside() {
   const data = getUserCycles();
   if (!data) return;
@@ -851,6 +890,9 @@ function initForside() {
 
   // 10. TIDSREJSE CHIPS — quick-links til tidsrejse
   renderForsideChips();
+
+  // 11. STREAK — vis ved 2+ dage
+  renderStreak();
 }
 
 /* ---- Forside helper: Organur lige nu ---- */
@@ -867,23 +909,29 @@ function renderOrganur(organ) {
   }
 }
 
-/* ---- Forside helper: Aarstid x Element ---- */
+/* ---- Helper: Hent aarstid-tekst (backward-compatible med string/array) ---- */
+function getAarstidText(seasonKey, element, rotate) {
+  if (typeof AARSTID_ELEMENT_TEKST === 'undefined') return null;
+  var pool = AARSTID_ELEMENT_TEKST[seasonKey] && AARSTID_ELEMENT_TEKST[seasonKey][element];
+  if (!pool) return null;
+  if (Array.isArray(pool)) return rotate ? pool[Calculations.dayRotation(pool.length)] : pool[0];
+  return pool;
+}
+
+/* ---- Helper: Map season display name til data-key ---- */
+function getSeasonKey(season) {
+  var seasonMap = {
+    'Vinter': 'vinter', 'For\u00e5r': 'foraar', 'Sommer': 'sommer',
+    'Sensommer': 'sensommer', 'Efter\u00e5r': 'efteraar'
+  };
+  return season ? (seasonMap[season.season] || 'vinter') : 'vinter';
+}
+
+/* ---- Forside helper: Aarstid x Element (roterer dagligt) ---- */
 function renderAarstidElement(season, domEl) {
   if (!season) return;
-  // season.season = 'Vinter'|'For\u00e5r'|'Sommer'|'Sensommer'|'Efter\u00e5r'
-  // AARSTID_ELEMENT_TEKST keys = vinter|foraar|sommer|sensommer|efteraar
-  const seasonMap = {
-    'Vinter': 'vinter',
-    'For\u00e5r': 'foraar',
-    'Sommer': 'sommer',
-    'Sensommer': 'sensommer',
-    'Efter\u00e5r': 'efteraar'
-  };
-  const key = seasonMap[season.season] || 'vinter';
-
-  if (typeof AARSTID_ELEMENT_TEKST !== 'undefined' && AARSTID_ELEMENT_TEKST[key] && AARSTID_ELEMENT_TEKST[key][domEl]) {
-    setText('lige-nu-aarstid', AARSTID_ELEMENT_TEKST[key][domEl]);
-  }
+  var tekst = getAarstidText(getSeasonKey(season), domEl, true);
+  if (tekst) setText('lige-nu-aarstid', tekst);
 }
 
 /* ---- Forside helper: Din handling (een yoga-pose) ---- */
@@ -911,7 +959,8 @@ function renderTemaer(domEl, phase) {
   const container = document.getElementById('lige-nu-temaer');
   if (!container) return;
 
-  const temaer = [];
+  // Byg FULD pulje af alle egnede temaer — daglig rotation vaelger 4
+  const alleTemaer = [];
 
   // Tema 1: Overgangsalder (kun fase 7-8, dvs. 42+ år)
   if (phase.phase >= 7 && phase.phase <= 8 && typeof OVERGANGSALDER_SPECIFIK !== 'undefined') {
@@ -922,7 +971,7 @@ function renderTemaer(domEl, phase) {
     if (oa.faser && oa.faser[faseTrin] && oa.faser[faseTrin].element_raad && oa.faser[faseTrin].element_raad[domEl]) {
       oaBody += '\n\n' + oa.faser[faseTrin].element_raad[domEl];
     }
-    temaer.push({
+    alleTemaer.push({
       titel: 'Overgangsalder og dit element',
       tekst: oaBody,
       link: { label: 'L\u00e6s mere om din fase \u2192', route: 'cir-dit-liv' }
@@ -935,7 +984,7 @@ function renderTemaer(domEl, phase) {
     let stressBody = stress.dyb || '';
     if (stress.oevelse) stressBody += '\n\n\u00d8velse: ' + stress.oevelse;
     if (stress.kost_raad) stressBody += '\n\n' + stress.kost_raad;
-    temaer.push({
+    alleTemaer.push({
       titel: 'Stress og dit element',
       tekst: stressBody,
       link: { label: 'Se flere \u00f8velser \u2192', route: 'din-praksis' }
@@ -946,7 +995,7 @@ function renderTemaer(domEl, phase) {
   if (typeof INSIGHT_FOOD !== 'undefined' && INSIGHT_FOOD[domEl]) {
     const foods = INSIGHT_FOOD[domEl];
     let foodBody = foods.map(f => '\u2022 ' + f.item + ' \u2014 ' + f.desc).join('\n');
-    temaer.push({
+    alleTemaer.push({
       titel: 'N\u00e6ring til dit element',
       tekst: foodBody,
       link: { label: 'Se mere om kost \u2192', route: 'din-praksis' }
@@ -960,37 +1009,37 @@ function renderTemaer(domEl, phase) {
       const tekst = TEMA_DYBDE.forandring_og_overgang[domEl];
       // Vis kun første afsnit som preview i den foldbare
       const firstPara = tekst.split('\n\n')[0];
-      temaer.push({
+      alleTemaer.push({
         titel: 'Forandring og dit element',
         tekst: firstPara,
         link: { label: 'L\u00e6s mere \u2192', route: 'cir-dit-liv' }
       });
     }
-    // Sorg og tab — for fase 7-9 (frigørelse, visdom)
-    if (phase.phase >= 7 && TEMA_DYBDE.sorg_og_tab && TEMA_DYBDE.sorg_og_tab[domEl]) {
+    // Sorg og tab — fase 6+ (frigørelse, modning og videre)
+    if (phase.phase >= 6 && TEMA_DYBDE.sorg_og_tab && TEMA_DYBDE.sorg_og_tab[domEl]) {
       const tekst = TEMA_DYBDE.sorg_og_tab[domEl];
       const firstPara = tekst.split('\n\n')[0];
-      temaer.push({
+      alleTemaer.push({
         titel: 'Sorg og dit element',
         tekst: firstPara,
         link: { label: 'L\u00e6s mere \u2192', route: 'cir-dit-liv' }
       });
     }
-    // Ensomhed — for fase 5-6 (ansvar, modning — ofte ensomme faser)
-    if (phase.phase >= 5 && phase.phase <= 6 && TEMA_DYBDE.ensomhed_og_isolation && TEMA_DYBDE.ensomhed_og_isolation[domEl]) {
+    // Ensomhed — fase 4+ (bredere relevans)
+    if (phase.phase >= 4 && TEMA_DYBDE.ensomhed_og_isolation && TEMA_DYBDE.ensomhed_og_isolation[domEl]) {
       const tekst = TEMA_DYBDE.ensomhed_og_isolation[domEl];
       const firstPara = tekst.split('\n\n')[0];
-      temaer.push({
+      alleTemaer.push({
         titel: 'Ensomhed og dit element',
         tekst: firstPara,
         link: { label: 'L\u00e6s mere \u2192', route: 'cir-dit-liv' }
       });
     }
-    // Graviditet/fertilitet — for fase 3-5 (forvandling, blomstring, ansvar)
-    if (phase.phase >= 3 && phase.phase <= 5 && TEMA_DYBDE.graviditet_og_fertilitet && TEMA_DYBDE.graviditet_og_fertilitet[domEl]) {
+    // Graviditet/fertilitet — fase 2-5
+    if (phase.phase >= 2 && phase.phase <= 5 && TEMA_DYBDE.graviditet_og_fertilitet && TEMA_DYBDE.graviditet_og_fertilitet[domEl]) {
       const tekst = TEMA_DYBDE.graviditet_og_fertilitet[domEl];
       const firstPara = tekst.split('\n\n')[0];
-      temaer.push({
+      alleTemaer.push({
         titel: 'Fertilitet og dit element',
         tekst: firstPara,
         link: { label: 'L\u00e6s mere \u2192', route: 'cir-dit-liv' }
@@ -998,9 +1047,48 @@ function renderTemaer(domEl, phase) {
     }
   }
 
-  if (temaer.length === 0) {
+  // Angst og dit element — relevant for alle
+  if (typeof UDVIDET_HJAELP !== 'undefined' && UDVIDET_HJAELP.angst && UDVIDET_HJAELP.angst[domEl]) {
+    const angst = UDVIDET_HJAELP.angst[domEl];
+    let angstBody = angst.dyb || '';
+    if (angst.oevelse) angstBody += '\n\n\u00d8velse: ' + angst.oevelse;
+    if (angst.kost_raad) angstBody += '\n\n' + angst.kost_raad;
+    alleTemaer.push({
+      titel: 'Angst og dit element',
+      tekst: angstBody,
+      link: { label: 'Se flere \u00f8velser \u2192', route: 'din-praksis' }
+    });
+  }
+
+  // Udbraendthed og dit element — relevant for alle
+  if (typeof UDVIDET_HJAELP !== 'undefined' && UDVIDET_HJAELP.udbraendthed && UDVIDET_HJAELP.udbraendthed[domEl]) {
+    const ub = UDVIDET_HJAELP.udbraendthed[domEl];
+    let ubBody = ub.dyb || '';
+    if (ub.oevelse) ubBody += '\n\n\u00d8velse: ' + ub.oevelse;
+    if (ub.kost_raad) ubBody += '\n\n' + ub.kost_raad;
+    alleTemaer.push({
+      titel: 'Udbr\u00e6ndthed og dit element',
+      tekst: ubBody,
+      link: { label: 'Se flere \u00f8velser \u2192', route: 'din-praksis' }
+    });
+  }
+
+  if (alleTemaer.length === 0) {
     container.style.display = 'none';
     return;
+  }
+
+  // Daglig rotation: vis max 4 temaer, skift startpunkt dagligt
+  var maxVis = 4;
+  var temaer;
+  if (alleTemaer.length <= maxVis) {
+    temaer = alleTemaer;
+  } else {
+    var startIdx = Calculations.dayRotation(alleTemaer.length);
+    temaer = [];
+    for (var i = 0; i < maxVis; i++) {
+      temaer.push(alleTemaer[(startIdx + i) % alleTemaer.length]);
+    }
   }
 
   container.innerHTML = '<div class="eyebrow">Temaer for dig</div>' +
@@ -2377,12 +2465,8 @@ function renderTidsrejseTemaer() {
 
   // 4. Årstid og element
   var aarstidContent = '';
-  if (data && typeof AARSTID_ELEMENT_TEKST !== 'undefined') {
-    var seasonMap = { 'Vinter': 'vinter', 'Forår': 'foraar', 'Sommer': 'sommer', 'Sensommer': 'sensommer', 'Efterår': 'efteraar' };
-    var sKey = seasonMap[data.cycles.season.season] || 'vinter';
-    if (AARSTID_ELEMENT_TEKST[sKey] && AARSTID_ELEMENT_TEKST[sKey][domEl]) {
-      aarstidContent = AARSTID_ELEMENT_TEKST[sKey][domEl];
-    }
+  if (data) {
+    aarstidContent = getAarstidText(getSeasonKey(data.cycles.season), domEl, false) || '';
   }
   if (aarstidContent) {
     temaer.push({ title: data.cycles.season.season + ' og ' + elLabel, icon: '◌', content: aarstidContent });
@@ -2600,7 +2684,7 @@ function initTidsDybere() {
 
     aaHtml += '<div class="dybde-expand-more">';
     seasonOrder.forEach(function(s) {
-      var tekst = AARSTID_ELEMENT_TEKST[s.key] ? AARSTID_ELEMENT_TEKST[s.key][domEl] : null;
+      var tekst = getAarstidText(s.key, domEl, false);
       if (!tekst) return;
       var isCurrent = s.key === currentSeasonKey;
       var bg = isCurrent ? 'rgba(107,95,123,0.06)' : 'rgba(107,95,123,0.02)';
@@ -3187,12 +3271,8 @@ function renderVinduerTemaer() {
 
   // 4. \u00c5rstid og element
   var aarstidContent = '';
-  if (data && typeof AARSTID_ELEMENT_TEKST !== 'undefined') {
-    var seasonMap = { 'Vinter': 'vinter', 'For\u00e5r': 'foraar', 'Sommer': 'sommer', 'Sensommer': 'sensommer', 'Efter\u00e5r': 'efteraar' };
-    var sKey = seasonMap[data.cycles.season.season] || 'vinter';
-    if (AARSTID_ELEMENT_TEKST[sKey] && AARSTID_ELEMENT_TEKST[sKey][domEl]) {
-      aarstidContent = AARSTID_ELEMENT_TEKST[sKey][domEl];
-    }
+  if (data) {
+    aarstidContent = getAarstidText(getSeasonKey(data.cycles.season), domEl, false) || '';
   }
   if (aarstidContent) {
     temaer.push({ title: (data ? data.cycles.season.season : 'Vinter') + ' og ' + elLabel, icon: '\u25cc', content: aarstidContent });
@@ -3879,8 +3959,9 @@ function initVinDybere() {
     var seasonKey = seasonName.toLowerCase().replace('å','aa');
     var seasonKeyMap = { 'vinter': 'vinter', 'foraar': 'foraar', 'forår': 'foraar', 'sommer': 'sommer', 'sensommer': 'sensommer', 'efteraar': 'efteraar', 'efterår': 'efteraar' };
     var mappedSeason = seasonKeyMap[seasonKey] || seasonKey;
-    if (typeof AARSTID_ELEMENT_TEKST !== 'undefined' && AARSTID_ELEMENT_TEKST[mappedSeason] && AARSTID_ELEMENT_TEKST[mappedSeason][userEl]) {
-      eHtml += '<div style="margin-top:16px">' + formatExpandable(AARSTID_ELEMENT_TEKST[mappedSeason][userEl], 80) + '</div>';
+    var aarstidTekst = getAarstidText(mappedSeason, userEl, false);
+    if (aarstidTekst) {
+      eHtml += '<div style="margin-top:16px">' + formatExpandable(aarstidTekst, 80) + '</div>';
     }
 
     // Cyklus-skift tekst
@@ -6234,15 +6315,10 @@ function initRejDybere() {
       dagligTekst = ELEMENT_FASE_DAGLIG[domEl][phaseNum];
     }
     // Tilfoej aarstid-element tekst
-    if (typeof AARSTID_ELEMENT_TEKST !== 'undefined') {
-      var seasonKey = cycles.season.season ? cycles.season.season.toLowerCase() : '';
-      // Map dansk to key
-      var seasonMap = { 'vinter': 'vinter', 'for\u00e5r': 'foraar', 'sommer': 'sommer', 'sensommer': 'sensommer', 'efter\u00e5r': 'efteraar' };
-      var sKey = seasonMap[seasonKey] || seasonKey;
-      if (AARSTID_ELEMENT_TEKST[sKey] && AARSTID_ELEMENT_TEKST[sKey][domEl]) {
-        if (dagligTekst) dagligTekst += '\n\n';
-        dagligTekst += AARSTID_ELEMENT_TEKST[sKey][domEl];
-      }
+    var aarstidSoeg = getAarstidText(getSeasonKey(cycles.season), domEl, false);
+    if (aarstidSoeg) {
+      if (dagligTekst) dagligTekst += '\n\n';
+      dagligTekst += aarstidSoeg;
     }
     if (dagligTekst) {
       dagligEl.innerHTML = formatExpandable(dagligTekst, 80);
@@ -6955,8 +7031,100 @@ function toggleIndSetting(el) {
     Storage.saveUser(u);
   }
 
+  // Request notification permission when morning/evening is enabled
+  if ((key === 'morning' || key === 'evening') && s[key]) {
+    requestNotificationPermission();
+  }
+
+  // Reschedule notifications when toggling or settings change
+  if (key === 'morning' || key === 'evening') {
+    scheduleLocalNotifications();
+  }
+
   // Toggle CSS class
   el.classList.toggle('ind-toggle--on', s[key]);
+}
+
+/* ---- Notifications: Request permission ---- */
+function requestNotificationPermission() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+/* ---- Notifications: Schedule local notifications ---- */
+var _notificationTimers = [];
+
+function scheduleLocalNotifications() {
+  // Clear existing timers
+  _notificationTimers.forEach(function(t) { clearTimeout(t); });
+  _notificationTimers = [];
+
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+  var settings = getIndSettings();
+  var now = new Date();
+
+  // Schedule morning notification
+  if (settings.morning) {
+    var mTime = (settings.morningTime || '07:30').split(':');
+    var morgenMs = scheduleTimeMs(now, parseInt(mTime[0]), parseInt(mTime[1]));
+    if (morgenMs > 0 && morgenMs < 86400000) { // max 24h ahead
+      _notificationTimers.push(setTimeout(function() { showDailyNotification('morgen'); }, morgenMs));
+    }
+  }
+
+  // Schedule evening notification
+  if (settings.evening) {
+    var eTime = (settings.eveningTime || '21:00').split(':');
+    var aftenMs = scheduleTimeMs(now, parseInt(eTime[0]), parseInt(eTime[1]));
+    if (aftenMs > 0 && aftenMs < 86400000) {
+      _notificationTimers.push(setTimeout(function() { showDailyNotification('aften'); }, aftenMs));
+    }
+  }
+}
+
+function scheduleTimeMs(now, targetHour, targetMin) {
+  var target = new Date(now);
+  target.setHours(targetHour, targetMin, 0, 0);
+  return target.getTime() - now.getTime();
+}
+
+/* ---- Notifications: Show a daily notification ---- */
+function showDailyNotification(tid) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  var data = getUserCycles();
+  if (!data) return;
+  var domEl = data.dominant.element;
+
+  // Get notification text from MORGEN_AFTEN_TEKST
+  var tekst = '';
+  if (typeof MORGEN_AFTEN_TEKST !== 'undefined' && MORGEN_AFTEN_TEKST[domEl] && MORGEN_AFTEN_TEKST[domEl][tid]) {
+    var pool = MORGEN_AFTEN_TEKST[domEl][tid];
+    if (pool && pool.length) {
+      tekst = pool[Calculations.dayRotation(pool.length)];
+    }
+  }
+  if (!tekst) tekst = tid === 'morgen' ? 'God morgen \u2014 m\u00e6rk efter, hvad din krop beder om i dag.' : 'God aften \u2014 hvordan har du m\u00e6rket din energi i dag?';
+
+  var titel = tid === 'morgen' ? 'God morgen \u2661' : 'God aften \u2661';
+
+  // Use Service Worker showNotification if available (works in background)
+  if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.ready.then(function(reg) {
+      reg.showNotification(titel, {
+        body: tekst,
+        icon: './assets/icons/icon-192.png',
+        badge: './assets/icons/icon-192.png',
+        tag: 'livsfaser-' + tid,
+        renotify: true
+      });
+    });
+  } else {
+    // Fallback to basic Notification API
+    new Notification(titel, { body: tekst, icon: './assets/icons/icon-192.png' });
+  }
 }
 
 function initIndstillinger() {

@@ -887,39 +887,139 @@ const CYKLUS_SKIFT_TEKST = {
 
 const AARSTID_ELEMENT_TEKST = {
   vinter: {
-    'VAND': 'Vinter og vand. Dobbelt dybde, dobbelt stilhed. Dette er din \u00e5rstid \u2014 alt i naturen bekræfter det din krop allerede ved: det er tid til at samle kr\u00e6fter. Lad dig synke ind i m\u00f8rket uden skyld. Det er her genopbygningen sker.',
-    'TR\u00c6': 'Vinter med tr\u00e6-energi. Der er noget i dig der vil vokse, men \u00e5rstiden beder dig vente. Tillad sp\u00e6ndingen \u2014 fr\u00f8et har brug for m\u00f8rket. Den drivkraft du m\u00e6rker er ikke forkert, den er bare for tidlig. For\u00e5ret kommer.',
-    'ILD': 'Vinter med ild-energi. Din varme st\u00e5r i kontrast til kulden udenfor. Du l\u00e6nges m\u00e5ske efter forbindelse, efter gl\u00e6de, efter lys. Find den varme indvendig \u2014 et stearinlys, en varm kop, en veninde der forstår.',
-    'JORD': 'Vinter med jord-energi. Naturen hviler, men din trang til at n\u00e6re er uforandret. Brug vinteren til at n\u00e6re dig selv for en gangs skyld. Varme supper, bløde tæpper, rytme og regelmæssighed. Milten takker dig.',
-    'METAL': 'Vinter med metal-energi. Klarheden er sk\u00e6rpet i den kolde luft. Din evne til at se essensen er p\u00e5 sit h\u00f8jeste. Brug vinterstilheden til at give slip p\u00e5 det overfl\u00f8dige. Lungerne \u00e5nder dybere n\u00e5r luften er ren.'
+    'VAND': [
+      'Vinter og vand. Dobbelt dybde, dobbelt stilhed. Dette er din \u00e5rstid \u2014 alt i naturen bekr\u00e6fter det din krop allerede ved: det er tid til at samle kr\u00e6fter. Lad dig synke ind i m\u00f8rket uden skyld. Det er her genopbygningen sker.',
+      'Vinterm\u00f8rket og dit vand-element taler samme sprog. Noget i dig hviler nu \u2014 ikke af tr\u00e6thed, men af visdom. Nyrerne samler energi i stilheden. Lad natten v\u00e6re lang.',
+      'N\u00e5r vinterens vand m\u00f8der dit eget, fordobles den indre stilhed. M\u00e5ske m\u00e6rker du det som en trang til at v\u00e6re alene. Det er ikke ensomhed \u2014 det er fylde.'
+    ],
+    'TR\u00c6': [
+      'Vinter med tr\u00e6-energi. Der er noget i dig der vil vokse, men \u00e5rstiden beder dig vente. Tillad sp\u00e6ndingen \u2014 fr\u00f8et har brug for m\u00f8rket. Den drivkraft du m\u00e6rker er ikke forkert, den er bare for tidlig. For\u00e5ret kommer.',
+      'Dit tr\u00e6-element presser p\u00e5 under vinterd\u00e6kket. M\u00e5ske dr\u00f8mmer du om nye begyndelser. Lad dr\u00f8mmene v\u00e6re \u2014 de er fr\u00f8ene. Vinteren modner dem i stilhed.',
+      'Tr\u00e6ets energi i vinterstilheden kan f\u00f8les som en uro der ikke har noget sted. Skriv den ned. Tegn den. Giv den form \u2014 ogs\u00e5 selvom den endnu ikke har retning.'
+    ],
+    'ILD': [
+      'Vinter med ild-energi. Din varme st\u00e5r i kontrast til kulden udenfor. Du l\u00e6nges m\u00e5ske efter forbindelse, efter gl\u00e6de, efter lys. Find den varme indvendig \u2014 et stearinlys, en varm kop, en veninde der forst\u00e5r.',
+      'Ilden i dig br\u00e6nder stille n\u00e5r verden er m\u00f8rk. Det er den indre varme der holder dig. M\u00e5ske er det tid til at samle dem du elsker t\u00e6ttere. Hjertet n\u00e6res af n\u00e6rhed.',
+      'Vinterens m\u00f8rke f\u00e5r din ild til at lyse klarere. Hvor andre ser kulde, m\u00e6rker du gl\u00f8derne. Brug den varme p\u00e5 noget smukt i aften \u2014 en samtale, et m\u00e5ltid, en k\u00e6rtegn.'
+    ],
+    'JORD': [
+      'Vinter med jord-energi. Naturen hviler, men din trang til at n\u00e6re er uforandret. Brug vinteren til at n\u00e6re dig selv for en gangs skyld. Varme supper, bl\u00f8de t\u00e6pper, rytme og regelm\u00e6ssighed. Milten takker dig.',
+      'Jordens energi i vinterm\u00e5nederne handler om fundament. Alt det du har samlet st\u00e5r nu stille og holder dig. Brug denne tid til at m\u00e6rke det b\u00e6rende i dit liv.',
+      'Dit jord-element s\u00f8ger tryghed n\u00e5r kulden kommer. Lav noget med h\u00e6nderne. En gryde, et brev, en omfavnelse. Den varme du giver, vender altid tilbage til dig.'
+    ],
+    'METAL': [
+      'Vinter med metal-energi. Klarheden er sk\u00e6rpet i den kolde luft. Din evne til at se essensen er p\u00e5 sit h\u00f8jeste. Brug vinterstilheden til at give slip p\u00e5 det overfl\u00f8dige. Lungerne \u00e5nder dybere n\u00e5r luften er ren.',
+      'Metal og vinter deler en kvalitet: det rene. N\u00e5r alt overfl\u00f8digt er faldet, st\u00e5r det essentielle tilbage. M\u00e5ske er der noget du kan give slip p\u00e5 i dag.',
+      'Vinterens klarhed n\u00e6rer dit metal-element. Kold luft, rene linjer, stille morgener. Din krop takker dig for enkelheden. Giv den mere af det.'
+    ]
   },
   foraar: {
-    'VAND': 'For\u00e5r med vand-energi. Naturen v\u00e5gner, men noget i dig vil stadig hvile. Det er naturligt \u2014 dit element har dybde, og dybde kræver tid. Lad for\u00e5ret komme til dig i stedet for at jage det. Du vokser ogs\u00e5, bare nedefra.',
-    'TR\u00c6': 'For\u00e5r og tr\u00e6. Dobbelt v\u00e6kst, dobbelt kraft. Alt i naturen spejler det du m\u00e6rker \u2014 en intens trang til at bryde igennem. F\u00f8lg den energi. Dette er dit \u00f8jeblik. Leveren jubilerer.',
-    'ILD': 'For\u00e5r med ild-energi. V\u00e6ksten n\u00e6rer din flamme. Du m\u00e6rker m\u00e5ske en stigende begejstring, en lyst til at forbinde, til at v\u00e6re ude, til at m\u00f8de verden. Lad for\u00e5ret puste til ilden.',
-    'JORD': 'For\u00e5r med jord-energi. V\u00e6ksten kan f\u00f8les urolig for dig der elsker stabilitet. Men jord er det for\u00e5ret vokser i. Du er fundamentet for alt det nye. M\u00e6rk den styrke \u2014 uden dig gror intet.',
-    'METAL': 'For\u00e5r med metal-energi. Det nye gr\u00f8nne kan f\u00f8les kaotisk for din klarhed. Men for\u00e5ret renser ogs\u00e5 \u2014 det fejer vinterstøvet v\u00e6k. Lad forårsvinden b\u00e6re det v\u00e6k du ikke l\u00e6ngere har brug for.'
+    'VAND': [
+      'For\u00e5r med vand-energi. Naturen v\u00e5gner, men noget i dig vil stadig hvile. Det er naturligt \u2014 dit element har dybde, og dybde kr\u00e6ver tid. Lad for\u00e5ret komme til dig i stedet for at jage det. Du vokser ogs\u00e5, bare nedefra.',
+      'For\u00e5rsvinden r\u00f8rer ved overfladen, men dit vand-element holder dybden. Lad andre v\u00e6re hurtige. Din v\u00e6kst sker nedefra \u2014 langsom og sikker som grundvand der stiger.',
+      'N\u00e5r for\u00e5ret kalder p\u00e5 handling, m\u00e5 du lytte til dit vand f\u00f8rst. M\u00e5ske er svaret ikke at g\u00f8re mere, men at m\u00e6rke mere. Stilheden har ogs\u00e5 en v\u00e6kst.'
+    ],
+    'TR\u00c6': [
+      'For\u00e5r og tr\u00e6. Dobbelt v\u00e6kst, dobbelt kraft. Alt i naturen spejler det du m\u00e6rker \u2014 en intens trang til at bryde igennem. F\u00f8lg den energi. Dette er dit \u00f8jeblik. Leveren jubilerer.',
+      'Tr\u00e6et i for\u00e5ret kender ingen tvivl. V\u00e6ksten er naturlov. M\u00e6rk den kraft i dig \u2014 den behøver ingen tilladelse. Ryk. Bevæg dig. Start noget.',
+      'Dit tr\u00e6-element danser med for\u00e5ret. Alt er muligt lige nu. Kroppen vil ud, leveren arbejder, synet er skarpt. Brug denne energi mens den er her.'
+    ],
+    'ILD': [
+      'For\u00e5r med ild-energi. V\u00e6ksten n\u00e6rer din flamme. Du m\u00e6rker m\u00e5ske en stigende begejstring, en lyst til at forbinde, til at v\u00e6re ude, til at m\u00f8de verden. Lad for\u00e5ret puste til ilden.',
+      'For\u00e5rets lys t\u00e6nder noget i dit ild-element. Dagene bliver l\u00e6ngere, og din energi vokser med dem. F\u00f8lg impulsen til at forbinde. Hjertet \u00e5bner sig lettere i lyset.',
+      'Ilden i dig flammer op n\u00e5r naturen v\u00e5gner. M\u00e5ske m\u00e6rker du en l\u00e6ngsel efter noget nyt \u2014 et projekt, en relation, en rejse. Lad den l\u00e6ngsel guide dig.'
+    ],
+    'JORD': [
+      'For\u00e5r med jord-energi. V\u00e6ksten kan f\u00f8les urolig for dig der elsker stabilitet. Men jord er det for\u00e5ret vokser i. Du er fundamentet for alt det nye. M\u00e6rk den styrke \u2014 uden dig gror intet.',
+      'Dit jord-element holder for\u00e5ret fast. Mens alt spirer og kravler, er du den varme jord alting gror i. Andre beh\u00f8ver din stabilitet nu. Glem ikke at du ogs\u00e5 f\u00e5r lov at blomstre.',
+      'For\u00e5rets uro m\u00f8der jordens ro i dig. Du beh\u00f8ver ikke jage forandringen \u2014 den kommer af sig selv. Bliv st\u00e5ende. V\u00e6r den jord der b\u00e6rer.'
+    ],
+    'METAL': [
+      'For\u00e5r med metal-energi. Det nye gr\u00f8nne kan f\u00f8les kaotisk for din klarhed. Men for\u00e5ret renser ogs\u00e5 \u2014 det fejer vinterstøvet v\u00e6k. Lad for\u00e5rsvinden b\u00e6re det v\u00e6k du ikke l\u00e6ngere har brug for.',
+      'Metallets klarhed i for\u00e5rets kaos er en gave. Du ser hvad der er v\u00e6sentligt n\u00e5r alt andet spirer vildt. Brug den skarphed \u2014 men lad ogs\u00e5 noget n\u00e6ring slippe igennem.',
+      'For\u00e5ret udfordrer dit metal-element med overflod. Alt vokser, alt vil noget. Din opgave er at v\u00e6lge. Lungerne \u00e5nder friere i den friske luft.'
+    ]
   },
   sommer: {
-    'VAND': 'Sommer med vand-energi. Alle andre blomstre og br\u00e6nder, men du s\u00f8ger m\u00e5ske skyggen. Det er helt i orden. Find vand \u2014 s\u00f8en, havet, bruset \u2014 og lad sommerens varme m\u00f8de din dybde. Begge er n\u00f8dvendige.',
-    'TR\u00c6': 'Sommer med tr\u00e6-energi. Din v\u00e6kst bader i sommerens lys. Der er en f\u00f8lelse af udfoldelse, af at alting lykkes. Nyd det \u2014 men husk at tr\u00e6et ogs\u00e5 har r\u00f8dder i skyggen. Balance.',
-    'ILD': 'Sommer og ild. Dobbelt varme, dobbelt forbindelse. Dette er din \u00e5rstid \u2014 lang dage, \u00e5bne d\u00f8re, levende samtaler. Men pas p\u00e5 overophedning. Find k\u00f8ling i vandmelon, skygge og stille aftener.',
-    'JORD': 'Sommer med jord-energi. Sommerens rigdom matcher din trang til at n\u00e6re. Marked, haver, frugter \u2014 alt er tilg\u00e6ngeligt. Brug sensommerens overgang til at samle ind. Du ved instinktivt hvad der skal gemmes.',
-    'METAL': 'Sommer med metal-energi. Sommerens intensitet kan f\u00f8les for meget. Du s\u00f8ger m\u00e5ske ro midt i festen, klarhed midt i l\u00e5rmen. Find den \u2014 i en tidlig morgen, en stille sti, et \u00f8jeblik alene med himlen.'
+    'VAND': [
+      'Sommer med vand-energi. Alle andre blomstrer og br\u00e6nder, men du s\u00f8ger m\u00e5ske skyggen. Det er helt i orden. Find vand \u2014 s\u00f8en, havet, bruset \u2014 og lad sommerens varme m\u00f8de din dybde. Begge er n\u00f8dvendige.',
+      'Sommerens varme n\u00e5r ned til dit vand-element. M\u00e5ske f\u00f8ler du dig tr\u00e6t n\u00e5r andre er energiske. S\u00f8g k\u00f8ling og dybde. En tidlig morgen ved vandet kan give dig alt hvad du mangler.',
+      'Dit vand-element finder balance i sommerens varme ved at s\u00f8ge ind. Lad natten v\u00e6re din \u2014 de stille timer n\u00e5r varmen har lagt sig og himlen \u00e5bner.'
+    ],
+    'TR\u00c6': [
+      'Sommer med tr\u00e6-energi. Din v\u00e6kst bader i sommerens lys. Der er en f\u00f8lelse af udfoldelse, af at alting lykkes. Nyd det \u2014 men husk at tr\u00e6et ogs\u00e5 har r\u00f8dder i skyggen. Balance.',
+      'Tr\u00e6et st\u00e5r fuldt udsprunget i sommerlyset. S\u00e5dan m\u00e6rkes dit element lige nu \u2014 alt folder sig ud. Nyd kronens fylde, men glem ikke r\u00f8dderne.',
+      'Sommerens l\u00e6ngde giver dit tr\u00e6-element tid til b\u00e5de v\u00e6kst og hvile. Brug de lange aftener til at v\u00e6re ude. Lyset n\u00e6rer leveren.'
+    ],
+    'ILD': [
+      'Sommer og ild. Dobbelt varme, dobbelt forbindelse. Dette er din \u00e5rstid \u2014 lange dage, \u00e5bne d\u00f8re, levende samtaler. Men pas p\u00e5 overophedning. Find k\u00f8ling i vandmelon, skygge og stille aftener.',
+      'Din ild-\u00e5rstid. Hjertet banker st\u00e6rkere, latteren kommer lettere, kroppen vil ud. Alt dette er dig i din fulde kraft. M\u00e6rk gl\u00e6den uden at t\u00f8mme den.',
+      'Sommerens ild m\u00f8der din egen. Det kan v\u00e6re fortryllende og udt\u00f8mmende p\u00e5 samme tid. K\u00f8l dig med noget bittert \u2014 en kop gr\u00f8n te, en pause i skyggen.'
+    ],
+    'JORD': [
+      'Sommer med jord-energi. Sommerens rigdom matcher din trang til at n\u00e6re. Marked, haver, frugter \u2014 alt er tilg\u00e6ngeligt. Brug sensommerens overgang til at samle ind. Du ved instinktivt hvad der skal gemmes.',
+      'Dit jord-element elsker sommerens overflod. Alt modnes, alt er tilg\u00e6ngeligt. Tag det med hjem \u2014 b\u00e6rrene, blomsterne, solens varme i huden. Gem det til senere.',
+      'Sommerjord er varm og generøs. M\u00e6rk den kvalitet i dig selv. Du n\u00e6rer andre uden at t\u00e6nke over det. Husk at lade dig selv n\u00e6re af sommerens gaver.'
+    ],
+    'METAL': [
+      'Sommer med metal-energi. Sommerens intensitet kan f\u00f8les for meget. Du s\u00f8ger m\u00e5ske ro midt i festen, klarhed midt i l\u00e5rmen. Find den \u2014 i en tidlig morgen, en stille sti, et \u00f8jeblik alene med himlen.',
+      'Dit metal-element s\u00f8ger essensen ogs\u00e5 om sommeren. Mens andre tager alt med, v\u00e6lger du det v\u00e6sentlige. \u00c9n god samtale. \u00c9n smuk aften. Det er nok.',
+      'Sommerens f\u00f8lelse af for meget kan l\u00f8ses med mindre. G\u00e5 tidligt hjem. Sid stille. Lad lungerne \u00e5nde dybt i aftenk\u00f8lingen. Metallets ro er din superkraft.'
+    ]
   },
   sensommer: {
-    'VAND': 'Sensommer med vand-energi. Lyset begynder at skifte, og din dybde forbereder sig p\u00e5 h\u00f8sten. Der er en s\u00f8dme i disse dage \u2014 den modne frugt, den varme jord. Lad den s\u00f8dme n\u00e5 dit vand-element.',
-    'TR\u00c6': 'Sensommer med tr\u00e6-energi. V\u00e6ksten n\u00e5r sit h\u00f8jdepunkt og begynder langsomt at stabilisere sig. Din drivkraft m\u00f8der en invitation til at hvile. Ikke standse \u2014 bare s\u00e6nke tempoet og m\u00e6rke hvad der er modent.',
-    'ILD': 'Sensommer med ild-energi. Din flamme finder et nyt udtryk \u2014 ikke eksplosiv men varm, moden, n\u00e6rv\u00e6rende. Sensommerens gl\u00f8der er dybere end sommerens blus. Nyd den modnere varme.',
-    'JORD': 'Sensommer og jord. Dobbelt n\u00e6ring, dobbelt fundament. Dette er din \u00e5rstid \u2014 alt modnes, alt samles, alt finder sin plads. M\u00e6rk den tryghed der kommer af at tingene er der, hvor de skal v\u00e6re.',
-    'METAL': 'Sensommer med metal-energi. Du m\u00e6rker allerede efter\u00e5ret i luften. Mens andre nyder de sidste varme dage, forbereder du dig p\u00e5 at give slip. Det er din styrke \u2014 at se forandringen f\u00f8r den kommer.'
+    'VAND': [
+      'Sensommer med vand-energi. Lyset begynder at skifte, og din dybde forbereder sig p\u00e5 h\u00f8sten. Der er en s\u00f8dme i disse dage \u2014 den modne frugt, den varme jord. Lad den s\u00f8dme n\u00e5 dit vand-element.',
+      'Sensommerens overgang taler til dit vand. Noget i dig ved at h\u00f8sten n\u00e6rmer sig. Det er ikke vemod \u2014 det er forberedelse. Din dybde samler sig.',
+      'N\u00e5r lyset \u00e6ndrer sig og sensommeren m\u00f8der dit vand-element, m\u00e6rker du m\u00e5ske en stille gl\u00e6de ved det kendte. Saft, duft, varme sten. Lad det v\u00e6re nok.'
+    ],
+    'TR\u00c6': [
+      'Sensommer med tr\u00e6-energi. V\u00e6ksten n\u00e5r sit h\u00f8jdepunkt og begynder langsomt at stabilisere sig. Din drivkraft m\u00f8der en invitation til at hvile. Ikke standse \u2014 bare s\u00e6nke tempoet og m\u00e6rke hvad der er modent.',
+      'Dit tr\u00e6-element m\u00e6rker sensommerens vendepunkt. Frugterne h\u00e6nger tungt. Nu handler det ikke om mere v\u00e6kst, men om at h\u00f8ste det der allerede er der.',
+      'Sensommerens tr\u00e6 st\u00e5r stille. Det gr\u00f8nne er m\u00e6ttet, og bladene begynder at tynges. S\u00e5dan m\u00e6rkes det m\u00e5ske i dig \u2014 en fylde der beder om at blive set.'
+    ],
+    'ILD': [
+      'Sensommer med ild-energi. Din flamme finder et nyt udtryk \u2014 ikke eksplosiv men varm, moden, n\u00e6rv\u00e6rende. Sensommerens gl\u00f8der er dybere end sommerens blus. Nyd den modnere varme.',
+      'Ilden i sensommeren er som gl\u00f8der i en pejs. Stille, vedvarende, varm. Dit ild-element finder ro her. Lad varmen v\u00e6re blid i stedet for intens.',
+      'Sensommerens lys er gyldent, og din ild f\u00f8lger med. M\u00e5ske m\u00e6rker du en dybere forbindelse nu \u2014 ikke til det nye, men til det der allerede er. Lad det varme dig.'
+    ],
+    'JORD': [
+      'Sensommer og jord. Dobbelt n\u00e6ring, dobbelt fundament. Dette er din \u00e5rstid \u2014 alt modnes, alt samles, alt finder sin plads. M\u00e6rk den tryghed der kommer af at tingene er der, hvor de skal v\u00e6re.',
+      'Din jord-\u00e5rstid. Alt er modent og b\u00e6rende. Kroppen ved det f\u00f8r sindet \u2014 milten arbejder roligt, maven er m\u00e6t, f\u00f8dderne er p\u00e5 jorden. Du er hjemme.',
+      'Sensommerens jord er varm og generøs. M\u00e6rk den kvalitet i alt hvad du g\u00f8r i dag. Det du r\u00f8rer ved, n\u00e6rer du. Det du n\u00e6rer, vokser.'
+    ],
+    'METAL': [
+      'Sensommer med metal-energi. Du m\u00e6rker allerede efter\u00e5ret i luften. Mens andre nyder de sidste varme dage, forbereder du dig p\u00e5 at give slip. Det er din styrke \u2014 at se forandringen f\u00f8r den kommer.',
+      'Dit metal-element fornemmer vendepunktet i sensommeren. Der er en klarhed i luften nu \u2014 sommert\u00e5gen letter. Brug den sk\u00e6rpede sans til at se hvad der virkelig betyder noget.',
+      'Sensommerens metal-kvalitet er at skelne. Hvad skal med videre ind i h\u00f8sten? Hvad m\u00e5 blive her? Du ved det allerede. Lyt til den stille stemme.'
+    ]
   },
   efteraar: {
-    'VAND': 'Efter\u00e5r med vand-energi. Naturen g\u00e5r indad, og du f\u00f8lger med. Metal-\u00e5rstidens klarhed n\u00e6rer dit vand \u2014 som efterårsregn der fylder b\u00e6kken. Brug denne tid til at samle din dybde.',
-    'TR\u00c6': 'Efter\u00e5r med tr\u00e6-energi. Bladene falder, og din v\u00e6kstkraft m\u00f8der en naturlig gr\u00e6nse. Det kan f\u00f8les frustrerende \u2014 men tr\u00e6et slipper bladene for at overleve. Hvad m\u00e5 du give slip p\u00e5 for at vokse igen til for\u00e5r?',
-    'ILD': 'Efter\u00e5r med ild-energi. Kulden kryber ind, og din flamme m\u00e5 arbejde h\u00e5rdere for at holde varmen. S\u00f8g den indre ild \u2014 mennesker, b\u00f8ger, samtaler der varmer. Du beh\u00f8ver ikke solen for at br\u00e6nde.',
-    'JORD': 'Efter\u00e5r med jord-energi. H\u00f8sten er hjemme, og du kan hvile i det du har samlet. Men efter\u00e5rets slip kan f\u00f8les utrygt for dig. Stol p\u00e5 at fundamentet holder, ogs\u00e5 n\u00e5r bladene falder.',
-    'METAL': 'Efter\u00e5r og metal. Dobbelt klarhed, dobbelt slip. Dette er din \u00e5rstid \u2014 alt unødvendigt falder v\u00e6k som blade fra tr\u00e6erne. M\u00e6rk sk\u00f8nheden i det rene. Essensen st\u00e5r tilbage, og den er nok.'
+    'VAND': [
+      'Efter\u00e5r med vand-energi. Naturen g\u00e5r indad, og du f\u00f8lger med. Metal-\u00e5rstidens klarhed n\u00e6rer dit vand \u2014 som efter\u00e5rsregn der fylder b\u00e6kken. Brug denne tid til at samle din dybde.',
+      'Dit vand-element m\u00e6rker efter\u00e5rets invitation. N\u00e5r bladene falder, stiger vandet. Din indre verden fylder mere nu. Giv den plads.',
+      'Efter\u00e5rsregnen og dit vand-element h\u00f8rer sammen. Der er en tyngde i luften der minder dig om at gå langsommere. Lad regnen v\u00e6re din meditation.'
+    ],
+    'TR\u00c6': [
+      'Efter\u00e5r med tr\u00e6-energi. Bladene falder, og din v\u00e6kstkraft m\u00f8der en naturlig gr\u00e6nse. Det kan f\u00f8les frustrerende \u2014 men tr\u00e6et slipper bladene for at overleve. Hvad m\u00e5 du give slip p\u00e5 for at vokse igen til for\u00e5r?',
+      'Dit tr\u00e6-element i efter\u00e5ret l\u00e6rer noget om at slippe. Ikke opgivelse, men visdom. Hvad du giver tilbage til jorden nu, bliver n\u00e6ring for det der kommer.',
+      'Tr\u00e6et i efter\u00e5ret er smukt i sin afkl\u00e6dning. M\u00e5ske m\u00e6rker du det som sorg, m\u00e5ske som lettelse. Begge dele er sande. Lad farverne skifte.'
+    ],
+    'ILD': [
+      'Efter\u00e5r med ild-energi. Kulden kryber ind, og din flamme m\u00e5 arbejde h\u00e5rdere for at holde varmen. S\u00f8g den indre ild \u2014 mennesker, b\u00f8ger, samtaler der varmer. Du beh\u00f8ver ikke solen for at br\u00e6nde.',
+      'Din ild i efter\u00e5ret er den flamme andre samles om. Du er varmen n\u00e5r verden bliver kold. M\u00e6rk den rolle \u2014 den er smuk, men husk at du ogs\u00e5 m\u00e5 lade dig varme.',
+      'N\u00e5r efter\u00e5ret k\u00f8ler af, trækker din ild sig indad. Det er ikke tab af energi \u2014 det er fordybelse. Den indre flamme br\u00e6nder klarere i m\u00f8rket.'
+    ],
+    'JORD': [
+      'Efter\u00e5r med jord-energi. H\u00f8sten er hjemme, og du kan hvile i det du har samlet. Men efter\u00e5rets slip kan f\u00f8les utrygt for dig. Stol p\u00e5 at fundamentet holder, ogs\u00e5 n\u00e5r bladene falder.',
+      'Dit jord-element i efter\u00e5ret handler om at stole p\u00e5 det du har bygget. Syltet\u00f8jet st\u00e5r p\u00e5 hylderne. Varmen er inde. Lad roen fylde dig i stedet for bekymringen.',
+      'After\u00e5rets jord minder dig om at det b\u00e6rende stadig b\u00e6rer. Ogs\u00e5 n\u00e5r tr\u00e6erne er nøgne. Fundamentet er der. Du er der.'
+    ],
+    'METAL': [
+      'Efter\u00e5r og metal. Dobbelt klarhed, dobbelt slip. Dette er din \u00e5rstid \u2014 alt un\u00f8dvendigt falder v\u00e6k som blade fra tr\u00e6erne. M\u00e6rk sk\u00f8nheden i det rene. Essensen st\u00e5r tilbage, og den er nok.',
+      'Din \u00e5rstid. Metal og efter\u00e5r i perfekt resonans. Alt hvad du g\u00f8r nu har en kvalitet af det essentielle. Giv slip med ynde. Lungerne \u00e5nder lettest n\u00e5r du ikke holder fast.',
+      'Metallets efter\u00e5r er sk\u00f8nt i sin enkelhed. \u00c9t blad falder, og du m\u00e6rker hele cirklen i det. Den klarhed er din gave. Brug den til at se det der virkelig t\u00e6ller.'
+    ]
   }
 };
 

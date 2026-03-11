@@ -21,7 +21,7 @@ Dynamisk companion til bogen — hjaelper brugere med at forstaa hvor de er i AL
 de-9-livsfaser/
 ├── index.html              # Main app shell (header, drawer nav, screen-content)
 ├── manifest.json           # PWA manifest (theme: #6c82a9, bg: #FDFCFB)
-├── sw.js                   # Service worker (currently v114)
+├── sw.js                   # Service worker (currently v133)
 ├── css/
 │   ├── tokens.css          # Design tokens, font-face, CSS variables
 │   ├── base.css            # Layout, header, drawer, animations
@@ -156,18 +156,24 @@ Router.navigate('livsfase-detail');
 | Skaerm | Status | Route | Init |
 |--------|--------|-------|------|
 | Forside (Lige Nu) | DONE — GOLDEN STANDARD | `forside` | initForside |
+| Dit Dybe Billede | DONE — DYB GOLDEN STANDARD | `cir-dit-liv` | initCirDitLiv |
 | Relationer (primaer) | DONE | `din-relation` | initDinRelation |
 | Dine Dybere Relationer | DONE | `rel-dybere` | initRelDybere |
-| Dit Dybe Billede | DONE — DYB GOLDEN STANDARD | `cir-dit-liv` | initCirDitLiv |
 | Tidsrejse (primaer) | DONE | `tidsrejse` | initTidsrejse |
 | Din Dybere Tidsrejse | DONE | `tids-dybere` | initTidsDybere |
+| Vinduer (primaer) | DONE | `vinduer` | initVinduer |
+| Dine Dybere Vinduer | DONE | `vin-dybere` | initVinDybere |
+| De Ni Faser (sekundaer) | DONE | `cyk-ni-faser` | initCykNiFaser |
+| Dine Dybere Faser | DONE | `faser-dybere` | initFaserDybere |
 | Min Praksis (sekundaer) | DONE | `min-praksis` | initMinPraksis |
 | Din Dybere Praksis | DONE | `din-praksis` | initDinPraksis |
 | Min Rejse (sekundaer) | DONE | `min-rejse` | initMinRejse |
 | Din Dybere Rejse | DONE | `rej-dybere` | initRejDybere |
-| Vinduer | NOT BUILT | — | — |
+| Tre Generationer (sekundaer) | DONE | `rel-tre-gen` | initRelTreGen |
+| Baggrund (sekundaer) | DONE | `rej-baggrund` | initRejBaggrund |
+| De Dybere Baggrunde | DONE | `baggrund-dybere` | initBaggrundDybere |
 
-**Cache versions:** index.html `?v=110`, sw.js `livsfaser-v124`
+**Cache versions:** index.html/JS `?v=132`, sw.js `livsfaser-v133`
 
 ---
 
@@ -192,12 +198,12 @@ sig foerst ud naar brugeren aktivt trykker "Dyk dybere" paa en skaerm.
 Forside (primaer, let)     → Dit Dybe Billede (cir-dit-liv)        FAERDIG
 Relationer (primaer, let)  → Dine Dybere Relationer (rel-dybere)   FAERDIG
 Tidsrejse (primaer, let)   → Din Dybere Tidsrejse (tids-dybere)    FAERDIG
-Vinduer (primaer, let)     → [dyb skaerm — skal bygges]
-De Ni Faser (sekundaer)    → [dyb skaerm — skal bygges]
+Vinduer (primaer, let)     → Dine Dybere Vinduer (vin-dybere)      FAERDIG
+De Ni Faser (sekundaer)    → Dine Dybere Faser (faser-dybere)      FAERDIG
 Min Praksis (sekundaer)    → Din Dybere Praksis (din-praksis)       FAERDIG
 Min Rejse (sekundaer)      → Din Dybere Rejse (rej-dybere)         FAERDIG
-Tre Generationer (sekund.) → [dyb skaerm — skal bygges]
-Baggrund (sekundaer)       → [dyb skaerm — skal bygges]
+Tre Generationer (sekund.) → (ingen separat dyb skaerm)
+Baggrund (sekundaer)       → De Dybere Baggrunde (baggrund-dybere) FAERDIG
 ```
 
 ### Skaerm-moenster (primaer + sekundaer — `.s` sektioner)
@@ -403,11 +409,11 @@ Init function uses dominant element to personalize all content
 
 ### Weighted Dominance (getWeightedDominant)
 ```
-Livsfase:  weight 3   (7 years — strongest signal)
-Aarstid:   weight 2   (~3 months)
-Maaned:    weight 1.5 (1 month)
-Ugedag:    weight 1   (1 day)
-Organur:   weight 0.5 (2 hours — weakest)
+Livsfase:      weight 4   (7 years — DOMINERER, kun overtrumfet af 3+ lag)
+Indre saeson:  weight 2   (~1.4 years — nuancerer)
+Aarstid:       weight 1.5 (~3 months — modulerer)
+Maaned:        weight 1   (1 month — finindstiller)
+Organur:       weight 0.5 (2 hours — tidspunkts-vejleder)
 ```
 
 ---
@@ -495,7 +501,7 @@ Main focus is on USER HERSELF first.
 2. **Router.navigate()** is the ONLY way to navigate — NOT `App.loadScreen()`
 3. **window._selectedPhase** stores which phase to show in livsfase-detail
 4. **_bound flag pattern** — always check `if (el._bound) return` before adding event listeners
-5. **Service worker cache** needs version bump on every deploy (currently v114 in sw.js line 1)
+5. **Service worker cache** needs version bump on every deploy (currently v133 in sw.js line 1)
 6. **Dates** — use `Storage.getLocalDateStr()` for local dates, NEVER `toISOString().split('T')[0]`
 7. **getText/setHTML helpers** — use `setText(id, text)` and `setHTML(id, html)` for DOM updates
 8. **getUserCycles()** returns null if no user/birthdate — always check for null

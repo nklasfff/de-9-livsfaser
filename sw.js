@@ -1,4 +1,4 @@
-const CACHE_NAME = 'livsfaser-v132';
+const CACHE_NAME = 'livsfaser-v133';
 const urlsToCache = [
   './',
   './index.html',
@@ -129,6 +129,25 @@ self.addEventListener('activate', event => {
         })
       )
     ).then(() => self.clients.claim())
+  );
+});
+
+// Notification click — open/focus the app
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+      // Focus existing tab if found
+      for (const client of windowClients) {
+        if (client.url.includes('de-9-livsfaser') && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      // Otherwise open new tab
+      if (clients.openWindow) {
+        return clients.openWindow('./');
+      }
+    })
   );
 });
 

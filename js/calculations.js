@@ -261,7 +261,7 @@ const Calculations = {
   },
 
   /* ---- Weighted dominant element — De 5 Lags hierarki ---- */
-  /*  Lag 1: Livsfase (7 år)     → DOMINERER     → weight 3
+  /*  Lag 1: Livsfase (7 år)     → DOMINERER     → weight 4
       Lag 2: Indre årstid (1,4 år) → NUANCERER   → weight 2
       Lag 3: Årets årstid (3 mdr)  → MODULERER   → weight 1.5
       Lag 4: Månedscyklus (1 mdr)  → FININDSTILLER → weight 1
