@@ -268,7 +268,7 @@ const Calculations = {
       Lag 5: Organur (2 timer)     → VEJLEDER    → weight 0.5 */
   getWeightedDominant(cycles) {
     const WEIGHTS = {
-      lifePhase: 3,       // Lag 1: 7 år — DOMINERER
+      lifePhase: 4,       // Lag 1: 7 år — DOMINERER (skal kun overtrumfes af 3+ lag)
       innerSeason: 2,     // Lag 2: ~1,4 år — NUANCERER
       season: 1.5,        // Lag 3: ~3 måneder — MODULERER
       monthCycle: 1,      // Lag 4: ~1 måned — FININDSTILLER

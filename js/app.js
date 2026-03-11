@@ -798,8 +798,12 @@ function initForside() {
   setText('lige-nu-element', elLabel(domEl));
   setText('lige-nu-kvaliteter', ELEMENT_KVALITETER[domEl] || '');
 
-  // 3. MORGEN/AFTEN-TEKST
-  if (typeof MORGEN_AFTEN_TEKST !== 'undefined' && MORGEN_AFTEN_TEKST[domEl]) {
+  // 3. PERSONLIG DAGLIG TEKST
+  // Prioriter buildDailyReading (cyklus-specifik), fallback til MORGEN_AFTEN_TEKST
+  const dailyReading = buildDailyReading(cycles, dominant);
+  if (dailyReading && dailyReading.length > 20) {
+    setText('lige-nu-tidstekst', dailyReading);
+  } else if (typeof MORGEN_AFTEN_TEKST !== 'undefined' && MORGEN_AFTEN_TEKST[domEl]) {
     const tid = hour < 12 ? 'morgen' : 'aften';
     const tekster = MORGEN_AFTEN_TEKST[domEl][tid];
     if (tekster && tekster.length) {
@@ -808,7 +812,7 @@ function initForside() {
     }
   }
 
-  // 3b. ELEMENT_FASE_DAGLIG — personlig daglig læsning
+  // 3b. ELEMENT_FASE_DAGLIG — personlig daglig læsning (nu med 180 rotationstekster)
   renderElementFaseDaglig(domEl, phase);
 
   // 4. ORGANUR LIGE NU
@@ -826,6 +830,9 @@ function initForside() {
   // 7. TEMAER (foldbare — inkl. TEMA_DYBDE)
   renderTemaer(domEl, phase);
 
+  // 7b. RELATION — live kort med TCM-interaktion
+  renderForsideRelation(cycles, dominant);
+
   // 8. MAERK EFTER — reset check-in state
   TrackingState.checkinMood = null;
   const allCiBtns = document.querySelectorAll('.checkin-card .ci-btn');
@@ -841,6 +848,9 @@ function initForside() {
 
   // 9. REFLEKSION
   renderRefleksion(phase);
+
+  // 10. TIDSREJSE CHIPS — quick-links til tidsrejse
+  renderForsideChips();
 }
 
 /* ---- Forside helper: Organur lige nu ---- */
@@ -903,8 +913,8 @@ function renderTemaer(domEl, phase) {
 
   const temaer = [];
 
-  // Tema 1: Overgangsalder (kun fase 6-8)
-  if (phase.phase >= 6 && phase.phase <= 8 && typeof OVERGANGSALDER_SPECIFIK !== 'undefined') {
+  // Tema 1: Overgangsalder (kun fase 7-8, dvs. 42+ år)
+  if (phase.phase >= 7 && phase.phase <= 8 && typeof OVERGANGSALDER_SPECIFIK !== 'undefined') {
     const oa = OVERGANGSALDER_SPECIFIK;
     let oaBody = oa.intro || '';
     // Add phase-specific element advice
@@ -1054,7 +1064,20 @@ function renderElementFaseDaglig(domEl, phase) {
     wrap.style.display = 'none';
     return;
   }
-  setText('lige-nu-daglig', ELEMENT_FASE_DAGLIG[domEl][phase.phase]);
+
+  // Brug ELEMENT_FASE_ROTATION for daglig variation (180 tekster)
+  // Fallback til ELEMENT_FASE_DAGLIG hvis rotation ikke findes
+  let tekst = ELEMENT_FASE_DAGLIG[domEl][phase.phase];
+  if (typeof ELEMENT_FASE_ROTATION !== 'undefined' && ELEMENT_FASE_ROTATION[domEl] && ELEMENT_FASE_ROTATION[domEl][phase.phase]) {
+    const pool = ELEMENT_FASE_ROTATION[domEl][phase.phase];
+    if (pool && pool.length) {
+      const idx = Calculations.dayRotation(pool.length);
+      tekst = pool[idx];
+    }
+  }
+
+  const html = formatExpandable(tekst, 15);
+  setHTML('lige-nu-daglig', html);
   wrap.style.display = '';
 }
 
