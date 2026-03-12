@@ -294,6 +294,36 @@ function renderKlimaBoks(containerId) {
   el.style.display = '';
 }
 
+/* ---- Portrætbro: universel personlig intro på ALLE skærme ---- */
+function renderPortraitBro(containerId) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  var p = getPortrait();
+  if (!p) { el.style.display = 'none'; return; }
+
+  var klimaTekst = '';
+  if (typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[p.climate.state]) {
+    klimaTekst = KLIMA_ELEMENT_TEKST[p.climate.state][p.dominant.element] || '';
+  }
+  if (!klimaTekst) { el.style.display = 'none'; return; }
+
+  var understroem = getUnderstroemTekst(p);
+  var domLabel = Calculations.ELEMENT_LABELS[p.dominant.element] || '';
+
+  var html = '<div style="background:rgba(108,130,169,0.04);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);padding:16px 18px">';
+  html += '<div style="font-family:var(--font-sans);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:var(--blaa);opacity:0.5;margin-bottom:6px">';
+  html += 'Dit øjeblik · ' + domLabel.toLowerCase() + ' · ' + p.climate.label.toLowerCase();
+  html += '</div>';
+  html += '<div style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:var(--text-body);line-height:1.7">' + klimaTekst + '</div>';
+  if (understroem) {
+    html += '<div style="font-family:var(--font-sans);font-size:12px;color:var(--text-light);margin-top:8px;font-style:italic">Lige nu: ' + understroem + '</div>';
+  }
+  html += '</div>';
+
+  el.innerHTML = html;
+  el.style.display = '';
+}
+
 /* ============================================================
    CHECK-IN & JOURNAL — Sprint 2
    ============================================================ */
@@ -1108,6 +1138,18 @@ function initForside() {
   // 2b. KLIMA-INDIKATOR \u2014 portr\u00e6ttets ene linje under hero
   renderKlimaIndikator('forside-klima');
 
+  // 2c. KLIMA-TEKST \u2014 Isabelles stemme om dit \u00f8jeblik (portr\u00e6ttets hjerte)
+  var klimaWrap = document.getElementById('forside-klima-tekst-wrap');
+  if (klimaWrap && p && typeof KLIMA_ELEMENT_TEKST !== 'undefined') {
+    var klimaPool = KLIMA_ELEMENT_TEKST[p.climate.state];
+    if (klimaPool && klimaPool[domEl]) {
+      setText('forside-klima-tekst', klimaPool[domEl]);
+      klimaWrap.style.display = '';
+    } else {
+      klimaWrap.style.display = 'none';
+    }
+  }
+
   // 3. PERSONLIG DAGLIG TEKST \u2014 beriget med portr\u00e6ttets resonans
   const dailyReading = buildDailyReading(cycles, dominant);
   if (dailyReading && dailyReading.length > 20) {
@@ -1240,93 +1282,106 @@ function renderHandling(domEl) {
   }
 }
 
-/* ---- Forside helper: Temaer (HUB-AND-SPOKE — hvert kort navigerer til UNIK skaerm) ---- */
+/* ---- Forside helper: Temaer (PORTRÆTDREVET — klima+understrøm farver hvert kort) ---- */
 function renderTemaer(domEl, phase) {
   const container = document.getElementById('lige-nu-temaer');
   if (!container) return;
 
   const elLabel = Calculations.ELEMENT_LABELS[domEl] || domEl;
+  var portrait = getPortrait();
+  var klimaLabel = portrait ? portrait.climate.label.toLowerCase() : '';
+  var understroem = portrait ? getUnderstroemTekst(portrait) : '';
+  var secLabel = portrait && portrait.secondary.element ? (Calculations.ELEMENT_LABELS[portrait.secondary.element] || '').toLowerCase() : '';
+  var klimaFrag = {
+    fuld_resonans: 'alle dine lag peger samme vej',
+    naerende_flow: 'strømmen bærer dig',
+    indre_storm: 'dine lag trækker i flere retninger',
+    kreativ_spaending: 'spændingsfeltet rummer energi',
+    stille_balance: 'alt er stille til stede'
+  };
+  var klimaFr = portrait ? (klimaFrag[portrait.climate.state] || '') : '';
+
   // Byg FULD pulje — hvert tema har sin EGEN unikke destination
   const alleTemaer = [];
 
   // Tema: Overgangsalder (kun fase 7-8)
   if (phase.phase >= 7 && phase.phase <= 8 && typeof OVERGANGSALDER_SPECIFIK !== 'undefined') {
     alleTemaer.push({
-      titel: 'Overgangsalder og dit element',
-      teaser: 'Hvad din ' + elLabel.toLowerCase() + '-energi har brug for i denne overgang',
-      route: 'cir-dit-liv'
+      titel: 'Overgangsalder i dit ' + klimaLabel,
+      teaser: 'Når ' + klimaFr + ' — hvad har din ' + elLabel.toLowerCase() + '-energi brug for i overgangen?',
+      route: 'cir-dit-liv', topic: 'tema'
     });
   }
 
   // Tema: Stress
   if (typeof UDVIDET_HJAELP !== 'undefined' && UDVIDET_HJAELP.stress && UDVIDET_HJAELP.stress[domEl]) {
     alleTemaer.push({
-      titel: 'Stress og dit element',
-      teaser: 'EFT og tapping til at l\u00f8sne ' + elLabel.toLowerCase() + '-stress',
-      route: 'pra-eft'
+      titel: 'Stress n\u00e5r ' + klimaFr,
+      teaser: 'EFT og tapping til at m\u00f8de ' + elLabel.toLowerCase() + '-stress med ' + secLabel + ' som st\u00f8tte',
+      route: 'pra-eft', topic: 'tema'
     });
   }
 
   // Tema: Naering
   if (typeof INSIGHT_FOOD !== 'undefined' && INSIGHT_FOOD[domEl]) {
     alleTemaer.push({
-      titel: 'N\u00e6ring til dit element',
-      teaser: 'Kost og ern\u00e6ring der st\u00f8tter dit ' + elLabel.toLowerCase() + '-element',
-      route: 'pra-kost'
+      titel: 'N\u00e6ring til dit ' + klimaLabel,
+      teaser: 'Kost der st\u00f8tter din ' + elLabel.toLowerCase() + '-krop n\u00e5r ' + klimaFr,
+      route: 'pra-kost', topic: 'kost'
     });
   }
 
   // Tema: Forandring
   if (typeof TEMA_DYBDE !== 'undefined' && TEMA_DYBDE.forandring_og_overgang && TEMA_DYBDE.forandring_og_overgang[domEl]) {
     alleTemaer.push({
-      titel: 'Forandring og dit element',
-      teaser: 'Refleksion over forandring set gennem ' + elLabel.toLowerCase(),
-      route: 'pra-refleksion'
+      titel: 'Forandring i dit ' + klimaLabel,
+      teaser: 'Refleksion over forandring med ' + elLabel.toLowerCase() + ' og ' + secLabel + ' som lys',
+      route: 'pra-refleksion', topic: 'tema'
     });
   }
 
   // Tema: Sorg (fase 6+)
   if (phase.phase >= 6 && typeof TEMA_DYBDE !== 'undefined' && TEMA_DYBDE.sorg_og_tab && TEMA_DYBDE.sorg_og_tab[domEl]) {
     alleTemaer.push({
-      titel: 'Sorg og dit element',
-      teaser: 'At m\u00e6rke efter i tab og frigivelse',
-      route: 'pra-foelelser'
+      titel: 'Sorg n\u00e5r ' + klimaFr,
+      teaser: 'At m\u00e6rke efter i tab og frigivelse \u2014 med ' + elLabel.toLowerCase() + 's styrke',
+      route: 'pra-foelelser', topic: 'foelelser'
     });
   }
 
   // Tema: Ensomhed (fase 4+)
   if (phase.phase >= 4 && typeof TEMA_DYBDE !== 'undefined' && TEMA_DYBDE.ensomhed_og_isolation && TEMA_DYBDE.ensomhed_og_isolation[domEl]) {
     alleTemaer.push({
-      titel: 'Ensomhed og dit element',
-      teaser: 'Healing og forbindelse n\u00e5r ' + elLabel.toLowerCase() + ' f\u00f8ler sig alene',
-      route: 'pra-healing'
+      titel: 'Ensomhed i dit ' + klimaLabel,
+      teaser: 'Forbindelse n\u00e5r ' + elLabel.toLowerCase() + ' f\u00f8ler sig alene \u2014 med ' + secLabel + ' som sti',
+      route: 'pra-healing', topic: 'tema'
     });
   }
 
   // Tema: Fertilitet (fase 2-5)
   if (phase.phase >= 2 && phase.phase <= 5 && typeof TEMA_DYBDE !== 'undefined' && TEMA_DYBDE.graviditet_og_fertilitet && TEMA_DYBDE.graviditet_og_fertilitet[domEl]) {
     alleTemaer.push({
-      titel: 'Fertilitet og dit element',
-      teaser: 'Kroppen, cyklussen og ny inspiration',
-      route: 'pra-inspiration'
+      titel: 'Fertilitet n\u00e5r ' + klimaFr,
+      teaser: 'Kroppen, cyklussen og ny inspiration i din ' + elLabel.toLowerCase() + '-energi',
+      route: 'pra-inspiration', topic: 'tema'
     });
   }
 
   // Tema: Angst
   if (typeof UDVIDET_HJAELP !== 'undefined' && UDVIDET_HJAELP.angst && UDVIDET_HJAELP.angst[domEl]) {
     alleTemaer.push({
-      titel: 'Angst og dit element',
-      teaser: 'Mindfulness og \u00e5ndedr\u00e6t n\u00e5r angsten melder sig',
-      route: 'pra-mindfulness'
+      titel: 'Angst n\u00e5r ' + klimaFr,
+      teaser: '\u00c5ndedr\u00e6t og mindfulness til at m\u00f8de ' + elLabel.toLowerCase() + '-angsten med ' + secLabel,
+      route: 'pra-mindfulness', topic: 'tema'
     });
   }
 
   // Tema: Udbraendthed
   if (typeof UDVIDET_HJAELP !== 'undefined' && UDVIDET_HJAELP.udbraendthed && UDVIDET_HJAELP.udbraendthed[domEl]) {
     alleTemaer.push({
-      titel: 'Udbr\u00e6ndthed og dit element',
-      teaser: 'Stille genopladning med yin yoga for ' + elLabel.toLowerCase(),
-      route: 'pra-yin-yoga'
+      titel: 'Udbr\u00e6ndthed i dit ' + klimaLabel,
+      teaser: 'Stille genopladning med yin yoga n\u00e5r ' + klimaFr,
+      route: 'pra-yin-yoga', topic: 'handling'
     });
   }
 
@@ -1348,10 +1403,11 @@ function renderTemaer(domEl, phase) {
     }
   }
 
-  // Hub-and-spoke: hvert kort er en DØR — tryk navigerer til unik skærm
-  container.innerHTML = '<div class="eyebrow">Temaer for dig</div>' +
+  // Hub-and-spoke: hvert kort med navContext — portr\u00e6ttet f\u00f8lger med
+  container.innerHTML = '<div class="eyebrow">Temaer for dig lige nu</div>' +
     temaer.map(t => {
-      return `<div class="tema" style="background:rgba(108,130,169,0.03);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer" onclick="Router.navigate('${t.route}')">
+      var oc = "setNavContext('" + (t.topic || 'tema') + "');Router.navigate('" + t.route + "')";
+      return `<div class="tema" style="background:rgba(108,130,169,0.03);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer" onclick="${oc}">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">${t.titel}</div>
           <div style="font-size:18px;color:var(--blaa);opacity:0.4">\u203a</div>
@@ -1950,15 +2006,32 @@ function initMinPraksis() {
   if (typeof initBreathBoxes === 'function') setTimeout(initBreathBoxes, 100);
   renderKlimaIndikator('portrait-klima');
 
-  // 1. HERO — generel
-  setText('mp-title', 'Din praksis');
-  setText('mp-intro', 'Metoder der kan st\u00f8tte dig \u2014 uanset hvor du er i livet');
+  // 1. HERO — portr\u00e6tdrevet
+  var p = getPortrait();
+  if (p) {
+    var domLabel = Calculations.ELEMENT_LABELS[p.dominant.element] || '';
+    setText('mp-title', 'Din praksis i dag');
+    var klimaOevHero = (typeof KLIMA_OEVELSE !== 'undefined' && KLIMA_OEVELSE[p.climate.state]) ? KLIMA_OEVELSE[p.climate.state] : null;
+    if (klimaOevHero) {
+      setText('mp-intro', klimaOevHero.raad);
+    } else {
+      setText('mp-intro', 'Metoder der kan st\u00f8tte dig \u2014 uanset hvor du er i livet');
+    }
+  } else {
+    setText('mp-title', 'Din praksis');
+    setText('mp-intro', 'Metoder der kan st\u00f8tte dig \u2014 uanset hvor du er i livet');
+  }
 
-  // 2. ISABELLE TEKST — generel
-  setText('mp-isabelle-tekst', 'Kroppen lyver aldrig. Den taler bare et sprog vi har glemt at lytte til. Her finder du metoder til at lytte igen.');
+  // 2. ISABELLE TEKST — portr\u00e6tfarvet
+  var klimaBridge = p ? buildBridge(p, 'praksis_generel') : '';
+  if (klimaBridge) {
+    setText('mp-isabelle-tekst', klimaBridge);
+  } else {
+    setText('mp-isabelle-tekst', 'Kroppen lyver aldrig. Den taler bare et sprog vi har glemt at lytte til. Her finder du metoder til at lytte igen.');
+  }
 
   // 3. INSIGHT BOKS — personaliseret med portr\u00e6t + navigationskontekst
-  var p = getPortrait();
+  if (!p) p = getPortrait();
   var ctx = getNavContext();
   if (p) {
     var domEl = p.dominant.element;
@@ -2489,7 +2562,7 @@ function initTidsrejse() {
   const relations = Storage.getRelations();
   const now = new Date();
 
-  // ── 2. FASE-REJSE INSIGHT ──
+  // ── 2. FASE-REJSE INSIGHT — portr\u00e6tdrevet ──
   if (data) {
     const { cycles } = data;
     const phase = cycles.lifePhase;
@@ -2499,11 +2572,16 @@ function initTidsrejse() {
     const yearsLeft = phase.endAge - age;
     const detail = typeof LIVSFASE_DETAIL !== 'undefined' ? LIVSFASE_DETAIL[phase.phase] : null;
 
-    setText('tids-insight-label', 'Fase ' + phase.phase + ' · ' + phase.name + ' · ' + elLabel);
+    var _p = getPortrait();
+    var klimaNote = _p ? ' \u00b7 ' + _p.climate.label.toLowerCase() : '';
+    setText('tids-insight-label', 'Fase ' + phase.phase + ' · ' + phase.name + ' · ' + elLabel + klimaNote);
     if (yearsLeft > 0) {
-      setText('tids-insight-text', 'Du er ' + yearInPhase + ' år inde i denne fase. Om ' + Math.round(yearsLeft) + ' år skifter du element.');
+      var _under = _p ? getUnderstroemTekst(_p) : '';
+      var tidsInsight = 'Du er ' + yearInPhase + ' \u00e5r inde i denne fase. Om ' + Math.round(yearsLeft) + ' \u00e5r skifter du element.';
+      if (_under) tidsInsight += ' Lige nu: ' + _under + '.';
+      setText('tids-insight-text', tidsInsight);
     } else {
-      setText('tids-insight-text', 'Du er i din niende og sidste fase — Visdom. ' + elLabel + '-energien samler alt det du har lært.');
+      setText('tids-insight-text', 'Du er i din niende og sidste fase \u2014 Visdom. ' + elLabel + '-energien samler alt det du har l\u00e6rt.');
     }
 
     // ── 3. ISABELLE TEKST — personlig ──
@@ -3629,9 +3707,19 @@ function renderVinduerTemaer() {
 
 /* ---- Sj\u00e6ldne Vinduer prim\u00e6r sk\u00e6rm (tab 4) ---- */
 function initVinduer() {
-  // ── PR\u00c6SENTATION — vises ALTID ──
+  // ── PR\u00c6SENTATION — portr\u00e6tdrevet ──
   setText('vin-title', 'Dine vinduer i tid');
-  setText('vin-intro', 'N\u00e5r flere af dine cyklusser peger i samme retning, \u00e5bner der sig et sj\u00e6ldent vindue. Det varer ikke l\u00e6nge \u2014 men det kan \u00e6ndre noget.');
+  var _pv = getPortrait();
+  if (_pv) {
+    var _vinBridge = buildBridge(_pv, 'vinduer');
+    if (_vinBridge) {
+      setText('vin-intro', _vinBridge + ' N\u00e5r flere cyklusser peger i samme retning, \u00e5bner der sig et sj\u00e6ldent vindue.');
+    } else {
+      setText('vin-intro', 'N\u00e5r flere af dine cyklusser peger i samme retning, \u00e5bner der sig et sj\u00e6ldent vindue. Det varer ikke l\u00e6nge \u2014 men det kan \u00e6ndre noget.');
+    }
+  } else {
+    setText('vin-intro', 'N\u00e5r flere af dine cyklusser peger i samme retning, \u00e5bner der sig et sj\u00e6ldent vindue. Det varer ikke l\u00e6nge \u2014 men det kan \u00e6ndre noget.');
+  }
 
   // ── BRUGERDATA — stop her hvis ingen data ──
   var user = Storage.getUser();
@@ -4828,8 +4916,18 @@ function shareMoment(title, text) {
 
 /* ---- De Ni Livsfaser (cyk-ni-faser — sekundaer skaerm) ---- */
 function initCykNiFaser() {
-  // 1. Isabelle-tekst
-  setText('nf-isabelle-tekst', 'Hvert syvende \u00e5r skifter noget i dig. Ikke pludseligt, men som \u00e5rstider der glider over i hinanden. Ni faser, fem elementer, \u00e9t liv. Find din \u2014 og m\u00e6rk hvad den beder dig om.');
+  // 1. Isabelle-tekst — portr\u00e6tdrevet
+  var _p = getPortrait();
+  if (_p) {
+    var _bridge = buildBridge(_p, 'faser_generel');
+    if (_bridge) {
+      setText('nf-isabelle-tekst', _bridge + ' Ni faser, fem elementer, \u00e9t liv. Find din \u2014 og m\u00e6rk hvad den beder dig om.');
+    } else {
+      setText('nf-isabelle-tekst', 'Hvert syvende \u00e5r skifter noget i dig. Ni faser, fem elementer, \u00e9t liv. Find din \u2014 og m\u00e6rk hvad den beder dig om.');
+    }
+  } else {
+    setText('nf-isabelle-tekst', 'Hvert syvende \u00e5r skifter noget i dig. Ni faser, fem elementer, \u00e9t liv. Find din \u2014 og m\u00e6rk hvad den beder dig om.');
+  }
   renderKlimaIndikator('portrait-klima');
 
   // 2. Insight-boks + kort tekst
@@ -5086,16 +5184,22 @@ function initPraYinYoga() {
   if (!data) return;
   const domEl = data.dominant.element;
   const elLabel = Calculations.ELEMENT_LABELS[domEl];
+  var _py = getPortrait();
+  var _klimaType = _py && typeof KLIMA_OEVELSE !== 'undefined' && KLIMA_OEVELSE[_py.climate.state] ? KLIMA_OEVELSE[_py.climate.state].type : '';
 
-  // Update featured section
+  // Update featured section — portr\u00e6tdrevet
   const yoga = typeof YIN_YOGA_FULL !== 'undefined' ? YIN_YOGA_FULL[domEl] : null;
   if (yoga && yoga.length > 0) {
-    setText('yoga-featured-label', `Anbefalet i dag · ${elLabel}`);
-    setText('yoga-featured-text', `${yoga[0].pose} ${yoga[0].desc}`);
+    var yogaLabel = 'Anbefalet i dag \u00b7 ' + elLabel;
+    if (_klimaType) yogaLabel += ' \u00b7 ' + _klimaType;
+    setText('yoga-featured-label', yogaLabel);
+    setText('yoga-featured-text', yoga[0].pose + ' ' + yoga[0].desc);
   }
 
   // Update element label
-  setText('yoga-element-label', `Dit element · ${elLabel}`);
+  var elLabelFull = 'Dit element \u00b7 ' + elLabel;
+  if (_py) elLabelFull += ' \u00b7 ' + _py.climate.label.toLowerCase();
+  setText('yoga-element-label', elLabelFull);
 }
 
 /* ---- EFT Tapping (pra-eft) ---- */
@@ -5104,8 +5208,10 @@ function initPraEft() {
   if (!data) return;
   const domEl = data.dominant.element;
   const elLabel = Calculations.ELEMENT_LABELS[domEl];
-
-  setText('eft-featured-label', `Anbefalet i dag · ${elLabel}`);
+  var _pe = getPortrait();
+  var eftLabel = 'Anbefalet i dag \u00b7 ' + elLabel;
+  if (_pe) eftLabel += ' \u00b7 ' + _pe.climate.label.toLowerCase();
+  setText('eft-featured-label', eftLabel);
 }
 
 /* ---- Følelsernes Hjul (pra-foelelser) ---- */
@@ -5462,9 +5568,19 @@ function initDinRelation() {
   renderKlimaIndikator('portrait-klima');
   const { cycles, dominant } = data;
 
-  // PR\u00c6SENTATION — konceptuel, Isabelles stemme (IKKE personspecifik)
+  // PR\u00c6SENTATION — portr\u00e6tdrevet
   setText('rel-title', 'N\u00e5r livsfaser m\u00f8des');
-  setText('rel-intro', 'Hvert menneske du m\u00f8der, b\u00e6rer sin egen rytme \u2014 formet af alder, fase og element. N\u00e5r jeres rytmer m\u00f8des, opst\u00e5r noget nyt. Her kan du udforske, hvad der sker i m\u00f8det.');
+  var _pr = getPortrait();
+  if (_pr) {
+    var _relBridge = buildBridge(_pr, 'relation');
+    if (_relBridge) {
+      setText('rel-intro', _relBridge + ' N\u00e5r jeres rytmer m\u00f8des, opst\u00e5r noget nyt. Her kan du udforske hvad der sker i m\u00f8det.');
+    } else {
+      setText('rel-intro', 'Hvert menneske du m\u00f8der, b\u00e6rer sin egen rytme \u2014 formet af alder, fase og element. N\u00e5r jeres rytmer m\u00f8des, opst\u00e5r noget nyt.');
+    }
+  } else {
+    setText('rel-intro', 'Hvert menneske du m\u00f8der, b\u00e6rer sin egen rytme \u2014 formet af alder, fase og element. N\u00e5r jeres rytmer m\u00f8des, opst\u00e5r noget nyt.');
+  }
 
   // Person-v\u00e6lger
   const relations = Storage.getRelations();
