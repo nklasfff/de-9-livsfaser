@@ -39,6 +39,196 @@ function getUserCycles() {
 }
 
 /* ============================================================
+   PORTR\u00c6T — den fortolkende motor
+   Mellem beregning og pr\u00e6sentation: fortolker hvad cyklusserne
+   BETYDER sammen — resonans, n\u00e6ring, modstand, klima.
+   Alle sk\u00e6rme l\u00e6ser fra det samme portr\u00e6t.
+   ============================================================ */
+
+/* Sheng (n\u00e6rende) og Ko (kontrollerende) cyklusser */
+var SHENG = { 'VAND': 'TR\u00c6', 'TR\u00c6': 'ILD', 'ILD': 'JORD', 'JORD': 'METAL', 'METAL': 'VAND' };
+var KO = { 'VAND': 'ILD', 'TR\u00c6': 'JORD', 'ILD': 'METAL', 'JORD': 'VAND', 'METAL': 'TR\u00c6' };
+
+/* Element felt-sense — hvad det m\u00e6rkes som i kroppen (Isabelles stemme) */
+var ELEMENT_FELT = {
+  'VAND': 'en dybde og stilhed, der kalder p\u00e5 at lytte indad',
+  'TR\u00c6': 'en kraft der presser fremad, en trang til at handle',
+  'ILD': 'en varme og \u00e5benhed, en lyst til forbindelse',
+  'JORD': 'en tryghed og stabilitet, en trang til at samle og n\u00e6re',
+  'METAL': 'en klarhed og skelneevne, en frihed i at slippe'
+};
+
+/* Resonansniveauer — hvor mange lag der deler det dominerende element */
+var RESONANS_TEKST = {
+  fuld: 'N\u00e6sten alle dine cyklusser peger i samme retning i dag. Det er sj\u00e6ldent \u2014 en synkronisering, hvor du kan m\u00e6rke det helt ind i kroppen.',
+  staerk: 'Tre af dine lag deler det samme element lige nu. Det er en st\u00e6rk resonans \u2014 {felt}.',
+  moderat: 'To af dine lag m\u00f8des i det samme element. En stille tilstedev\u00e6relse af {felt}.',
+  spredt: 'Dine cyklusser tr\u00e6kker i flere retninger i dag. Det er normalt \u2014 det er det, der sker det meste af tiden. Lad din livsfase v\u00e6re grundtonen.'
+};
+
+/* Klimatilstande — det indre klima baseret p\u00e5 Sheng/Ko-par */
+var KLIMA_TEKST = {
+  fuld_resonans: { label: 'Fuld resonans', tekst: 'Dine cyklusser synger sammen i dag. Det er sj\u00e6ldent, og du kan m\u00e6rke det.' },
+  naerende_flow: { label: 'N\u00e6rende flow', tekst: 'Elementerne st\u00f8tter hinanden i dag. Der er en blid str\u00f8m.' },
+  indre_storm: { label: 'Indre bev\u00e6gelse', tekst: 'Elementerne tr\u00e6kker i flere retninger. Det er ikke en fejl \u2014 det er systemet, der arbejder.' },
+  kreativ_spaending: { label: 'Kreativ sp\u00e6nding', tekst: 'Modk\u00e6fter m\u00f8der n\u00e6ring. Der er energi i sp\u00e6ndingsfeltet.' },
+  stille_balance: { label: 'Stille balance', tekst: 'Intet dominerer. Alt er stille til stede.' }
+};
+
+/* Livsfase \u00d7 \u00c5rstid — fortolkning af samspillet mellem de to vigtigste lag */
+var LIVS_AARSTID_TEKST = {
+  resonans: '{aarstid} forst\u00e6rker det, du allerede m\u00e6rker i din fase. {livsLabel} m\u00f8der {aarstidLabel}, og den dobbelte virkning kan m\u00e6rkes \u2014 {felt}.',
+  naeres: '{aarstid} n\u00e6rer din {livsLabel}-energi stille og direkte. {aarstidLabel} st\u00f8tter {livsLabel} \u2014 det kan m\u00e6rkes som {felt}.',
+  naerer: 'Din {livsLabel}-energi giver til {aarstid}s bev\u00e6gelse. Du st\u00f8tter den str\u00f8m, der er omkring dig.',
+  kontrolleres: '{aarstid} tr\u00e6kker i en anden retning end din livsfase. {aarstidLabel} udfordrer {livsLabel} \u2014 det kan f\u00f8les som en uro, men det er balance.',
+  kontrollerer: 'Din {livsLabel}-energi holder {aarstid}s {aarstidLabel} i skak. Du har en naturlig styrke til at navigere den str\u00f8m.'
+};
+
+/* ---- buildPortrait: den centrale fortolkningsfunktion ---- */
+function buildPortrait(data) {
+  if (!data) return null;
+  var cycles = data.cycles;
+  var dominant = data.dominant;
+  var elements = cycles.elements;
+  var domEl = dominant.element;
+  var elLabel = function(el) { return Calculations.ELEMENT_LABELS[el] || el; };
+
+  /* 1. RESONANS — hvor mange lag deler det dominerende element */
+  var matching = elements.filter(function(e) { return e === domEl; }).length;
+  var resLevel = matching >= 4 ? 'fuld' : matching >= 3 ? 'staerk' : matching >= 2 ? 'moderat' : 'spredt';
+
+  var layerNames = ['livsfase', 'indre \u00e5rstid', '\u00e5rstid', 'm\u00e5ned', 'organur'];
+  var matchingLayers = [];
+  for (var i = 0; i < elements.length; i++) {
+    if (elements[i] === domEl) matchingLayers.push(layerNames[i]);
+  }
+
+  var resTekst = (RESONANS_TEKST[resLevel] || '').replace('{felt}', ELEMENT_FELT[domEl] || '');
+
+  /* 2. SEKUND\u00c6RT ELEMENT — underspillet str\u00f8m */
+  var scores = dominant.scores || {};
+  var sorted = Object.keys(scores).sort(function(a, b) { return scores[b] - scores[a]; });
+  var secondaryEl = sorted.length > 1 ? sorted[1] : null;
+  var secondaryScore = secondaryEl ? scores[secondaryEl] : 0;
+
+  var secRelation = 'neutral';
+  if (secondaryEl) {
+    if (SHENG[secondaryEl] === domEl) secRelation = 'naeres';
+    else if (SHENG[domEl] === secondaryEl) secRelation = 'naerer';
+    else if (KO[secondaryEl] === domEl) secRelation = 'kontrolleres';
+    else if (KO[domEl] === secondaryEl) secRelation = 'kontrollerer';
+  }
+
+  /* 3. LIVSFASE \u00d7 \u00c5RSTID — det vigtigste samspil */
+  var lifeEl = cycles.lifePhase.element;
+  var seasonEl = cycles.season.element;
+  var seasonName = cycles.season.season || '\u00e5rstiden';
+
+  var livsAarstidRel = 'neutral';
+  if (lifeEl === seasonEl) livsAarstidRel = 'resonans';
+  else if (SHENG[seasonEl] === lifeEl) livsAarstidRel = 'naeres';
+  else if (SHENG[lifeEl] === seasonEl) livsAarstidRel = 'naerer';
+  else if (KO[seasonEl] === lifeEl) livsAarstidRel = 'kontrolleres';
+  else if (KO[lifeEl] === seasonEl) livsAarstidRel = 'kontrollerer';
+
+  var livsAarstidTekst = '';
+  if (LIVS_AARSTID_TEKST[livsAarstidRel]) {
+    livsAarstidTekst = LIVS_AARSTID_TEKST[livsAarstidRel]
+      .replace(/{aarstid}/g, seasonName.toLowerCase())
+      .replace(/{livsLabel}/g, elLabel(lifeEl).toLowerCase())
+      .replace(/{aarstidLabel}/g, elLabel(seasonEl).toLowerCase())
+      .replace(/{felt}/g, ELEMENT_FELT[lifeEl] || '');
+  }
+
+  /* 4. KLIMA — Sheng/Ko-par mellem alle unikke elementer */
+  var shengCount = 0, koCount = 0;
+  var uniqueEls = [];
+  var seen = {};
+  elements.forEach(function(e) { if (!seen[e]) { uniqueEls.push(e); seen[e] = true; } });
+
+  for (var i = 0; i < uniqueEls.length; i++) {
+    for (var j = i + 1; j < uniqueEls.length; j++) {
+      if (SHENG[uniqueEls[i]] === uniqueEls[j] || SHENG[uniqueEls[j]] === uniqueEls[i]) shengCount++;
+      if (KO[uniqueEls[i]] === uniqueEls[j] || KO[uniqueEls[j]] === uniqueEls[i]) koCount++;
+    }
+  }
+
+  var climate = 'stille_balance';
+  if (matching >= 3 || (dominant.score || 0) >= 5) climate = 'fuld_resonans';
+  else if (shengCount >= 2 && koCount === 0) climate = 'naerende_flow';
+  else if (koCount >= 2) climate = 'indre_storm';
+  else if (koCount >= 1 && shengCount >= 1) climate = 'kreativ_spaending';
+
+  /* 5. ORGANUR-RESONANS — resonerer organet med livsfasen? */
+  var organEl = cycles.organ ? cycles.organ.element : null;
+  var organResonance = organEl === lifeEl;
+
+  return {
+    user: data.user, cycles: cycles, dominant: dominant,
+    resonance: { count: matching, total: elements.length, level: resLevel, layers: matchingLayers, tekst: resTekst },
+    livsAarstid: { lifeElement: lifeEl, seasonElement: seasonEl, seasonName: seasonName, relation: livsAarstidRel, tekst: livsAarstidTekst },
+    secondary: { element: secondaryEl, score: secondaryScore, relation: secRelation },
+    climate: { state: climate, shengCount: shengCount, koCount: koCount, label: KLIMA_TEKST[climate] ? KLIMA_TEKST[climate].label : '', tekst: KLIMA_TEKST[climate] ? KLIMA_TEKST[climate].tekst : '' },
+    organResonance: organResonance,
+    felt: ELEMENT_FELT[domEl] || '',
+    scores: scores
+  };
+}
+
+/* Portr\u00e6t-cache: genberegnes \u00e9n gang per time */
+var _portrait = null;
+var _portraitKey = null;
+
+function getPortrait() {
+  var now = new Date();
+  var key = now.toDateString() + '_' + now.getHours();
+  if (_portrait && _portraitKey === key) return _portrait;
+  var data = getUserCycles();
+  if (!data) return null;
+  _portrait = buildPortrait(data);
+  _portraitKey = key;
+  return _portrait;
+}
+
+function invalidatePortrait() { _portrait = null; _portraitKey = null; }
+
+/* ---- Portr\u00e6t-rendering: kort klimaindikator til enhver sk\u00e6rm ---- */
+function renderKlimaIndikator(containerId) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  var p = getPortrait();
+  if (!p) { el.style.display = 'none'; return; }
+
+  var domLabel = Calculations.ELEMENT_LABELS[p.dominant.element] || '';
+  el.textContent = p.resonance.count + ' af ' + p.resonance.total + ' lag i ' + domLabel.toLowerCase() + ' \u00b7 ' + p.climate.label.toLowerCase();
+  el.style.display = '';
+}
+
+/* ---- Portr\u00e6t-rendering: livsfase \u00d7 \u00e5rstid-fortolkning ---- */
+function renderLivsAarstid(containerId) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  var p = getPortrait();
+  if (!p || !p.livsAarstid.tekst) { el.style.display = 'none'; return; }
+  el.textContent = p.livsAarstid.tekst;
+  el.style.display = '';
+}
+
+/* ---- Portr\u00e6t-rendering: klimaboks med label + tekst ---- */
+function renderKlimaBoks(containerId) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  var p = getPortrait();
+  if (!p) { el.style.display = 'none'; return; }
+
+  el.innerHTML = '<div style="font-family:var(--font-sans);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:var(--blaa);opacity:0.6;margin-bottom:6px">'
+    + p.climate.label + '</div>'
+    + '<div style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:var(--text-body);line-height:1.6">'
+    + p.climate.tekst + '</div>';
+  el.style.display = '';
+}
+
+/* ============================================================
    CHECK-IN & JOURNAL — Sprint 2
    ============================================================ */
 
@@ -818,9 +1008,10 @@ function renderStreak() {
 }
 
 function initForside() {
-  const data = getUserCycles();
-  if (!data) return;
-  const { cycles, dominant } = data;
+  invalidatePortrait();
+  const p = getPortrait();
+  if (!p) return;
+  const { cycles, dominant } = p;
   const now = new Date();
   const hour = now.getHours();
   const elLabel = (el) => Calculations.ELEMENT_LABELS[el] || el;
@@ -837,8 +1028,10 @@ function initForside() {
   setText('lige-nu-element', elLabel(domEl));
   setText('lige-nu-kvaliteter', ELEMENT_KVALITETER[domEl] || '');
 
-  // 3. PERSONLIG DAGLIG TEKST
-  // Prioriter buildDailyReading (cyklus-specifik), fallback til MORGEN_AFTEN_TEKST
+  // 2b. KLIMA-INDIKATOR \u2014 portr\u00e6ttets ene linje under hero
+  renderKlimaIndikator('forside-klima');
+
+  // 3. PERSONLIG DAGLIG TEKST \u2014 beriget med portr\u00e6ttets resonans
   const dailyReading = buildDailyReading(cycles, dominant);
   if (dailyReading && dailyReading.length > 20) {
     setText('lige-nu-tidstekst', dailyReading);
@@ -857,8 +1050,9 @@ function initForside() {
   // 4. ORGANUR LIGE NU
   renderOrganur(cycles.organ);
 
-  // 5. AARSTID x ELEMENT
+  // 5. AARSTID x ELEMENT + LIVSFASE-SAMSPIL (portr\u00e6ttets fortolkning)
   renderAarstidElement(cycles.season, domEl);
+  renderLivsAarstid('lige-nu-livs-aarstid');
 
   // 5b. KOMMENDE SKIFT
   renderKommendeSkift(cycles);
@@ -1641,6 +1835,7 @@ function initRelationer() {
    ============================================================ */
 function initMinPraksis() {
   if (typeof initBreathBoxes === 'function') setTimeout(initBreathBoxes, 100);
+  renderKlimaIndikator('portrait-klima');
 
   // 1. HERO — generel
   setText('mp-title', 'Din praksis');
@@ -2158,6 +2353,7 @@ function initPraksis() {
 function initTidsrejse() {
   // ── 1. BRUGERDATA ──
   const data = getUserCycles();
+  renderKlimaIndikator('portrait-klima');
   const user = Storage.getUser();
   const relations = Storage.getRelations();
   const now = new Date();
@@ -2725,6 +2921,7 @@ function initTidsDybere() {
 /* ---- Min Rejse (sekundaer skaerm — golden standard) ---- */
 
 function initMinRejse() {
+  renderKlimaIndikator('portrait-klima');
   // 1. HERO — generel
   setText('mr-title', 'Din historie skrives nu');
   setText('mr-intro', 'Journal, m\u00f8nstre og den stille forandring');
@@ -3271,6 +3468,7 @@ function initVinduer() {
 
   // ── Beregn nuv\u00e6rende alignment ──
   var data = getUserCycles();
+  renderKlimaIndikator('portrait-klima');
   var cycles = data.cycles;
   var phase = cycles.lifePhase;
   var userAge = cycles.age;
@@ -4452,6 +4650,7 @@ function shareMoment(title, text) {
 function initCykNiFaser() {
   // 1. Isabelle-tekst
   setText('nf-isabelle-tekst', 'Hvert syvende \u00e5r skifter noget i dig. Ikke pludseligt, men som \u00e5rstider der glider over i hinanden. Ni faser, fem elementer, \u00e9t liv. Find din \u2014 og m\u00e6rk hvad den beder dig om.');
+  renderKlimaIndikator('portrait-klima');
 
   // 2. Insight-boks + kort tekst
   var data = getUserCycles();
@@ -5080,6 +5279,7 @@ function navigateToRelation(personName) {
 function initDinRelation() {
   const data = getUserCycles();
   if (!data) return;
+  renderKlimaIndikator('portrait-klima');
   const { cycles, dominant } = data;
 
   // PR\u00c6SENTATION — konceptuel, Isabelles stemme (IKKE personspecifik)
@@ -5666,6 +5866,7 @@ function initRelToRytmer() {
 function initRelTreGen() {
   const data = getUserCycles();
   if (!data) return;
+  renderKlimaIndikator('portrait-klima');
   const phase = data.cycles.lifePhase;
   const elLabel = Calculations.ELEMENT_LABELS[phase.element];
   setText('tregen-featured-label', `Du · Fase ${phase.phase} · ${elLabel}`);
@@ -6623,6 +6824,7 @@ function initRejAlleFaser() {
 }
 
 function initRejBaggrund() {
+  renderKlimaIndikator('portrait-klima');
   // HERO — statisk
   setText('bg-title', 'Viden der bærer');
   setText('bg-intro', 'Traditionerne, forskningen og den røde tråd \u2014 den dybere forståelse bag cyklusser og elementer');
