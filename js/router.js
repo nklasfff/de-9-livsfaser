@@ -166,28 +166,9 @@ const Router = {
       }
     }
 
-    // Inject portrait bro on all non-forside/onboarding screens
-    if (name !== 'forside' && name !== 'onboarding' && name !== 'onboarding-result') {
-      var firstSection = container.querySelector('.s, .dybde-section');
-      var sectionWrapper = container.querySelector('.section');
-      var insertTarget = firstSection || (sectionWrapper ? sectionWrapper.querySelector('.section-intro, .feeling-box, .featured, .fig') : null);
-      if (insertTarget && !container.querySelector('.portrait-bro')) {
-        var broDiv = document.createElement('div');
-        broDiv.className = 'portrait-bro';
-        broDiv.id = 'portrait-bro';
-        broDiv.style.display = 'none';
-        broDiv.style.padding = '30px 24px 0';
-        insertTarget.parentNode.insertBefore(broDiv, insertTarget);
-      }
-    }
-
     // Call init function
     if (screen.init && typeof window[screen.init] === 'function') {
       window[screen.init]();
-      // Render portrait bro after init (so portrait is built)
-      if (name !== 'forside' && name !== 'onboarding' && name !== 'onboarding-result' && typeof renderPortraitBro === 'function') {
-        renderPortraitBro('portrait-bro');
-      }
       if (screen.niveau === 2 && typeof updateSaveBtn === 'function') updateSaveBtn();
     }
 
