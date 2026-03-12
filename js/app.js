@@ -954,122 +954,93 @@ function renderHandling(domEl) {
   setText('handling-tekst', desc);
 }
 
-/* ---- Forside helper: Temaer (foldbare kort) ---- */
+/* ---- Forside helper: Temaer (HUB-AND-SPOKE — hvert kort navigerer til UNIK skaerm) ---- */
 function renderTemaer(domEl, phase) {
   const container = document.getElementById('lige-nu-temaer');
   if (!container) return;
 
-  // Byg FULD pulje af alle egnede temaer — daglig rotation vaelger 4
+  const elLabel = Calculations.ELEMENT_LABELS[domEl] || domEl;
+  // Byg FULD pulje — hvert tema har sin EGEN unikke destination
   const alleTemaer = [];
 
-  // Tema 1: Overgangsalder (kun fase 7-8, dvs. 42+ år)
+  // Tema: Overgangsalder (kun fase 7-8)
   if (phase.phase >= 7 && phase.phase <= 8 && typeof OVERGANGSALDER_SPECIFIK !== 'undefined') {
-    const oa = OVERGANGSALDER_SPECIFIK;
-    let oaBody = oa.intro || '';
-    // Add phase-specific element advice
-    const faseTrin = phase.phase === 6 ? 'tidlig' : phase.phase === 7 ? 'midt' : 'sen';
-    if (oa.faser && oa.faser[faseTrin] && oa.faser[faseTrin].element_raad && oa.faser[faseTrin].element_raad[domEl]) {
-      oaBody += '\n\n' + oa.faser[faseTrin].element_raad[domEl];
-    }
     alleTemaer.push({
       titel: 'Overgangsalder og dit element',
-      tekst: oaBody,
-      link: { label: 'L\u00e6s mere om din fase \u2192', route: 'cir-dit-liv' }
+      teaser: 'Hvad din ' + elLabel.toLowerCase() + '-energi har brug for i denne overgang',
+      route: 'cir-dit-liv'
     });
   }
 
-  // Tema 2: Stress og dit element
+  // Tema: Stress
   if (typeof UDVIDET_HJAELP !== 'undefined' && UDVIDET_HJAELP.stress && UDVIDET_HJAELP.stress[domEl]) {
-    const stress = UDVIDET_HJAELP.stress[domEl];
-    let stressBody = stress.dyb || '';
-    if (stress.oevelse) stressBody += '\n\n\u00d8velse: ' + stress.oevelse;
-    if (stress.kost_raad) stressBody += '\n\n' + stress.kost_raad;
     alleTemaer.push({
       titel: 'Stress og dit element',
-      tekst: stressBody,
-      link: { label: 'Se flere \u00f8velser \u2192', route: 'din-praksis' }
+      teaser: 'EFT og tapping til at l\u00f8sne ' + elLabel.toLowerCase() + '-stress',
+      route: 'pra-eft'
     });
   }
 
-  // Tema 3: Naering til dit element
+  // Tema: Naering
   if (typeof INSIGHT_FOOD !== 'undefined' && INSIGHT_FOOD[domEl]) {
-    const foods = INSIGHT_FOOD[domEl];
-    let foodBody = foods.map(f => '\u2022 ' + f.item + ' \u2014 ' + f.desc).join('\n');
     alleTemaer.push({
       titel: 'N\u00e6ring til dit element',
-      tekst: foodBody,
-      link: { label: 'Se mere om kost \u2192', route: 'din-praksis' }
+      teaser: 'Kost og ern\u00e6ring der st\u00f8tter dit ' + elLabel.toLowerCase() + '-element',
+      route: 'pra-kost'
     });
   }
 
-  // Tema 4-5: TEMA_DYBDE — kontekstuelle dybe temaer
-  if (typeof TEMA_DYBDE !== 'undefined') {
-    // Forandring og overgang — relevant for alle
-    if (TEMA_DYBDE.forandring_og_overgang && TEMA_DYBDE.forandring_og_overgang[domEl]) {
-      const tekst = TEMA_DYBDE.forandring_og_overgang[domEl];
-      // Vis kun første afsnit som preview i den foldbare
-      const firstPara = tekst.split('\n\n')[0];
-      alleTemaer.push({
-        titel: 'Forandring og dit element',
-        tekst: firstPara,
-        link: { label: 'L\u00e6s mere \u2192', route: 'cir-dit-liv' }
-      });
-    }
-    // Sorg og tab — fase 6+ (frigørelse, modning og videre)
-    if (phase.phase >= 6 && TEMA_DYBDE.sorg_og_tab && TEMA_DYBDE.sorg_og_tab[domEl]) {
-      const tekst = TEMA_DYBDE.sorg_og_tab[domEl];
-      const firstPara = tekst.split('\n\n')[0];
-      alleTemaer.push({
-        titel: 'Sorg og dit element',
-        tekst: firstPara,
-        link: { label: 'L\u00e6s mere \u2192', route: 'cir-dit-liv' }
-      });
-    }
-    // Ensomhed — fase 4+ (bredere relevans)
-    if (phase.phase >= 4 && TEMA_DYBDE.ensomhed_og_isolation && TEMA_DYBDE.ensomhed_og_isolation[domEl]) {
-      const tekst = TEMA_DYBDE.ensomhed_og_isolation[domEl];
-      const firstPara = tekst.split('\n\n')[0];
-      alleTemaer.push({
-        titel: 'Ensomhed og dit element',
-        tekst: firstPara,
-        link: { label: 'L\u00e6s mere \u2192', route: 'cir-dit-liv' }
-      });
-    }
-    // Graviditet/fertilitet — fase 2-5
-    if (phase.phase >= 2 && phase.phase <= 5 && TEMA_DYBDE.graviditet_og_fertilitet && TEMA_DYBDE.graviditet_og_fertilitet[domEl]) {
-      const tekst = TEMA_DYBDE.graviditet_og_fertilitet[domEl];
-      const firstPara = tekst.split('\n\n')[0];
-      alleTemaer.push({
-        titel: 'Fertilitet og dit element',
-        tekst: firstPara,
-        link: { label: 'L\u00e6s mere \u2192', route: 'cir-dit-liv' }
-      });
-    }
+  // Tema: Forandring
+  if (typeof TEMA_DYBDE !== 'undefined' && TEMA_DYBDE.forandring_og_overgang && TEMA_DYBDE.forandring_og_overgang[domEl]) {
+    alleTemaer.push({
+      titel: 'Forandring og dit element',
+      teaser: 'Refleksion over forandring set gennem ' + elLabel.toLowerCase(),
+      route: 'pra-refleksion'
+    });
   }
 
-  // Angst og dit element — relevant for alle
+  // Tema: Sorg (fase 6+)
+  if (phase.phase >= 6 && typeof TEMA_DYBDE !== 'undefined' && TEMA_DYBDE.sorg_og_tab && TEMA_DYBDE.sorg_og_tab[domEl]) {
+    alleTemaer.push({
+      titel: 'Sorg og dit element',
+      teaser: 'At m\u00e6rke efter i tab og frigivelse',
+      route: 'pra-foelelser'
+    });
+  }
+
+  // Tema: Ensomhed (fase 4+)
+  if (phase.phase >= 4 && typeof TEMA_DYBDE !== 'undefined' && TEMA_DYBDE.ensomhed_og_isolation && TEMA_DYBDE.ensomhed_og_isolation[domEl]) {
+    alleTemaer.push({
+      titel: 'Ensomhed og dit element',
+      teaser: 'Healing og forbindelse n\u00e5r ' + elLabel.toLowerCase() + ' f\u00f8ler sig alene',
+      route: 'pra-healing'
+    });
+  }
+
+  // Tema: Fertilitet (fase 2-5)
+  if (phase.phase >= 2 && phase.phase <= 5 && typeof TEMA_DYBDE !== 'undefined' && TEMA_DYBDE.graviditet_og_fertilitet && TEMA_DYBDE.graviditet_og_fertilitet[domEl]) {
+    alleTemaer.push({
+      titel: 'Fertilitet og dit element',
+      teaser: 'Kroppen, cyklussen og ny inspiration',
+      route: 'pra-inspiration'
+    });
+  }
+
+  // Tema: Angst
   if (typeof UDVIDET_HJAELP !== 'undefined' && UDVIDET_HJAELP.angst && UDVIDET_HJAELP.angst[domEl]) {
-    const angst = UDVIDET_HJAELP.angst[domEl];
-    let angstBody = angst.dyb || '';
-    if (angst.oevelse) angstBody += '\n\n\u00d8velse: ' + angst.oevelse;
-    if (angst.kost_raad) angstBody += '\n\n' + angst.kost_raad;
     alleTemaer.push({
       titel: 'Angst og dit element',
-      tekst: angstBody,
-      link: { label: 'Se flere \u00f8velser \u2192', route: 'din-praksis' }
+      teaser: 'Mindfulness og \u00e5ndedr\u00e6t n\u00e5r angsten melder sig',
+      route: 'pra-mindfulness'
     });
   }
 
-  // Udbraendthed og dit element — relevant for alle
+  // Tema: Udbraendthed
   if (typeof UDVIDET_HJAELP !== 'undefined' && UDVIDET_HJAELP.udbraendthed && UDVIDET_HJAELP.udbraendthed[domEl]) {
-    const ub = UDVIDET_HJAELP.udbraendthed[domEl];
-    let ubBody = ub.dyb || '';
-    if (ub.oevelse) ubBody += '\n\n\u00d8velse: ' + ub.oevelse;
-    if (ub.kost_raad) ubBody += '\n\n' + ub.kost_raad;
     alleTemaer.push({
       titel: 'Udbr\u00e6ndthed og dit element',
-      tekst: ubBody,
-      link: { label: 'Se flere \u00f8velser \u2192', route: 'din-praksis' }
+      teaser: 'Stille genopladning med yin yoga for ' + elLabel.toLowerCase(),
+      route: 'pra-yin-yoga'
     });
   }
 
@@ -1091,45 +1062,20 @@ function renderTemaer(domEl, phase) {
     }
   }
 
+  // Hub-and-spoke: hvert kort er en DØR — tryk navigerer til unik skærm
   container.innerHTML = '<div class="eyebrow">Temaer for dig</div>' +
     temaer.map(t => {
-      // Truncate display text to first ~200 chars for the collapsed view
-      const previewLen = 180;
-      const preview = t.tekst.length > previewLen ? t.tekst.substring(0, previewLen).replace(/\n/g, ' ') + '\u2026' : t.tekst.replace(/\n/g, ' ');
-      const fullText = t.tekst.replace(/\n/g, '<br>');
-      return `<div class="tema" onclick="this.classList.toggle('open')" style="background:rgba(108,130,169,0.03);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer">
+      return `<div class="tema" style="background:rgba(108,130,169,0.03);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer" onclick="Router.navigate('${t.route}')">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">${t.titel}</div>
-          <div class="tema-arr" style="font-size:18px;color:var(--blaa-pale);transition:transform 0.2s">\u203a</div>
+          <div style="font-size:18px;color:var(--blaa);opacity:0.4">\u203a</div>
         </div>
-        <div class="tema-body" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease">
-          <div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(108,130,169,0.06)">${fullText}</div>
-          ${t.link ? `<a onclick="event.stopPropagation();Router.navigate('${t.link.route}')" style="display:inline-block;margin-top:10px;font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--blaa);opacity:0.7;cursor:pointer">${t.link.label}</a>` : ''}
-        </div>
+        <div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--text-light);margin-top:4px;line-height:1.5">${t.teaser}</div>
       </div>`;
     }).join('');
-
-  // Add CSS toggle behavior via class
-  container.querySelectorAll('.tema').forEach(tema => {
-    tema.addEventListener('click', function(e) {
-      const body = this.querySelector('.tema-body');
-      const arr = this.querySelector('.tema-arr');
-      if (body) {
-        if (body.style.maxHeight && body.style.maxHeight !== '0px') {
-          body.style.maxHeight = '0px';
-          if (arr) arr.style.transform = '';
-        } else {
-          body.style.maxHeight = body.scrollHeight + 'px';
-          if (arr) arr.style.transform = 'rotate(90deg)';
-        }
-      }
-    });
-    // Remove the inline onclick to avoid double-fire
-    tema.removeAttribute('onclick');
-  });
 }
 
-/* ---- Forside helper: Refleksion (udvidet med EKSTRA_REFLEKSIONER_NY) ---- */
+/* ---- Forside helper: Refleksion (sender spoergsmaal med til journal) ---- */
 function renderRefleksion(phase) {
   // Saml alle refleksioner fra begge kilder
   let questions = [];
@@ -1141,7 +1087,14 @@ function renderRefleksion(phase) {
   }
   if (!questions.length) return;
   const idx = Calculations.dayRotation(questions.length);
-  setText('lige-nu-refleksion', questions[idx]);
+  const question = questions[idx];
+  setText('lige-nu-refleksion', question);
+
+  // Opdater journal-link til at sende spoergsmaal med
+  const journalLink = document.querySelector('#lige-nu-refleksion + div a, .s a[onclick*="rej-journal"]');
+  if (journalLink) {
+    journalLink.setAttribute('onclick', "window._journalQuestion='" + question.replace(/'/g, "\\'") + "';Router.navigate('rej-journal')");
+  }
 }
 
 /* ---- Forside helper: Element+Fase daglig læsning ---- */
@@ -1164,8 +1117,10 @@ function renderElementFaseDaglig(domEl, phase) {
     }
   }
 
-  const html = formatExpandable(tekst, 15);
-  setHTML('lige-nu-daglig', html);
+  // Hub: vis kort tekst (ingen inline expand — linker til cir-dit-liv)
+  const words = tekst.split(/\s+/);
+  const shortText = words.length > 30 ? words.slice(0, 30).join(' ') + ' \u2026' : tekst;
+  setText('lige-nu-daglig', shortText);
   wrap.style.display = '';
 }
 
@@ -1228,9 +1183,24 @@ function renderKommendeSkift(cycles) {
 
   // Vis det mest relevante skift (længst varighed først: årstid > måned > ugedag)
   const shift = shifts[shifts.length - 1];
-  setText('skift-label', 'Kommende skift · ' + shift.label);
+  setText('skift-label', 'Kommende skift \u00b7 ' + shift.label);
   setText('skift-tekst', shift.tekst);
   wrap.style.display = '';
+
+  // Gør hele sektionen tappable — naviger til vinduer med skift-datoen
+  if (shift.targetDate) {
+    wrap.onclick = function() { navigateToVinduerWithDate(shift.targetDate); };
+  } else {
+    // Fallback: beregn dato fra label
+    const daysMatch = shift.label.match(/(\d+)/);
+    if (daysMatch) {
+      const futureDate = new Date(now);
+      futureDate.setDate(futureDate.getDate() + parseInt(daysMatch[1]));
+      const pad2 = n => String(n).padStart(2, '0');
+      const dateStr = futureDate.getFullYear() + '-' + pad2(futureDate.getMonth()+1) + '-' + pad2(futureDate.getDate());
+      wrap.onclick = function() { navigateToVinduerWithDate(dateStr); };
+    }
+  }
 }
 
 /* ============================================================
@@ -6675,6 +6645,18 @@ function initRejJournal() {
   const data = getUserCycles();
   if (!data) return;
   setText('journal-featured-label', `Din journal · Fase ${data.cycles.lifePhase.phase}`);
+
+  // Pre-fill fra refleksions-spoergsmaal (sendt fra forside)
+  if (window._journalQuestion) {
+    const textarea = document.querySelector('textarea, #journal-input, .journal-textarea');
+    if (textarea) {
+      textarea.value = window._journalQuestion + '\n\n';
+      textarea.focus();
+      // Placer cursor i slutningen
+      textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+    }
+    window._journalQuestion = null; // Ryd efter brug
+  }
 
   // Render saved journal entries (only if there are any — otherwise keep mockup examples)
   renderJournalEntries();

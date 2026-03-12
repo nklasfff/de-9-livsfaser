@@ -23,17 +23,21 @@
   </div>
 </div>
 
-<!-- DIN DAGLIGE L&AElig;SNING -->
-<div class="s" id="lige-nu-daglig-wrap" style="display:none">
+<!-- DIN DAGLIGE L&AElig;SNING — kort tekst + link til dyb skaerm -->
+<div class="s" id="lige-nu-daglig-wrap" style="display:none;cursor:pointer" onclick="Router.navigate('cir-dit-liv')">
   <div class="isa isa-sm" id="lige-nu-daglig"></div>
+  <div style="text-align:center;margin-top:8px">
+    <span style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--blaa);opacity:0.7">Udforsk dit dybe billede &rarr;</span>
+  </div>
 </div>
 
-<!-- ORGANUR LIGE NU -->
+<!-- ORGANUR LIGE NU — tappable til din praksis -->
 <div class="s">
   <div class="eyebrow">Dit organur lige nu</div>
-  <div id="lige-nu-organur" style="background:rgba(108,130,169,0.04);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);padding:16px 18px;margin-top:10px">
+  <div id="lige-nu-organur" style="background:rgba(108,130,169,0.04);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);padding:16px 18px;margin-top:10px;cursor:pointer" onclick="Router.navigate('din-praksis')">
     <div id="organur-tid" style="font-family:var(--font-sans);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:var(--blaa);margin-bottom:6px"></div>
     <div id="organur-tekst" style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6"></div>
+    <div style="text-align:right;margin-top:6px"><span style="font-family:var(--font-serif);font-size:12px;font-style:italic;color:var(--blaa);opacity:0.5">&rarr;</span></div>
   </div>
 </div>
 
@@ -42,11 +46,12 @@
   <div class="isa isa-sm" id="lige-nu-aarstid"></div>
 </div>
 
-<!-- KOMMENDE SKIFT -->
-<div class="s" id="lige-nu-skift-wrap" style="display:none">
+<!-- KOMMENDE SKIFT — tappable, navigerer til vinduer med skift-dato -->
+<div class="s" id="lige-nu-skift-wrap" style="display:none;cursor:pointer">
   <div id="lige-nu-skift" style="text-align:center">
     <div id="skift-label" style="font-family:var(--font-sans);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:var(--blaa);opacity:0.6;margin-bottom:4px"></div>
     <div id="skift-tekst" class="isa isa-sm" style="margin:0"></div>
+    <div style="margin-top:8px"><span style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--blaa);opacity:0.7">Se dine cyklusser der &rarr;</span></div>
   </div>
 </div>
 
@@ -60,7 +65,7 @@
     <div id="handling-type" style="font-family:var(--font-sans);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:var(--blaa);margin-bottom:4px"></div>
     <div id="handling-titel" style="font-family:var(--font-serif);font-size:19px;color:var(--text-dark);margin-bottom:8px"></div>
     <div id="handling-tekst" style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:var(--text-body);line-height:1.6;max-width:320px;margin:0 auto"></div>
-    <a onclick="Router.navigate('min-praksis')" style="display:inline-block;margin-top:12px;font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--blaa);opacity:0.7;cursor:pointer">Se flere &oslash;velser &rarr;</a>
+    <a onclick="Router.navigate('pra-yin-yoga')" style="display:inline-block;margin-top:12px;font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--blaa);opacity:0.7;cursor:pointer">Se flere &oslash;velser &rarr;</a>
   </div>
 </div>
 
@@ -109,13 +114,13 @@
   <a id="forside-del" onclick="shareElement()" style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--blaa);opacity:0.6;cursor:pointer">Del dit element &rarr;</a>
 </div>
 
-<!-- DYK DYBERE -->
+<!-- DYK DYBERE — alle links til unikke skaerme -->
 <div class="s" style="padding-bottom:32px">
   <div class="eyebrow">Dyk dybere</div>
   <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px">
     <a onclick="Router.navigate('cir-dit-liv')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">Dit Dybe Billede</a>
     <a onclick="Router.navigate('cyk-ni-faser')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">De Ni Faser</a>
-    <a onclick="Router.navigate('min-praksis')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">Min Praksis</a>
+    <a onclick="Router.navigate('din-praksis')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">Din Dybere Praksis</a>
     <a onclick="Router.navigate('min-rejse')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">Min Rejse</a>
   </div>
 </div>
