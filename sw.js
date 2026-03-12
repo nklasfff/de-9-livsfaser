@@ -1,4 +1,4 @@
-const CACHE_NAME = 'livsfaser-v136';
+const CACHE_NAME = 'livsfaser-v137';
 const urlsToCache = [
   './',
   './index.html',
@@ -15,6 +15,7 @@ const urlsToCache = [
   './js/storage.js',
   './js/calculations.js',
   './js/data.js',
+  './js/data-portrait.js',
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
   './assets/images/9-cirkler.png',

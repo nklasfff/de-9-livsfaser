@@ -192,6 +192,67 @@ function getPortrait() {
 
 function invalidatePortrait() { _portrait = null; _portraitKey = null; }
 
+/* ============================================================
+   NAVIGATIONSKONTEKST — b\u00e6r portr\u00e6ttets tilstand mellem sk\u00e6rme
+   N\u00e5r brugeren trykker p\u00e5 noget, gemmes konteksten s\u00e5
+   den modtagende sk\u00e6rm ved HVAD brugeren kom fra.
+   ============================================================ */
+var _navContext = null;
+
+function setNavContext(topic) {
+  var p = getPortrait();
+  if (!p) { _navContext = null; return; }
+  _navContext = {
+    fromScreen: Router.currentRoute || 'forside',
+    topic: topic || '',
+    element: p.dominant.element,
+    secondary: p.secondary.element,
+    climate: p.climate.state,
+    livsAarstidRelation: p.livsAarstid.relation,
+    resonanceLevel: p.resonance.level,
+    timestamp: Date.now()
+  };
+}
+
+function getNavContext() {
+  if (!_navContext) return null;
+  // Kontekst er gyldig i 60 sekunder
+  if (Date.now() - _navContext.timestamp > 60000) { _navContext = null; return null; }
+  var ctx = _navContext;
+  _navContext = null;  // Auto-clear efter brug
+  return ctx;
+}
+
+/* ---- Portr\u00e6t-bro: bygger en kort s\u00e6tning der forbinder kontekst til indhold ---- */
+function buildBridge(portrait, topic) {
+  if (!portrait) return '';
+  var domEl = portrait.dominant.element;
+  var elLabel = Calculations.ELEMENT_LABELS[domEl] || '';
+  var climate = portrait.climate.state;
+  var secEl = portrait.secondary.element;
+  var secLabel = secEl ? (Calculations.ELEMENT_LABELS[secEl] || '') : '';
+
+  // Brug KLIMA_ELEMENT_TEKST hvis tilg\u00e6ngelig
+  if (typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[climate] && KLIMA_ELEMENT_TEKST[climate][domEl]) {
+    return KLIMA_ELEMENT_TEKST[climate][domEl];
+  }
+
+  // Fallback: generisk bro baseret p\u00e5 klima
+  var klimaLabel = portrait.climate.label || '';
+  if (!klimaLabel) return '';
+  return 'I dit ' + klimaLabel.toLowerCase() + ' kan ' + elLabel.toLowerCase() + '-energien finde sit udtryk.';
+}
+
+/* ---- Understr\u00f8m-tekst: dominant + sekund\u00e6r karakteristik ---- */
+function getUnderstroemTekst(portrait) {
+  if (!portrait || !portrait.secondary.element) return '';
+  var key = portrait.dominant.element + '_' + portrait.secondary.element;
+  if (typeof UNDERSTROEM_TEKST !== 'undefined' && UNDERSTROEM_TEKST[key]) {
+    return UNDERSTROEM_TEKST[key];
+  }
+  return '';
+}
+
 /* ---- Portr\u00e6t-rendering: kort klimaindikator til enhver sk\u00e6rm ---- */
 function renderKlimaIndikator(containerId) {
   var el = document.getElementById(containerId);
@@ -200,7 +261,12 @@ function renderKlimaIndikator(containerId) {
   if (!p) { el.style.display = 'none'; return; }
 
   var domLabel = Calculations.ELEMENT_LABELS[p.dominant.element] || '';
-  el.textContent = p.resonance.count + ' af ' + p.resonance.total + ' lag i ' + domLabel.toLowerCase() + ' \u00b7 ' + p.climate.label.toLowerCase();
+  var secLabel = p.secondary.element ? (Calculations.ELEMENT_LABELS[p.secondary.element] || '') : '';
+
+  var tekst = p.resonance.count + ' af ' + p.resonance.total + ' lag i ' + domLabel.toLowerCase();
+  if (secLabel) tekst += ' med ' + secLabel.toLowerCase() + ' som understr\u00f8m';
+  tekst += ' \u00b7 ' + p.climate.label.toLowerCase();
+  el.textContent = tekst;
   el.style.display = '';
 }
 
@@ -961,9 +1027,9 @@ function buildDailyReading(cycles, dominant) {
   // Build concrete cycle references
   const cykNavne = [];
   if (phase.element === domEl) cykNavne.push('din livsfase');
-  if (cycles.innerSeason && cycles.innerSeason.element === domEl) cykNavne.push('din indre årstid');
-  if (cycles.season.element === domEl) cykNavne.push('årstiden');
-  if (cycles.monthCycle && cycles.monthCycle.element === domEl) cykNavne.push('måneden');
+  if (cycles.innerSeason && cycles.innerSeason.element === domEl) cykNavne.push('din indre \u00e5rstid');
+  if (cycles.season.element === domEl) cykNavne.push('\u00e5rstiden');
+  if (cycles.monthCycle && cycles.monthCycle.element === domEl) cykNavne.push('m\u00e5neden');
   if (cycles.organ.element === domEl) cykNavne.push('dit organur');
 
   const cykStr = cykNavne.length > 0 ? cykNavne.join(', ') : 'dine cyklusser';
@@ -983,11 +1049,22 @@ function buildDailyReading(cycles, dominant) {
 
   // Build concrete detail
   const konkretParts = [];
-  if (phase.element === domEl) konkretParts.push(`Fase ${phase.phase} er ${elLabel(domEl)}`);
-  if (cycles.season.element === domEl) konkretParts.push(`${cycles.season.season} er ${elLabel(domEl)}`);
+  if (phase.element === domEl) konkretParts.push('Fase ' + phase.phase + ' er ' + elLabel(domEl));
+  if (cycles.season.element === domEl) konkretParts.push(cycles.season.season + ' er ' + elLabel(domEl));
   const konkret = konkretParts.length > 0 ? konkretParts.join(', og ') + '.' : '';
 
-  return template.replace('{cyklusser}', cykStr).replace('{konkret}', konkret);
+  var baseTekst = template.replace('{cyklusser}', cykStr).replace('{konkret}', konkret);
+
+  // BERIG med understr\u00f8m fra portr\u00e6ttet
+  var p = getPortrait();
+  if (p) {
+    var understroem = getUnderstroemTekst(p);
+    if (understroem) {
+      baseTekst += ' Lige nu er det ' + understroem + '.';
+    }
+  }
+
+  return baseTekst;
 }
 
 /* ---- Streak: Render på forsiden (kun ved 2+ dage) ---- */
@@ -1138,14 +1215,29 @@ function renderHandling(domEl) {
   const pose = poses[idx];
   if (!pose) return;
 
-  setText('handling-type', 'Yin Yoga \u00b7 ' + elLabel(domEl));
+  // Klima-farvet type-label
+  var p = getPortrait();
+  var klimaType = '';
+  if (p && typeof KLIMA_OEVELSE !== 'undefined' && KLIMA_OEVELSE[p.climate.state]) {
+    klimaType = ' \u00b7 ' + KLIMA_OEVELSE[p.climate.state].type;
+  }
+  setText('handling-type', 'Yin Yoga \u00b7 ' + elLabel(domEl) + klimaType);
   setText('handling-titel', pose.pose.split('(')[0].trim());
 
-  // Build description with meridian and time
-  let desc = pose.desc;
+  // Bro-s\u00e6tning + pose-beskrivelse
+  var bridge = p ? buildBridge(p, 'handling') : '';
+  let desc = '';
+  if (bridge) desc = bridge + ' ';
+  desc += pose.desc;
   if (pose.tid) desc += ' ' + pose.tid + '.';
   if (pose.meridian) desc += ' Meridian: ' + pose.meridian + '.';
   setText('handling-tekst', desc);
+
+  // Tilf\u00f8j navContext til "Se flere \u00f8velser" linket
+  var handlingLink = document.querySelector('#lige-nu-handling a[onclick*="pra-yin-yoga"]');
+  if (handlingLink) {
+    handlingLink.setAttribute('onclick', "setNavContext('handling');Router.navigate('pra-yin-yoga')");
+  }
 }
 
 /* ---- Forside helper: Temaer (HUB-AND-SPOKE — hvert kort navigerer til UNIK skaerm) ---- */
@@ -1307,8 +1399,29 @@ function renderPhaseRefleksion(elementId, phaseNum) {
   }
 }
 
-/* ---- Backward-compatible wrapper for forside ---- */
+/* ---- Backward-compatible wrapper for forside — beriget med klima-refleksion ---- */
 function renderRefleksion(phase) {
+  var el = document.getElementById('lige-nu-refleksion');
+  if (!el) return;
+
+  // Pr\u00f8v f\u00f8rst klima-farvet refleksion fra portr\u00e6ttet
+  var p = getPortrait();
+  if (p && typeof KLIMA_REFLEKSION !== 'undefined') {
+    var klimaPool = KLIMA_REFLEKSION[p.climate.state];
+    if (klimaPool && klimaPool[p.dominant.element]) {
+      el.textContent = klimaPool[p.dominant.element];
+      // S\u00e6t journal-link med sp\u00f8rgsm\u00e5let
+      var section = el.closest('.s');
+      var journalLink = section ? section.querySelector('a[onclick*="rej-journal"]') : null;
+      if (journalLink) {
+        var q = klimaPool[p.dominant.element].replace(/'/g, "\\'");
+        journalLink.setAttribute('onclick', "setNavContext('refleksion');window._journalQuestion='" + q + "';Router.navigate('rej-journal')");
+      }
+      return;
+    }
+  }
+
+  // Fallback: brug fase-baseret refleksion
   renderPhaseRefleksion('lige-nu-refleksion', phase.phase);
 }
 
@@ -1844,13 +1957,31 @@ function initMinPraksis() {
   // 2. ISABELLE TEKST — generel
   setText('mp-isabelle-tekst', 'Kroppen lyver aldrig. Den taler bare et sprog vi har glemt at lytte til. Her finder du metoder til at lytte igen.');
 
-  // 3. INSIGHT BOKS — kort personaliseret kontekst
-  var data = getUserCycles();
-  if (data) {
-    var domEl = data.dominant.element;
-    var elLabel = Calculations.ELEMENT_LABELS[domEl];
-    setText('mp-insight-label', 'Dit element lige nu');
-    setText('mp-insight-text', 'Dit dominerende element er ' + elLabel + '. Metoderne herunder kan alle tilpasses dit element \u2014 tryk p\u00e5 en metode for at g\u00e5 dybere.');
+  // 3. INSIGHT BOKS — personaliseret med portr\u00e6t + navigationskontekst
+  var p = getPortrait();
+  var ctx = getNavContext();
+  if (p) {
+    var domEl = p.dominant.element;
+    var elLabel = Calculations.ELEMENT_LABELS[domEl] || '';
+    var klimaOev = (typeof KLIMA_OEVELSE !== 'undefined' && KLIMA_OEVELSE[p.climate.state]) ? KLIMA_OEVELSE[p.climate.state] : null;
+
+    setText('mp-insight-label', 'Din praksis lige nu');
+
+    // Brug portr\u00e6t-drevet tekst
+    var insightTekst = '';
+    if (klimaOev) {
+      insightTekst = klimaOev.raad;
+    } else {
+      insightTekst = 'Dit dominerende element er ' + elLabel + '. Metoderne herunder kan alle tilpasses dit element.';
+    }
+
+    // Tilf\u00f8j understr\u00f8m
+    var understroem = getUnderstroemTekst(p);
+    if (understroem) {
+      insightTekst += ' Lige nu er dit billede ' + understroem + '.';
+    }
+
+    setText('mp-insight-text', insightTekst);
   }
 
   // 4. FEELING — generel introduktion
@@ -2477,6 +2608,25 @@ function initTidsrejse() {
       html += '<div style="font-size:13px;color:#8B7D9B">' + userCycles.season.season + ' (' + Calculations.ELEMENT_LABELS[userCycles.season.element] + ') · ' + userCycles.weekday.day + '</div>';
       html += '</div>';
 
+      // ── Portr\u00e6t for den valgte dato ──
+      var datePortrait = buildPortraitAtDate(user.birthdate, targetDate, false);
+      if (datePortrait) {
+        var dpLabel = Calculations.ELEMENT_LABELS[datePortrait.dominant.element] || '';
+        var dpSecLabel = datePortrait.secondary.element ? (Calculations.ELEMENT_LABELS[datePortrait.secondary.element] || '') : '';
+        var dpKlima = datePortrait.climate.label || '';
+
+        html += '<div style="text-align:center;font-family:var(--font-sans);font-size:11px;font-weight:400;letter-spacing:0.8px;color:var(--text-light);margin:6px 0">';
+        html += datePortrait.resonance.count + ' af ' + datePortrait.resonance.total + ' lag i ' + dpLabel.toLowerCase();
+        if (dpSecLabel) html += ' med ' + dpSecLabel.toLowerCase() + ' som understr\u00f8m';
+        html += ' \u00b7 ' + dpKlima.toLowerCase();
+        html += '</div>';
+
+        // Livsfase\u00d7\u00e5rstid fortolkning for den dato
+        if (datePortrait.livsAarstid.tekst) {
+          html += '<div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#8B7D9B;line-height:1.5;margin:8px 0;text-align:center">' + datePortrait.livsAarstid.tekst + '</div>';
+        }
+      }
+
       // ── Isabelle-intro (kort) ──
       if (detail) {
         var introShort = detail.introText.split('.').slice(0, 2).join('.') + '.';
@@ -2525,13 +2675,15 @@ function initTidsrejse() {
           html += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase">' + rel.name + '</div>';
           html += '<div style="font-size:14px;color:#6B5F7B;font-weight:500;margin:3px 0">' + rc.age + ' år · Fase ' + rc.lifePhase.phase + ': ' + rc.lifePhase.name + ' (' + relElLabel + ')</div>';
 
-          // Element-interaktion
+          // Element-interaktion — beriget med Sheng/Ko
           var uEl = phase.element;
           var interaction = '';
-          if (uEl === relEl) interaction = 'Begge i ' + elLabel + ' — dyb resonans.';
-          else if (nourishing[uEl] === relEl) interaction = 'Dit ' + elLabel + ' ' + (isPast ? 'nærede' : 'nærer') + ' ' + rel.name + 's ' + relElLabel + '.';
-          else if (nourishing[relEl] === uEl) interaction = rel.name + 's ' + relElLabel + ' ' + (isPast ? 'nærede' : 'nærer') + ' dit ' + elLabel + '.';
-          else interaction = elLabel + ' ' + (isPast ? 'mødte' : 'møder') + ' ' + relElLabel + ' — forskellige energier.';
+          if (uEl === relEl) interaction = 'Begge i ' + elLabel + ' \u2014 dyb resonans. I forst\u00e6rker hinandens energi.';
+          else if (SHENG[uEl] === relEl) interaction = 'Dit ' + elLabel + ' ' + (isPast ? 'n\u00e6rede' : 'n\u00e6rer') + ' ' + rel.name + 's ' + relElLabel + '. En b\u00e6rende str\u00f8m mellem jer.';
+          else if (SHENG[relEl] === uEl) interaction = rel.name + 's ' + relElLabel + ' ' + (isPast ? 'n\u00e6rede' : 'n\u00e6rer') + ' dit ' + elLabel + '. Du modtager st\u00f8tte.';
+          else if (KO[uEl] === relEl) interaction = 'Dit ' + elLabel + ' udfordrer ' + rel.name + 's ' + relElLabel + '. En sp\u00e6nding der kan v\u00e6re kreativ.';
+          else if (KO[relEl] === uEl) interaction = rel.name + 's ' + relElLabel + ' udfordrer dit ' + elLabel + '. En modstand der ogs\u00e5 er v\u00e6kst.';
+          else interaction = elLabel + ' ' + (isPast ? 'm\u00f8dte' : 'm\u00f8der') + ' ' + relElLabel + ' \u2014 forskellige energier i stille balance.';
           html += '<div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#8B7D9B;margin-top:6px">' + interaction + '</div>';
           html += '</div>';
         });
@@ -3275,7 +3427,35 @@ function cyclesAtDate(birthdate, targetDate, isMale) {
   const innerSeason = isMale ? null : Calculations.calculateInnerSeason(birthdate, date);
   const season = Calculations.calculateSeason(date);
   const weekday = Calculations.calculateWeekday(date);
-  return { age, lifePhase, innerSeason, season, weekday, date };
+  const organ = Calculations.calculateOrganClock(date);
+  const monthCycle = Calculations.calculateCalendarMonth(date);
+
+  // Byg elements-array (5 lag) — samme r\u00e6kkef\u00f8lge som allCycles
+  const elements = [
+    lifePhase.element,
+    innerSeason ? innerSeason.element : lifePhase.element,
+    season.element,
+    monthCycle.element,
+    organ.element
+  ];
+
+  return { age, lifePhase, innerSeason, season, weekday, organ, monthCycle, elements, date };
+}
+
+/* ---- Portr\u00e6t for en vilk\u00e5rlig dato — bruges af tidsrejse og vinduer ---- */
+function buildPortraitAtDate(birthdate, targetDate, isMale) {
+  var cycles = cyclesAtDate(birthdate, targetDate, isMale);
+  if (!cycles) return null;
+
+  // Byg et data-objekt der ligner getUserCycles()-output
+  var dominant = Calculations.getWeightedDominant(cycles);
+  var data = {
+    user: Storage.getUser(),
+    cycles: cycles,
+    dominant: dominant
+  };
+
+  return buildPortrait(data);
 }
 
 /* ---- Sj\u00e6ldne Vinduer — motor + rendering ---- */
@@ -5397,6 +5577,43 @@ function buildRelationReading() {
 
   setText('rel-climate-label', 'Dig og ' + rel.name + ' \u00b7 ' + tcmType);
   setText('rel-climate-text', climate.text);
+
+  // ── 1a. TO PORTR\u00c6TTER — dit og deres klima side om side ──
+  var relPortraitEl = document.getElementById('rel-portraits');
+  if (relPortraitEl) {
+    var userP = getPortrait();
+    var theirP = buildPortraitAtDate(rel.birthdate, targetDate, isMale);
+
+    if (userP && theirP) {
+      var userDomLabel = Calculations.ELEMENT_LABELS[userP.dominant.element] || '';
+      var theirDomLabel = Calculations.ELEMENT_LABELS[theirP.dominant.element] || '';
+      var userSecLabel = userP.secondary.element ? (Calculations.ELEMENT_LABELS[userP.secondary.element] || '') : '';
+      var theirSecLabel = theirP.secondary.element ? (Calculations.ELEMENT_LABELS[theirP.secondary.element] || '') : '';
+
+      var pHtml = '<div style="display:flex;gap:10px;margin:10px 0">';
+      pHtml += '<div style="flex:1;padding:10px;background:rgba(123,122,158,0.04);border-radius:10px;text-align:center">';
+      pHtml += '<div style="font-size:11px;color:#a89bb3;margin-bottom:3px">Dit portr\u00e6t</div>';
+      pHtml += '<div style="font-size:13px;color:#7b7a9e">' + userDomLabel;
+      if (userSecLabel) pHtml += ' \u00b7 ' + userSecLabel.toLowerCase();
+      pHtml += '</div>';
+      pHtml += '<div style="font-size:11px;color:#a89bb3;margin-top:2px">' + userP.climate.label.toLowerCase() + '</div>';
+      pHtml += '</div>';
+
+      pHtml += '<div style="flex:1;padding:10px;background:rgba(123,122,158,0.04);border-radius:10px;text-align:center">';
+      pHtml += '<div style="font-size:11px;color:#a89bb3;margin-bottom:3px">' + rel.name + 's portr\u00e6t</div>';
+      pHtml += '<div style="font-size:13px;color:#7b7a9e">' + theirDomLabel;
+      if (theirSecLabel) pHtml += ' \u00b7 ' + theirSecLabel.toLowerCase();
+      pHtml += '</div>';
+      pHtml += '<div style="font-size:11px;color:#a89bb3;margin-top:2px">' + theirP.climate.label.toLowerCase() + '</div>';
+      pHtml += '</div>';
+      pHtml += '</div>';
+
+      relPortraitEl.innerHTML = pHtml;
+      relPortraitEl.style.display = '';
+    } else {
+      relPortraitEl.style.display = 'none';
+    }
+  }
 
   // ── 1b. RELATION_DYBDE — dyb laesning, expandable (kort foerst) ──
   const dybdeWrap = document.getElementById('rel-dybde-wrap');
