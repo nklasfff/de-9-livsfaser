@@ -199,7 +199,7 @@ function invalidatePortrait() { _portrait = null; _portraitKey = null; }
    ============================================================ */
 var _navContext = null;
 
-function setNavContext(topic) {
+function setNavContext(topic, specifics) {
   var p = getPortrait();
   if (!p) { _navContext = null; return; }
   _navContext = {
@@ -212,6 +212,12 @@ function setNavContext(topic) {
     resonanceLevel: p.resonance.level,
     timestamp: Date.now()
   };
+  // Specifikt indhold: { dataPool, dataKey, temaTitle }
+  if (specifics) {
+    _navContext.dataPool = specifics.dataPool || null;
+    _navContext.dataKey = specifics.dataKey || null;
+    _navContext.temaTitle = specifics.temaTitle || '';
+  }
 }
 
 function getNavContext() {
@@ -251,6 +257,97 @@ function getUnderstroemTekst(portrait) {
     return UNDERSTROEM_TEKST[key];
   }
   return '';
+}
+
+/* ---- Tema-indhold: viser specifikt indhold baseret på navigationskontekst ---- */
+/* Når brugeren klikker f.eks. "Stress" på forsiden og lander på pra-eft,
+   viser denne funktion STRESS-specifikt indhold øverst på skærmen.
+   Returnerer ctx hvis specifikt indhold blev vist, null ellers. */
+function renderTemaContent(ctx) {
+  if (!ctx || !ctx.dataPool || !ctx.dataKey) return null;
+  var domEl = ctx.element;
+  if (!domEl) return null;
+
+  // Slå data op i den rigtige pool
+  var pool = null;
+  if (ctx.dataPool === 'UDVIDET_HJAELP' && typeof UDVIDET_HJAELP !== 'undefined') {
+    pool = UDVIDET_HJAELP[ctx.dataKey];
+  } else if (ctx.dataPool === 'TEMA_DYBDE' && typeof TEMA_DYBDE !== 'undefined') {
+    pool = TEMA_DYBDE[ctx.dataKey];
+  } else if (ctx.dataPool === 'OVERGANGSALDER_SPECIFIK' && typeof OVERGANGSALDER_SPECIFIK !== 'undefined') {
+    pool = OVERGANGSALDER_SPECIFIK;
+  } else if (ctx.dataPool === 'INSIGHT_FOOD' && typeof INSIGHT_FOOD !== 'undefined') {
+    pool = INSIGHT_FOOD;
+  }
+  if (!pool || !pool[domEl]) return null;
+
+  var data = pool[domEl];
+  var elLabel = Calculations.ELEMENT_LABELS[domEl] || '';
+  var title = ctx.temaTitle || '';
+
+  // Byg tema-sektionen
+  var container = document.getElementById('screen-content');
+  if (!container) return null;
+
+  // Find den første .section eller .tone-* element
+  var section = container.querySelector('.section, [class*="tone-"]');
+  if (!section) return null;
+
+  // Fjern evt. tidligere tema-content
+  var existing = section.querySelector('.tema-content');
+  if (existing) existing.remove();
+
+  // Byg HTML for specifikt indhold
+  var html = '<div class="tema-content" style="background:rgba(108,130,169,0.04);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);padding:20px 18px;margin:16px 0 20px">';
+  html += '<div style="font-family:var(--font-sans);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:var(--blaa);margin-bottom:8px">' + title + ' · ' + elLabel + '</div>';
+
+  // INSIGHT_FOOD: array af { item, desc }
+  if (Array.isArray(data)) {
+    html += '<div style="font-family:var(--font-serif);font-size:15px;color:var(--text-body);line-height:1.7">';
+    data.forEach(function(f) {
+      html += '<div style="margin-bottom:10px"><strong style="font-weight:500">' + f.item + '</strong> — ' + f.desc + '</div>';
+    });
+    html += '</div>';
+  } else {
+    // Dyb tekst (UDVIDET_HJAELP har .dyb, TEMA_DYBDE har direkte streng)
+    var dybTekst = '';
+    if (typeof data === 'string') {
+      dybTekst = data;
+    } else if (data.dyb) {
+      dybTekst = data.dyb;
+    }
+    if (dybTekst) {
+      html += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.7">' + formatExpandable(dybTekst, 40) + '</div>';
+    }
+
+    // Øvelse (kun UDVIDET_HJAELP)
+    if (data.oevelse) {
+      html += '<div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(108,130,169,0.06)">';
+      html += '<div style="font-family:var(--font-sans);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:var(--blaa);opacity:0.7;margin-bottom:6px">Øvelse</div>';
+      html += '<div style="font-family:var(--font-serif);font-size:14.5px;color:var(--text-body);line-height:1.6">' + data.oevelse + '</div>';
+      html += '</div>';
+    }
+
+    // Kostråd (kun UDVIDET_HJAELP)
+    if (data.kost_raad) {
+      html += '<div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(108,130,169,0.06)">';
+      html += '<div style="font-family:var(--font-sans);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:var(--blaa);opacity:0.7;margin-bottom:6px">Kost</div>';
+      html += '<div style="font-family:var(--font-serif);font-size:14.5px;color:var(--text-body);line-height:1.6">' + data.kost_raad + '</div>';
+      html += '</div>';
+    }
+  }
+
+  html += '</div>';
+
+  // Indsæt efter section-intro (eller efter figur)
+  var insertAfter = section.querySelector('.section-intro') || section.querySelector('.section-sub');
+  if (insertAfter) {
+    insertAfter.insertAdjacentHTML('afterend', html);
+  } else {
+    section.insertAdjacentHTML('afterbegin', html);
+  }
+
+  return ctx;
 }
 
 /* ---- Portr\u00e6t-rendering: kort klimaindikator til enhver sk\u00e6rm ---- */
@@ -1250,7 +1347,7 @@ function renderHandling(domEl) {
   // Tilf\u00f8j navContext til "Se flere \u00f8velser" linket
   var handlingLink = document.querySelector('#lige-nu-handling a[onclick*="pra-yin-yoga"]');
   if (handlingLink) {
-    handlingLink.setAttribute('onclick', "setNavContext('handling');Router.navigate('pra-yin-yoga')");
+    handlingLink.setAttribute('onclick', "setNavContext('handling',{dataPool:'UDVIDET_HJAELP',dataKey:'udbraendthed',temaTitle:'Din handling'});Router.navigate('pra-yin-yoga')");
   }
 }
 
@@ -1281,7 +1378,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'Overgangsalder i dit ' + klimaLabel,
       teaser: 'Når ' + klimaFr + ' — hvad har din ' + elLabel.toLowerCase() + '-energi brug for i overgangen?',
-      route: 'cir-dit-liv', topic: 'tema'
+      route: 'cir-dit-liv', topic: 'overgangsalder',
+      dataPool: 'TEMA_DYBDE', dataKey: 'overgangsalder', temaTitle: 'Overgangsalder'
     });
   }
 
@@ -1290,7 +1388,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'Stress n\u00e5r ' + klimaFr,
       teaser: 'EFT og tapping til at m\u00f8de ' + elLabel.toLowerCase() + '-stress med ' + secLabel + ' som st\u00f8tte',
-      route: 'pra-eft', topic: 'tema'
+      route: 'pra-eft', topic: 'stress',
+      dataPool: 'UDVIDET_HJAELP', dataKey: 'stress', temaTitle: 'Stress'
     });
   }
 
@@ -1299,7 +1398,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'N\u00e6ring til dit ' + klimaLabel,
       teaser: 'Kost der st\u00f8tter din ' + elLabel.toLowerCase() + '-krop n\u00e5r ' + klimaFr,
-      route: 'pra-kost', topic: 'kost'
+      route: 'pra-kost', topic: 'kost',
+      dataPool: 'INSIGHT_FOOD', dataKey: '', temaTitle: 'Næring til dit element'
     });
   }
 
@@ -1308,7 +1408,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'Forandring i dit ' + klimaLabel,
       teaser: 'Refleksion over forandring med ' + elLabel.toLowerCase() + ' og ' + secLabel + ' som lys',
-      route: 'pra-refleksion', topic: 'tema'
+      route: 'pra-refleksion', topic: 'forandring',
+      dataPool: 'TEMA_DYBDE', dataKey: 'forandring_og_overgang', temaTitle: 'Forandring'
     });
   }
 
@@ -1317,7 +1418,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'Sorg n\u00e5r ' + klimaFr,
       teaser: 'At m\u00e6rke efter i tab og frigivelse \u2014 med ' + elLabel.toLowerCase() + 's styrke',
-      route: 'pra-foelelser', topic: 'foelelser'
+      route: 'pra-foelelser', topic: 'sorg',
+      dataPool: 'TEMA_DYBDE', dataKey: 'sorg_og_tab', temaTitle: 'Sorg og tab'
     });
   }
 
@@ -1326,7 +1428,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'Ensomhed i dit ' + klimaLabel,
       teaser: 'Forbindelse n\u00e5r ' + elLabel.toLowerCase() + ' f\u00f8ler sig alene \u2014 med ' + secLabel + ' som sti',
-      route: 'pra-healing', topic: 'tema'
+      route: 'pra-healing', topic: 'ensomhed',
+      dataPool: 'TEMA_DYBDE', dataKey: 'ensomhed_og_isolation', temaTitle: 'Ensomhed'
     });
   }
 
@@ -1335,7 +1438,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'Fertilitet n\u00e5r ' + klimaFr,
       teaser: 'Kroppen, cyklussen og ny inspiration i din ' + elLabel.toLowerCase() + '-energi',
-      route: 'pra-inspiration', topic: 'tema'
+      route: 'pra-inspiration', topic: 'fertilitet',
+      dataPool: 'TEMA_DYBDE', dataKey: 'graviditet_og_fertilitet', temaTitle: 'Fertilitet'
     });
   }
 
@@ -1344,7 +1448,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'Angst n\u00e5r ' + klimaFr,
       teaser: '\u00c5ndedr\u00e6t og mindfulness til at m\u00f8de ' + elLabel.toLowerCase() + '-angsten med ' + secLabel,
-      route: 'pra-mindfulness', topic: 'tema'
+      route: 'pra-mindfulness', topic: 'angst',
+      dataPool: 'UDVIDET_HJAELP', dataKey: 'angst', temaTitle: 'Angst'
     });
   }
 
@@ -1353,7 +1458,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'Udbr\u00e6ndthed i dit ' + klimaLabel,
       teaser: 'Stille genopladning med yin yoga n\u00e5r ' + klimaFr,
-      route: 'pra-yin-yoga', topic: 'handling'
+      route: 'pra-yin-yoga', topic: 'udbraendthed',
+      dataPool: 'UDVIDET_HJAELP', dataKey: 'udbraendthed', temaTitle: 'Udbrændthed'
     });
   }
 
@@ -1375,10 +1481,14 @@ function renderTemaer(domEl, phase) {
     }
   }
 
-  // Hub-and-spoke: hvert kort med navContext — portr\u00e6ttet f\u00f8lger med
+  // Hub-and-spoke: hvert kort med navContext + specifics — portr\u00e6ttet f\u00f8lger med
   container.innerHTML = '<div class="eyebrow">Temaer for dig lige nu</div>' +
     temaer.map(t => {
-      var oc = "setNavContext('" + (t.topic || 'tema') + "');Router.navigate('" + t.route + "')";
+      var specifics = '';
+      if (t.dataPool) {
+        specifics = ",{dataPool:'" + t.dataPool + "',dataKey:'" + (t.dataKey || '') + "',temaTitle:'" + (t.temaTitle || '').replace(/'/g, "\\'") + "'}";
+      }
+      var oc = "setNavContext('" + (t.topic || 'tema') + "'" + specifics + ");Router.navigate('" + t.route + "')";
       return `<div class="tema" style="background:rgba(108,130,169,0.03);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer" onclick="${oc}">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">${t.titel}</div>
@@ -2173,6 +2283,10 @@ function renderPraksisTemaer() {
 
 /* ---- Din Praksis (dyb skaerm — alt materialet udfoldet) ---- */
 function initDinPraksis() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
+
   setText('prak-fase-label', 'Din praksis i dybden');
   setText('prak-intro', 'Alle metoder udfoldet. Yin yoga, EFT, meridianstrygning, kost, mindfulness og mere. V\u00e6lg det der kalder, eller lad v\u00e6re.');
   if (typeof initBreathBoxes === 'function') setTimeout(function() { initBreathBoxes(); }, 100);
@@ -2885,6 +2999,10 @@ function renderTidsrejseTemaer() {
 /* ---- Din Dybere Tidsrejse (dyb skaerm for Tidsrejse tab 3) ---- */
 
 function initTidsDybere() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
+
   var data = getUserCycles();
   if (!data) {
     setText('tdyb-title', 'Rejsen gennem tid');
@@ -3129,6 +3247,10 @@ function initTidsDybere() {
 /* ---- Min Rejse (sekundaer skaerm — golden standard) ---- */
 
 function initMinRejse() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
+
   renderKlimaIndikator('portrait-klima');
   // 1. HERO — generel
   setText('mr-title', 'Din historie skrives nu');
@@ -3994,6 +4116,10 @@ function initVinduer() {
 /* ---- initVinDybere — Dine Dybere Vinduer ---- */
 
 function initVinDybere() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
+
   var data = getUserCycles();
   if (!data) return;
   var cycles = data.cycles;
@@ -4504,6 +4630,10 @@ function initCirDitLiv() {
   if (!detail) return;
   const elLabel = Calculations.ELEMENT_LABELS[phase.element] || phase.element;
 
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
+
   // 1. Hero
   setText('dybde-fase-label', `Fase ${phaseNum} \u00b7 ${elLabel}`);
   setText('dybde-intro', detail.introText);
@@ -4892,6 +5022,10 @@ function shareMoment(title, text) {
 
 /* ---- De Ni Livsfaser (cyk-ni-faser — sekundaer skaerm) ---- */
 function initCykNiFaser() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
+
   // 1. Isabelle-tekst — portr\u00e6tdrevet med fase-specifik kontekst
   var _p = getPortrait();
   if (_p) {
@@ -5036,6 +5170,10 @@ function renderNiFaserTemaer() {
 
 /* ---- Dine Dybere Faser (faser-dybere — dyb skaerm) ---- */
 function initFaserDybere() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
+
   var data = getUserCycles();
   if (!data) return;
   var cycles = data.cycles;
@@ -5168,6 +5306,10 @@ function initPraYinYoga() {
   var secLabel = p && p.secondary.element ? Calculations.ELEMENT_LABELS[p.secondary.element] : '';
   var container = document.getElementById('screen-content');
 
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
+
   // 1. SECTION-INTRO — klimafarvet
   var introEl = container ? container.querySelector('.section-intro') : null;
   if (introEl && p && klimaOev) {
@@ -5225,6 +5367,10 @@ function initPraEft() {
   var container = document.getElementById('screen-content');
   var klimaOev = p && typeof KLIMA_OEVELSE !== 'undefined' && KLIMA_OEVELSE[p.climate.state] ? KLIMA_OEVELSE[p.climate.state] : null;
   var understroem = p ? getUnderstroemTekst(p) : '';
+
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
 
   // Feeling-map: element → central følelse for EFT
   var eftFeel = { 'VAND': 'frygt og uro', 'TR\u00c6': 'frustration og stagnation', 'ILD': 'rastl\u00f8shed og overbelastning', 'JORD': 'bekymring og grubleri', 'METAL': 'sorg og perfektionisme' };
@@ -5286,6 +5432,10 @@ function initPraFoelelser() {
   var container = document.getElementById('screen-content');
   var understroem = p ? getUnderstroemTekst(p) : '';
   var secLabel = p && p.secondary.element ? Calculations.ELEMENT_LABELS[p.secondary.element] : '';
+
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
 
   var feelMap = {
     'VAND': { feeling: 'Frygt', desc: 'den stille respekt for det ukendte', balance: '\u00c6refrygt, visdom, intuition', ubalance: 'angst, isolation, handlingslammelse' },
@@ -5438,6 +5588,10 @@ function initPraMindfulness() {
   var klimaOev = p && typeof KLIMA_OEVELSE !== 'undefined' && KLIMA_OEVELSE[p.climate.state] ? KLIMA_OEVELSE[p.climate.state] : null;
   var understroem = p ? getUnderstroemTekst(p) : '';
 
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
+
   var mindMap = {
     'VAND': { vej: 'dybden', tekst: 'Vand finder stilhed i dybden. Lyt til det der er under tankerne. M\u00e6rk \u00e5ndedr\u00e6ttet som b\u00f8lger \u2014 langsomt ind, langsomt ud.' },
     'TR\u00c6': { vej: 'bev\u00e6gelse', tekst: 'Tr\u00e6 finder n\u00e6rv\u00e6r i bev\u00e6gelse. M\u00e6rk kroppen str\u00e6kke sig mod lyset. St\u00e5 op, str\u00e6k armene, m\u00e6rk r\u00f8dderne nedefter.' },
@@ -5501,6 +5655,10 @@ function initPraRefleksion() {
   var p = getPortrait();
   var container = document.getElementById('screen-content');
   var understroem = p ? getUnderstroemTekst(p) : '';
+
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
 
   // 1. FEATURED LABEL — fase + element + klima
   var featLabel = 'Fase ' + phase.phase + ' \u00b7 ' + phase.name + ' \u00b7 ' + elLabel;
@@ -5632,6 +5790,10 @@ function initPraKost() {
   var container = document.getElementById('screen-content');
   var understroem = p ? getUnderstroemTekst(p) : '';
 
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
+
   // 1. FEATURED LABEL — portr\u00e6tdrevet
   var featLabel = 'N\u00e6ring i dag \u00b7 ' + elLabel;
   if (p) featLabel += ' \u00b7 ' + p.climate.label.toLowerCase();
@@ -5701,6 +5863,10 @@ function initPraHealing() {
   var understroem = p ? getUnderstroemTekst(p) : '';
   var mStryg = typeof MERIDIAN_STRYGNINGER !== 'undefined' && MERIDIAN_STRYGNINGER[domEl] ? MERIDIAN_STRYGNINGER[domEl][0] : null;
 
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
+
   // 1. FEATURED — portr\u00e6tdrevet
   if (mStryg) {
     var featLabel = 'Din strygning \u00b7 ' + elLabel;
@@ -5767,6 +5933,10 @@ function initPraInspiration() {
   var p = getPortrait();
   var container = document.getElementById('screen-content');
 
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
+
   var featLabel = 'Mest brugt i Fase ' + phase.phase + ' \u00b7 ' + phase.name;
   if (p) featLabel += ' \u00b7 ' + p.climate.label.toLowerCase();
   setText('inspiration-featured-label', featLabel);
@@ -5829,6 +5999,10 @@ function navigateToRelation(personName) {
 }
 
 function initDinRelation() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
+
   const data = getUserCycles();
   if (!data) return;
   renderKlimaIndikator('portrait-klima');
@@ -6159,6 +6333,10 @@ function renderRelationTemaer(rel, userEl, theirEl, userPhaseNum, theirPhaseNum,
 
 // ── initRelDybere — fuld fordybelse som cir-dit-liv men for relationer ──
 function initRelDybere() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
+
   var user = Storage.getUser();
   if (!user || !user.birthdate) return;
   var rel = RelDeepState.selectedPerson;
@@ -6964,6 +7142,10 @@ function renderKonstellationFigur(people, pairs) {
    ============================================================ */
 
 function initRejDybere() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
+
   var data = getUserCycles();
   if (!data) {
     setText('rejdyb-title', 'Din rejse i dybden');
@@ -7535,6 +7717,10 @@ function renderBaggrundTemaer() {
 /* ---- DYB SKAERM: De Dybere Baggrunde ---- */
 
 function initBaggrundDybere() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  renderTemaContent(ctx);
+
   // HERO
   setText('bd-intro', 'Den dybere forståelse bag cyklusser, elementer og livets rytmer \u2014 fra kinesisk medicin til vedisk filosofi, fra epigenetik til kroppens indre visdom.');
 
