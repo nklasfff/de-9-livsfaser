@@ -381,14 +381,14 @@ function renderCheckinTimeline() {
       return `<div style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:14px;margin:0 0 8px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:${c.note ? '6px' : '0'}">
           <div>
-            <span style="font-family:sans-serif;font-size:12px;color:#8892a1;letter-spacing:1px;text-transform:uppercase">${dateStr}</span>
+            <span style="font-family:var(--font-sans);font-size:12px;color:#8892a1;letter-spacing:1px;text-transform:uppercase">${dateStr}</span>
           </div>
           <div style="display:flex;gap:6px">
-            <span style="padding:3px 10px;border-radius:12px;font-family:sans-serif;font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">${label}</span>
-            ${elLabel ? `<span style="padding:3px 10px;border-radius:12px;font-family:sans-serif;font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">${elLabel}</span>` : ''}
+            <span style="padding:3px 10px;border-radius:12px;font-family:var(--font-sans);font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">${label}</span>
+            ${elLabel ? `<span style="padding:3px 10px;border-radius:12px;font-family:var(--font-sans);font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">${elLabel}</span>` : ''}
           </div>
         </div>
-        ${c.note ? `<div style="font-family:Georgia,serif;font-size:14px;color:#6e7d91;font-style:italic;line-height:1.5">${c.note}</div>` : ''}
+        ${c.note ? `<div style="font-family:var(--font-serif);font-size:14px;color:#6e7d91;font-style:italic;line-height:1.5">${c.note}</div>` : ''}
       </div>`;
     }).join('')}
   `;
@@ -465,10 +465,10 @@ function renderJournalEntries() {
     const tags = [phase, season, elLabel].filter(Boolean);
 
     return `<div style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:16px;margin:0 0 10px">
-      <div style="font-family:sans-serif;font-size:12px;color:#8892a1;letter-spacing:1.5px;font-weight:400;text-transform:uppercase;margin-bottom:6px">${dateStr}</div>
-      <div style="font-family:sans-serif;font-size:15px;color:#6e7d91;line-height:1.6;margin-bottom:10px">${j.text}</div>
+      <div style="font-family:var(--font-sans);font-size:12px;color:#8892a1;letter-spacing:1.5px;font-weight:400;text-transform:uppercase;margin-bottom:6px">${dateStr}</div>
+      <div style="font-family:var(--font-sans);font-size:15px;color:#6e7d91;line-height:1.6;margin-bottom:10px">${j.text}</div>
       ${tags.length > 0 ? `<div style="display:flex;gap:6px;flex-wrap:wrap">
-        ${tags.map(t => `<span style="padding:3px 10px;border-radius:12px;font-family:sans-serif;font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">${t}</span>`).join('')}
+        ${tags.map(t => `<span style="padding:3px 10px;border-radius:12px;font-family:var(--font-sans);font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">${t}</span>`).join('')}
       </div>` : ''}
     </div>`;
   }).join('');
@@ -1261,7 +1261,7 @@ function renderForsideRelation(userCycles, userDominant) {
   container.innerHTML = `
     <div class="forside-card" style="margin-top:16px;cursor:pointer" onclick="navigateToRelation('${rel.name}')">
       <div class="card-label">Dig og ${rel.name} \u00b7 ${interLabel}</div>
-      <div class="card-text" style="font-family:Georgia,serif;font-size:15px;font-style:italic;color:#6c7a8a;line-height:1.55">${interText}</div>
+      <div class="card-text" style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:#6c7a8a;line-height:1.55">${interText}</div>
       <a class="card-link">Se jeres dynamik \u2192</a>
       ${exampleNote}
     </div>`;
@@ -1335,7 +1335,7 @@ function renderForsideChips() {
   }
 
   container.innerHTML = chips.map(c =>
-    `<div style="padding:8px 14px;background:rgba(108,130,169,0.06);border:1px solid rgba(108,130,169,0.12);border-radius:20px;font-family:'DM Sans',sans-serif;font-size:13px;color:#6c82a9;cursor:pointer;white-space:nowrap" onclick="navigateToVinduerWithDate('${c.date}')">${c.label}</div>`
+    `<div style="padding:8px 14px;background:rgba(108,130,169,0.06);border:1px solid rgba(108,130,169,0.12);border-radius:20px;font-family:var(--font-sans);font-size:13px;color:#6c82a9;cursor:pointer;white-space:nowrap" onclick="navigateToVinduerWithDate('${c.date}')">${c.label}</div>`
   ).join('');
 }
 
@@ -1539,7 +1539,7 @@ function initRelationer() {
     });
 
     if (useExample) {
-      html += `<div style="font-family:sans-serif;font-size:12px;color:#aaa;text-align:center;margin-top:8px;font-style:italic">Eksempel-data \u2014 <span style="color:#7b7a9e;cursor:pointer;text-decoration:underline" onclick="Router.navigate('indstillinger')">tilf\u00f8j dine relationer</span></div>`;
+      html += `<div style="font-family:var(--font-sans);font-size:12px;color:#aaa;text-align:center;margin-top:8px;font-style:italic">Eksempel-data \u2014 <span style="color:#7b7a9e;cursor:pointer;text-decoration:underline" onclick="Router.navigate('indstillinger')">tilf\u00f8j dine relationer</span></div>`;
     }
 
     pulseEl.innerHTML = html;
@@ -5680,7 +5680,7 @@ function initRelLigeNu() {
     });
 
     if (useExample) {
-      html += `<div style="font-family:sans-serif;font-size:12px;color:#aaa;text-align:center;margin-top:8px;font-style:italic">Eksempel-data — tilføj dine egne relationer i onboarding</div>`;
+      html += `<div style="font-family:var(--font-sans);font-size:12px;color:#aaa;text-align:center;margin-top:8px;font-style:italic">Eksempel-data — tilføj dine egne relationer i onboarding</div>`;
     }
 
     personList.innerHTML = html;
@@ -5954,10 +5954,10 @@ function initRelKonstellation() {
   // ── PERSON PILLS ──
   const pillsEl = document.getElementById('konst-pills');
   if (pillsEl) {
-    let html = `<div style="background:rgba(123,122,158,0.14);border-radius:20px;padding:8px 16px;font-family:sans-serif;font-size:13px;color:#7b7a9e;font-weight:500;opacity:1;border-bottom:2px solid rgba(123,122,158,0.4)">Dig</div>`;
+    let html = `<div style="background:rgba(123,122,158,0.14);border-radius:20px;padding:8px 16px;font-family:var(--font-sans);font-size:13px;color:#7b7a9e;font-weight:500;opacity:1;border-bottom:2px solid rgba(123,122,158,0.4)">Dig</div>`;
     rels.forEach((r, i) => {
       const active = selected[i + 1];
-      html += `<div class="konst-pill" data-idx="${i + 1}" style="background:rgba(184,166,192,${active ? '0.12' : '0.05'});border-radius:20px;padding:8px 16px;font-family:sans-serif;font-size:13px;color:#9b8da8;font-weight:${active ? '500' : '300'};cursor:pointer;opacity:${active ? '1' : '0.5'};border-bottom:${active ? '2px solid rgba(184,166,192,0.4)' : '2px solid transparent'};transition:all 0.2s">${r.name}</div>`;
+      html += `<div class="konst-pill" data-idx="${i + 1}" style="background:rgba(184,166,192,${active ? '0.12' : '0.05'});border-radius:20px;padding:8px 16px;font-family:var(--font-sans);font-size:13px;color:#9b8da8;font-weight:${active ? '500' : '300'};cursor:pointer;opacity:${active ? '1' : '0.5'};border-bottom:${active ? '2px solid rgba(184,166,192,0.4)' : '2px solid transparent'};transition:all 0.2s">${r.name}</div>`;
     });
     pillsEl.innerHTML = html;
 
@@ -6071,13 +6071,13 @@ function initRelKonstellation() {
         const label = Calculations.ELEMENT_LABELS[el];
         const names = people.filter(p => p.el === el).map(p => p.name).join(', ');
         html += `<div style="margin-bottom:8px">`;
-        html += `<div style="display:flex;justify-content:space-between;font-family:sans-serif;font-size:12px;color:#7b7a9e;margin-bottom:3px"><span>${label}${count > 0 ? ' · ' + names : ''}</span><span>${count}</span></div>`;
+        html += `<div style="display:flex;justify-content:space-between;font-family:var(--font-sans);font-size:12px;color:#7b7a9e;margin-bottom:3px"><span>${label}${count > 0 ? ' · ' + names : ''}</span><span>${count}</span></div>`;
         html += `<div style="height:6px;background:rgba(123,122,158,0.08);border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:rgba(123,122,158,${count > 0 ? '0.35' : '0.05'});border-radius:3px;transition:width 0.5s"></div></div>`;
         html += `</div>`;
       });
 
       // Dominant + missing text
-      html += `<div style="font-family:Georgia,serif;font-size:14px;color:#7b7a9e;font-style:italic;margin-top:12px;line-height:1.6">`;
+      html += `<div style="font-family:var(--font-serif);font-size:14px;color:#7b7a9e;font-style:italic;margin-top:12px;line-height:1.6">`;
       html += KONST_GROUP_TEXTS[dominantEl];
       if (missing.length > 0) {
         html += ` <span style="color:#88839e">${missing.join(' og ')} mangler i jeres felt — det er det I søger udenfor.</span>`;
@@ -6105,11 +6105,11 @@ function initRelKonstellation() {
 
         html += `<div style="background:${typeColors[pair.type]};border:1px solid rgba(123,122,158,0.08);border-radius:14px;padding:14px 16px;margin-bottom:8px">`;
         html += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">`;
-        html += `<div style="font-family:sans-serif;font-size:13px;color:#7b7a9e;font-weight:500">${pair.a.name} <span style="color:#aaa">&amp;</span> ${pair.b.name}</div>`;
-        html += `<div style="font-family:sans-serif;font-size:11px;color:#88839e;background:rgba(123,122,158,0.08);border-radius:10px;padding:2px 8px">${typeLabels[pair.type]}</div>`;
+        html += `<div style="font-family:var(--font-sans);font-size:13px;color:#7b7a9e;font-weight:500">${pair.a.name} <span style="color:#aaa">&amp;</span> ${pair.b.name}</div>`;
+        html += `<div style="font-family:var(--font-sans);font-size:11px;color:#88839e;background:rgba(123,122,158,0.08);border-radius:10px;padding:2px 8px">${typeLabels[pair.type]}</div>`;
         html += `</div>`;
-        html += `<div style="font-family:sans-serif;font-size:12px;color:#88839e;margin-bottom:4px">${pair.a.elLabel} ${pair.type === 'resonans' ? '=' : pair.type === 'naerer' ? '\u2192' : pair.type === 'naeres' ? '\u2190' : '\u2194'} ${pair.b.elLabel}</div>`;
-        html += `<div style="font-family:Georgia,serif;font-size:13px;color:#7b7a9e;font-style:italic;line-height:1.5">${pair.a.name} og ${pair.b.name} ${pair.poetisk}.</div>`;
+        html += `<div style="font-family:var(--font-sans);font-size:12px;color:#88839e;margin-bottom:4px">${pair.a.elLabel} ${pair.type === 'resonans' ? '=' : pair.type === 'naerer' ? '\u2192' : pair.type === 'naeres' ? '\u2190' : '\u2194'} ${pair.b.elLabel}</div>`;
+        html += `<div style="font-family:var(--font-serif);font-size:13px;color:#7b7a9e;font-style:italic;line-height:1.5">${pair.a.name} og ${pair.b.name} ${pair.poetisk}.</div>`;
         html += `</div>`;
       });
 
@@ -6150,7 +6150,7 @@ function initRelKonstellation() {
       html += `</div>`;
 
       if (useExample) {
-        html += `<div style="font-family:sans-serif;font-size:12px;color:#aaa;text-align:center;margin-top:12px;font-style:italic">Eksempel-data — tilf\u00f8j dine egne relationer i onboarding</div>`;
+        html += `<div style="font-family:var(--font-sans);font-size:12px;color:#aaa;text-align:center;margin-top:12px;font-style:italic">Eksempel-data — tilf\u00f8j dine egne relationer i onboarding</div>`;
       }
 
       // Show result
