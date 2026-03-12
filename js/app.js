@@ -1075,26 +1075,47 @@ function renderTemaer(domEl, phase) {
     }).join('');
 }
 
-/* ---- Forside helper: Refleksion (sender spoergsmaal med til journal) ---- */
-function renderRefleksion(phase) {
-  // Saml alle refleksioner fra begge kilder
-  let questions = [];
-  if (typeof REFLEKSION_DATA !== 'undefined' && REFLEKSION_DATA[phase.phase]) {
-    questions = questions.concat(REFLEKSION_DATA[phase.phase]);
+/* ---- Universal refleksion: bruges af ALLE skaerme ---- */
+function renderPhaseRefleksion(elementId, phaseNum) {
+  if (!phaseNum) {
+    var data = getUserCycles();
+    phaseNum = data ? data.cycles.lifePhase.phase : null;
   }
-  if (typeof EKSTRA_REFLEKSIONER_NY !== 'undefined' && EKSTRA_REFLEKSIONER_NY[phase.phase]) {
-    questions = questions.concat(EKSTRA_REFLEKSIONER_NY[phase.phase]);
+  var el = document.getElementById(elementId);
+  if (!el) return;
+
+  // Saml spørgsmål fra alle tre kilder
+  var questions = [];
+  if (typeof REFLEKSION_DATA !== 'undefined' && REFLEKSION_DATA[phaseNum]) {
+    questions = questions.concat(REFLEKSION_DATA[phaseNum]);
+  }
+  if (typeof EKSTRA_REFLEKSIONER_NY !== 'undefined' && EKSTRA_REFLEKSIONER_NY[phaseNum]) {
+    questions = questions.concat(EKSTRA_REFLEKSIONER_NY[phaseNum]);
+  }
+  if (typeof LIVSFASE_DETAIL !== 'undefined' && LIVSFASE_DETAIL[phaseNum]) {
+    var detail = LIVSFASE_DETAIL[phaseNum];
+    if (detail.ekstraRefleksioner) questions = questions.concat(detail.ekstraRefleksioner);
   }
   if (!questions.length) return;
-  const idx = Calculations.dayRotation(questions.length);
-  const question = questions[idx];
-  setText('lige-nu-refleksion', question);
 
-  // Opdater journal-link til at sende spoergsmaal med
-  const journalLink = document.querySelector('#lige-nu-refleksion + div a, .s a[onclick*="rej-journal"]');
+  // Offset baseret paa elementId saa hver skaerm faar et UNIKT spoergsmaal
+  var offset = 0;
+  for (var c = 0; c < elementId.length; c++) offset += elementId.charCodeAt(c);
+  var idx = (Calculations.dayRotation(questions.length) + offset) % questions.length;
+  var question = questions[idx];
+  el.textContent = question;
+
+  // Find naermeste journal-link og send spoergsmaal med
+  var section = el.closest('.s, .dybde-section');
+  var journalLink = section ? section.querySelector('a[onclick*="rej-journal"]') : null;
   if (journalLink) {
     journalLink.setAttribute('onclick', "window._journalQuestion='" + question.replace(/'/g, "\\'") + "';Router.navigate('rej-journal')");
   }
+}
+
+/* ---- Backward-compatible wrapper for forside ---- */
+function renderRefleksion(phase) {
+  renderPhaseRefleksion('lige-nu-refleksion', phase.phase);
 }
 
 /* ---- Forside helper: Element+Fase daglig læsning ---- */
@@ -1650,16 +1671,8 @@ function initMinPraksis() {
   // 7. TEMAER — generelle emner
   renderPraksisTemaer();
 
-  // 8. REFLEKSION — generel
-  var reflQuestions = [
-    'Hvad beder din krop om lige nu?',
-    'Hvilken metode kalder p\u00e5 dig i dag?',
-    'Hvorn\u00e5r gav du sidst din krop det den bad om?',
-    'Hvad ville du g\u00f8re for dig selv, hvis du turde?',
-    'Hvad har du brug for \u2014 ikke hvad du b\u00f8r, men hvad du m\u00e6rker?'
-  ];
-  var ri = Calculations.dayRotation(reflQuestions.length);
-  setText('mp-refleksion', '\u00ab ' + reflQuestions[ri] + ' \u00bb');
+  // 8. REFLEKSION — personlig via universel funktion
+  renderPhaseRefleksion('mp-refleksion');
 }
 
 function renderPraksisMetoder() {
@@ -1785,7 +1798,6 @@ function renderPraksisTemaer() {
 function initDinPraksis() {
   setText('prak-fase-label', 'Din praksis i dybden');
   setText('prak-intro', 'Alle metoder udfoldet. Yin yoga, EFT, meridianstrygning, kost, mindfulness og mere. V\u00e6lg det der kalder, eller lad v\u00e6re.');
-  setText('prak-refleksion', '\u00ab\u2009Hvad beder din krop om lige nu?\u2009\u00bb');
   if (typeof initBreathBoxes === 'function') setTimeout(function() { initBreathBoxes(); }, 100);
 
   var allElements = ['VAND', 'TR\u00c6', 'ILD', 'JORD', 'METAL'];
@@ -1912,16 +1924,8 @@ function initDinPraksis() {
     oevelserEl.innerHTML = oHtml;
   }
 
-  // 9. Refleksion
-  var reflQuestions = [
-    'Hvad beder din krop om lige nu?',
-    'Hvilken f\u00f8lelse b\u00e6rer du i dag?',
-    'Hvad ville du g\u00f8re for dig selv, hvis du turde?',
-    'Hvorn\u00e5r m\u00e6rkede du sidst din krop tydeligt?',
-    'Hvad har du brug for \u2014 ikke hvad du b\u00f8r, men hvad du m\u00e6rker?'
-  ];
-  var ri = Calculations.dayRotation(reflQuestions.length);
-  setText('prak-refleksion', '\u00ab ' + reflQuestions[ri] + ' \u00bb');
+  // 9. Refleksion — personlig via universel funktion
+  renderPhaseRefleksion('prak-refleksion');
 
   // 10. Raad — som flydende Isabelle-tekst, ikke cards
   var raadEl = document.getElementById('prak-raad');
@@ -2353,17 +2357,8 @@ function initTidsrejse() {
   // ── 7. TEMAER (5 foldbare kort) ──
   renderTidsrejseTemaer();
 
-  // ── 8. REFLEKSION ──
-  var phaseNum = data ? data.cycles.lifePhase.phase : 5;
-  var questions = typeof REFLEKSION_DATA !== 'undefined' ? REFLEKSION_DATA[phaseNum] : null;
-  var extraQ = typeof EKSTRA_REFLEKSIONER_NY !== 'undefined' ? EKSTRA_REFLEKSIONER_NY[phaseNum] : null;
-  var allQ = (questions || []).concat(extraQ || []);
-  if (allQ.length > 0) {
-    var qi = Calculations.dayRotation(allQ.length);
-    setText('tids-refleksion', '«\u2009' + allQ[qi] + '\u2009»');
-  } else {
-    setText('tids-refleksion', '«\u2009Hvilket øjeblik i dit liv ville du gerne forstå bedre?\u2009»');
-  }
+  // ── 8. REFLEKSION — personlig via universel funktion ──
+  renderPhaseRefleksion('tids-refleksion');
 
   // Auto-fill if preset date passed from another screen
   if (window._tidsrejsePresetDate && dateInput && btn) {
@@ -2723,20 +2718,8 @@ function initTidsDybere() {
     oevelseEl.innerHTML = oevHtml;
   }
 
-  // \u2500\u2500 11. REFLEKSION \u2500\u2500
-  var tidsQuestions = [
-    'Hvilket \u00f8jeblik i dit liv ville du gerne forst\u00e5 bedre?',
-    'Hvorn\u00e5r f\u00f8lte du sidst at tiden gentog sig?',
-    'Hvilket element fra din fortid savner du mest?',
-    'Hvad ville du fort\u00e6lle dit yngre jeg?',
-    'Hvilken fase i dit liv f\u00f8les mest levende i din erindring?',
-    'Hvad har du l\u00e6rt af de skift du har v\u00e6ret igennem?',
-    'Hvem var du dengang \u2014 og hvem er du nu?'
-  ];
-  var extraQ = typeof EKSTRA_REFLEKSIONER_NY !== 'undefined' ? EKSTRA_REFLEKSIONER_NY[phaseNum] : null;
-  var allQ = tidsQuestions.concat(extraQ || []);
-  var qi = Calculations.dayRotation(allQ.length);
-  setText('tdyb-refleksion', '\u00ab\u2009' + allQ[qi] + '\u2009\u00bb');
+  // \u2500\u2500 11. REFLEKSION \u2014 personlig via universel funktion \u2500\u2500
+  renderPhaseRefleksion('tdyb-refleksion', phaseNum);
 }
 
 /* ---- Min Rejse (sekundaer skaerm — golden standard) ---- */
@@ -2814,24 +2797,12 @@ function initMinRejse() {
     var faseEl = document.getElementById('mr-fase-tekst');
     if (faseEl) faseEl.innerHTML = formatExpandable(faseTekst, 15);
 
-    // 7. REFLEKSION — personlig
-    var questions = [];
-    if (typeof REFLEKSION_DATA !== 'undefined' && REFLEKSION_DATA[phaseNum]) {
-      questions = questions.concat(REFLEKSION_DATA[phaseNum]);
-    }
-    if (typeof EKSTRA_REFLEKSIONER_NY !== 'undefined' && EKSTRA_REFLEKSIONER_NY[phaseNum]) {
-      questions = questions.concat(EKSTRA_REFLEKSIONER_NY[phaseNum]);
-    }
-    if (questions.length) {
-      var qi = Calculations.dayRotation(questions.length);
-      setText('mr-refleksion', '\u00ab\u2009' + questions[qi] + '\u2009\u00bb');
-    } else {
-      setText('mr-refleksion', '\u00ab\u2009Hvad er du p\u00e5 vej mod?\u2009\u00bb');
-    }
+    // 7. REFLEKSION — personlig via universel funktion
+    renderPhaseRefleksion('mr-refleksion', phaseNum);
   } else {
     var faseEl2 = document.getElementById('mr-fase-tekst');
     if (faseEl2) faseEl2.innerHTML = '<span style="font-family:var(--font-serif);font-style:italic;color:var(--text-light)">Tilf\u00f8j din f\u00f8dselsdato i indstillinger for at se din personlige fase-rejse.</span>';
-    setText('mr-refleksion', '\u00ab\u2009Hvad er du p\u00e5 vej mod?\u2009\u00bb');
+    renderPhaseRefleksion('mr-refleksion');
   }
 
   // 6. TEMAER — 5 foldbare kort
@@ -3051,8 +3022,8 @@ function initRejse() {
     exploreEl.innerHTML = eHtml;
   }
 
-  // ── STATISK REFLEKSION fallback ──
-  setText('rej-refleksion', '\u00ab\u2009Hvad er du p\u00e5 vej mod?\u2009\u00bb');
+  // ── REFLEKSION — personlig via universel funktion (med fallback for ikke-onboardede) ──
+  renderPhaseRefleksion('rej-refleksion');
 
   // ── STATISK MILESTONE fallback ──
   setText('rej-milestone-label', 'Din rejse');
@@ -3075,12 +3046,6 @@ function initRejse() {
   if (detail) milestoneText += ' ' + detail.introText.split('.').slice(0, 2).join('.') + '.';
   setText('rej-milestone-text', milestoneText);
 
-  // ── REFLEKSION — personlig ──
-  var questions = typeof REFLEKSION_DATA !== 'undefined' ? REFLEKSION_DATA[phaseNum] : null;
-  if (questions && questions.length) {
-    var qi = Calculations.dayRotation(questions.length);
-    setText('rej-refleksion', '\u00ab\u2009' + questions[qi] + '\u2009\u00bb');
-  }
 }
 
 /* Helper: byg et rejse-kort med → pil */
@@ -3291,12 +3256,10 @@ function initVinduer() {
   setText('vin-title', 'Dine vinduer i tid');
   setText('vin-intro', 'N\u00e5r flere af dine cyklusser peger i samme retning, \u00e5bner der sig et sj\u00e6ldent vindue. Det varer ikke l\u00e6nge \u2014 men det kan \u00e6ndre noget.');
 
-  // ── STATISK REFLEKSION fallback ──
-  setText('vin-refleksion', '\u00ab\u2009Hvilket \u00f8jeblik i dit liv ville du gerne forst\u00e5 bedre?\u2009\u00bb');
-
   // ── BRUGERDATA — stop her hvis ingen data ──
   var user = Storage.getUser();
   if (!user || !user.birthdate) {
+    renderPhaseRefleksion('vin-refleksion');
     setHTML('vin-aktiv-nu', '<div style="padding:16px;background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.08);border-radius:var(--radius);text-align:center"><div style="font-family:var(--font-serif);font-size:15px;color:var(--text-body);font-style:italic">Tilf\u00f8j din f\u00f8dselsdato i indstillinger for at se dine personlige vinduer.</div></div>');
     renderVinduerTemaer();
     return;
@@ -3582,15 +3545,8 @@ function initVinduer() {
   // ── TEMAER ──
   renderVinduerTemaer();
 
-  // ── REFLEKSION — personlig ──
-  var phaseNum = phase ? phase.phase : 7;
-  var questions = typeof REFLEKSION_DATA !== 'undefined' ? REFLEKSION_DATA[phaseNum] : null;
-  var extraQ = typeof EKSTRA_REFLEKSIONER_NY !== 'undefined' ? EKSTRA_REFLEKSIONER_NY[phaseNum] : null;
-  if (extraQ) questions = (questions || []).concat(extraQ);
-  if (questions && questions.length) {
-    var qi = Calculations.dayRotation(questions.length);
-    setText('vin-refleksion', '\u00ab\u2009' + questions[qi] + '\u2009\u00bb');
-  }
+  // ── REFLEKSION — personlig via universel funktion ──
+  renderPhaseRefleksion('vin-refleksion', phase ? phase.phase : null);
 }
 
 /* ---- initVinDybere — Dine Dybere Vinduer ---- */
@@ -3957,19 +3913,8 @@ function initVinDybere() {
     oevEl.innerHTML = formatExpandable(oevTekst, 80);
   }
 
-  // 10. Refleksion
-  var reflEl = document.getElementById('vdyb-refleksion');
-  if (reflEl) {
-    var reflQuestions = [
-      'Hvornår mærkede du sidst at tiden åbnede sig — at alt pegede i samme retning?',
-      'Hvilket element føler du dig mest hjemme i — og hvorfor?',
-      'Hvad ville du gøre, hvis du vidste at lige præcis denne dag var sjælden?',
-      'Er der et vindue i dit liv du fortryder at have ladet passere?',
-      'Hvad ville du sige til dig selv om fem år — fra det sted du står lige nu?'
-    ];
-    var ri2 = Calculations.dayRotation(reflQuestions.length);
-    reflEl.textContent = '«\u2009' + reflQuestions[ri2] + '\u2009»';
-  }
+  // 10. Refleksion — personlig via universel funktion
+  renderPhaseRefleksion('vdyb-refleksion', phaseNum);
 }
 
 /* ============================================================
@@ -4147,14 +4092,8 @@ function initCirDitLiv() {
   // 7. \u00d8velser
   renderDybdeOevelser(document.getElementById('dybde-oevelser'), detail.oevelser);
 
-  // 8. Refleksion (dagligt roteret)
-  if (detail.ekstraRefleksioner && detail.ekstraRefleksioner.length) {
-    const ri = Calculations.dayRotation(detail.ekstraRefleksioner.length);
-    setText('dybde-refleksion', detail.ekstraRefleksioner[ri]);
-  } else if (detail.refleksioner && detail.refleksioner.length) {
-    const ri = Calculations.dayRotation(detail.refleksioner.length);
-    setText('dybde-refleksion', detail.refleksioner[ri]);
-  }
+  // 8. Refleksion — personlig via universel funktion
+  renderPhaseRefleksion('dybde-refleksion', phase.phase);
 
   // 9. Fasens r\u00e5d
   renderDybdeRaad(document.getElementById('dybde-raad'), detail.fasensRaad);
@@ -4546,16 +4485,8 @@ function initCykNiFaser() {
   // 4. Temaer
   renderNiFaserTemaer();
 
-  // 5. Refleksion
-  var reflQuestions = [
-    'Hvilken fase i dit liv har formet dig mest?',
-    'Hvad har din nuv\u00e6rende fase l\u00e6rt dig?',
-    'Hvilken fase l\u00e6ngtes du efter at forst\u00e5 bedre?',
-    'Hvad ville du sige til dig selv i en tidligere fase?',
-    'Hvad bringer din fase dig, som ingen anden fase kan?'
-  ];
-  var ri = Calculations.dayRotation(reflQuestions.length);
-  setText('nf-refleksion', '\u00ab ' + reflQuestions[ri] + ' \u00bb');
+  // 5. Refleksion — personlig via universel funktion
+  renderPhaseRefleksion('nf-refleksion');
 }
 
 function renderNiFaserCards(containerId, phases, data) {
@@ -4706,12 +4637,8 @@ function initFaserDybere() {
   var essayEl = document.getElementById('fd-element-essay');
   if (essayEl && detail.elementEssay) essayEl.innerHTML = formatExpandable(detail.elementEssay, 80);
 
-  // 12. Refleksion
-  var reflections = detail.ekstraRefleksioner || detail.refleksioner || [];
-  if (reflections.length) {
-    var ri = Calculations.dayRotation(reflections.length);
-    setText('fd-refleksion', '\u00ab\u2009' + reflections[ri] + '\u2009\u00bb');
-  }
+  // 12. Refleksion — personlig via universel funktion
+  renderPhaseRefleksion('fd-refleksion', phaseNum);
 }
 
 /* ---- De Fire Uger (cyk-fire-uger) ---- */
@@ -6558,23 +6485,8 @@ function initRejDybere() {
     overgangEl.innerHTML = formatExpandable(detail.overgangTekst, 80);
   }
 
-  // ── 17. REFLEKSION ──
-  var questions = [];
-  if (typeof REFLEKSION_DATA !== 'undefined' && REFLEKSION_DATA[phaseNum]) {
-    questions = questions.concat(REFLEKSION_DATA[phaseNum]);
-  }
-  if (typeof EKSTRA_REFLEKSIONER_NY !== 'undefined' && EKSTRA_REFLEKSIONER_NY[phaseNum]) {
-    questions = questions.concat(EKSTRA_REFLEKSIONER_NY[phaseNum]);
-  }
-  if (detail && detail.ekstraRefleksioner) {
-    questions = questions.concat(detail.ekstraRefleksioner);
-  }
-  if (questions.length) {
-    var qi = Calculations.dayRotation(questions.length);
-    setText('rejdyb-refleksion', '\u00ab\u2009' + questions[qi] + '\u2009\u00bb');
-  } else {
-    setText('rejdyb-refleksion', '\u00ab\u2009Hvad fort\u00e6ller din rejse dig?\u2009\u00bb');
-  }
+  // ── 17. REFLEKSION — personlig via universel funktion ──
+  renderPhaseRefleksion('rejdyb-refleksion', phaseNum);
 }
 
 /* ============================================================
@@ -6759,16 +6671,8 @@ function initRejBaggrund() {
   // TEMAER
   renderBaggrundTemaer();
 
-  // REFLEKSION
-  var reflQuestions = [
-    'Hvilken tradition taler mest til dig lige nu \u2014 og hvad siger det om hvor du er?',
-    'Hvornår mærkede du sidst at din krop vidste noget, dit hoved endnu ikke forstod?',
-    'Hvad ville det betyde for dig, hvis de syv-årige cyklusser virkelig stemmer?',
-    'Hvad ved du nu, som du ville ønske du vidste for tyve år siden?',
-    'Hvilken viden har du båret længe \u2014 uden at give den plads?'
-  ];
-  var ri = Calculations.dayRotation(reflQuestions.length);
-  setText('bg-refleksion', '\u00AB ' + reflQuestions[ri] + ' \u00BB');
+  // REFLEKSION — personlig via universel funktion
+  renderPhaseRefleksion('bg-refleksion');
 }
 
 function renderBaggrundKort(containerId, kort) {
@@ -6920,18 +6824,8 @@ function initBaggrundDybere() {
       formatExpandable('Jeg begyndte ikke med bøger. Jeg begyndte med en fornemmelse af at noget manglede \u2014 en forståelse af de skift jeg mærkede i min egen krop og mit eget sind. Overgangsalderen ramte mig som en mur. Ikke fordi den var uventet, men fordi jeg ikke havde sprog for den.\n\nSå begyndte jeg at lede. Kinesisk medicin gav mig elementerne. Vedisk filosofi gav mig livsfaserne. Nordisk tradition gav mig forbundetheden. Og moderne forskning gav mig bekræftelsen på at det hele hænger sammen.\n\nDet der overraskede mig mest var ikke forskellene mellem traditionerne, men ligheden. Kulturer der aldrig har mødtes, har uafhængigt af hinanden set de samme mønstre. Og de mønstre stemte med det jeg mærkede i min egen krop. Det var ikke teori. Det var genkendelse.\n\nDenne app er mit forsøg på at samle de tråde \u2014 ikke som et system du skal lære, men som et spejl du kan kigge i. Og måske genkende noget du allerede vidste.', 80);
   }
 
-  // 9. REFLEKSION
-  var reflQuestions = [
-    'Hvilken tradition taler mest til dig lige nu \u2014 og hvad siger det om hvor du er?',
-    'Hvornår mærkede du sidst at din krop vidste noget, dit hoved endnu ikke forstod?',
-    'Hvad ville det betyde for dig, hvis de syv-årige cyklusser virkelig stemmer?',
-    'Hvad ved du nu, som du ville ønske du vidste for tyve år siden?',
-    'Hvilken viden har du båret længe \u2014 uden at give den plads?',
-    'Hvis du kunne give din yngre selv ét stykke visdom, hvad ville det være?',
-    'Hvad er den viden du ikke kan forklare, men som du ved er sand?'
-  ];
-  var ri = Calculations.dayRotation(reflQuestions.length);
-  setText('bd-refleksion', '\u00AB ' + reflQuestions[ri] + ' \u00BB');
+  // 9. REFLEKSION — personlig via universel funktion
+  renderPhaseRefleksion('bd-refleksion');
 }
 
 /* ============================================================
