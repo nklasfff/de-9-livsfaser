@@ -2,6 +2,86 @@
    SCREENS — Screen-specific styles
    ============================================================ */
 
+/* ---- ØJEBLIKKET — full-screen opening moment ---- */
+.oejeblik-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 9999;
+  background: #1a1815;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
+  opacity: 1;
+  transition: opacity 0.8s ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.oejeblik-overlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+.oejeblik-content {
+  max-width: 300px;
+  text-align: center;
+}
+.oejeblik-organ {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: oejeblikFadeIn 1.2s ease 0.3s forwards;
+}
+.oejeblik-bridge {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.85);
+  opacity: 0;
+  animation: oejeblikFadeIn 1.5s ease 0.9s forwards;
+}
+.oejeblik-hint {
+  position: absolute;
+  bottom: max(48px, calc(env(safe-area-inset-bottom, 0px) + 32px));
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.18);
+  opacity: 0;
+  animation: oejeblikFadeIn 1s ease 2.2s forwards;
+}
+.oejeblik-share {
+  margin-top: 32px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-pill);
+  padding: 8px 20px;
+  display: inline-block;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  opacity: 0;
+  animation: oejeblikFadeIn 1s ease 1.8s forwards;
+}
+.oejeblik-share:active {
+  color: rgba(255,255,255,0.5);
+  border-color: rgba(255,255,255,0.25);
+}
+@keyframes oejeblikFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* ---- ONBOARDING (Side 1: Velkomst) ---- */
 .s1-title {
   text-align: center; padding: 34px 0 6px;
@@ -337,6 +417,29 @@
 .ci-response--visible {
   display: block !important;
   animation: ciFadeIn 0.4s ease;
+}
+/* Check-in insight (portrait comparison) */
+.ci-insight {
+  padding: 16px 18px; border-radius: var(--radius);
+  margin-bottom: 12px; text-align: center;
+}
+.ci-insight--match {
+  background: rgba(122,144,139,0.06); border: 1px solid rgba(122,144,139,0.12);
+}
+.ci-insight--secondary {
+  background: rgba(107,95,123,0.06); border: 1px solid rgba(107,95,123,0.12);
+}
+.ci-insight--explore {
+  background: rgba(138,150,169,0.06); border: 1px solid rgba(138,150,169,0.12);
+}
+.ci-insight-label {
+  font-family: var(--font-sans); font-size: 10px; font-weight: 500;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--blaa); opacity: 0.6; margin-bottom: 6px;
+}
+.ci-insight-text {
+  font-family: var(--font-serif); font-size: 14.5px; font-style: italic;
+  color: var(--text-body); line-height: 1.6;
 }
 .ci-patterns-card {
   margin-top: 18px; padding: 14px 18px;

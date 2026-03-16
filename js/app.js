@@ -193,13 +193,177 @@ function getPortrait() {
 function invalidatePortrait() { _portrait = null; _portraitKey = null; }
 
 /* ============================================================
+   ØJEBLIKKET — den daglige åbningssætning
+   Ét øjeblik af genkendelse. Organur + element + klima
+   smeltet til én poetisk sætning.
+   ============================================================ */
+
+var OEJEBLIK_ORGAN = {
+  '03-05': 'Lungerne renser i stilheden',
+  '05-07': 'Kroppen slipper det overflødige',
+  '07-09': 'Maven åbner sig for næring',
+  '09-11': 'Milten omdanner til klarhed',
+  '11-13': 'Hjertet søger forbindelse',
+  '13-15': 'Tyndtarmen sorterer det væsentlige',
+  '15-17': 'Blæren renser stille',
+  '17-19': 'Nyrerne samler din dybeste energi',
+  '19-21': 'Hjertets beskytter tænder aftenlyset',
+  '21-23': 'Kroppen finder sin indre varme',
+  '23-01': 'Galdeblæren sorterer nattens beslutninger',
+  '01-03': 'Leveren arbejder i det skjulte'
+};
+
+var OEJEBLIK_BRIDGES = {
+  'VAND': {
+    'fuld_resonans': 'Alt i dig peger mod stilhed lige nu. Mærk den — den er sjælden.',
+    'naerende_flow': 'Dybden i dig næres stille. Lad den bære dig i dag.',
+    'indre_storm': 'Noget trækker i flere retninger. Men vandet finder altid vej.',
+    'kreativ_spaending': 'Der er energi i spændingen. Din dybde holder den.',
+    'stille_balance': 'Intet dominerer. Din stilhed er bare til stede.'
+  },
+  'TRÆ': {
+    'fuld_resonans': 'Al din kraft peger i samme retning i dag. Følg den.',
+    'naerende_flow': 'Væksten i dig næres lige nu. Noget spirer allerede.',
+    'indre_storm': 'Kraften trækker i dig — brug den uro som retning.',
+    'kreativ_spaending': 'Spændingen er livskraft der søger form. Giv den plads.',
+    'stille_balance': 'Træet hviler. Rødderne arbejder i det stille.'
+  },
+  'ILD': {
+    'fuld_resonans': 'Varmen i dig synger med alt omkring dig. Sjældent og smukt.',
+    'naerende_flow': 'Din ild næres stille i dag. Forbindelsen vokser.',
+    'indre_storm': 'Flammen danser i modvind. Den slukker ikke — den finder ny form.',
+    'kreativ_spaending': 'Der er gnister i spændingsfeltet. Brug dem klogt.',
+    'stille_balance': 'Ilden hviler. Gløderne er varme nok.'
+  },
+  'JORD': {
+    'fuld_resonans': 'Hele dit fundament synger sammen i dag. Du står fast.',
+    'naerende_flow': 'Stabiliteten i dig næres stille. Jorden bærer dig.',
+    'indre_storm': 'Noget rokker. Men jorden under dig er dybere end stormen.',
+    'kreativ_spaending': 'Spændingen gøder jorden. Noget vil gro af det.',
+    'stille_balance': 'Intet presser. Fundamentet er bare der — stille og bærende.'
+  },
+  'METAL': {
+    'fuld_resonans': 'Klarheden er total lige nu. Du ser præcis hvad der er væsentligt.',
+    'naerende_flow': 'Din klarhed næres i dag. Essensen bliver tydeligere.',
+    'indre_storm': 'Modbølgen giver metallets skarphed noget at arbejde med.',
+    'kreativ_spaending': 'I spændingen finder din klarhed sin bedste kant.',
+    'stille_balance': 'Stille klarhed. Kun det nødvendige. Det er nok.'
+  }
+};
+
+function getOrganHourKey(hour) {
+  if (hour >= 3 && hour < 5) return '03-05';
+  if (hour >= 5 && hour < 7) return '05-07';
+  if (hour >= 7 && hour < 9) return '07-09';
+  if (hour >= 9 && hour < 11) return '09-11';
+  if (hour >= 11 && hour < 13) return '11-13';
+  if (hour >= 13 && hour < 15) return '13-15';
+  if (hour >= 15 && hour < 17) return '15-17';
+  if (hour >= 17 && hour < 19) return '17-19';
+  if (hour >= 19 && hour < 21) return '19-21';
+  if (hour >= 21 && hour < 23) return '21-23';
+  if (hour >= 23 || hour < 1) return '23-01';
+  return '01-03';
+}
+
+function buildOejeblik() {
+  var p = getPortrait();
+  if (!p) return null;
+
+  var hour = new Date().getHours();
+  var organKey = getOrganHourKey(hour);
+  var domEl = p.dominant.element;
+  var climate = p.climate.state;
+
+  var organLine = OEJEBLIK_ORGAN[organKey] || '';
+  var bridge = (OEJEBLIK_BRIDGES[domEl] && OEJEBLIK_BRIDGES[domEl][climate])
+    ? OEJEBLIK_BRIDGES[domEl][climate]
+    : ELEMENT_FELT[domEl] || '';
+
+  return { organLine: organLine, bridge: bridge };
+}
+
+function showOejeblik() {
+  // Only show once per session
+  if (sessionStorage.getItem('oejeblik_shown')) return;
+
+  var overlay = document.getElementById('oejeblikket');
+  if (!overlay) return;
+
+  var data = buildOejeblik();
+  if (!data || !data.bridge) return;
+
+  setText('oejeblik-organ', data.organLine);
+  setText('oejeblik-bridge', data.bridge);
+
+  // Show share button
+  var shareBtn = document.getElementById('oejeblik-share');
+  if (shareBtn) shareBtn.style.display = '';
+
+  overlay.style.display = 'flex';
+  sessionStorage.setItem('oejeblik_shown', '1');
+
+  var dismissed = false;
+  var dismiss = function() {
+    if (dismissed) return;
+    dismissed = true;
+    overlay.classList.add('fade-out');
+    setTimeout(function() { overlay.style.display = 'none'; }, 800);
+  };
+
+  overlay.addEventListener('click', dismiss);
+  setTimeout(dismiss, 6000);
+}
+
+/* ---- Del dit øjeblik — screenshot-venlig deling ---- */
+function shareOejeblik() {
+  var data = buildOejeblik();
+  if (!data) return;
+
+  var p = getPortrait();
+  var elLabel = p ? (Calculations.ELEMENT_LABELS[p.dominant.element] || '') : '';
+  var kanji = p ? (Calculations.ELEMENT_TEGN[p.dominant.element] || '') : '';
+
+  var tekst = kanji + ' ' + data.organLine + '\n\n' + data.bridge
+    + '\n\n— ' + elLabel + ' · De 9 Livsfasers Energi';
+  var url = 'https://nklasfff.github.io/de-9-livsfaser/';
+
+  if (navigator.share) {
+    navigator.share({ title: 'Mit øjeblik', text: tekst, url: url }).catch(function() {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(tekst + '\n' + url).then(function() {
+      showActionToast('Kopieret til udklipsholder');
+    });
+  }
+}
+
+/* ---- Send til relation — inviter en person til at se deres cyklusser ---- */
+function shareRelation(relationName, relationElement, userElement) {
+  var relLabel = Calculations.ELEMENT_LABELS[relationElement] || relationElement;
+  var userLabel = Calculations.ELEMENT_LABELS[userElement] || userElement;
+  var url = 'https://nklasfff.github.io/de-9-livsfaser/';
+
+  var tekst = 'Hej ' + (relationName || '') + '. Jeg bruger en app om livsfaser og kinesisk medicin. '
+    + 'Den siger at dit ' + relLabel.toLowerCase() + '-element møder mit ' + userLabel.toLowerCase()
+    + ' lige nu. Vil du se din egen energi?\n' + url;
+
+  if (navigator.share) {
+    navigator.share({ title: 'De 9 Livsfasers Energi', text: tekst, url: url }).catch(function() {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(tekst).then(function() {
+      showActionToast('Besked kopieret');
+    });
+  }
+}
+
+/* ============================================================
    NAVIGATIONSKONTEKST — b\u00e6r portr\u00e6ttets tilstand mellem sk\u00e6rme
    N\u00e5r brugeren trykker p\u00e5 noget, gemmes konteksten s\u00e5
    den modtagende sk\u00e6rm ved HVAD brugeren kom fra.
    ============================================================ */
 var _navContext = null;
 
-function setNavContext(topic) {
+function setNavContext(topic, specifics) {
   var p = getPortrait();
   if (!p) { _navContext = null; return; }
   _navContext = {
@@ -212,6 +376,17 @@ function setNavContext(topic) {
     resonanceLevel: p.resonance.level,
     timestamp: Date.now()
   };
+  // Specifikt indhold: { dataPool, dataKey, temaTitle }
+  if (specifics) {
+    _navContext.dataPool = specifics.dataPool || null;
+    _navContext.dataKey = specifics.dataKey || null;
+    _navContext.temaTitle = specifics.temaTitle || '';
+    // Flow-metadata: { flow, step, nextScreen, nextLabel }
+    _navContext.flow = specifics.flow || null;
+    _navContext.step = specifics.step || 0;
+    _navContext.nextScreen = specifics.nextScreen || null;
+    _navContext.nextLabel = specifics.nextLabel || null;
+  }
 }
 
 function getNavContext() {
@@ -251,6 +426,101 @@ function getUnderstroemTekst(portrait) {
     return UNDERSTROEM_TEKST[key];
   }
   return '';
+}
+
+/* ---- Tema-indhold: TRANSFORMERER skærmen baseret på navigationskontekst ---- */
+/* Når brugeren klikker f.eks. "Stress" og lander på pra-eft,
+   SKJULER denne funktion den generiske hero og ERSTATTER med tema-specifikt indhold.
+   Sætter section.dataset.temaActive = '1' så init-funktioner IKKE overskriver.
+   Returnerer ctx hvis transformation skete, null ellers. */
+function renderTemaContent(ctx) {
+  if (!ctx || !ctx.dataPool || !ctx.dataKey) return null;
+  var domEl = ctx.element;
+  if (!domEl) return null;
+
+  var pool = null;
+  if (ctx.dataPool === 'UDVIDET_HJAELP' && typeof UDVIDET_HJAELP !== 'undefined') {
+    pool = UDVIDET_HJAELP[ctx.dataKey];
+  } else if (ctx.dataPool === 'TEMA_DYBDE' && typeof TEMA_DYBDE !== 'undefined') {
+    pool = TEMA_DYBDE[ctx.dataKey];
+  } else if (ctx.dataPool === 'OVERGANGSALDER_SPECIFIK' && typeof OVERGANGSALDER_SPECIFIK !== 'undefined') {
+    pool = OVERGANGSALDER_SPECIFIK;
+  } else if (ctx.dataPool === 'INSIGHT_FOOD' && typeof INSIGHT_FOOD !== 'undefined') {
+    pool = INSIGHT_FOOD;
+  }
+  if (!pool || !pool[domEl]) return null;
+
+  var data = pool[domEl];
+  var elLabel = Calculations.ELEMENT_LABELS[domEl] || '';
+  var title = ctx.temaTitle || '';
+
+  var container = document.getElementById('screen-content');
+  if (!container) return null;
+  var section = container.querySelector('.section, [class*="tone-"]');
+  if (!section) return null;
+
+  // === TRANSFORMATION: skjul generisk hero, erstat med tema-indhold ===
+
+  // 1. Tilføj tema til titlen
+  var titleEl = section.querySelector('.section-title');
+  if (titleEl) titleEl.textContent = titleEl.textContent + ' \u00b7 ' + title;
+
+  // 2. Skjul generisk undertitel
+  var subEl = section.querySelector('.section-sub');
+  if (subEl) subEl.style.display = 'none';
+
+  // 3. Skjul hero-billede
+  var figEl = section.querySelector('.fig');
+  if (figEl) figEl.style.display = 'none';
+
+  // 4. Erstat intro med tema-specifik dyb tekst
+  var introEl = section.querySelector('.section-intro');
+  if (introEl) {
+    var dybTekst = '';
+    if (typeof data === 'string') {
+      dybTekst = data;
+    } else if (data.dyb) {
+      dybTekst = data.dyb;
+    } else if (Array.isArray(data)) {
+      dybTekst = data.map(function(f) { return f.item + ' \u2014 ' + f.desc; }).join('. ');
+    }
+    if (dybTekst) introEl.innerHTML = formatExpandable(dybTekst, 60);
+  }
+
+  // 5. Erstat feeling-box indhold
+  var feelBox = section.querySelector('.feeling-box');
+  if (feelBox) {
+    var feelLabel = feelBox.querySelector('.feeling-label');
+    var feelText = feelBox.querySelector('.feeling-text');
+    if (data.oevelse) {
+      if (feelLabel) feelLabel.textContent = title + ' \u00b7 \u00d8velse for ' + elLabel;
+      if (feelText) feelText.textContent = data.oevelse;
+    } else if (Array.isArray(data)) {
+      if (feelLabel) feelLabel.textContent = title + ' \u00b7 ' + elLabel;
+      if (feelText) {
+        feelText.innerHTML = data.map(function(f) {
+          return '<div style="margin-bottom:8px"><strong style="font-weight:500">' + f.item + '</strong> \u2014 ' + f.desc + '</div>';
+        }).join('');
+      }
+    }
+  }
+
+  // 6. Erstat featured med kostråd eller skjul
+  var featured = section.querySelector('.featured');
+  if (featured) {
+    var featLabel = featured.querySelector('.featured-label');
+    var featText = featured.querySelector('.featured-text');
+    var featSub = featured.querySelector('.featured-sub');
+    if (data.kost_raad) {
+      if (featLabel) featLabel.textContent = title + ' \u00b7 Kost for ' + elLabel;
+      if (featText) featText.textContent = data.kost_raad;
+      if (featSub) featSub.style.display = 'none';
+    }
+  }
+
+  // Markér sektionen — init-funktioner SKAL tjekke dette og IKKE overskrive
+  section.dataset.temaActive = '1';
+  return ctx;
 }
 
 /* ---- Portr\u00e6t-rendering: kort klimaindikator til enhver sk\u00e6rm ---- */
@@ -295,6 +565,68 @@ function renderKlimaBoks(containerId) {
 }
 
 /* renderPortraitBro removed — portrait shapes content INSIDE each screen's init */
+
+/* ---- renderFlowNext: intelligent "next step" baseret på flow-kontekst ---- */
+/* Kan tilføjes til enhver skærm via: renderFlowNext('container-id', ctx) */
+function renderFlowNext(containerId, ctx) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+
+  var p = getPortrait();
+  if (!p) return;
+
+  var domEl = p.dominant.element;
+  var elLabel = Calculations.ELEMENT_LABELS[domEl] || domEl;
+  var links = [];
+
+  // Hvis flow-kontekst har et specifikt næste skridt
+  if (ctx && ctx.nextScreen && ctx.nextLabel) {
+    links.push({
+      tekst: ctx.nextLabel,
+      action: "setNavContext('" + (ctx.topic || 'flow') + "',{flow:'" + (ctx.flow || '') + "',step:" + ((ctx.step || 0) + 1) + "});Router.navigate('" + ctx.nextScreen + "')"
+    });
+  }
+
+  // Altid tilføj portrætdrevne forslag
+  var hour = new Date().getHours();
+  var organKey = getOrganHourKey(hour);
+  var organData = ORGANUR_VINDUER ? ORGANUR_VINDUER[organKey] : null;
+
+  if (p.organResonance && organData) {
+    links.push({
+      tekst: organData.organ + ' resonerer med din livsfase — se dit dybe billede',
+      action: "setNavContext('organur_resonans');Router.navigate('cir-dit-liv')"
+    });
+  }
+
+  if (p.secondary.element && p.secondary.relation === 'kontrolleres') {
+    var secLabel = Calculations.ELEMENT_LABELS[p.secondary.element] || '';
+    links.push({
+      tekst: secLabel + ' udfordrer dit ' + elLabel.toLowerCase() + ' — udforsk din praksis',
+      action: "setNavContext('secondary_kontrol');Router.navigate('din-praksis')"
+    });
+  }
+
+  if (links.length === 0) {
+    links.push({
+      tekst: 'Tilbage til dit øjeblik',
+      action: "Router.navigate('forside')"
+    });
+  }
+
+  // Render max 2 links
+  links = links.slice(0, 2);
+  var html = '<div class="eyebrow" style="color:var(--blaa)">Dit næste skridt</div>';
+  html += '<div style="margin-top:8px">';
+  for (var i = 0; i < links.length; i++) {
+    html += '<a onclick="' + links[i].action + '" style="display:block;padding:12px 16px;margin-bottom:8px;'
+      + 'background:rgba(108,130,169,0.04);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);cursor:pointer;'
+      + 'font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.55">'
+      + links[i].tekst + ' <span style="color:var(--blaa);opacity:0.6">&rarr;</span></a>';
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
 
 /* ============================================================
    CHECK-IN & JOURNAL — Sprint 2
@@ -390,7 +722,7 @@ function selectMood(id, el) {
   }
 }
 
-/* ---- toggleCheckinSupport: Fold out empathy + 4 recommendations ---- */
+/* ---- toggleCheckinSupport: Intelligent portrait comparison + recommendations ---- */
 function toggleCheckinSupport() {
   const panel = document.getElementById('ci-support-panel');
   if (!panel) return;
@@ -405,9 +737,67 @@ function toggleCheckinSupport() {
   const moodId = TrackingState.checkinMood;
   if (!moodId) return;
 
-  const element = MOOD_ELEMENT_MAP[moodId] || 'VAND';
-  const elLabel = Calculations.ELEMENT_LABELS[element] || element;
+  const moodElement = MOOD_ELEMENT_MAP[moodId] || 'VAND';
+  const moodLabel = Calculations.ELEMENT_LABELS[moodElement] || moodElement;
   const empati = MOOD_EMPATI[moodId] || '';
+
+  // INTELLIGENT COMPARISON: mood vs. portrait prediction
+  const p = getPortrait();
+  let insightHTML = '';
+  if (p) {
+    const domEl = p.dominant.element;
+    const domLabel = Calculations.ELEMENT_LABELS[domEl] || domEl;
+    const secEl = p.secondary.element;
+    const secLabel = secEl ? (Calculations.ELEMENT_LABELS[secEl] || '') : '';
+
+    if (moodElement === domEl) {
+      // MATCH: user feels what the cycles predict
+      insightHTML = '<div class="ci-insight ci-insight--match">'
+        + '<div class="ci-insight-label">Resonans</div>'
+        + '<div class="ci-insight-text">Du mærker præcis det, dine cyklusser peger på. '
+        + domLabel + '-energien er tydelig i dag — stol på den fornemmelse.</div>'
+        + '</div>';
+    } else if (secEl && moodElement === secEl) {
+      // SECONDARY MATCH: user feels the undercurrent
+      insightHTML = '<div class="ci-insight ci-insight--secondary">'
+        + '<div class="ci-insight-label">Din understrøm taler</div>'
+        + '<div class="ci-insight-text">Dit dominerende element er ' + domLabel.toLowerCase()
+        + ', men du mærker ' + moodLabel.toLowerCase() + ' — din understrøm. '
+        + 'Måske er det ' + secLabel.toLowerCase() + '-energien der beder om opmærksomhed lige nu.</div>'
+        + '</div>';
+    } else {
+      // MISMATCH: something else is at play
+      var rel = 'neutral';
+      if (SHENG[moodElement] === domEl) rel = 'naerer';
+      else if (SHENG[domEl] === moodElement) rel = 'naeres';
+      else if (KO[moodElement] === domEl || KO[domEl] === moodElement) rel = 'kontrol';
+
+      var mismatchText = '';
+      if (rel === 'naerer') {
+        mismatchText = moodLabel + ' nærer dit ' + domLabel.toLowerCase()
+          + '. Det du mærker er en støtte til din grundtone — lad den strømme.';
+      } else if (rel === 'naeres') {
+        mismatchText = 'Dit ' + domLabel.toLowerCase() + ' nærer det '
+          + moodLabel.toLowerCase() + ' du mærker. Noget nyt spirer måske.';
+      } else if (rel === 'kontrol') {
+        mismatchText = moodLabel + ' og ' + domLabel.toLowerCase()
+          + ' trækker i forskellige retninger. Det er ikke en fejl — det er kroppen der balancerer.';
+      } else {
+        mismatchText = 'Du mærker ' + moodLabel.toLowerCase()
+          + ', men dine cyklusser peger mod ' + domLabel.toLowerCase()
+          + '. Begge er sande. Lyt til det der er stærkest lige nu.';
+      }
+
+      insightHTML = '<div class="ci-insight ci-insight--explore">'
+        + '<div class="ci-insight-label">Noget andet taler</div>'
+        + '<div class="ci-insight-text">' + mismatchText + '</div>'
+        + '</div>';
+    }
+  }
+
+  // Element to base recommendations on: the FELT mood (not the predicted one)
+  const element = moodElement;
+  const elLabel = moodLabel;
 
   // Get recommendations
   const mStryg = (typeof MERIDIAN_STRYGNINGER !== 'undefined' && MERIDIAN_STRYGNINGER[element]) ? MERIDIAN_STRYGNINGER[element][0] : null;
@@ -417,21 +807,21 @@ function toggleCheckinSupport() {
 
   let recsHTML = '';
   if (yoga) {
-    recsHTML += `<div class="ci-rec" onclick="Router.navigate('din-praksis')" style="margin-bottom:8px">
+    recsHTML += `<div class="ci-rec" onclick="setNavContext('checkin_yoga');Router.navigate('din-praksis')" style="margin-bottom:8px">
       <div class="ci-rec-label">Yin Yoga \u00b7 ${elLabel}</div>
       <div class="ci-rec-title">${yoga.pose.split('(')[0].trim()}</div>
       <div class="ci-rec-desc">${yoga.desc}</div>
     </div>`;
   }
   if (mStryg) {
-    recsHTML += `<div class="ci-rec" onclick="Router.navigate('din-praksis')" style="margin-bottom:8px">
+    recsHTML += `<div class="ci-rec" onclick="setNavContext('checkin_meridian');Router.navigate('din-praksis')" style="margin-bottom:8px">
       <div class="ci-rec-label">Meridianstrygning \u00b7 ${elLabel}</div>
       <div class="ci-rec-title">${mStryg.meridian}</div>
       <div class="ci-rec-desc">${mStryg.desc}</div>
     </div>`;
   }
   if (food) {
-    recsHTML += `<div class="ci-rec" onclick="Router.navigate('din-praksis')" style="margin-bottom:8px">
+    recsHTML += `<div class="ci-rec" onclick="setNavContext('checkin_kost');Router.navigate('din-praksis')" style="margin-bottom:8px">
       <div class="ci-rec-label">Næring · ${elLabel}</div>
       <div class="ci-rec-title">${food.item}</div>
       <div class="ci-rec-desc">${food.desc}</div>
@@ -446,7 +836,7 @@ function toggleCheckinSupport() {
     </div>`;
   }
 
-  panel.innerHTML = `<div class="ci-empati">${empati}</div>${recsHTML}`;
+  panel.innerHTML = `<div class="ci-empati">${empati}</div>${insightHTML}${recsHTML}`;
   panel.style.display = '';
   panel.style.animation = 'ciFadeIn 0.4s ease';
 }
@@ -1086,6 +1476,98 @@ function renderStreak() {
   el.style.display = '';
 }
 
+/* ---- Intelligent Navigation — kontekstuelle links baseret på portrættet ---- */
+function renderIntelligentNav(portrait, cycles, dominant) {
+  var container = document.getElementById('forside-intelligent-nav');
+  if (!container || !portrait) return;
+
+  var domEl = dominant.element;
+  var elLabel = Calculations.ELEMENT_LABELS[domEl] || domEl;
+  var phase = cycles.lifePhase;
+  var organ = cycles.organ;
+  var hour = new Date().getHours();
+  var links = [];
+
+  // 1. ORGANUR-RESONANS → cir-dit-liv (med flow til vinduer)
+  if (portrait.organResonance) {
+    links.push({
+      tekst: organ.organ + ' resonerer med din livsfase lige nu — udforsk det dybe billede',
+      action: "setNavContext('organur_resonans',{flow:'organur',step:1,nextScreen:'vinduer',nextLabel:'Denne resonans er sjælden — se hvornår den sker igen'});Router.navigate('cir-dit-liv')"
+    });
+  }
+
+  // 2. SEKUNDÆRT ELEMENT → relationer eller praksis (med flow videre)
+  if (portrait.secondary.element) {
+    var secLabel = Calculations.ELEMENT_LABELS[portrait.secondary.element] || '';
+    var secRel = portrait.secondary.relation;
+    if (secRel === 'kontrolleres' || secRel === 'kontrollerer') {
+      links.push({
+        tekst: secLabel + ' trækker i dig som understrøm — se hvad det betyder for din krop',
+        action: "setNavContext('secondary_element',{flow:'understream',step:1,nextScreen:'cir-dit-liv',nextLabel:'Se det større billede af dine fem lag'});Router.navigate('din-praksis')"
+      });
+    } else {
+      links.push({
+        tekst: secLabel + ' nærer dit ' + elLabel.toLowerCase() + ' stille — dyk ned i billedet',
+        action: "setNavContext('daglig',{flow:'naering',step:1,nextScreen:'din-praksis',nextLabel:'Se hvad din krop beder om lige nu'});Router.navigate('cir-dit-liv')"
+      });
+    }
+  }
+
+  // 3. RELATION (hvis bruger har relationer — med flow til dybere relationer)
+  var relations = Storage.getRelations ? Storage.getRelations() : [];
+  if (relations.length > 0) {
+    var rel = relations[0];
+    var relCycles = Calculations.allCycles(rel.birthdate, new Date(), { isMale: rel.gender === 'mand' });
+    var relDom = Calculations.getWeightedDominant(relCycles);
+    var relLabel = Calculations.ELEMENT_LABELS[relDom.element] || '';
+    links.push({
+      tekst: (rel.name || 'Din relation') + 's ' + relLabel.toLowerCase() + ' møder dit ' + elLabel.toLowerCase() + ' — se jeres dynamik',
+      action: "setNavContext('relation_forside',{flow:'relation',step:1,nextScreen:'rel-dybere',nextLabel:'Dyk dybere i jeres dynamik'});Router.navigate('din-relation')"
+    });
+  }
+
+  // 4. TIDSBEVIDST link — morgen vs. aften
+  if (hour < 12) {
+    links.push({
+      tekst: 'Din morgenenergi er ' + elLabel.toLowerCase() + ' i fase ' + phase.phase + ' — se din praksis',
+      action: "setNavContext('morgen');Router.navigate('min-praksis')"
+    });
+  } else if (hour >= 18) {
+    links.push({
+      tekst: 'Aftenen inviterer til refleksion — skriv i din journal',
+      action: "Router.navigate('rej-journal')"
+    });
+  } else {
+    links.push({
+      tekst: elLabel + ' i fase ' + phase.phase + ' — se de ni faser',
+      action: "setNavContext('faser_generel');Router.navigate('cyk-ni-faser')"
+    });
+  }
+
+  // 5. FALLBACK: altid vis "Min Rejse" hvis under 3 links
+  if (links.length < 3) {
+    links.push({
+      tekst: 'Din rejse i ' + elLabel.toLowerCase() + '-elementet — se din udvikling',
+      action: "setNavContext('rejse_generel');Router.navigate('min-rejse')"
+    });
+  }
+
+  // Begræns til 4 links
+  links = links.slice(0, 4);
+
+  // Render
+  var html = '<div class="eyebrow">Dit næste skridt</div>';
+  html += '<div style="margin-top:10px">';
+  for (var i = 0; i < links.length; i++) {
+    html += '<a onclick="' + links[i].action + '" class="intelligent-nav-link" style="display:block;padding:14px 16px;margin-bottom:8px;'
+      + 'background:rgba(108,130,169,0.04);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);cursor:pointer;'
+      + 'font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.55">'
+      + links[i].tekst + ' <span style="color:var(--blaa);opacity:0.6">&rarr;</span></a>';
+  }
+  html += '</div>';
+  container.innerHTML = html;
+}
+
 function initForside() {
   invalidatePortrait();
   const p = getPortrait();
@@ -1096,6 +1578,9 @@ function initForside() {
   const elLabel = (el) => Calculations.ELEMENT_LABELS[el] || el;
   const domEl = dominant.element;
   const phase = cycles.lifePhase;
+
+  // 0. ØJEBLIKKET — vis daglig åbningssætning (kun én gang per session)
+  showOejeblik();
 
   // 1. DATO + HILSEN
   const hilsen = hour < 12 ? 'God morgen' : hour < 18 ? 'God eftermiddag' : 'God aften';
@@ -1178,6 +1663,9 @@ function initForside() {
 
   // 11. STREAK — vis ved 2+ dage
   renderStreak();
+
+  // 12. INTELLIGENT NAVIGATION — kontekstuelle links baseret på portrættet
+  renderIntelligentNav(p, cycles, dominant);
 }
 
 /* ---- Forside helper: Organur lige nu ---- */
@@ -1250,7 +1738,7 @@ function renderHandling(domEl) {
   // Tilf\u00f8j navContext til "Se flere \u00f8velser" linket
   var handlingLink = document.querySelector('#lige-nu-handling a[onclick*="pra-yin-yoga"]');
   if (handlingLink) {
-    handlingLink.setAttribute('onclick', "setNavContext('handling');Router.navigate('pra-yin-yoga')");
+    handlingLink.setAttribute('onclick', "setNavContext('handling',{dataPool:'UDVIDET_HJAELP',dataKey:'udbraendthed',temaTitle:'Din handling'});Router.navigate('pra-yin-yoga')");
   }
 }
 
@@ -1281,7 +1769,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'Overgangsalder i dit ' + klimaLabel,
       teaser: 'Når ' + klimaFr + ' — hvad har din ' + elLabel.toLowerCase() + '-energi brug for i overgangen?',
-      route: 'cir-dit-liv', topic: 'tema'
+      route: 'cir-dit-liv', topic: 'overgangsalder',
+      dataPool: 'TEMA_DYBDE', dataKey: 'overgangsalder', temaTitle: 'Overgangsalder'
     });
   }
 
@@ -1290,7 +1779,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'Stress n\u00e5r ' + klimaFr,
       teaser: 'EFT og tapping til at m\u00f8de ' + elLabel.toLowerCase() + '-stress med ' + secLabel + ' som st\u00f8tte',
-      route: 'pra-eft', topic: 'tema'
+      route: 'pra-eft', topic: 'stress',
+      dataPool: 'UDVIDET_HJAELP', dataKey: 'stress', temaTitle: 'Stress'
     });
   }
 
@@ -1299,7 +1789,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'N\u00e6ring til dit ' + klimaLabel,
       teaser: 'Kost der st\u00f8tter din ' + elLabel.toLowerCase() + '-krop n\u00e5r ' + klimaFr,
-      route: 'pra-kost', topic: 'kost'
+      route: 'pra-kost', topic: 'kost',
+      dataPool: 'INSIGHT_FOOD', dataKey: '', temaTitle: 'Næring til dit element'
     });
   }
 
@@ -1308,7 +1799,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'Forandring i dit ' + klimaLabel,
       teaser: 'Refleksion over forandring med ' + elLabel.toLowerCase() + ' og ' + secLabel + ' som lys',
-      route: 'pra-refleksion', topic: 'tema'
+      route: 'pra-refleksion', topic: 'forandring',
+      dataPool: 'TEMA_DYBDE', dataKey: 'forandring_og_overgang', temaTitle: 'Forandring'
     });
   }
 
@@ -1317,7 +1809,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'Sorg n\u00e5r ' + klimaFr,
       teaser: 'At m\u00e6rke efter i tab og frigivelse \u2014 med ' + elLabel.toLowerCase() + 's styrke',
-      route: 'pra-foelelser', topic: 'foelelser'
+      route: 'pra-foelelser', topic: 'sorg',
+      dataPool: 'TEMA_DYBDE', dataKey: 'sorg_og_tab', temaTitle: 'Sorg og tab'
     });
   }
 
@@ -1326,7 +1819,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'Ensomhed i dit ' + klimaLabel,
       teaser: 'Forbindelse n\u00e5r ' + elLabel.toLowerCase() + ' f\u00f8ler sig alene \u2014 med ' + secLabel + ' som sti',
-      route: 'pra-healing', topic: 'tema'
+      route: 'pra-healing', topic: 'ensomhed',
+      dataPool: 'TEMA_DYBDE', dataKey: 'ensomhed_og_isolation', temaTitle: 'Ensomhed'
     });
   }
 
@@ -1335,7 +1829,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'Fertilitet n\u00e5r ' + klimaFr,
       teaser: 'Kroppen, cyklussen og ny inspiration i din ' + elLabel.toLowerCase() + '-energi',
-      route: 'pra-inspiration', topic: 'tema'
+      route: 'pra-inspiration', topic: 'fertilitet',
+      dataPool: 'TEMA_DYBDE', dataKey: 'graviditet_og_fertilitet', temaTitle: 'Fertilitet'
     });
   }
 
@@ -1344,7 +1839,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'Angst n\u00e5r ' + klimaFr,
       teaser: '\u00c5ndedr\u00e6t og mindfulness til at m\u00f8de ' + elLabel.toLowerCase() + '-angsten med ' + secLabel,
-      route: 'pra-mindfulness', topic: 'tema'
+      route: 'pra-mindfulness', topic: 'angst',
+      dataPool: 'UDVIDET_HJAELP', dataKey: 'angst', temaTitle: 'Angst'
     });
   }
 
@@ -1353,7 +1849,8 @@ function renderTemaer(domEl, phase) {
     alleTemaer.push({
       titel: 'Udbr\u00e6ndthed i dit ' + klimaLabel,
       teaser: 'Stille genopladning med yin yoga n\u00e5r ' + klimaFr,
-      route: 'pra-yin-yoga', topic: 'handling'
+      route: 'pra-yin-yoga', topic: 'udbraendthed',
+      dataPool: 'UDVIDET_HJAELP', dataKey: 'udbraendthed', temaTitle: 'Udbrændthed'
     });
   }
 
@@ -1375,10 +1872,14 @@ function renderTemaer(domEl, phase) {
     }
   }
 
-  // Hub-and-spoke: hvert kort med navContext — portr\u00e6ttet f\u00f8lger med
+  // Hub-and-spoke: hvert kort med navContext + specifics — portr\u00e6ttet f\u00f8lger med
   container.innerHTML = '<div class="eyebrow">Temaer for dig lige nu</div>' +
     temaer.map(t => {
-      var oc = "setNavContext('" + (t.topic || 'tema') + "');Router.navigate('" + t.route + "')";
+      var specifics = '';
+      if (t.dataPool) {
+        specifics = ",{dataPool:'" + t.dataPool + "',dataKey:'" + (t.dataKey || '') + "',temaTitle:'" + (t.temaTitle || '').replace(/'/g, "\\'") + "'}";
+      }
+      var oc = "setNavContext('" + (t.topic || 'tema') + "'" + specifics + ");Router.navigate('" + t.route + "')";
       return `<div class="tema" style="background:rgba(108,130,169,0.03);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer" onclick="${oc}">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">${t.titel}</div>
@@ -2173,6 +2674,10 @@ function renderPraksisTemaer() {
 
 /* ---- Din Praksis (dyb skaerm — alt materialet udfoldet) ---- */
 function initDinPraksis() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
+
   setText('prak-fase-label', 'Din praksis i dybden');
   setText('prak-intro', 'Alle metoder udfoldet. Yin yoga, EFT, meridianstrygning, kost, mindfulness og mere. V\u00e6lg det der kalder, eller lad v\u00e6re.');
   if (typeof initBreathBoxes === 'function') setTimeout(function() { initBreathBoxes(); }, 100);
@@ -2380,6 +2885,9 @@ function initDinPraksis() {
     });
     hjelpEl.innerHTML = hHtml;
   }
+
+  // INTELLIGENT FLOW — næste skridt
+  renderFlowNext('flow-next-container', ctx);
 }
 
 /* ---- Praksis (Section 3) ---- */
@@ -2885,6 +3393,10 @@ function renderTidsrejseTemaer() {
 /* ---- Din Dybere Tidsrejse (dyb skaerm for Tidsrejse tab 3) ---- */
 
 function initTidsDybere() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
+
   var data = getUserCycles();
   if (!data) {
     setText('tdyb-title', 'Rejsen gennem tid');
@@ -3129,6 +3641,10 @@ function initTidsDybere() {
 /* ---- Min Rejse (sekundaer skaerm — golden standard) ---- */
 
 function initMinRejse() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
+
   renderKlimaIndikator('portrait-klima');
   // 1. HERO — generel
   setText('mr-title', 'Din historie skrives nu');
@@ -3994,6 +4510,10 @@ function initVinduer() {
 /* ---- initVinDybere — Dine Dybere Vinduer ---- */
 
 function initVinDybere() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
+
   var data = getUserCycles();
   if (!data) return;
   var cycles = data.cycles;
@@ -4504,6 +5024,10 @@ function initCirDitLiv() {
   if (!detail) return;
   const elLabel = Calculations.ELEMENT_LABELS[phase.element] || phase.element;
 
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
+
   // 1. Hero
   setText('dybde-fase-label', `Fase ${phaseNum} \u00b7 ${elLabel}`);
   setText('dybde-intro', detail.introText);
@@ -4555,6 +5079,9 @@ function initCirDitLiv() {
   if (overgangEl && detail.overgangTekst) {
     overgangEl.innerHTML = formatExpandable(detail.overgangTekst, 80);
   }
+
+  // INTELLIGENT FLOW — næste skridt baseret på kontekst
+  renderFlowNext('flow-next-container', ctx);
 }
 
 function initCirLivsfase() {
@@ -4892,6 +5419,10 @@ function shareMoment(title, text) {
 
 /* ---- De Ni Livsfaser (cyk-ni-faser — sekundaer skaerm) ---- */
 function initCykNiFaser() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
+
   // 1. Isabelle-tekst — portr\u00e6tdrevet med fase-specifik kontekst
   var _p = getPortrait();
   if (_p) {
@@ -5036,6 +5567,10 @@ function renderNiFaserTemaer() {
 
 /* ---- Dine Dybere Faser (faser-dybere — dyb skaerm) ---- */
 function initFaserDybere() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
+
   var data = getUserCycles();
   if (!data) return;
   var cycles = data.cycles;
@@ -5168,38 +5703,45 @@ function initPraYinYoga() {
   var secLabel = p && p.secondary.element ? Calculations.ELEMENT_LABELS[p.secondary.element] : '';
   var container = document.getElementById('screen-content');
 
-  // 1. SECTION-INTRO — klimafarvet
-  var introEl = container ? container.querySelector('.section-intro') : null;
-  if (introEl && p && klimaOev) {
-    introEl.textContent = klimaOev.raad + ' Yin yoga m\u00f8der dig pr\u00e6cis d\u00e9r \u2014 med ' + klimaOev.type + ' stillinger der \u00e5bner ' + elLabel.toLowerCase() + '-elementets meridianer.';
-  }
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
 
-  // 2. FEELING-TEXT — klimaspecifik kropsoplevelse
-  var feelText = container ? container.querySelector('.feeling-text') : null;
-  if (feelText && p) {
-    var klimaBridge = typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[p.climate.state] ? KLIMA_ELEMENT_TEKST[p.climate.state][domEl] : '';
-    if (klimaBridge) {
-      feelText.textContent = klimaBridge + ' Yin yoga beder dig ikke om at tvinge noget \u00e5bent. Den beder dig om at blive \u2014 og lade tiden g\u00f8re arbejdet.';
+  // Kun generisk personalisering hvis INTET tema er aktivt
+  if (!temaActive) {
+    // 1. SECTION-INTRO — klimafarvet
+    var introEl = container ? container.querySelector('.section-intro') : null;
+    if (introEl && p && klimaOev) {
+      introEl.textContent = klimaOev.raad + ' Yin yoga m\u00f8der dig pr\u00e6cis d\u00e9r \u2014 med ' + klimaOev.type + ' stillinger der \u00e5bner ' + elLabel.toLowerCase() + '-elementets meridianer.';
+    }
+
+    // 2. FEELING-TEXT — klimaspecifik kropsoplevelse
+    var feelText = container ? container.querySelector('.feeling-text') : null;
+    if (feelText && p) {
+      var klimaBridge = typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[p.climate.state] ? KLIMA_ELEMENT_TEKST[p.climate.state][domEl] : '';
+      if (klimaBridge) {
+        feelText.textContent = klimaBridge + ' Yin yoga beder dig ikke om at tvinge noget \u00e5bent. Den beder dig om at blive \u2014 og lade tiden g\u00f8re arbejdet.';
+      }
+    }
+
+    // 3. FEATURED — pose valgt ud fra portr\u00e6t
+    var yoga = typeof YIN_YOGA_FULL !== 'undefined' ? YIN_YOGA_FULL[domEl] : null;
+    if (yoga && yoga.length > 0) {
+      var yogaLabel = 'Anbefalet i dag \u00b7 ' + elLabel;
+      if (klimaOev) yogaLabel += ' \u00b7 ' + klimaOev.type;
+      setText('yoga-featured-label', yogaLabel);
+      var featTekst = yoga[0].pose + ' \u2014 ' + yoga[0].desc;
+      if (understroem) featTekst += ' Lige nu er dit billede ' + understroem + '.';
+      setText('yoga-featured-text', featTekst);
     }
   }
 
-  // 3. FEATURED — pose valgt ud fra portr\u00e6t
-  var yoga = typeof YIN_YOGA_FULL !== 'undefined' ? YIN_YOGA_FULL[domEl] : null;
-  if (yoga && yoga.length > 0) {
-    var yogaLabel = 'Anbefalet i dag \u00b7 ' + elLabel;
-    if (klimaOev) yogaLabel += ' \u00b7 ' + klimaOev.type;
-    setText('yoga-featured-label', yogaLabel);
-    var featTekst = yoga[0].pose + ' \u2014 ' + yoga[0].desc;
-    if (understroem) featTekst += ' Lige nu er dit billede ' + understroem + '.';
-    setText('yoga-featured-text', featTekst);
-  }
-
-  // 4. ELEMENT-LABEL — portr\u00e6tdrevet
+  // 4. ELEMENT-LABEL — portr\u00e6tdrevet (altid relevant)
   var elLabelFull = 'Dit element \u00b7 ' + elLabel;
   if (p) elLabelFull += ' \u00b7 ' + p.climate.label.toLowerCase();
   setText('yoga-element-label', elLabelFull);
 
-  // 5. INSIGHT-TEXT — klimafarvet forklaring
+  // 5. INSIGHT-TEXT — klimafarvet forklaring (altid relevant)
   var insightText = container ? container.querySelector('.insight-text') : null;
   if (insightText && p) {
     var insightStr = elLabel + '-elementet styrer ' + (domEl === 'VAND' ? 'nyrerne og bl\u00e6ren' : domEl === 'TR\u00c6' ? 'leveren og galdebl\u00e6ren' : domEl === 'ILD' ? 'hjertet og tyndtarmen' : domEl === 'JORD' ? 'milten og maven' : 'lungerne og tyktarmen') + '.';
@@ -5208,10 +5750,11 @@ function initPraYinYoga() {
     insightText.textContent = insightStr;
   }
 
-  // 6. WAVE-CAPTION — portr\u00e6tfarvet
+  // 6. WAVE-CAPTION — portr\u00e6tfarvet (altid relevant)
   var waveCap = container ? container.querySelector('.wave-caption') : null;
   if (waveCap && p) {
-    waveCap.textContent = 'Fem elementer, fem indgange til kroppen. Dit ' + elLabel.toLowerCase() + '-element peger mod ' + (yoga && yoga[0] ? yoga[0].pose : 'din stilling') + ' \u2014 i dit ' + p.climate.label.toLowerCase() + '.';
+    var yoga2 = typeof YIN_YOGA_FULL !== 'undefined' ? YIN_YOGA_FULL[domEl] : null;
+    waveCap.textContent = 'Fem elementer, fem indgange til kroppen. Dit ' + elLabel.toLowerCase() + '-element peger mod ' + (yoga2 && yoga2[0] ? yoga2[0].pose : 'din stilling') + ' \u2014 i dit ' + p.climate.label.toLowerCase() + '.';
   }
 }
 
@@ -5226,44 +5769,50 @@ function initPraEft() {
   var klimaOev = p && typeof KLIMA_OEVELSE !== 'undefined' && KLIMA_OEVELSE[p.climate.state] ? KLIMA_OEVELSE[p.climate.state] : null;
   var understroem = p ? getUnderstroemTekst(p) : '';
 
-  // Feeling-map: element → central følelse for EFT
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
+
   var eftFeel = { 'VAND': 'frygt og uro', 'TR\u00c6': 'frustration og stagnation', 'ILD': 'rastl\u00f8shed og overbelastning', 'JORD': 'bekymring og grubleri', 'METAL': 'sorg og perfektionisme' };
   var eftPunkt = { 'VAND': 'kravebens-punktet (nyremeridianens bane)', 'TR\u00c6': 'side-punktet under armen (levermeridianens bane)', 'ILD': 'brystpunktet (hjertemeridianens bane)', 'JORD': 'kindben-punktet (miltmeridianens bane)', 'METAL': 'n\u00e6sepunktet (lungemeridianens bane)' };
 
-  // 1. SECTION-INTRO — klimafarvet
-  var introEl = container ? container.querySelector('.section-intro') : null;
-  if (introEl && p) {
-    var klimaTekst = typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[p.climate.state] ? KLIMA_ELEMENT_TEKST[p.climate.state][domEl] : '';
-    if (klimaTekst) {
-      introEl.textContent = klimaTekst + ' EFT kan m\u00f8de det \u2014 med lette bank p\u00e5 meridianpunkter mens du s\u00e6tter ord p\u00e5 det du m\u00e6rker.';
+  // Kun generisk personalisering hvis INTET tema er aktivt
+  if (!temaActive) {
+    // 1. SECTION-INTRO — klimafarvet
+    var introEl = container ? container.querySelector('.section-intro') : null;
+    if (introEl && p) {
+      var klimaTekst = typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[p.climate.state] ? KLIMA_ELEMENT_TEKST[p.climate.state][domEl] : '';
+      if (klimaTekst) {
+        introEl.textContent = klimaTekst + ' EFT kan m\u00f8de det \u2014 med lette bank p\u00e5 meridianpunkter mens du s\u00e6tter ord p\u00e5 det du m\u00e6rker.';
+      }
     }
-  }
 
-  // 2. FEELING-TEXT — klimaspecifik
-  var feelText = container ? container.querySelector('.feeling-text') : null;
-  if (feelText && p) {
-    var stressData = typeof UDVIDET_HJAELP !== 'undefined' && UDVIDET_HJAELP.stress && UDVIDET_HJAELP.stress[domEl] ? UDVIDET_HJAELP.stress[domEl] : null;
-    if (p.climate.state === 'indre_storm' || p.climate.state === 'kreativ_spaending') {
-      var angstData = typeof UDVIDET_HJAELP !== 'undefined' && UDVIDET_HJAELP.angst && UDVIDET_HJAELP.angst[domEl] ? UDVIDET_HJAELP.angst[domEl] : null;
-      if (angstData) feelText.textContent = angstData.oevelse;
-      else if (stressData) feelText.textContent = stressData.oevelse;
-    } else if (stressData) {
-      feelText.textContent = stressData.oevelse;
+    // 2. FEELING-TEXT — klimaspecifik
+    var feelText = container ? container.querySelector('.feeling-text') : null;
+    if (feelText && p) {
+      var stressData = typeof UDVIDET_HJAELP !== 'undefined' && UDVIDET_HJAELP.stress && UDVIDET_HJAELP.stress[domEl] ? UDVIDET_HJAELP.stress[domEl] : null;
+      if (p.climate.state === 'indre_storm' || p.climate.state === 'kreativ_spaending') {
+        var angstData = typeof UDVIDET_HJAELP !== 'undefined' && UDVIDET_HJAELP.angst && UDVIDET_HJAELP.angst[domEl] ? UDVIDET_HJAELP.angst[domEl] : null;
+        if (angstData) feelText.textContent = angstData.oevelse;
+        else if (stressData) feelText.textContent = stressData.oevelse;
+      } else if (stressData) {
+        feelText.textContent = stressData.oevelse;
+      }
     }
-  }
 
-  // 3. FEATURED — portr\u00e6tdrevet EFT-anbefaling
-  var eftLabel = 'Anbefalet i dag \u00b7 ' + elLabel + ' \u00b7 ' + (eftFeel[domEl] || '');
-  if (p) eftLabel += ' \u00b7 ' + p.climate.label.toLowerCase();
-  setText('eft-featured-label', eftLabel);
+    // 3. FEATURED — portr\u00e6tdrevet EFT-anbefaling
+    var eftLabel = 'Anbefalet i dag \u00b7 ' + elLabel + ' \u00b7 ' + (eftFeel[domEl] || '');
+    if (p) eftLabel += ' \u00b7 ' + p.climate.label.toLowerCase();
+    setText('eft-featured-label', eftLabel);
 
-  var featText = container ? container.querySelector('.featured-text') : null;
-  if (featText && p) {
-    var tekst = 'Med ' + elLabel + ' som dit element er ' + (eftPunkt[domEl] || 'dit meridianpunkt') + ' s\u00e6rligt vigtigt.';
-    if (klimaOev) tekst += ' I dit ' + p.climate.label.toLowerCase() + ' passer ' + klimaOev.type + ' bankning bedst.';
-    if (understroem) tekst += ' Lige nu: ' + understroem + '.';
-    tekst += ' Bank bl\u00f8dt og sig: \u00abSelv om jeg m\u00e6rker denne ' + (eftFeel[domEl] || 'uro').split(' og ')[0] + ', accepterer jeg mig selv helt og fuldt.\u00bb';
-    featText.textContent = tekst;
+    var featText = container ? container.querySelector('.featured-text') : null;
+    if (featText && p) {
+      var tekst = 'Med ' + elLabel + ' som dit element er ' + (eftPunkt[domEl] || 'dit meridianpunkt') + ' s\u00e6rligt vigtigt.';
+      if (klimaOev) tekst += ' I dit ' + p.climate.label.toLowerCase() + ' passer ' + klimaOev.type + ' bankning bedst.';
+      if (understroem) tekst += ' Lige nu: ' + understroem + '.';
+      tekst += ' Bank bl\u00f8dt og sig: \u00abSelv om jeg m\u00e6rker denne ' + (eftFeel[domEl] || 'uro').split(' og ')[0] + ', accepterer jeg mig selv helt og fuldt.\u00bb';
+      featText.textContent = tekst;
+    }
   }
 
   // 4. Highlight dominant element card
@@ -5287,6 +5836,10 @@ function initPraFoelelser() {
   var understroem = p ? getUnderstroemTekst(p) : '';
   var secLabel = p && p.secondary.element ? Calculations.ELEMENT_LABELS[p.secondary.element] : '';
 
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
+
   var feelMap = {
     'VAND': { feeling: 'Frygt', desc: 'den stille respekt for det ukendte', balance: '\u00c6refrygt, visdom, intuition', ubalance: 'angst, isolation, handlingslammelse' },
     'TR\u00c6': { feeling: 'Vrede', desc: 'den bundne kraft der s\u00f8ger retning', balance: 'handlekraft, klarhed, kreativitet', ubalance: 'irritation, frustration, bitterhed' },
@@ -5296,29 +5849,31 @@ function initPraFoelelser() {
   };
   var feel = feelMap[domEl] || feelMap['VAND'];
 
-  // 1. FEELING-TEXT — klimafarvet f\u00f8lelseslandskab
-  var feelText = container ? container.querySelector('.feeling-text') : null;
-  if (feelText && p) {
-    var klimaBridge = typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[p.climate.state] ? KLIMA_ELEMENT_TEKST[p.climate.state][domEl] : '';
-    if (klimaBridge) {
-      var tekst = klimaBridge + ' Med ' + elLabel + ' som dominant element kan du m\u00e6rke ' + feel.feeling.toLowerCase() + ' \u2014 ' + feel.desc + '.';
-      if (understroem) tekst += ' Din understr\u00f8m er ' + understroem + '.';
-      feelText.textContent = tekst;
+  if (!temaActive) {
+    // 1. FEELING-TEXT — klimafarvet f\u00f8lelseslandskab
+    var feelText = container ? container.querySelector('.feeling-text') : null;
+    if (feelText && p) {
+      var klimaBridge = typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[p.climate.state] ? KLIMA_ELEMENT_TEKST[p.climate.state][domEl] : '';
+      if (klimaBridge) {
+        var tekst = klimaBridge + ' Med ' + elLabel + ' som dominant element kan du m\u00e6rke ' + feel.feeling.toLowerCase() + ' \u2014 ' + feel.desc + '.';
+        if (understroem) tekst += ' Din understr\u00f8m er ' + understroem + '.';
+        feelText.textContent = tekst;
+      }
     }
-  }
 
-  // 2. FEATURED — portr\u00e6tdrevet
-  var featLabel = 'Aktivt felt \u00b7 ' + elLabel + ' \u00b7 ' + feel.feeling;
-  if (p) featLabel += ' \u00b7 ' + p.climate.label.toLowerCase();
-  setText('foelelser-featured-label', featLabel);
+    // 2. FEATURED — portr\u00e6tdrevet
+    var featLabel = 'Aktivt felt \u00b7 ' + elLabel + ' \u00b7 ' + feel.feeling;
+    if (p) featLabel += ' \u00b7 ' + p.climate.label.toLowerCase();
+    setText('foelelser-featured-label', featLabel);
 
-  var featText = container ? container.querySelector('.featured-text') : null;
-  if (featText && p) {
-    var tekst = feel.feeling + ' i balance er ' + feel.balance + '. I ubalance bliver den til ' + feel.ubalance + '.';
-    if (p.climate.state === 'indre_storm') tekst += ' I din indre bev\u00e6gelse er denne f\u00f8lelse mere intens end normalt.';
-    else if (p.climate.state === 'naerende_flow') tekst += ' I dit n\u00e6rende flow er der plads til at m\u00f8de den med bl\u00f8dhed.';
-    else if (p.climate.state === 'kreativ_spaending') tekst += ' I dit sp\u00e6ndingsfelt kan denne f\u00f8lelse v\u00e6re en d\u00f8r\u00e5bner.';
-    featText.textContent = tekst;
+    var featText = container ? container.querySelector('.featured-text') : null;
+    if (featText && p) {
+      var tekst = feel.feeling + ' i balance er ' + feel.balance + '. I ubalance bliver den til ' + feel.ubalance + '.';
+      if (p.climate.state === 'indre_storm') tekst += ' I din indre bev\u00e6gelse er denne f\u00f8lelse mere intens end normalt.';
+      else if (p.climate.state === 'naerende_flow') tekst += ' I dit n\u00e6rende flow er der plads til at m\u00f8de den med bl\u00f8dhed.';
+      else if (p.climate.state === 'kreativ_spaending') tekst += ' I dit sp\u00e6ndingsfelt kan denne f\u00f8lelse v\u00e6re en d\u00f8r\u00e5bner.';
+      featText.textContent = tekst;
+    }
   }
 
   // 3. INSIGHT-TEXT — klimafarvet handling
@@ -5438,6 +5993,10 @@ function initPraMindfulness() {
   var klimaOev = p && typeof KLIMA_OEVELSE !== 'undefined' && KLIMA_OEVELSE[p.climate.state] ? KLIMA_OEVELSE[p.climate.state] : null;
   var understroem = p ? getUnderstroemTekst(p) : '';
 
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
+
   var mindMap = {
     'VAND': { vej: 'dybden', tekst: 'Vand finder stilhed i dybden. Lyt til det der er under tankerne. M\u00e6rk \u00e5ndedr\u00e6ttet som b\u00f8lger \u2014 langsomt ind, langsomt ud.' },
     'TR\u00c6': { vej: 'bev\u00e6gelse', tekst: 'Tr\u00e6 finder n\u00e6rv\u00e6r i bev\u00e6gelse. M\u00e6rk kroppen str\u00e6kke sig mod lyset. St\u00e5 op, str\u00e6k armene, m\u00e6rk r\u00f8dderne nedefter.' },
@@ -5447,34 +6006,36 @@ function initPraMindfulness() {
   };
   var mind = mindMap[domEl] || mindMap['VAND'];
 
-  // 1. SECTION-INTRO — klimafarvet
-  var introEl = container ? container.querySelector('.section-intro') : null;
-  if (introEl && p && klimaOev) {
-    introEl.textContent = klimaOev.raad + ' Din vej ind er gennem ' + mind.vej + ' \u2014 det er ' + elLabel.toLowerCase() + '-elementets naturlige stilhed.';
-  }
-
-  // 2. FEELING-TEXT — klimaspecifik
-  var feelText = container ? container.querySelector('.feeling-text') : null;
-  if (feelText && p) {
-    var klimaBridge = typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[p.climate.state] ? KLIMA_ELEMENT_TEKST[p.climate.state][domEl] : '';
-    if (klimaBridge) {
-      feelText.textContent = klimaBridge + ' Nogle dage f\u00f8les stilheden umulig. Det er elementerne der taler. Lyt \u2014 og find din vej ind gennem ' + mind.vej + '.';
+  if (!temaActive) {
+    // 1. SECTION-INTRO — klimafarvet
+    var introEl = container ? container.querySelector('.section-intro') : null;
+    if (introEl && p && klimaOev) {
+      introEl.textContent = klimaOev.raad + ' Din vej ind er gennem ' + mind.vej + ' \u2014 det er ' + elLabel.toLowerCase() + '-elementets naturlige stilhed.';
     }
-  }
 
-  // 3. FEATURED — portr\u00e6tdrevet
-  var featLabel = 'Din vej ind \u00b7 ' + elLabel;
-  if (p) featLabel += ' \u00b7 ' + p.climate.label.toLowerCase();
-  setText('mindfulness-featured-label', featLabel);
+    // 2. FEELING-TEXT — klimaspecifik
+    var feelText = container ? container.querySelector('.feeling-text') : null;
+    if (feelText && p) {
+      var klimaBridge = typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[p.climate.state] ? KLIMA_ELEMENT_TEKST[p.climate.state][domEl] : '';
+      if (klimaBridge) {
+        feelText.textContent = klimaBridge + ' Nogle dage f\u00f8les stilheden umulig. Det er elementerne der taler. Lyt \u2014 og find din vej ind gennem ' + mind.vej + '.';
+      }
+    }
 
-  var featTekst = mind.tekst;
-  if (understroem) featTekst += ' Lige nu er dit billede ' + understroem + '.';
-  setText('mindfulness-featured-text', featTekst);
+    // 3. FEATURED — portr\u00e6tdrevet
+    var featLabel = 'Din vej ind \u00b7 ' + elLabel;
+    if (p) featLabel += ' \u00b7 ' + p.climate.label.toLowerCase();
+    setText('mindfulness-featured-label', featLabel);
 
-  // 4. WAVE-CAPTION — portr\u00e6tfarvet
-  var waveCap = container ? container.querySelector('.wave-caption') : null;
-  if (waveCap && p) {
-    waveCap.textContent = 'Fire lag mellem dig og stilheden. I dit ' + p.climate.label.toLowerCase() + ' er vejen gennem ' + mind.vej + ' \u2014 ' + elLabel.toLowerCase() + '-elementets gave til dig.';
+    var featTekst = mind.tekst;
+    if (understroem) featTekst += ' Lige nu er dit billede ' + understroem + '.';
+    setText('mindfulness-featured-text', featTekst);
+
+    // 4. WAVE-CAPTION — portr\u00e6tfarvet
+    var waveCap = container ? container.querySelector('.wave-caption') : null;
+    if (waveCap && p) {
+      waveCap.textContent = 'Fire lag mellem dig og stilheden. I dit ' + p.climate.label.toLowerCase() + ' er vejen gennem ' + mind.vej + ' \u2014 ' + elLabel.toLowerCase() + '-elementets gave til dig.';
+    }
   }
 
   // 5. Highlight dominant element meditation card
@@ -5502,26 +6063,32 @@ function initPraRefleksion() {
   var container = document.getElementById('screen-content');
   var understroem = p ? getUnderstroemTekst(p) : '';
 
-  // 1. FEATURED LABEL — fase + element + klima
-  var featLabel = 'Fase ' + phase.phase + ' \u00b7 ' + phase.name + ' \u00b7 ' + elLabel;
-  if (p) featLabel += ' \u00b7 ' + p.climate.label.toLowerCase();
-  setText('refleksion-featured-label', featLabel);
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
 
-  // 2. FEATURED TEXT — klimafarvet
-  var featText = container ? container.querySelector('.featured-text') : null;
-  if (featText && p) {
-    var tekst = 'Tre sp\u00f8rgsm\u00e5l valgt til din livsfase \u2014 farvet af dit ' + p.climate.label.toLowerCase() + '.';
-    if (understroem) tekst += ' Dit billede lige nu er ' + understroem + '.';
-    tekst += ' Tag det sp\u00f8rgsm\u00e5l der kalder \u2014 og giv det tid.';
-    featText.textContent = tekst;
-  }
+  if (!temaActive) {
+    // 1. FEATURED LABEL — fase + element + klima
+    var featLabel = 'Fase ' + phase.phase + ' \u00b7 ' + phase.name + ' \u00b7 ' + elLabel;
+    if (p) featLabel += ' \u00b7 ' + p.climate.label.toLowerCase();
+    setText('refleksion-featured-label', featLabel);
 
-  // 3. FEELING-TEXT — klimaspecifik refleksion
-  var feelText = container ? container.querySelector('.feeling-text') : null;
-  if (feelText && p) {
-    var klimaBridge = typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[p.climate.state] ? KLIMA_ELEMENT_TEKST[p.climate.state][domEl] : '';
-    if (klimaBridge) {
-      feelText.textContent = klimaBridge + ' I denne tilstand kan refleksion n\u00e5 dybere end normalt. Du er klar til at se hvad dit liv virkelig handler om.';
+    // 2. FEATURED TEXT — klimafarvet
+    var featText = container ? container.querySelector('.featured-text') : null;
+    if (featText && p) {
+      var tekst = 'Tre sp\u00f8rgsm\u00e5l valgt til din livsfase \u2014 farvet af dit ' + p.climate.label.toLowerCase() + '.';
+      if (understroem) tekst += ' Dit billede lige nu er ' + understroem + '.';
+      tekst += ' Tag det sp\u00f8rgsm\u00e5l der kalder \u2014 og giv det tid.';
+      featText.textContent = tekst;
+    }
+
+    // 3. FEELING-TEXT — klimaspecifik refleksion
+    var feelText = container ? container.querySelector('.feeling-text') : null;
+    if (feelText && p) {
+      var klimaBridge = typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[p.climate.state] ? KLIMA_ELEMENT_TEKST[p.climate.state][domEl] : '';
+      if (klimaBridge) {
+        feelText.textContent = klimaBridge + ' I denne tilstand kan refleksion n\u00e5 dybere end normalt. Du er klar til at se hvad dit liv virkelig handler om.';
+      }
     }
   }
 
@@ -5632,40 +6199,46 @@ function initPraKost() {
   var container = document.getElementById('screen-content');
   var understroem = p ? getUnderstroemTekst(p) : '';
 
-  // 1. FEATURED LABEL — portr\u00e6tdrevet
-  var featLabel = 'N\u00e6ring i dag \u00b7 ' + elLabel;
-  if (p) featLabel += ' \u00b7 ' + p.climate.label.toLowerCase();
-  setText('kost-featured-label', featLabel);
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
 
-  // 2. FEATURED TEXT — klimaspecifik kostvejledning
-  var featText = container ? container.querySelector('.featured-text') : null;
-  if (featText && p) {
-    var stressKost = typeof UDVIDET_HJAELP !== 'undefined' && UDVIDET_HJAELP.stress && UDVIDET_HJAELP.stress[domEl] ? UDVIDET_HJAELP.stress[domEl].kost_raad : '';
-    if (p.climate.state === 'indre_storm' && stressKost) {
-      featText.textContent = 'Dine lag tr\u00e6kker i flere retninger. ' + stressKost;
-    } else if (p.climate.state === 'naerende_flow' && stressKost) {
-      featText.textContent = 'Dit flow b\u00e6rer dig. N\u00e6r det med ' + elLabel.toLowerCase() + '-venlige f\u00f8devarer. ' + stressKost;
-    } else {
-      var tekst = 'Baseret p\u00e5 dit ' + elLabel.toLowerCase() + '-element i ' + p.climate.label.toLowerCase() + '.';
-      if (understroem) tekst += ' Dit billede: ' + understroem + '.';
-      featText.textContent = tekst;
+  if (!temaActive) {
+    // 1. FEATURED LABEL — portr\u00e6tdrevet
+    var featLabel = 'N\u00e6ring i dag \u00b7 ' + elLabel;
+    if (p) featLabel += ' \u00b7 ' + p.climate.label.toLowerCase();
+    setText('kost-featured-label', featLabel);
+
+    // 2. FEATURED TEXT — klimaspecifik kostvejledning
+    var featText = container ? container.querySelector('.featured-text') : null;
+    if (featText && p) {
+      var stressKost = typeof UDVIDET_HJAELP !== 'undefined' && UDVIDET_HJAELP.stress && UDVIDET_HJAELP.stress[domEl] ? UDVIDET_HJAELP.stress[domEl].kost_raad : '';
+      if (p.climate.state === 'indre_storm' && stressKost) {
+        featText.textContent = 'Dine lag tr\u00e6kker i flere retninger. ' + stressKost;
+      } else if (p.climate.state === 'naerende_flow' && stressKost) {
+        featText.textContent = 'Dit flow b\u00e6rer dig. N\u00e6r det med ' + elLabel.toLowerCase() + '-venlige f\u00f8devarer. ' + stressKost;
+      } else {
+        var tekst = 'Baseret p\u00e5 dit ' + elLabel.toLowerCase() + '-element i ' + p.climate.label.toLowerCase() + '.';
+        if (understroem) tekst += ' Dit billede: ' + understroem + '.';
+        featText.textContent = tekst;
+      }
     }
-  }
 
-  // 3. SECTION-INTRO — klimafarvet
-  var introEl = container ? container.querySelector('.section-intro') : null;
-  if (introEl && p) {
-    var klimaBridge = typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[p.climate.state] ? KLIMA_ELEMENT_TEKST[p.climate.state][domEl] : '';
-    if (klimaBridge) {
-      introEl.textContent = klimaBridge + ' I kinesisk medicin er mad medicin \u2014 det du spiser, taler til dine organer. Her er hvad dit ' + elLabel.toLowerCase() + '-element beder om.';
+    // 3. SECTION-INTRO — klimafarvet
+    var introEl = container ? container.querySelector('.section-intro') : null;
+    if (introEl && p) {
+      var klimaBridge = typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[p.climate.state] ? KLIMA_ELEMENT_TEKST[p.climate.state][domEl] : '';
+      if (klimaBridge) {
+        introEl.textContent = klimaBridge + ' I kinesisk medicin er mad medicin \u2014 det du spiser, taler til dine organer. Her er hvad dit ' + elLabel.toLowerCase() + '-element beder om.';
+      }
     }
-  }
 
-  // 4. FEELING-TEXT — klimaspecifik
-  var feelText = container ? container.querySelector('.feeling-text') : null;
-  if (feelText && p) {
-    var smag = { 'VAND': 'salt', 'TR\u00c6': 'surt', 'ILD': 'bittert', 'JORD': 's\u00f8dt', 'METAL': 'skarpt' };
-    feelText.textContent = 'M\u00e5ske cr\u00e6ver du ' + (smag[domEl] || 'noget') + ' \u2014 det er ' + elLabel.toLowerCase() + '-elementet der kalder. I dit ' + p.climate.label.toLowerCase() + ' er denne trang st\u00e6rkere end normalt. Det er ikke svaghed. Det er visdom forkl\u00e6dt som appetit.';
+    // 4. FEELING-TEXT — klimaspecifik
+    var feelText2 = container ? container.querySelector('.feeling-text') : null;
+    if (feelText2 && p) {
+      var smag = { 'VAND': 'salt', 'TR\u00c6': 'surt', 'ILD': 'bittert', 'JORD': 's\u00f8dt', 'METAL': 'skarpt' };
+      feelText2.textContent = 'M\u00e5ske cr\u00e6ver du ' + (smag[domEl] || 'noget') + ' \u2014 det er ' + elLabel.toLowerCase() + '-elementet der kalder. I dit ' + p.climate.label.toLowerCase() + ' er denne trang st\u00e6rkere end normalt. Det er ikke svaghed. Det er visdom forkl\u00e6dt som appetit.';
+    }
   }
 
   // 5. FOOD CARDS — fra INSIGHT_FOOD (allerede element-specifik)
@@ -5701,24 +6274,30 @@ function initPraHealing() {
   var understroem = p ? getUnderstroemTekst(p) : '';
   var mStryg = typeof MERIDIAN_STRYGNINGER !== 'undefined' && MERIDIAN_STRYGNINGER[domEl] ? MERIDIAN_STRYGNINGER[domEl][0] : null;
 
-  // 1. FEATURED — portr\u00e6tdrevet
-  if (mStryg) {
-    var featLabel = 'Din strygning \u00b7 ' + elLabel;
-    if (p) featLabel += ' \u00b7 ' + p.climate.label.toLowerCase();
-    setText('healing-featured-label', featLabel);
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
 
-    var tekst = mStryg.meridian + ' \u2014 ' + mStryg.desc;
-    if (klimaOev) tekst += ' I dit ' + p.climate.label.toLowerCase() + ' er ' + klimaOev.type + ' strygninger mest gavnlige.';
-    if (understroem) tekst += ' Dit billede: ' + understroem + '.';
-    setText('healing-featured-text', tekst);
-  }
+  if (!temaActive) {
+    // 1. FEATURED — portr\u00e6tdrevet
+    if (mStryg) {
+      var featLabel = 'Din strygning \u00b7 ' + elLabel;
+      if (p) featLabel += ' \u00b7 ' + p.climate.label.toLowerCase();
+      setText('healing-featured-label', featLabel);
 
-  // 2. SECTION-INTRO — klimafarvet
-  var introEl = container ? container.querySelector('.section-intro') : null;
-  if (introEl && p) {
-    var klimaBridge = typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[p.climate.state] ? KLIMA_ELEMENT_TEKST[p.climate.state][domEl] : '';
-    if (klimaBridge) {
-      introEl.textContent = klimaBridge + ' Meridianstrygning f\u00f8lger energiens vej og hj\u00e6lper den med at flyde frit \u2014 begynd med ' + elLabel.toLowerCase() + '-meridianen.';
+      var tekst = mStryg.meridian + ' \u2014 ' + mStryg.desc;
+      if (klimaOev) tekst += ' I dit ' + p.climate.label.toLowerCase() + ' er ' + klimaOev.type + ' strygninger mest gavnlige.';
+      if (understroem) tekst += ' Dit billede: ' + understroem + '.';
+      setText('healing-featured-text', tekst);
+    }
+
+    // 2. SECTION-INTRO — klimafarvet
+    var introEl = container ? container.querySelector('.section-intro') : null;
+    if (introEl && p) {
+      var klimaBridge = typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[p.climate.state] ? KLIMA_ELEMENT_TEKST[p.climate.state][domEl] : '';
+      if (klimaBridge) {
+        introEl.textContent = klimaBridge + ' Meridianstrygning f\u00f8lger energiens vej og hj\u00e6lper den med at flyde frit \u2014 begynd med ' + elLabel.toLowerCase() + '-meridianen.';
+      }
     }
   }
 
@@ -5767,16 +6346,22 @@ function initPraInspiration() {
   var p = getPortrait();
   var container = document.getElementById('screen-content');
 
-  var featLabel = 'Mest brugt i Fase ' + phase.phase + ' \u00b7 ' + phase.name;
-  if (p) featLabel += ' \u00b7 ' + p.climate.label.toLowerCase();
-  setText('inspiration-featured-label', featLabel);
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
 
-  // Klimafarvet intro
-  var introEl = container ? container.querySelector('.section-intro') : null;
-  if (introEl && p) {
-    var klimaBridge = typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[p.climate.state] ? KLIMA_ELEMENT_TEKST[p.climate.state][domEl] : '';
-    if (klimaBridge) {
-      introEl.textContent = klimaBridge + ' Her er hvad andre i din fase har fundet st\u00f8ttende \u2014 m\u00e5ske genkender du noget.';
+  if (!temaActive) {
+    var featLabel = 'Mest brugt i Fase ' + phase.phase + ' \u00b7 ' + phase.name;
+    if (p) featLabel += ' \u00b7 ' + p.climate.label.toLowerCase();
+    setText('inspiration-featured-label', featLabel);
+
+    // Klimafarvet intro
+    var introEl = container ? container.querySelector('.section-intro') : null;
+    if (introEl && p) {
+      var klimaBridge = typeof KLIMA_ELEMENT_TEKST !== 'undefined' && KLIMA_ELEMENT_TEKST[p.climate.state] ? KLIMA_ELEMENT_TEKST[p.climate.state][domEl] : '';
+      if (klimaBridge) {
+        introEl.textContent = klimaBridge + ' Her er hvad andre i din fase har fundet st\u00f8ttende \u2014 m\u00e5ske genkender du noget.';
+      }
     }
   }
 }
@@ -5829,6 +6414,10 @@ function navigateToRelation(personName) {
 }
 
 function initDinRelation() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
+
   const data = getUserCycles();
   if (!data) return;
   renderKlimaIndikator('portrait-klima');
@@ -6042,6 +6631,18 @@ function buildRelationReading() {
     samtaleEl.innerHTML = '\u00ab\u2009' + samtale.spoerg + '\u2009\u00bb';
   }
 
+  // ── 4. SEND TIL RELATION — viral invitation ──
+  var sendWrap = document.getElementById('rel-send-wrap');
+  var sendName = document.getElementById('rel-send-name');
+  var sendBtn = document.getElementById('rel-send-btn');
+  if (sendWrap && sendBtn && rel.name) {
+    if (sendName) sendName.textContent = rel.name;
+    sendBtn.onclick = function() {
+      shareRelation(rel.name, theirEl, userEl);
+    };
+    sendWrap.style.display = '';
+  }
+
   window.scrollTo({ top: 0 });
 }
 
@@ -6159,6 +6760,10 @@ function renderRelationTemaer(rel, userEl, theirEl, userPhaseNum, theirPhaseNum,
 
 // ── initRelDybere — fuld fordybelse som cir-dit-liv men for relationer ──
 function initRelDybere() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
+
   var user = Storage.getUser();
   if (!user || !user.birthdate) return;
   var rel = RelDeepState.selectedPerson;
@@ -6964,6 +7569,10 @@ function renderKonstellationFigur(people, pairs) {
    ============================================================ */
 
 function initRejDybere() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
+
   var data = getUserCycles();
   if (!data) {
     setText('rejdyb-title', 'Din rejse i dybden');
@@ -7535,6 +8144,10 @@ function renderBaggrundTemaer() {
 /* ---- DYB SKAERM: De Dybere Baggrunde ---- */
 
 function initBaggrundDybere() {
+  // Specifikt tema-indhold fra navigationskontekst
+  var ctx = getNavContext();
+  var temaActive = renderTemaContent(ctx);
+
   // HERO
   setText('bd-intro', 'Den dybere forståelse bag cyklusser, elementer og livets rytmer \u2014 fra kinesisk medicin til vedisk filosofi, fra epigenetik til kroppens indre visdom.');
 
