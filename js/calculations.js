@@ -5,15 +5,15 @@
 
 const Calculations = {
   PHASE_DATA: {
-    1: { element: 'VAND', startAge: 0,  endAge: 7,  name: 'Livets begyndelse' },
-    2: { element: 'VAND', startAge: 7,  endAge: 14, name: 'Udforskning' },
-    3: { element: 'TRÆ',  startAge: 14, endAge: 21, name: 'Forvandling' },
-    4: { element: 'TRÆ',  startAge: 21, endAge: 28, name: 'Blomstring' },
-    5: { element: 'ILD',  startAge: 28, endAge: 35, name: 'Ansvar' },
-    6: { element: 'METAL', startAge: 35, endAge: 42, name: 'Klarhed' },
+    1: { element: 'TRÆ',  startAge: 0,  endAge: 7,  name: 'Spiring' },
+    2: { element: 'TRÆ',  startAge: 7,  endAge: 14, name: 'Vækst' },
+    3: { element: 'ILD',  startAge: 14, endAge: 21, name: 'Forvandling' },
+    4: { element: 'JORD', startAge: 21, endAge: 28, name: 'Blomstring' },
+    5: { element: 'JORD', startAge: 28, endAge: 35, name: 'Nærende' },
+    6: { element: 'METAL', startAge: 35, endAge: 42, name: 'Forfining' },
     7: { element: 'METAL', startAge: 42, endAge: 49, name: 'Frigørelse' },
     8: { element: 'VAND',  startAge: 49, endAge: 56, name: 'Dybde' },
-    9: { element: 'VAND', startAge: 56, endAge: 63, name: 'Visdom' }
+    9: { element: 'TRÆ',  startAge: 56, endAge: 63, name: 'Andet Forår' }
   },
 
   MALE_PHASE_DATA: {
