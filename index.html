@@ -11,15 +11,25 @@
 <title>De 9 Livsfasers Energi</title>
 
 <!-- Styles -->
-<link rel="stylesheet" href="css/tokens.css?v=142">
-<link rel="stylesheet" href="css/base.css?v=142">
-<link rel="stylesheet" href="css/components.css?v=142">
-<link rel="stylesheet" href="css/sections.css?v=142">
-<link rel="stylesheet" href="css/screens.css?v=142">
-<link rel="stylesheet" href="css/arc-nav.css?v=142">
+<link rel="stylesheet" href="css/tokens.css?v=143">
+<link rel="stylesheet" href="css/base.css?v=143">
+<link rel="stylesheet" href="css/components.css?v=143">
+<link rel="stylesheet" href="css/sections.css?v=143">
+<link rel="stylesheet" href="css/screens.css?v=143">
+<link rel="stylesheet" href="css/arc-nav.css?v=143">
 </head>
 <body>
 <div id="app">
+
+  <!-- ØJEBLIKKET — daily opening moment -->
+  <div id="oejeblikket" class="oejeblik-overlay" style="display:none">
+    <div class="oejeblik-content">
+      <div class="oejeblik-organ" id="oejeblik-organ"></div>
+      <div class="oejeblik-bridge" id="oejeblik-bridge"></div>
+      <div class="oejeblik-share" id="oejeblik-share" style="display:none" onclick="event.stopPropagation();shareOejeblik()">del dette øjeblik</div>
+    </div>
+    <div class="oejeblik-hint">tryk for at fortsætte</div>
+  </div>
 
   <!-- HEADER -->
   <header class="app-header">
@@ -121,13 +131,13 @@
 </div>
 
 <!-- Scripts -->
-<script src="js/storage.js?v=142"></script>
-<script src="js/calculations.js?v=142"></script>
-<script src="js/data.js?v=142"></script>
-<script src="js/data-expanded.js?v=142"></script>
-<script src="js/data-portrait.js?v=142"></script>
-<script src="js/arc-nav.js?v=142"></script>
-<script src="js/router.js?v=142"></script>
-<script src="js/app.js?v=142"></script>
+<script src="js/storage.js?v=143"></script>
+<script src="js/calculations.js?v=143"></script>
+<script src="js/data.js?v=143"></script>
+<script src="js/data-expanded.js?v=143"></script>
+<script src="js/data-portrait.js?v=143"></script>
+<script src="js/arc-nav.js?v=143"></script>
+<script src="js/router.js?v=143"></script>
+<script src="js/app.js?v=143"></script>
 </body>
 </html>
