@@ -121,51 +121,91 @@
 .prak { margin-bottom: 22px; text-align: center; }
 .prak .pe { font-family: var(--font-serif); font-size: 15px; color: var(--lilla); font-style: italic; }
 
-/* ---- FORSIDE (Side 3) ---- */
-.s { padding: 28px var(--pad-screen) 0; }
-.eyebrow { font-family: var(--font-sans); font-size: 12px; color: var(--neutral); letter-spacing: 3px; text-transform: uppercase; text-align: center; margin-bottom: 8px; opacity: 0.8; }
+/* ============================================================
+   TYPOGRAFI-SYSTEM — 8 trin, brugt konsekvent overalt
+   ============================================================ */
 
-/* Isabelles stemme — poetisk tekst */
+/* Sektion-wrapper */
+.s { padding: 28px var(--pad-screen) 8px; }
+
+/* Eyebrow — sektionslabel (12px sans, caps) */
+.eyebrow {
+  font-family: var(--font-sans); font-size: 12px;
+  color: var(--neutral); letter-spacing: 3px;
+  text-transform: uppercase; text-align: center;
+  margin-bottom: 8px; opacity: 0.8;
+}
+
+/* Sub-label — type/meta under eyebrow (11px sans, caps) */
+.sub-label {
+  font-family: var(--font-sans); font-size: 11px;
+  font-weight: 500; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--blaa);
+  margin-bottom: 6px;
+}
+
+/* Meta-line — streak, klima-indikator (12px sans, centered) */
+.meta-line {
+  font-family: var(--font-sans); font-size: 12px;
+  font-weight: 400; color: var(--text-light);
+  text-align: center; letter-spacing: 0.5px;
+}
+.meta-line--sm {
+  font-size: 11px; letter-spacing: 0.8px;
+}
+
+/* Text-hero — side/sektions-overskrift (28px serif) */
+.text-hero {
+  font-family: var(--font-serif); font-size: 28px;
+  color: var(--text-dark); text-align: center;
+  line-height: 1.3;
+}
+
+/* Text-featured — fremhævet titel (20px serif italic) */
+.text-featured {
+  font-family: var(--font-serif); font-size: 20px;
+  font-style: italic; color: var(--text-dark);
+  margin-bottom: 10px;
+}
+
+/* Text-card-title — kort/undersektion titel (16px serif italic) */
+.text-card-title {
+  font-family: var(--font-serif); font-size: 16px;
+  font-style: italic; color: var(--text-dark);
+}
+
+/* Isabelles stemme — poetisk centreret tekst (16px serif italic) */
 .isa {
   font-family: var(--font-serif); font-size: 16px;
   font-style: italic; color: var(--text-body);
-  line-height: 1.7; text-align: center;
-  max-width: 380px; margin: 0 auto;
+  line-height: 1.65; text-align: center;
+  max-width: 360px; margin: 0 auto;
 }
+
+/* Isa-sm — lettere brødtekst (15px sans 300) */
 .isa-sm {
   font-size: 15px; line-height: 1.65;
   color: var(--text-mid); font-weight: 300;
   font-family: var(--font-sans); font-style: normal;
 }
 
-/* Forside tema-kort */
-.forside-tema {
-  background: rgba(108,130,169,0.03);
-  border: 1px solid rgba(108,130,169,0.08);
-  border-radius: var(--radius);
-  padding: 16px 18px;
-  margin-top: 10px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.forside-tema:active { background: rgba(108,130,169,0.08); }
-.forside-tema-header {
-  display: flex; justify-content: space-between; align-items: center;
-}
-.forside-tema-title {
-  font-family: var(--font-serif); font-size: 16px;
-  color: var(--text-dark); font-style: italic;
-}
-.forside-tema-arrow {
-  font-size: 18px; color: var(--blaa); opacity: 0.4;
-}
-.forside-tema-teaser {
-  font-family: var(--font-serif); font-size: 13.5px;
-  font-style: italic; color: var(--text-light);
-  margin-top: 5px; line-height: 1.5;
+/* Isa-desc — beskrivelser i Isabelles stemme (15px serif italic) */
+.isa-desc {
+  font-family: var(--font-serif); font-size: 15px;
+  font-style: italic; color: var(--text-body);
+  line-height: 1.65; text-align: center;
+  max-width: 320px; margin: 0 auto;
 }
 
-/* Konsistent link-stil (alle pil-links) */
+/* Isa-refl — refleksion (17px serif italic) */
+.isa-refl {
+  font-family: var(--font-serif); font-size: 17px;
+  font-style: italic; color: var(--text-dark);
+  line-height: 1.65; text-align: center;
+  max-width: 360px; margin: 0 auto 14px;
+}
+
+/* Isa-link — alle pil-navigationslinks (13.5px serif italic) */
 .isa-link {
   display: inline-block;
   font-family: var(--font-serif); font-size: 13.5px;
@@ -174,8 +214,73 @@
   text-decoration: none;
 }
 .isa-link:active { opacity: 1; }
+
+/* Hero-specifik: element-symbol + navn + kvaliteter */
+.hero-symbol {
+  font-size: 64px; line-height: 1;
+  color: var(--blaa); opacity: 0.18;
+}
+.hero-name {
+  font-family: var(--font-serif); font-size: 28px;
+  color: var(--text-dark); margin-top: 6px;
+}
+.hero-qualities {
+  font-family: var(--font-serif); font-size: 15px;
+  font-style: italic; color: var(--text-light);
+  margin-top: 8px; letter-spacing: 0.5px;
+}
+
+/* Card-arrow — pil i kort (brugt i organur, tema-kort) */
+.card-arrow-right {
+  text-align: right; margin-top: 6px;
+  font-size: 12px; color: var(--blaa); opacity: 0.5;
+}
+
+/* Forside tema-kort */
+.forside-tema {
+  background: rgba(108,130,169,0.04);
+  border: 1px solid rgba(108,130,169,0.08);
+  border-radius: var(--radius);
+  padding: 16px 18px; margin-top: 10px;
+  cursor: pointer; transition: background 0.15s;
+}
+.forside-tema:active { background: rgba(108,130,169,0.08); }
+.forside-tema-header {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.forside-tema-title {
+  font-family: var(--font-serif); font-size: 16px;
+  font-style: italic; color: var(--text-dark);
+}
+.forside-tema-arrow {
+  font-size: 18px; color: var(--blaa); opacity: 0.4;
+}
+.forside-tema-teaser {
+  font-family: var(--font-sans); font-size: 15px;
+  font-weight: 300; color: var(--text-light);
+  margin-top: 6px; line-height: 1.65;
+}
+
+/* Explore-pills wrapper */
+.explore-pills {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center; margin-top: 10px;
+}
+
+/* Chips wrapper */
+.forside-chips {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center;
+}
+
+/* Link-wrapper — centreret link med luft over */
+.link-center {
+  text-align: center; margin-top: 14px;
+}
+
+/* --- Legacy (bruges af andre skaerme) --- */
 .title { font-family: var(--font-serif); font-size: 26px; font-style: italic; color: var(--text-dark); text-align: center; margin-top: 18px; margin-bottom: 10px; line-height: 1.25; font-weight: 400; }
-.body-text { font-family: var(--font-sans); font-size: 15.5px; color: #888; text-align: center; line-height: 1.65; font-weight: 300; margin-bottom: 22px; }
+.body-text { font-family: var(--font-sans); font-size: 15px; color: #888; text-align: center; line-height: 1.65; font-weight: 300; margin-bottom: 22px; }
 .circles { display: flex; justify-content: center; margin-bottom: 22px; }
 
 .forside-card {
@@ -405,7 +510,7 @@
    ============================================================ */
 
 .dybde-section {
-  padding: 28px var(--pad-screen) 0;
+  padding: 28px var(--pad-screen) 8px;
 }
 .dybde-body {
   font-family: var(--font-sans); font-size: 15px;
