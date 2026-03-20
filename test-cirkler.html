@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Koncentriske cirkler — prototype</title>
+<style>
+  body {
+    margin: 0; padding: 40px;
+    background: #FDFCFB;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    display: flex; flex-direction: column; align-items: center; gap: 40px;
+  }
+  h2 { font-size: 14px; color: #888; letter-spacing: 1px; text-transform: uppercase; }
+
+  .cirkler-wrap {
+    position: relative;
+    width: 340px;
+    aspect-ratio: 1344 / 768;
+    /* same max-width as forside.html uses */
+  }
+  .cirkler-wrap img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* Each text pair: label + value, absolutely positioned */
+  .ring-text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .ring-text .label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.95);
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+  .ring-text .value {
+    font-size: 10px;
+    font-weight: 400;
+    font-style: italic;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.3;
+  }
+
+  /* Ring positions — tuned to match the ellipse bands */
+  .ring-livsfase { top: 8%; }
+  .ring-aarstid  { top: 23%; }
+  .ring-maaned   { top: 37%; }
+  .ring-ugedag   { top: 50%; }
+  .ring-organur  { top: 62%; }
+  .ring-center   { top: 76%; }
+
+  .ring-center .label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.9);
+  }
+
+  /* === Comparison: original static image === */
+  .original-wrap {
+    width: 340px;
+  }
+  .original-wrap img {
+    width: 100%;
+    display: block;
+  }
+
+  /* Responsive: scale text with container */
+  @media (max-width: 380px) {
+    .cirkler-wrap { width: 300px; }
+    .ring-text .label { font-size: 9.5px; letter-spacing: 1px; }
+    .ring-text .value { font-size: 8.5px; }
+    .ring-center .label { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<h2>Dynamisk prototype</h2>
+<div class="cirkler-wrap">
+  <img src="assets/images/forside_koncent_minus_tekst.png" alt="">
+  <div class="ring-text ring-livsfase">
+    <div class="label">LIVSFASE</div>
+    <div class="value" id="val-livsfase">Fase 6 — Metal</div>
+  </div>
+  <div class="ring-text ring-aarstid">
+    <div class="label">ÅRSTID</div>
+    <div class="value" id="val-aarstid">Vinter — Vand</div>
+  </div>
+  <div class="ring-text ring-maaned">
+    <div class="label">MÅNED</div>
+    <div class="value" id="val-maaned">Marts — Træ</div>
+  </div>
+  <div class="ring-text ring-ugedag">
+    <div class="label">UGEDAG</div>
+    <div class="value" id="val-ugedag">Onsdag — Ild</div>
+  </div>
+  <div class="ring-text ring-organur">
+    <div class="label">ORGANUR</div>
+    <div class="value" id="val-organur">19-21 — Perikardium</div>
+  </div>
+  <div class="ring-text ring-center">
+    <div class="label">DIT<br>LIV</div>
+  </div>
+</div>
+
+<h2>Original (statisk reference)</h2>
+<div class="original-wrap">
+  <img src="assets/images/Gemini_Generated_Image_4llrmp4llrmp4llr.png" alt="">
+</div>
+
+<!-- Test med worst-case lange tekster -->
+<h2>Worst-case (længste tekster)</h2>
+<div class="cirkler-wrap">
+  <img src="assets/images/forside_koncent_minus_tekst.png" alt="">
+  <div class="ring-text ring-livsfase">
+    <div class="label">LIVSFASE</div>
+    <div class="value">Fase 6 — Metal</div>
+  </div>
+  <div class="ring-text ring-aarstid">
+    <div class="label">ÅRSTID</div>
+    <div class="value">Sensommer — Jord</div>
+  </div>
+  <div class="ring-text ring-maaned">
+    <div class="label">MÅNED</div>
+    <div class="value">September — Metal</div>
+  </div>
+  <div class="ring-text ring-ugedag">
+    <div class="label">UGEDAG</div>
+    <div class="value">Torsdag — Jord</div>
+  </div>
+  <div class="ring-text ring-organur">
+    <div class="label">ORGANUR</div>
+    <div class="value">23-01 — Galdeblære</div>
+  </div>
+  <div class="ring-text ring-center">
+    <div class="label">DIT<br>LIV</div>
+  </div>
+</div>
+
+</body>
+</html>
