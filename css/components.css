@@ -304,19 +304,6 @@
 .pull-quote-text { font-family: var(--font-serif); font-size: 20px; font-style: italic; color: #8a96a9; line-height: 1.6; }
 .pull-quote-attr { font-family: var(--font-sans); font-size: 12px; color: #888; font-weight: 300; margin-top: 10px; letter-spacing: 1px; }
 
-/* ISABELLE'S VOICE — poetisk brødtekst */
-.isa {
-  font-family: var(--font-serif);
-  font-size: 16px;
-  font-style: italic;
-  color: var(--text-body);
-  line-height: 1.65;
-  text-align: center;
-}
-.isa-sm {
-  font-size: 14.5px;
-}
-
 /* FIGURE WRAPPER — consistent spacing for all illustrations */
 .fig {
   text-align: center;
@@ -329,8 +316,6 @@
   margin: 0 auto;
   border-radius: 12px;
 }
-.fig--wide img { max-width: 400px; }
-.fig--compact img { max-width: 200px; }
 .wave-timeline .fig {
   margin: 12px auto 8px;
 }
@@ -440,16 +425,3 @@
 .phase-block.current .phase-block-name { color: var(--lilla); }
 .phase-block.current .phase-block-element { color: var(--lilla-light); }
 .phase-block.future { opacity: 0.5; }
-
-/* DATE INPUT — shared style for tidsrejse/vinduer/relationer date pickers */
-.tids-date-input {
-  font-family: var(--font-sans);
-  font-size: 15px;
-  color: var(--text-body);
-  border: 1px solid rgba(107, 95, 123, 0.15);
-  border-radius: 10px;
-  padding: 10px 12px;
-  background: rgba(107, 95, 123, 0.03);
-  outline: none;
-  box-sizing: border-box;
-}

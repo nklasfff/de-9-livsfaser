@@ -2,17 +2,17 @@
 
 <!-- HERO: Titel + figur 1 -->
 <div class="s" style="padding-bottom:0">
-  <div class="section-eyebrow" style="color:#8B7D9B">Sj&aelig;ldne Vinduer</div>
+  <div class="eyebrow" style="color:#8B7D9B">Sj&aelig;ldne Vinduer</div>
   <div style="text-align:center;margin:16px 0 8px">
-    <div id="vin-title" class="section-title">Dine vinduer i tid</div>
-    <div id="vin-intro" class="isa isa-sm"></div>
+    <div id="vin-title" style="font-family:var(--font-serif);font-size:28px;color:var(--text-dark)">Dine vinduer i tid</div>
+    <div id="vin-intro" style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:var(--text-light);margin-top:6px;line-height:1.6;max-width:320px;margin-left:auto;margin-right:auto"></div>
   </div>
   <div class="fig" style="padding:0 20px">
-    <img src="assets/images/vinduer-tid-lilla.png" alt="Sj&aelig;ldne Vinduer">
+    <img src="assets/images/vinduer-tid-lilla.png" alt="Sj&aelig;ldne Vinduer" style="max-width:300px;margin:0 auto">
   </div>
 </div>
 
-<div id="portrait-klima" style="display:none" class="meta-text"></div>
+<div id="portrait-klima" style="display:none;text-align:center;padding:8px 0 0;font-family:var(--font-sans);font-size:11px;font-weight:400;letter-spacing:0.8px;color:var(--text-light)"></div>
 
 <!-- INTRO TEKST (h&oslash;rer visuelt til hero, derfor pt:0) -->
 <div class="s" style="padding-top:0">
@@ -23,29 +23,29 @@
 
 <!-- DIT VINDUE LIGE NU — n&oslash;gle-sektion -->
 <div class="s">
-  <div class="section-eyebrow" style="color:#8B7D9B">Dit vindue lige nu</div>
+  <div class="eyebrow" style="color:#8B7D9B">Dit vindue lige nu</div>
   <div id="vin-aktiv-nu"></div>
   <div id="vin-organur" style="margin-top:12px"></div>
 </div>
 
 <!-- KOMMENDE VINDUER -->
 <div class="s">
-  <div class="section-eyebrow" style="color:#8B7D9B">Kommende vinduer</div>
+  <div class="eyebrow" style="color:#8B7D9B">Kommende vinduer</div>
   <div id="vin-kommende"></div>
 </div>
 
 <!-- V&AElig;LG EN DATO — motoren -->
 <div class="s">
-  <div class="section-eyebrow" style="color:#8B7D9B">Udforsk en dato</div>
-  <div id="vin-chips" class="chip-wrap" style="margin:8px 0 12px"></div>
+  <div class="eyebrow" style="color:#8B7D9B">Udforsk en dato</div>
+  <div id="vin-chips" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0 12px"></div>
   <div style="display:flex;gap:10px;align-items:center">
-    <input type="date" id="vinduer-date" class="tids-date-input">
-    <div class="quick-action-btn" style="border-color:rgba(107,95,123,0.25);color:#6B5F7B;white-space:nowrap;margin:0" id="vinduer-btn">Se &rarr;</div>
+    <input type="date" id="vinduer-date" style="flex:1;padding:10px 12px;border:1px solid rgba(107,95,123,0.15);border-radius:10px;font-family:var(--font-sans);font-size:15px;color:#6B5F7B;background:rgba(107,95,123,0.03);outline:none;box-sizing:border-box">
+    <div class="quick-action-btn" style="border-color:rgba(107,95,123,0.25);color:#6B5F7B;cursor:pointer;white-space:nowrap;margin:0" id="vinduer-btn">Se &rarr;</div>
   </div>
   <!-- Person-valg (valgfrit, vises kun med relationer) -->
   <div id="vin-person-wrap" style="display:none;margin-top:14px;padding-top:12px;border-top:1px solid rgba(107,95,123,0.08)">
-    <div class="group-label" style="font-size:12px;color:#a89bb3;margin-bottom:8px">Tilf&oslash;j en person (valgfrit)</div>
-    <div id="vin-person-pills" class="chip-wrap"></div>
+    <div style="font-size:12px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Tilf&oslash;j en person (valgfrit)</div>
+    <div id="vin-person-pills" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center"></div>
   </div>
 </div>
 
@@ -56,8 +56,8 @@
 
 <!-- FIGUR 2 — tidsspiralen -->
 <div class="s">
-  <div class="fig fig--compact">
-    <img src="assets/images/vinduer-tidsspiral.png" alt="Tidsspiralen" style="opacity:0.85">
+  <div class="fig">
+    <img src="assets/images/vinduer-tidsspiral.png" alt="Tidsspiralen" style="max-width:220px;margin:0 auto;opacity:0.85">
   </div>
 </div>
 
@@ -71,21 +71,21 @@
 
 <!-- REFLEKSION -->
 <div class="s">
-  <div class="section-eyebrow" style="color:#8B7D9B">Refleksion</div>
+  <div class="eyebrow" style="color:#8B7D9B">Refleksion</div>
   <div class="isa" id="vin-refleksion" style="font-size:17px;margin-bottom:12px"></div>
   <div style="text-align:center">
-    <a onclick="Router.navigate('rej-journal')" class="soft-link" style="color:#6B5F7B">Skriv i din journal &rarr;</a>
+    <a onclick="Router.navigate('rej-journal')" style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#6B5F7B;opacity:0.7;cursor:pointer">Skriv i din journal &rarr;</a>
   </div>
 </div>
 
 <!-- DYK DYBERE -->
 <div class="s" style="padding-bottom:32px">
-  <div class="section-eyebrow" style="color:#8B7D9B">Dyk dybere</div>
-  <div class="chip-wrap" style="margin-top:8px">
-    <a onclick="Router.navigate('vin-dybere')" class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)">Dine Dybere Vinduer</a>
-    <a onclick="Router.navigate('vin-tidslinje')" class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)">Mit livs tidslinje</a>
-    <a onclick="Router.navigate('vin-oejeblikke')" class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)">Vigtige &oslash;jeblikke</a>
-    <a onclick="Router.navigate('tidsrejse')" class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15)">Tidsrejse</a>
+  <div class="eyebrow" style="color:#8B7D9B">Dyk dybere</div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px">
+    <a onclick="Router.navigate('vin-dybere')" class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15);cursor:pointer">Dine Dybere Vinduer</a>
+    <a onclick="Router.navigate('vin-tidslinje')" class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15);cursor:pointer">Mit livs tidslinje</a>
+    <a onclick="Router.navigate('vin-oejeblikke')" class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15);cursor:pointer">Vigtige &oslash;jeblikke</a>
+    <a onclick="Router.navigate('tidsrejse')" class="explore-link" style="color:#6B5F7B;border-color:rgba(107,95,123,0.15);cursor:pointer">Tidsrejse</a>
   </div>
 </div>
 
