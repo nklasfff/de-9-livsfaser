@@ -193,170 +193,6 @@ function getPortrait() {
 function invalidatePortrait() { _portrait = null; _portraitKey = null; }
 
 /* ============================================================
-   ØJEBLIKKET — den daglige åbningssætning
-   Ét øjeblik af genkendelse. Organur + element + klima
-   smeltet til én poetisk sætning.
-   ============================================================ */
-
-var OEJEBLIK_ORGAN = {
-  '03-05': 'Lungerne renser i stilheden',
-  '05-07': 'Kroppen slipper det overflødige',
-  '07-09': 'Maven åbner sig for næring',
-  '09-11': 'Milten omdanner til klarhed',
-  '11-13': 'Hjertet søger forbindelse',
-  '13-15': 'Tyndtarmen sorterer det væsentlige',
-  '15-17': 'Blæren renser stille',
-  '17-19': 'Nyrerne samler din dybeste energi',
-  '19-21': 'Hjertets beskytter tænder aftenlyset',
-  '21-23': 'Kroppen finder sin indre varme',
-  '23-01': 'Galdeblæren sorterer nattens beslutninger',
-  '01-03': 'Leveren arbejder i det skjulte'
-};
-
-var OEJEBLIK_BRIDGES = {
-  'VAND': {
-    'fuld_resonans': 'Alt i dig peger mod stilhed lige nu. Mærk den — den er sjælden.',
-    'naerende_flow': 'Dybden i dig næres stille. Lad den bære dig i dag.',
-    'indre_storm': 'Noget trækker i flere retninger. Men vandet finder altid vej.',
-    'kreativ_spaending': 'Der er energi i spændingen. Din dybde holder den.',
-    'stille_balance': 'Intet dominerer. Din stilhed er bare til stede.'
-  },
-  'TRÆ': {
-    'fuld_resonans': 'Al din kraft peger i samme retning i dag. Følg den.',
-    'naerende_flow': 'Væksten i dig næres lige nu. Noget spirer allerede.',
-    'indre_storm': 'Kraften trækker i dig — brug den uro som retning.',
-    'kreativ_spaending': 'Spændingen er livskraft der søger form. Giv den plads.',
-    'stille_balance': 'Træet hviler. Rødderne arbejder i det stille.'
-  },
-  'ILD': {
-    'fuld_resonans': 'Varmen i dig synger med alt omkring dig. Sjældent og smukt.',
-    'naerende_flow': 'Din ild næres stille i dag. Forbindelsen vokser.',
-    'indre_storm': 'Flammen danser i modvind. Den slukker ikke — den finder ny form.',
-    'kreativ_spaending': 'Der er gnister i spændingsfeltet. Brug dem klogt.',
-    'stille_balance': 'Ilden hviler. Gløderne er varme nok.'
-  },
-  'JORD': {
-    'fuld_resonans': 'Hele dit fundament synger sammen i dag. Du står fast.',
-    'naerende_flow': 'Stabiliteten i dig næres stille. Jorden bærer dig.',
-    'indre_storm': 'Noget rokker. Men jorden under dig er dybere end stormen.',
-    'kreativ_spaending': 'Spændingen gøder jorden. Noget vil gro af det.',
-    'stille_balance': 'Intet presser. Fundamentet er bare der — stille og bærende.'
-  },
-  'METAL': {
-    'fuld_resonans': 'Klarheden er total lige nu. Du ser præcis hvad der er væsentligt.',
-    'naerende_flow': 'Din klarhed næres i dag. Essensen bliver tydeligere.',
-    'indre_storm': 'Modbølgen giver metallets skarphed noget at arbejde med.',
-    'kreativ_spaending': 'I spændingen finder din klarhed sin bedste kant.',
-    'stille_balance': 'Stille klarhed. Kun det nødvendige. Det er nok.'
-  }
-};
-
-function getOrganHourKey(hour) {
-  if (hour >= 3 && hour < 5) return '03-05';
-  if (hour >= 5 && hour < 7) return '05-07';
-  if (hour >= 7 && hour < 9) return '07-09';
-  if (hour >= 9 && hour < 11) return '09-11';
-  if (hour >= 11 && hour < 13) return '11-13';
-  if (hour >= 13 && hour < 15) return '13-15';
-  if (hour >= 15 && hour < 17) return '15-17';
-  if (hour >= 17 && hour < 19) return '17-19';
-  if (hour >= 19 && hour < 21) return '19-21';
-  if (hour >= 21 && hour < 23) return '21-23';
-  if (hour >= 23 || hour < 1) return '23-01';
-  return '01-03';
-}
-
-function buildOejeblik() {
-  var p = getPortrait();
-  if (!p) return null;
-
-  var hour = new Date().getHours();
-  var organKey = getOrganHourKey(hour);
-  var domEl = p.dominant.element;
-  var climate = p.climate.state;
-
-  var organLine = OEJEBLIK_ORGAN[organKey] || '';
-  var bridge = (OEJEBLIK_BRIDGES[domEl] && OEJEBLIK_BRIDGES[domEl][climate])
-    ? OEJEBLIK_BRIDGES[domEl][climate]
-    : ELEMENT_FELT[domEl] || '';
-
-  return { organLine: organLine, bridge: bridge };
-}
-
-function showOejeblik() {
-  // Only show once per session
-  if (sessionStorage.getItem('oejeblik_shown')) return;
-
-  var overlay = document.getElementById('oejeblikket');
-  if (!overlay) return;
-
-  var data = buildOejeblik();
-  if (!data || !data.bridge) return;
-
-  setText('oejeblik-organ', data.organLine);
-  setText('oejeblik-bridge', data.bridge);
-
-  // Show share button
-  var shareBtn = document.getElementById('oejeblik-share');
-  if (shareBtn) shareBtn.style.display = '';
-
-  overlay.style.display = 'flex';
-  sessionStorage.setItem('oejeblik_shown', '1');
-
-  var dismissed = false;
-  var dismiss = function() {
-    if (dismissed) return;
-    dismissed = true;
-    overlay.classList.add('fade-out');
-    setTimeout(function() { overlay.style.display = 'none'; }, 800);
-  };
-
-  overlay.addEventListener('click', dismiss);
-  setTimeout(dismiss, 6000);
-}
-
-/* ---- Del dit øjeblik — screenshot-venlig deling ---- */
-function shareOejeblik() {
-  var data = buildOejeblik();
-  if (!data) return;
-
-  var p = getPortrait();
-  var elLabel = p ? (Calculations.ELEMENT_LABELS[p.dominant.element] || '') : '';
-  var kanji = p ? (Calculations.ELEMENT_TEGN[p.dominant.element] || '') : '';
-
-  var tekst = kanji + ' ' + data.organLine + '\n\n' + data.bridge
-    + '\n\n— ' + elLabel + ' · De 9 Livsfasers Energi';
-  var url = 'https://nklasfff.github.io/de-9-livsfaser/';
-
-  if (navigator.share) {
-    navigator.share({ title: 'Mit øjeblik', text: tekst, url: url }).catch(function() {});
-  } else if (navigator.clipboard) {
-    navigator.clipboard.writeText(tekst + '\n' + url).then(function() {
-      showActionToast('Kopieret til udklipsholder');
-    });
-  }
-}
-
-/* ---- Send til relation — inviter en person til at se deres cyklusser ---- */
-function shareRelation(relationName, relationElement, userElement) {
-  var relLabel = Calculations.ELEMENT_LABELS[relationElement] || relationElement;
-  var userLabel = Calculations.ELEMENT_LABELS[userElement] || userElement;
-  var url = 'https://nklasfff.github.io/de-9-livsfaser/';
-
-  var tekst = 'Hej ' + (relationName || '') + '. Jeg bruger en app om livsfaser og kinesisk medicin. '
-    + 'Den siger at dit ' + relLabel.toLowerCase() + '-element møder mit ' + userLabel.toLowerCase()
-    + ' lige nu. Vil du se din egen energi?\n' + url;
-
-  if (navigator.share) {
-    navigator.share({ title: 'De 9 Livsfasers Energi', text: tekst, url: url }).catch(function() {});
-  } else if (navigator.clipboard) {
-    navigator.clipboard.writeText(tekst).then(function() {
-      showActionToast('Besked kopieret');
-    });
-  }
-}
-
-/* ============================================================
    NAVIGATIONSKONTEKST — b\u00e6r portr\u00e6ttets tilstand mellem sk\u00e6rme
    N\u00e5r brugeren trykker p\u00e5 noget, gemmes konteksten s\u00e5
    den modtagende sk\u00e6rm ved HVAD brugeren kom fra.
@@ -381,11 +217,6 @@ function setNavContext(topic, specifics) {
     _navContext.dataPool = specifics.dataPool || null;
     _navContext.dataKey = specifics.dataKey || null;
     _navContext.temaTitle = specifics.temaTitle || '';
-    // Flow-metadata: { flow, step, nextScreen, nextLabel }
-    _navContext.flow = specifics.flow || null;
-    _navContext.step = specifics.step || 0;
-    _navContext.nextScreen = specifics.nextScreen || null;
-    _navContext.nextLabel = specifics.nextLabel || null;
   }
 }
 
@@ -566,68 +397,6 @@ function renderKlimaBoks(containerId) {
 
 /* renderPortraitBro removed — portrait shapes content INSIDE each screen's init */
 
-/* ---- renderFlowNext: intelligent "next step" baseret på flow-kontekst ---- */
-/* Kan tilføjes til enhver skærm via: renderFlowNext('container-id', ctx) */
-function renderFlowNext(containerId, ctx) {
-  var el = document.getElementById(containerId);
-  if (!el) return;
-
-  var p = getPortrait();
-  if (!p) return;
-
-  var domEl = p.dominant.element;
-  var elLabel = Calculations.ELEMENT_LABELS[domEl] || domEl;
-  var links = [];
-
-  // Hvis flow-kontekst har et specifikt næste skridt
-  if (ctx && ctx.nextScreen && ctx.nextLabel) {
-    links.push({
-      tekst: ctx.nextLabel,
-      action: "setNavContext('" + (ctx.topic || 'flow') + "',{flow:'" + (ctx.flow || '') + "',step:" + ((ctx.step || 0) + 1) + "});Router.navigate('" + ctx.nextScreen + "')"
-    });
-  }
-
-  // Altid tilføj portrætdrevne forslag
-  var hour = new Date().getHours();
-  var organKey = getOrganHourKey(hour);
-  var organData = ORGANUR_VINDUER ? ORGANUR_VINDUER[organKey] : null;
-
-  if (p.organResonance && organData) {
-    links.push({
-      tekst: organData.organ + ' resonerer med din livsfase — se dit dybe billede',
-      action: "setNavContext('organur_resonans');Router.navigate('cir-dit-liv')"
-    });
-  }
-
-  if (p.secondary.element && p.secondary.relation === 'kontrolleres') {
-    var secLabel = Calculations.ELEMENT_LABELS[p.secondary.element] || '';
-    links.push({
-      tekst: secLabel + ' udfordrer dit ' + elLabel.toLowerCase() + ' — udforsk din praksis',
-      action: "setNavContext('secondary_kontrol');Router.navigate('din-praksis')"
-    });
-  }
-
-  if (links.length === 0) {
-    links.push({
-      tekst: 'Tilbage til dit øjeblik',
-      action: "Router.navigate('forside')"
-    });
-  }
-
-  // Render max 2 links
-  links = links.slice(0, 2);
-  var html = '<div class="eyebrow" style="color:var(--blaa)">Dit næste skridt</div>';
-  html += '<div style="margin-top:8px">';
-  for (var i = 0; i < links.length; i++) {
-    html += '<a onclick="' + links[i].action + '" style="display:block;padding:12px 16px;margin-bottom:8px;'
-      + 'background:rgba(108,130,169,0.04);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);cursor:pointer;'
-      + 'font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.55">'
-      + links[i].tekst + ' <span style="color:var(--blaa);opacity:0.6">&rarr;</span></a>';
-  }
-  html += '</div>';
-  el.innerHTML = html;
-}
-
 /* ============================================================
    CHECK-IN & JOURNAL — Sprint 2
    ============================================================ */
@@ -722,7 +491,7 @@ function selectMood(id, el) {
   }
 }
 
-/* ---- toggleCheckinSupport: Intelligent portrait comparison + recommendations ---- */
+/* ---- toggleCheckinSupport: Fold out empathy + 4 recommendations ---- */
 function toggleCheckinSupport() {
   const panel = document.getElementById('ci-support-panel');
   if (!panel) return;
@@ -737,67 +506,9 @@ function toggleCheckinSupport() {
   const moodId = TrackingState.checkinMood;
   if (!moodId) return;
 
-  const moodElement = MOOD_ELEMENT_MAP[moodId] || 'VAND';
-  const moodLabel = Calculations.ELEMENT_LABELS[moodElement] || moodElement;
+  const element = MOOD_ELEMENT_MAP[moodId] || 'VAND';
+  const elLabel = Calculations.ELEMENT_LABELS[element] || element;
   const empati = MOOD_EMPATI[moodId] || '';
-
-  // INTELLIGENT COMPARISON: mood vs. portrait prediction
-  const p = getPortrait();
-  let insightHTML = '';
-  if (p) {
-    const domEl = p.dominant.element;
-    const domLabel = Calculations.ELEMENT_LABELS[domEl] || domEl;
-    const secEl = p.secondary.element;
-    const secLabel = secEl ? (Calculations.ELEMENT_LABELS[secEl] || '') : '';
-
-    if (moodElement === domEl) {
-      // MATCH: user feels what the cycles predict
-      insightHTML = '<div class="ci-insight ci-insight--match">'
-        + '<div class="ci-insight-label">Resonans</div>'
-        + '<div class="ci-insight-text">Du mærker præcis det, dine cyklusser peger på. '
-        + domLabel + '-energien er tydelig i dag — stol på den fornemmelse.</div>'
-        + '</div>';
-    } else if (secEl && moodElement === secEl) {
-      // SECONDARY MATCH: user feels the undercurrent
-      insightHTML = '<div class="ci-insight ci-insight--secondary">'
-        + '<div class="ci-insight-label">Din understrøm taler</div>'
-        + '<div class="ci-insight-text">Dit dominerende element er ' + domLabel.toLowerCase()
-        + ', men du mærker ' + moodLabel.toLowerCase() + ' — din understrøm. '
-        + 'Måske er det ' + secLabel.toLowerCase() + '-energien der beder om opmærksomhed lige nu.</div>'
-        + '</div>';
-    } else {
-      // MISMATCH: something else is at play
-      var rel = 'neutral';
-      if (SHENG[moodElement] === domEl) rel = 'naerer';
-      else if (SHENG[domEl] === moodElement) rel = 'naeres';
-      else if (KO[moodElement] === domEl || KO[domEl] === moodElement) rel = 'kontrol';
-
-      var mismatchText = '';
-      if (rel === 'naerer') {
-        mismatchText = moodLabel + ' nærer dit ' + domLabel.toLowerCase()
-          + '. Det du mærker er en støtte til din grundtone — lad den strømme.';
-      } else if (rel === 'naeres') {
-        mismatchText = 'Dit ' + domLabel.toLowerCase() + ' nærer det '
-          + moodLabel.toLowerCase() + ' du mærker. Noget nyt spirer måske.';
-      } else if (rel === 'kontrol') {
-        mismatchText = moodLabel + ' og ' + domLabel.toLowerCase()
-          + ' trækker i forskellige retninger. Det er ikke en fejl — det er kroppen der balancerer.';
-      } else {
-        mismatchText = 'Du mærker ' + moodLabel.toLowerCase()
-          + ', men dine cyklusser peger mod ' + domLabel.toLowerCase()
-          + '. Begge er sande. Lyt til det der er stærkest lige nu.';
-      }
-
-      insightHTML = '<div class="ci-insight ci-insight--explore">'
-        + '<div class="ci-insight-label">Noget andet taler</div>'
-        + '<div class="ci-insight-text">' + mismatchText + '</div>'
-        + '</div>';
-    }
-  }
-
-  // Element to base recommendations on: the FELT mood (not the predicted one)
-  const element = moodElement;
-  const elLabel = moodLabel;
 
   // Get recommendations
   const mStryg = (typeof MERIDIAN_STRYGNINGER !== 'undefined' && MERIDIAN_STRYGNINGER[element]) ? MERIDIAN_STRYGNINGER[element][0] : null;
@@ -807,21 +518,21 @@ function toggleCheckinSupport() {
 
   let recsHTML = '';
   if (yoga) {
-    recsHTML += `<div class="ci-rec" onclick="setNavContext('checkin_yoga');Router.navigate('din-praksis')" style="margin-bottom:8px">
+    recsHTML += `<div class="ci-rec" onclick="Router.navigate('din-praksis')" style="margin-bottom:8px">
       <div class="ci-rec-label">Yin Yoga \u00b7 ${elLabel}</div>
       <div class="ci-rec-title">${yoga.pose.split('(')[0].trim()}</div>
       <div class="ci-rec-desc">${yoga.desc}</div>
     </div>`;
   }
   if (mStryg) {
-    recsHTML += `<div class="ci-rec" onclick="setNavContext('checkin_meridian');Router.navigate('din-praksis')" style="margin-bottom:8px">
+    recsHTML += `<div class="ci-rec" onclick="Router.navigate('din-praksis')" style="margin-bottom:8px">
       <div class="ci-rec-label">Meridianstrygning \u00b7 ${elLabel}</div>
       <div class="ci-rec-title">${mStryg.meridian}</div>
       <div class="ci-rec-desc">${mStryg.desc}</div>
     </div>`;
   }
   if (food) {
-    recsHTML += `<div class="ci-rec" onclick="setNavContext('checkin_kost');Router.navigate('din-praksis')" style="margin-bottom:8px">
+    recsHTML += `<div class="ci-rec" onclick="Router.navigate('din-praksis')" style="margin-bottom:8px">
       <div class="ci-rec-label">Næring · ${elLabel}</div>
       <div class="ci-rec-title">${food.item}</div>
       <div class="ci-rec-desc">${food.desc}</div>
@@ -836,7 +547,7 @@ function toggleCheckinSupport() {
     </div>`;
   }
 
-  panel.innerHTML = `<div class="ci-empati">${empati}</div>${insightHTML}${recsHTML}`;
+  panel.innerHTML = `<div class="ci-empati">${empati}</div>${recsHTML}`;
   panel.style.display = '';
   panel.style.animation = 'ciFadeIn 0.4s ease';
 }
@@ -1476,98 +1187,6 @@ function renderStreak() {
   el.style.display = '';
 }
 
-/* ---- Intelligent Navigation — kontekstuelle links baseret på portrættet ---- */
-function renderIntelligentNav(portrait, cycles, dominant) {
-  var container = document.getElementById('forside-intelligent-nav');
-  if (!container || !portrait) return;
-
-  var domEl = dominant.element;
-  var elLabel = Calculations.ELEMENT_LABELS[domEl] || domEl;
-  var phase = cycles.lifePhase;
-  var organ = cycles.organ;
-  var hour = new Date().getHours();
-  var links = [];
-
-  // 1. ORGANUR-RESONANS → cir-dit-liv (med flow til vinduer)
-  if (portrait.organResonance) {
-    links.push({
-      tekst: organ.organ + ' resonerer med din livsfase lige nu — udforsk det dybe billede',
-      action: "setNavContext('organur_resonans',{flow:'organur',step:1,nextScreen:'vinduer',nextLabel:'Denne resonans er sjælden — se hvornår den sker igen'});Router.navigate('cir-dit-liv')"
-    });
-  }
-
-  // 2. SEKUNDÆRT ELEMENT → relationer eller praksis (med flow videre)
-  if (portrait.secondary.element) {
-    var secLabel = Calculations.ELEMENT_LABELS[portrait.secondary.element] || '';
-    var secRel = portrait.secondary.relation;
-    if (secRel === 'kontrolleres' || secRel === 'kontrollerer') {
-      links.push({
-        tekst: secLabel + ' trækker i dig som understrøm — se hvad det betyder for din krop',
-        action: "setNavContext('secondary_element',{flow:'understream',step:1,nextScreen:'cir-dit-liv',nextLabel:'Se det større billede af dine fem lag'});Router.navigate('din-praksis')"
-      });
-    } else {
-      links.push({
-        tekst: secLabel + ' nærer dit ' + elLabel.toLowerCase() + ' stille — dyk ned i billedet',
-        action: "setNavContext('daglig',{flow:'naering',step:1,nextScreen:'din-praksis',nextLabel:'Se hvad din krop beder om lige nu'});Router.navigate('cir-dit-liv')"
-      });
-    }
-  }
-
-  // 3. RELATION (hvis bruger har relationer — med flow til dybere relationer)
-  var relations = Storage.getRelations ? Storage.getRelations() : [];
-  if (relations.length > 0) {
-    var rel = relations[0];
-    var relCycles = Calculations.allCycles(rel.birthdate, new Date(), { isMale: rel.gender === 'mand' });
-    var relDom = Calculations.getWeightedDominant(relCycles);
-    var relLabel = Calculations.ELEMENT_LABELS[relDom.element] || '';
-    links.push({
-      tekst: (rel.name || 'Din relation') + 's ' + relLabel.toLowerCase() + ' møder dit ' + elLabel.toLowerCase() + ' — se jeres dynamik',
-      action: "setNavContext('relation_forside',{flow:'relation',step:1,nextScreen:'rel-dybere',nextLabel:'Dyk dybere i jeres dynamik'});Router.navigate('din-relation')"
-    });
-  }
-
-  // 4. TIDSBEVIDST link — morgen vs. aften
-  if (hour < 12) {
-    links.push({
-      tekst: 'Din morgenenergi er ' + elLabel.toLowerCase() + ' i fase ' + phase.phase + ' — se din praksis',
-      action: "setNavContext('morgen');Router.navigate('min-praksis')"
-    });
-  } else if (hour >= 18) {
-    links.push({
-      tekst: 'Aftenen inviterer til refleksion — skriv i din journal',
-      action: "Router.navigate('rej-journal')"
-    });
-  } else {
-    links.push({
-      tekst: elLabel + ' i fase ' + phase.phase + ' — se de ni faser',
-      action: "setNavContext('faser_generel');Router.navigate('cyk-ni-faser')"
-    });
-  }
-
-  // 5. FALLBACK: altid vis "Min Rejse" hvis under 3 links
-  if (links.length < 3) {
-    links.push({
-      tekst: 'Din rejse i ' + elLabel.toLowerCase() + '-elementet — se din udvikling',
-      action: "setNavContext('rejse_generel');Router.navigate('min-rejse')"
-    });
-  }
-
-  // Begræns til 4 links
-  links = links.slice(0, 4);
-
-  // Render
-  var html = '<div class="eyebrow">Dit næste skridt</div>';
-  html += '<div style="margin-top:10px">';
-  for (var i = 0; i < links.length; i++) {
-    html += '<a onclick="' + links[i].action + '" class="intelligent-nav-link" style="display:block;padding:14px 16px;margin-bottom:8px;'
-      + 'background:rgba(108,130,169,0.04);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);cursor:pointer;'
-      + 'font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.55">'
-      + links[i].tekst + ' <span style="color:var(--blaa);opacity:0.6">&rarr;</span></a>';
-  }
-  html += '</div>';
-  container.innerHTML = html;
-}
-
 function initForside() {
   invalidatePortrait();
   const p = getPortrait();
@@ -1578,9 +1197,6 @@ function initForside() {
   const elLabel = (el) => Calculations.ELEMENT_LABELS[el] || el;
   const domEl = dominant.element;
   const phase = cycles.lifePhase;
-
-  // 0. ØJEBLIKKET — vis daglig åbningssætning (kun én gang per session)
-  showOejeblik();
 
   // 1. DATO + HILSEN
   const hilsen = hour < 12 ? 'God morgen' : hour < 18 ? 'God eftermiddag' : 'God aften';
@@ -1663,9 +1279,6 @@ function initForside() {
 
   // 11. STREAK — vis ved 2+ dage
   renderStreak();
-
-  // 12. INTELLIGENT NAVIGATION — kontekstuelle links baseret på portrættet
-  renderIntelligentNav(p, cycles, dominant);
 }
 
 /* ---- Forside helper: Organur lige nu ---- */
@@ -2885,9 +2498,6 @@ function initDinPraksis() {
     });
     hjelpEl.innerHTML = hHtml;
   }
-
-  // INTELLIGENT FLOW — næste skridt
-  renderFlowNext('flow-next-container', ctx);
 }
 
 /* ---- Praksis (Section 3) ---- */
@@ -5079,9 +4689,6 @@ function initCirDitLiv() {
   if (overgangEl && detail.overgangTekst) {
     overgangEl.innerHTML = formatExpandable(detail.overgangTekst, 80);
   }
-
-  // INTELLIGENT FLOW — næste skridt baseret på kontekst
-  renderFlowNext('flow-next-container', ctx);
 }
 
 function initCirLivsfase() {
@@ -6629,18 +6236,6 @@ function buildRelationReading() {
   const samtaleEl = document.getElementById('rel-samtale');
   if (samtaleEl && samtale) {
     samtaleEl.innerHTML = '\u00ab\u2009' + samtale.spoerg + '\u2009\u00bb';
-  }
-
-  // ── 4. SEND TIL RELATION — viral invitation ──
-  var sendWrap = document.getElementById('rel-send-wrap');
-  var sendName = document.getElementById('rel-send-name');
-  var sendBtn = document.getElementById('rel-send-btn');
-  if (sendWrap && sendBtn && rel.name) {
-    if (sendName) sendName.textContent = rel.name;
-    sendBtn.onclick = function() {
-      shareRelation(rel.name, theirEl, userEl);
-    };
-    sendWrap.style.display = '';
   }
 
   window.scrollTo({ top: 0 });

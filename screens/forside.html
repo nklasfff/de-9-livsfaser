@@ -123,7 +123,15 @@
   <a id="forside-del" onclick="shareElement()" style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--blaa);opacity:0.6;cursor:pointer">Del dit element &rarr;</a>
 </div>
 
-<!-- INTELLIGENT NAVIGATION — kontekstuelle links baseret p&aring; portr&aelig;t -->
-<div class="s" style="padding-bottom:32px" id="forside-intelligent-nav"></div>
+<!-- DYK DYBERE — alle links til unikke skaerme -->
+<div class="s" style="padding-bottom:32px">
+  <div class="eyebrow">Dyk dybere</div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px">
+    <a onclick="setNavContext('daglig');Router.navigate('cir-dit-liv')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">Dit Dybe Billede</a>
+    <a onclick="setNavContext('faser_generel');Router.navigate('cyk-ni-faser')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">De Ni Faser</a>
+    <a onclick="setNavContext('praksis_generel');Router.navigate('din-praksis')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">Din Dybere Praksis</a>
+    <a onclick="setNavContext('rejse_generel');Router.navigate('min-rejse')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">Min Rejse</a>
+  </div>
+</div>
 
 <div class="section-closer"></div>
