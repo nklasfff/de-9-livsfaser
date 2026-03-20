@@ -1493,12 +1493,12 @@ function renderTemaer(domEl, phase) {
         specifics = ",{dataPool:'" + t.dataPool + "',dataKey:'" + (t.dataKey || '') + "',temaTitle:'" + (t.temaTitle || '').replace(/'/g, "\\'") + "'}";
       }
       var oc = "setNavContext('" + (t.topic || 'tema') + "'" + specifics + ");Router.navigate('" + t.route + "')";
-      return `<div class="tema" style="background:rgba(108,130,169,0.03);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer" onclick="${oc}">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">${t.titel}</div>
-          <div style="font-size:18px;color:var(--blaa);opacity:0.4">\u203a</div>
+      return `<div class="forside-tema" onclick="${oc}">
+        <div class="forside-tema-header">
+          <div class="forside-tema-title">${t.titel}</div>
+          <div class="forside-tema-arrow">\u203a</div>
         </div>
-        <div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--text-light);margin-top:4px;line-height:1.5">${t.teaser}</div>
+        <div class="forside-tema-teaser">${t.teaser}</div>
       </div>`;
     }).join('');
 }
