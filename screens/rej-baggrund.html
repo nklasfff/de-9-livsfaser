@@ -2,17 +2,17 @@
 
 <!-- HERO: Titel + figur 1 -->
 <div class="s" style="padding-bottom:0">
-  <div class="eyebrow" style="color:#8d95a1">Baggrund</div>
+  <div class="section-eyebrow" style="color:#8d95a1">Baggrund</div>
   <div style="text-align:center;margin:16px 0 8px">
-    <div id="bg-title" style="font-family:var(--font-serif);font-size:28px;color:var(--text-dark)">Viden der b&aelig;rer</div>
-    <div id="bg-intro" style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:var(--text-light);margin-top:6px;line-height:1.6;max-width:320px;margin-left:auto;margin-right:auto">Traditionerne, forskningen og den r&oslash;de tr&aring;d &mdash; den dybere forst&aring;else bag cyklusser og elementer</div>
+    <div id="bg-title" class="section-title">Viden der b&aelig;rer</div>
+    <div id="bg-intro" class="isa isa-sm">Traditionerne, forskningen og den r&oslash;de tr&aring;d &mdash; den dybere forst&aring;else bag cyklusser og elementer</div>
   </div>
   <div class="fig" style="padding:0 20px">
-    <img src="assets/images/baggrund-visdom.png" alt="Fem traditioner samles" style="max-width:300px;margin:0 auto;border-radius:14px">
+    <img src="assets/images/baggrund-visdom.png" alt="Fem traditioner samles" style="border-radius:14px">
   </div>
 </div>
 
-<div id="portrait-klima" style="display:none;text-align:center;padding:8px 0 0;font-family:var(--font-sans);font-size:11px;font-weight:400;letter-spacing:0.8px;color:var(--text-light)"></div>
+<div id="portrait-klima" style="display:none" class="meta-text"></div>
 
 <!-- ISABELLE TEKST -->
 <div class="s" style="padding-top:0">
@@ -21,10 +21,10 @@
 
 <!-- DIN VIDEN LIGE NU — insight box -->
 <div class="s">
-  <div class="eyebrow" style="color:#8d95a1">Din viden lige nu</div>
-  <div id="bg-insight" style="background:rgba(138,150,169,0.04);border:1px solid rgba(138,150,169,0.08);border-radius:var(--radius);padding:16px 18px;margin-top:10px">
-    <div id="bg-insight-label" style="font-family:var(--font-sans);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:#8d95a1;margin-bottom:6px"></div>
-    <div id="bg-insight-text" style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6"></div>
+  <div class="section-eyebrow" style="color:#8d95a1">Din viden lige nu</div>
+  <div id="bg-insight" class="insight-box" style="background:rgba(138,150,169,0.04);border:1px solid rgba(138,150,169,0.08);margin-top:10px">
+    <div id="bg-insight-label" class="insight-label" style="color:#8d95a1"></div>
+    <div id="bg-insight-text" class="insight-text"></div>
   </div>
 </div>
 
@@ -35,7 +35,7 @@
 
 <!-- TRADITIONER — 3 preview-kort -->
 <div class="s">
-  <div class="eyebrow" style="color:#8d95a1">Traditioner og systemer</div>
+  <div class="section-eyebrow" style="color:#8d95a1">Traditioner og systemer</div>
   <div id="bg-traditioner"></div>
 </div>
 
@@ -48,7 +48,7 @@
 
 <!-- VIDENSKAB — 3 preview-kort -->
 <div class="s">
-  <div class="eyebrow" style="color:#8d95a1">Videnskab og krop</div>
+  <div class="section-eyebrow" style="color:#8d95a1">Videnskab og krop</div>
   <div id="bg-videnskab"></div>
 </div>
 
@@ -57,20 +57,20 @@
 
 <!-- REFLEKSION -->
 <div class="s">
-  <div class="eyebrow" style="color:#8d95a1">Refleksion</div>
+  <div class="section-eyebrow" style="color:#8d95a1">Refleksion</div>
   <div class="isa" id="bg-refleksion" style="font-size:17px;margin-bottom:12px"></div>
   <div style="text-align:center">
-    <a onclick="Router.navigate('rej-journal')" style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#8a96a9;opacity:0.7;cursor:pointer">Skriv i din journal &rarr;</a>
+    <a onclick="Router.navigate('rej-journal')" class="soft-link" style="color:#8a96a9">Skriv i din journal &rarr;</a>
   </div>
 </div>
 
 <!-- DYK DYBERE -->
 <div class="s" style="padding-bottom:32px">
-  <div class="eyebrow" style="color:#8d95a1">Dyk dybere</div>
-  <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px">
-    <a onclick="Router.navigate('baggrund-dybere')" class="explore-link" style="color:#8a96a9;border-color:rgba(138,150,169,0.15);cursor:pointer">De Dybere Baggrunde</a>
-    <a onclick="Router.navigate('om-isabelle')" class="explore-link" style="color:#8a96a9;border-color:rgba(138,150,169,0.15);cursor:pointer">Om Isabelle</a>
-    <a onclick="Router.navigate('cyk-kontrol')" class="explore-link" style="color:#8a96a9;border-color:rgba(138,150,169,0.15);cursor:pointer">Kontrolcyklussen</a>
+  <div class="section-eyebrow" style="color:#8d95a1">Dyk dybere</div>
+  <div class="chip-wrap" style="margin-top:8px">
+    <a onclick="Router.navigate('baggrund-dybere')" class="explore-link" style="color:#8a96a9;border-color:rgba(138,150,169,0.15)">De Dybere Baggrunde</a>
+    <a onclick="Router.navigate('om-isabelle')" class="explore-link" style="color:#8a96a9;border-color:rgba(138,150,169,0.15)">Om Isabelle</a>
+    <a onclick="Router.navigate('cyk-kontrol')" class="explore-link" style="color:#8a96a9;border-color:rgba(138,150,169,0.15)">Kontrolcyklussen</a>
   </div>
 </div>
 

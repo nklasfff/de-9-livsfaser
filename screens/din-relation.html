@@ -2,34 +2,34 @@
 
 <!-- HERO: Titel + figur 1 -->
 <div class="s" style="padding-bottom:0">
-  <div class="eyebrow" style="color:#88839e">Dine relationer</div>
+  <div class="section-eyebrow" style="color:#88839e">Dine relationer</div>
   <div style="text-align:center;margin:16px 0 8px">
-    <div id="rel-title" style="font-family:var(--font-serif);font-size:28px;color:var(--text-dark)">N&aring;r livsfaser m&oslash;des</div>
-    <div id="rel-intro" style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:var(--text-light);margin-top:6px;line-height:1.6;max-width:320px;margin-left:auto;margin-right:auto">Hvert menneske du m&oslash;der, b&aelig;rer sin egen rytme</div>
+    <div id="rel-title" class="section-title">N&aring;r livsfaser m&oslash;des</div>
+    <div id="rel-intro" class="isa isa-sm">Hvert menneske du m&oslash;der, b&aelig;rer sin egen rytme</div>
   </div>
   <div class="fig" style="padding:0 20px">
-    <img src="assets/images/relationer_forside.png" alt="Relationer" style="max-width:300px;margin:0 auto">
+    <img src="assets/images/relationer_forside.png" alt="Relationer">
   </div>
 </div>
 
-<div id="portrait-klima" style="display:none;text-align:center;padding:8px 0 0;font-family:var(--font-sans);font-size:11px;font-weight:400;letter-spacing:0.8px;color:var(--text-light)"></div>
+<div id="portrait-klima" style="display:none" class="meta-text"></div>
 
 <!-- V&AElig;LG PERSON + TIDSPUNKT -->
 <div class="s">
-  <div class="eyebrow" style="color:#88839e">V&aelig;lg person</div>
-  <div id="rel-pills" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0 12px"></div>
+  <div class="section-eyebrow" style="color:#88839e">V&aelig;lg person</div>
+  <div id="rel-pills" class="chip-wrap" style="margin:8px 0 12px"></div>
   <div style="display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap">
     <span class="rel-deep-chip active" onclick="setRelDeepDate(null, this)">Nu</span>
-    <input type="date" id="rel-deep-date" style="font-family:var(--font-sans);font-size:14px;color:var(--text-body);border:1px solid rgba(123,122,158,0.15);border-radius:10px;padding:6px 10px;background:var(--bg)" onchange="onRelDeepDateChange(this.value)">
+    <input type="date" id="rel-deep-date" class="tids-date-input" style="padding:6px 10px" onchange="onRelDeepDateChange(this.value)">
   </div>
-  <div id="rel-smart-chips" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px"></div>
+  <div id="rel-smart-chips" class="chip-wrap" style="gap:6px;margin-top:8px"></div>
 </div>
 
 <!-- JERES KLIMA — dynamisk TCM-interaktion -->
 <div class="s">
   <div id="rel-climate" style="padding:16px 18px;background:rgba(123,122,158,0.04);border:1px solid rgba(123,122,158,0.08);border-radius:var(--radius)">
-    <div id="rel-climate-label" style="font-family:var(--font-sans);font-size:11px;color:#88839e;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px"></div>
-    <div id="rel-climate-text" style="font-family:var(--font-sans);font-size:14.5px;color:var(--text-body);line-height:1.55;font-weight:300"></div>
+    <div id="rel-climate-label" class="group-label" style="color:#88839e;margin-bottom:6px"></div>
+    <div id="rel-climate-text" class="dybde-body"></div>
   </div>
   <div id="rel-portraits" style="display:none"></div>
 </div>
@@ -41,23 +41,23 @@
 
 <!-- FIGUR 2 — visuel pause -->
 <div class="s">
-  <div class="fig">
-    <img src="assets/images/relationer_blad_liberation_HQ.png" alt="Relationer" style="max-width:220px;margin:0 auto;opacity:0.85">
+  <div class="fig fig--compact">
+    <img src="assets/images/relationer_blad_liberation_HQ.png" alt="Relationer" style="opacity:0.85">
   </div>
 </div>
 
 <!-- SAMTALE&Aring;BNER — een poetisk s&aelig;tning -->
 <div class="s">
-  <div class="eyebrow" style="color:#88839e">Samtale&aring;bner</div>
+  <div class="section-eyebrow" style="color:#88839e">Samtale&aring;bner</div>
   <div style="padding:16px 18px;background:rgba(123,122,158,0.04);border:1px solid rgba(123,122,158,0.08);border-radius:var(--radius)">
-    <div id="rel-samtale" style="font-family:var(--font-serif);font-size:17px;font-style:italic;color:#7b7a9e;line-height:1.55;text-align:center"></div>
+    <div id="rel-samtale" class="isa" style="color:#7b7a9e;font-size:17px"></div>
   </div>
 </div>
 
 <!-- JERES HANDLING — oevelse sammen -->
 <div class="s" id="rel-handling-wrap" style="display:none">
-  <div class="eyebrow" style="color:#88839e">Noget I kan g&oslash;re sammen</div>
-  <div id="rel-handling-tekst" style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6;text-align:center"></div>
+  <div class="section-eyebrow" style="color:#88839e">Noget I kan g&oslash;re sammen</div>
+  <div id="rel-handling-tekst" class="isa" style="font-size:15px"></div>
 </div>
 
 <!-- TEMAER — foldbare dybe kort (som forsidens temaer) -->
@@ -65,12 +65,12 @@
 
 <!-- DYK DYBERE — links til sekundaere skaerme -->
 <div class="s" style="padding-bottom:32px">
-  <div class="eyebrow" style="color:#88839e">Dyk dybere</div>
-  <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px">
-    <a onclick="Router.navigate('rel-dybere')" class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15);cursor:pointer">Dine Dybere Relationer</a>
-    <a onclick="Router.navigate('rel-tre-gen')" class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15);cursor:pointer">Tre Generationer</a>
-    <a onclick="Router.navigate('rel-to-rytmer')" class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15);cursor:pointer">To Rytmer</a>
-    <a onclick="Router.navigate('rel-epigenetik')" class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15);cursor:pointer">Epigenetik &amp; Arv</a>
+  <div class="section-eyebrow" style="color:#88839e">Dyk dybere</div>
+  <div class="chip-wrap" style="margin-top:8px">
+    <a onclick="Router.navigate('rel-dybere')" class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)">Dine Dybere Relationer</a>
+    <a onclick="Router.navigate('rel-tre-gen')" class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)">Tre Generationer</a>
+    <a onclick="Router.navigate('rel-to-rytmer')" class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)">To Rytmer</a>
+    <a onclick="Router.navigate('rel-epigenetik')" class="explore-link" style="color:#7b7a9e;border-color:rgba(123,122,158,0.15)">Epigenetik &amp; Arv</a>
   </div>
 </div>
 

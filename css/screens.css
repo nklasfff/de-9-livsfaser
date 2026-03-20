@@ -124,6 +124,38 @@
 /* ---- FORSIDE (Side 3) ---- */
 .s { padding: 30px var(--pad-screen) 0; }
 .eyebrow { font-family: var(--font-sans); font-size: 12px; color: var(--neutral); letter-spacing: 3px; text-transform: uppercase; text-align: center; margin-bottom: 6px; opacity: 0.8; }
+
+/* Hero element display */
+.hero-wrap { text-align: center; margin: 20px 0 8px; }
+.hero-kanji { font-size: 64px; line-height: 1; color: var(--blaa); opacity: 0.18; }
+.hero-element { font-family: var(--font-serif); font-size: 30px; color: var(--text-dark); margin-top: 4px; }
+.hero-kvaliteter { font-family: var(--font-serif); font-size: 14.5px; font-style: italic; color: var(--text-light); margin-top: 6px; letter-spacing: 0.5px; }
+
+/* Meta text (streak, klima-indikator) */
+.meta-text { text-align: center; font-family: var(--font-sans); font-size: 12px; font-weight: 400; color: var(--text-light); }
+.meta-text--sm { font-size: 11px; letter-spacing: 0.8px; }
+
+/* Soft link — alle "→" navigationslinks */
+.soft-link { display: inline-block; font-family: var(--font-serif); font-size: 13px; font-style: italic; color: var(--blaa); opacity: 0.7; cursor: pointer; text-decoration: none; }
+.soft-link:active { opacity: 1; }
+
+/* Organur box on forside */
+.organur-box { background: rgba(108,130,169,0.04); border: 1px solid rgba(108,130,169,0.08); border-radius: var(--radius); padding: 16px 18px; margin-top: 10px; cursor: pointer; }
+.organur-label { font-family: var(--font-sans); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; color: var(--blaa); margin-bottom: 6px; }
+.organur-tekst { font-family: var(--font-serif); font-size: 15px; font-style: italic; color: var(--text-body); line-height: 1.6; }
+.organur-arrow { text-align: right; margin-top: 6px; font-family: var(--font-serif); font-size: 12px; font-style: italic; color: var(--blaa); opacity: 0.5; }
+
+/* Handling section */
+.handling-wrap { text-align: center; margin-top: 12px; }
+.handling-type { font-family: var(--font-sans); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; color: var(--blaa); margin-bottom: 4px; }
+.handling-titel { font-family: var(--font-serif); font-size: 19px; color: var(--text-dark); margin-bottom: 8px; }
+.handling-tekst { font-family: var(--font-serif); font-size: 14.5px; font-style: italic; color: var(--text-body); line-height: 1.6; max-width: 320px; margin: 0 auto; }
+
+/* Skift label */
+.skift-label { font-family: var(--font-sans); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; color: var(--blaa); opacity: 0.6; margin-bottom: 4px; }
+
+/* Chip wrap (tidsrejse, explore) */
+.chip-wrap { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
 .title { font-family: var(--font-serif); font-size: 26px; font-style: italic; color: var(--text-dark); text-align: center; margin-top: 18px; margin-bottom: 10px; line-height: 1.25; font-weight: 400; }
 .body-text { font-family: var(--font-sans); font-size: 15.5px; color: #888; text-align: center; line-height: 1.65; font-weight: 300; margin-bottom: 22px; }
 .circles { display: flex; justify-content: center; margin-bottom: 22px; }

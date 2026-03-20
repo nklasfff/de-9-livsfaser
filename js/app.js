@@ -388,9 +388,9 @@ function renderKlimaBoks(containerId) {
   var p = getPortrait();
   if (!p) { el.style.display = 'none'; return; }
 
-  el.innerHTML = '<div style="font-family:var(--font-sans);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:var(--blaa);opacity:0.6;margin-bottom:6px">'
+  el.innerHTML = '<div class="group-label" style="color:var(--blaa);opacity:0.6;margin-bottom:6px">'
     + p.climate.label + '</div>'
-    + '<div style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:var(--text-body);line-height:1.6">'
+    + '<div class="isa isa-sm">'
     + p.climate.tekst + '</div>';
   el.style.display = '';
 }
@@ -740,14 +740,14 @@ function renderCheckinTimeline() {
       return `<div style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:14px;margin:0 0 8px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:${c.note ? '6px' : '0'}">
           <div>
-            <span style="font-family:var(--font-sans);font-size:12px;color:#8892a1;letter-spacing:1px;text-transform:uppercase">${dateStr}</span>
+            <span class="group-label" style="font-size:12px;color:#8892a1">${dateStr}</span>
           </div>
           <div style="display:flex;gap:6px">
             <span style="padding:3px 10px;border-radius:12px;font-family:var(--font-sans);font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">${label}</span>
             ${elLabel ? `<span style="padding:3px 10px;border-radius:12px;font-family:var(--font-sans);font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">${elLabel}</span>` : ''}
           </div>
         </div>
-        ${c.note ? `<div style="font-family:var(--font-serif);font-size:14px;color:#6e7d91;font-style:italic;line-height:1.5">${c.note}</div>` : ''}
+        ${c.note ? `<div class="isa isa-sm" style="color:#6e7d91;text-align:left">${c.note}</div>` : ''}
       </div>`;
     }).join('')}
   `;
@@ -824,8 +824,8 @@ function renderJournalEntries() {
     const tags = [phase, season, elLabel].filter(Boolean);
 
     return `<div style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:14px;padding:16px;margin:0 0 10px">
-      <div style="font-family:var(--font-sans);font-size:12px;color:#8892a1;letter-spacing:1.5px;font-weight:400;text-transform:uppercase;margin-bottom:6px">${dateStr}</div>
-      <div style="font-family:var(--font-sans);font-size:15px;color:#6e7d91;line-height:1.6;margin-bottom:10px">${j.text}</div>
+      <div class="group-label" style="font-size:12px;color:#8892a1;margin-bottom:6px">${dateStr}</div>
+      <div class="dybde-body-p" style="color:#6e7d91;margin-bottom:10px">${j.text}</div>
       ${tags.length > 0 ? `<div style="display:flex;gap:6px;flex-wrap:wrap">
         ${tags.map(t => `<span style="padding:3px 10px;border-radius:12px;font-family:var(--font-sans);font-size:12px;color:#8892a1;background:rgba(138,150,169,0.06)">${t}</span>`).join('')}
       </div>` : ''}
@@ -1495,10 +1495,10 @@ function renderTemaer(domEl, phase) {
       var oc = "setNavContext('" + (t.topic || 'tema') + "'" + specifics + ");Router.navigate('" + t.route + "')";
       return `<div class="tema" style="background:rgba(108,130,169,0.03);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer" onclick="${oc}">
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">${t.titel}</div>
+          <div class="dybde-tema-title">${t.titel}</div>
           <div style="font-size:18px;color:var(--blaa);opacity:0.4">\u203a</div>
         </div>
-        <div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--text-light);margin-top:4px;line-height:1.5">${t.teaser}</div>
+        <div class="isa isa-sm" style="color:var(--text-light);margin-top:4px;text-align:left">${t.teaser}</div>
       </div>`;
     }).join('');
 }
@@ -1731,7 +1731,7 @@ function renderForsideRelation(userCycles, userDominant) {
   container.innerHTML = `
     <div class="forside-card" style="margin-top:16px;cursor:pointer" onclick="navigateToRelation('${rel.name}')">
       <div class="card-label">Dig og ${rel.name} \u00b7 ${interLabel}</div>
-      <div class="card-text" style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:#6c7a8a;line-height:1.55">${interText}</div>
+      <div class="card-text" class="isa isa-sm" style="color:#6c7a8a;text-align:left">${interText}</div>
       <a class="card-link">Se jeres dynamik \u2192</a>
       ${exampleNote}
     </div>`;
@@ -2009,7 +2009,7 @@ function initRelationer() {
     });
 
     if (useExample) {
-      html += `<div style="font-family:var(--font-sans);font-size:12px;color:#aaa;text-align:center;margin-top:8px;font-style:italic">Eksempel-data \u2014 <span style="color:#7b7a9e;cursor:pointer;text-decoration:underline" onclick="Router.navigate('indstillinger')">tilf\u00f8j dine relationer</span></div>`;
+      html += `<div class="meta-text" style="margin-top:8px;font-style:italic;color:#aaa">Eksempel-data \u2014 <span style="color:#7b7a9e;cursor:pointer;text-decoration:underline" onclick="Router.navigate('indstillinger')">tilf\u00f8j dine relationer</span></div>`;
     }
 
     pulseEl.innerHTML = html;
@@ -2220,9 +2220,9 @@ function renderPraksisMetoder() {
     var html = '<div style="background:rgba(122,144,139,0.03);border:1px solid rgba(122,144,139,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer" onclick="Router.navigate(\'' + m.route + '\')">';
     html += '<div style="display:flex;justify-content:space-between;align-items:flex-start">';
     html += '<div style="flex:1">';
-    html += '<div style="font-family:var(--font-sans);font-size:11px;color:#83938e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">' + m.label + '</div>';
-    html += '<div style="font-family:var(--font-serif);font-size:17px;color:var(--text-dark);margin-bottom:4px">' + m.title + '</div>';
-    html += '<div style="font-family:var(--font-sans);font-size:13.5px;color:var(--text-body);line-height:1.5;font-weight:300">' + m.desc + '</div>';
+    html += '<div class="group-label" style="color:#83938e;margin-bottom:4px">' + m.label + '</div>';
+    html += '<div class="card-title" style="margin-bottom:4px">' + m.title + '</div>';
+    html += '<div class="card-desc">' + m.desc + '</div>';
     html += '</div>';
     html += '<div style="font-size:18px;color:rgba(122,144,139,0.4);margin-left:12px;margin-top:14px">\u2192</div>';
     html += '</div></div>';
@@ -2259,11 +2259,11 @@ function renderPraksisTemaer() {
   temaer.forEach(function(t) {
     html += '<div class="tema" style="background:rgba(122,144,139,0.03);border:1px solid rgba(122,144,139,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer">';
     html += '<div style="display:flex;justify-content:space-between;align-items:center">';
-    html += '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">' + t.titel + '</div>';
+    html += '<div class="dybde-tema-title">' + t.titel + '</div>';
     html += '<div class="tema-arr" style="font-size:18px;color:rgba(122,144,139,0.5);transition:transform 0.2s">\u203a</div>';
     html += '</div>';
     html += '<div class="tema-body" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease">';
-    html += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(122,144,139,0.06)">' + t.tekst + '</div>';
+    html += '<div class="isa isa-sm" style="text-align:left;margin-top:10px;padding-top:10px;border-top:1px solid rgba(122,144,139,0.06)">' + t.tekst + '</div>';
     html += '</div></div>';
   });
   container.innerHTML = html;
@@ -2771,14 +2771,14 @@ function initTidsrejse() {
 
       // ── Dato + alder ──
       html += '<div style="text-align:center">';
-      html += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">' + formatDanishDate(targetDate) + ' ' + targetDate.getFullYear() + '</div>';
-      html += '<div style="font-family:var(--font-serif);font-size:22px;color:#6B5F7B;margin:4px 0 2px">Du ' + varEr + ' ' + userCycles.age + ' år</div>';
+      html += '<div class="group-label" style="color:#a89bb3;margin-bottom:4px">' + formatDanishDate(targetDate) + ' ' + targetDate.getFullYear() + '</div>';
+      html += '<div class="milestone-phase" style="font-size:22px;color:#6B5F7B;margin:4px 0 2px">Du ' + varEr + ' ' + userCycles.age + ' år</div>';
       html += '</div>';
 
       // ── Fase-kort (kompakt) ──
       html += '<div style="margin:14px 0;padding:12px 16px;background:rgba(107,95,123,0.06);border-radius:12px">';
-      html += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase">Fase ' + phase.phase + ' · ' + elLabel + '</div>';
-      html += '<div style="font-family:var(--font-serif);font-size:18px;color:#6B5F7B;margin:3px 0">' + phase.name + '</div>';
+      html += '<div class="group-label" style="color:#a89bb3">Fase ' + phase.phase + ' · ' + elLabel + '</div>';
+      html += '<div class="milestone-phase" style="font-size:18px;color:#6B5F7B;margin:3px 0">' + phase.name + '</div>';
       html += '<div style="font-size:13px;color:#8B7D9B">' + userCycles.season.season + ' (' + Calculations.ELEMENT_LABELS[userCycles.season.element] + ') · ' + userCycles.weekday.day + '</div>';
       html += '</div>';
 
@@ -2797,14 +2797,14 @@ function initTidsrejse() {
 
         // Livsfase\u00d7\u00e5rstid fortolkning for den dato
         if (datePortrait.livsAarstid.tekst) {
-          html += '<div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#8B7D9B;line-height:1.5;margin:8px 0;text-align:center">' + datePortrait.livsAarstid.tekst + '</div>';
+          html += '<div class="isa isa-sm" style="color:#8B7D9B;margin:8px 0;font-size:13px">' + datePortrait.livsAarstid.tekst + '</div>';
         }
       }
 
       // ── Isabelle-intro (kort) ──
       if (detail) {
         var introShort = detail.introText.split('.').slice(0, 2).join('.') + '.';
-        html += '<div style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:var(--text-body);line-height:1.6;margin:12px 0">' + formatExpandable(introShort, 15) + '</div>';
+        html += '<div class="isa isa-sm" style="margin:12px 0;text-align:left">' + formatExpandable(introShort, 15) + '</div>';
       }
 
       // ── Dengang vs nu ──
@@ -2828,7 +2828,7 @@ function initTidsrejse() {
           // Transition tekst
           var transKey = phase.element + '_' + nowPhase.element;
           if (typeof CYKLUS_SKIFT_TEKST !== 'undefined' && CYKLUS_SKIFT_TEKST[transKey]) {
-            html += '<div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#8B7D9B;line-height:1.5">' + formatExpandable(CYKLUS_SKIFT_TEKST[transKey], 15) + '</div>';
+            html += '<div class="isa isa-sm" style="color:#8B7D9B;font-size:13px">' + formatExpandable(CYKLUS_SKIFT_TEKST[transKey], 15) + '</div>';
           }
         }
       }
@@ -2846,7 +2846,7 @@ function initTidsrejse() {
           var relElLabel = Calculations.ELEMENT_LABELS[relEl];
 
           html += '<div style="margin-top:14px;padding:12px 16px;background:rgba(123,122,158,0.05);border-radius:12px;border:1px solid rgba(123,122,158,0.08)">';
-          html += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase">' + rel.name + '</div>';
+          html += '<div class="group-label" style="color:#a89bb3">' + rel.name + '</div>';
           html += '<div style="font-size:14px;color:#6B5F7B;font-weight:500;margin:3px 0">' + rc.age + ' år · Fase ' + rc.lifePhase.phase + ': ' + rc.lifePhase.name + ' (' + relElLabel + ')</div>';
 
           // Element-interaktion — beriget med Sheng/Ko
@@ -2858,14 +2858,14 @@ function initTidsrejse() {
           else if (KO[uEl] === relEl) interaction = 'Dit ' + elLabel + ' udfordrer ' + rel.name + 's ' + relElLabel + '. En sp\u00e6nding der kan v\u00e6re kreativ.';
           else if (KO[relEl] === uEl) interaction = rel.name + 's ' + relElLabel + ' udfordrer dit ' + elLabel + '. En modstand der ogs\u00e5 er v\u00e6kst.';
           else interaction = elLabel + ' ' + (isPast ? 'm\u00f8dte' : 'm\u00f8der') + ' ' + relElLabel + ' \u2014 forskellige energier i stille balance.';
-          html += '<div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#8B7D9B;margin-top:6px">' + interaction + '</div>';
+          html += '<div class="isa isa-sm" style="color:#8B7D9B;font-size:13px;margin-top:6px">' + interaction + '</div>';
           html += '</div>';
         });
       }
 
       // ── Link til fuld tidsvindue ──
       html += '<div style="text-align:center;margin-top:16px">';
-      html += '<a style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#6B5F7B;opacity:0.7;cursor:pointer" onclick="window._vinduerPresetDate=\'' + val + '\';Router.navigate(\'vinduer\')">Se hele tidsvinduet →</a>';
+      html += '<a class="soft-link" style="color:#6B5F7B" onclick="window._vinduerPresetDate=\'' + val + '\';Router.navigate(\'vinduer\')">Se hele tidsvinduet →</a>';
       html += '</div>';
 
       if (resultWrap) resultWrap.style.display = '';
@@ -2972,11 +2972,11 @@ function renderTidsrejseTemaer() {
     var fullText = tema.content.replace(/\n/g, '<br>');
     html += '<div class="tema" style="background:rgba(107,95,123,0.03);border:1px solid rgba(107,95,123,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer">';
     html += '<div style="display:flex;justify-content:space-between;align-items:center">';
-    html += '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">' + tema.title + '</div>';
+    html += '<div class="dybde-tema-title">' + tema.title + '</div>';
     html += '<div class="tema-arr" style="font-size:18px;color:#a89bb3;transition:transform 0.2s">›</div>';
     html += '</div>';
     html += '<div class="tema-body" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease">';
-    html += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(107,95,123,0.06)">' + fullText + '</div>';
+    html += '<div class="isa isa-sm" style="text-align:left;margin-top:10px;padding-top:10px;border-top:1px solid rgba(107,95,123,0.06)">' + fullText + '</div>';
     html += '</div>';
     html += '</div>';
   });
@@ -3059,8 +3059,8 @@ function initTidsDybere() {
       tlHtml += '<div style="padding:10px 14px;margin:6px 0;border-radius:10px;background:' + bg + ';border:' + border + ';opacity:' + opacity + '">';
       tlHtml += '<div style="display:flex;justify-content:space-between;align-items:center">';
       tlHtml += '<div>';
-      tlHtml += '<span style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase">Fase ' + i + ' \u00b7 ' + pd.startAge + '\u2013' + pd.endAge + ' \u00e5r</span>';
-      tlHtml += '<div style="font-family:var(--font-serif);font-size:15px;color:var(--text-dark);margin-top:2px">' + pd.name + ' <span style="color:#8B7D9B;font-size:13px">\u00b7 ' + pdEl + '</span></div>';
+      tlHtml += '<span class="group-label" style="color:#a89bb3">Fase ' + i + ' \u00b7 ' + pd.startAge + '\u2013' + pd.endAge + ' \u00e5r</span>';
+      tlHtml += '<div class="dybde-tema-title" style="font-size:15px;margin-top:2px">' + pd.name + ' <span style="color:#8B7D9B;font-size:13px">\u00b7 ' + pdEl + '</span></div>';
       tlHtml += '</div>';
       if (isCurrent) {
         tlHtml += '<div style="font-size:10px;color:#6B5F7B;font-weight:500;text-transform:uppercase;letter-spacing:1px;background:rgba(107,95,123,0.1);padding:3px 8px;border-radius:6px">Nu</div>';
@@ -3085,7 +3085,7 @@ function initTidsDybere() {
       if (prevEl !== phase.element) {
         var prevTransKey = prevEl + '_' + phase.element;
         skiftHtml += '<div style="margin-bottom:20px">';
-        skiftHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Dit seneste skift: ' + prevElLabel + ' \u2192 ' + elLabel + '</div>';
+        skiftHtml += '<div class="group-label" style="color:#a89bb3;margin-bottom:6px">Dit seneste skift: ' + prevElLabel + ' \u2192 ' + elLabel + '</div>';
         if (typeof CYKLUS_SKIFT_TEKST !== 'undefined' && CYKLUS_SKIFT_TEKST[prevTransKey]) {
           skiftHtml += formatExpandable(CYKLUS_SKIFT_TEKST[prevTransKey], 80);
         }
@@ -3102,7 +3102,7 @@ function initTidsDybere() {
       if (nextEl !== phase.element) {
         var nextTransKey = phase.element + '_' + nextEl;
         skiftHtml += '<div style="margin-bottom:12px">';
-        skiftHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Dit n\u00e6ste skift om ' + Math.round(yearsLeft) + ' \u00e5r: ' + elLabel + ' \u2192 ' + nextElLabel + '</div>';
+        skiftHtml += '<div class="group-label" style="color:#a89bb3;margin-bottom:6px">Dit n\u00e6ste skift om ' + Math.round(yearsLeft) + ' \u00e5r: ' + elLabel + ' \u2192 ' + nextElLabel + '</div>';
         if (typeof CYKLUS_SKIFT_TEKST !== 'undefined' && CYKLUS_SKIFT_TEKST[nextTransKey]) {
           skiftHtml += formatExpandable(CYKLUS_SKIFT_TEKST[nextTransKey], 80);
         }
@@ -3135,13 +3135,13 @@ function initTidsDybere() {
         var parData = typeof TIDSREJSE_PAR !== 'undefined' ? TIDSREJSE_PAR[parKey] : null;
 
         relHtml += '<div style="margin-bottom:20px;padding:14px 16px;background:rgba(107,95,123,0.03);border:1px solid rgba(107,95,123,0.08);border-radius:var(--radius)">';
-        relHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">' + rel.name + ' \u00b7 Fase ' + relCycles.lifePhase.phase + ' \u00b7 ' + relElLabel + '</div>';
+        relHtml += '<div class="group-label" style="color:#a89bb3;margin-bottom:4px">' + rel.name + ' \u00b7 Fase ' + relCycles.lifePhase.phase + ' \u00b7 ' + relElLabel + '</div>';
         if (parData) {
           var introText = parData.intro.replace(/\{navn\}/g, rel.name);
           relHtml += '<div style="margin:8px 0">' + formatExpandable(introText, 40) + '</div>';
           if (parData.raad) {
             var raadText = parData.raad.replace(/\{navn\}/g, rel.name);
-            relHtml += '<div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:#8B7D9B;margin-top:8px">' + raadText + '</div>';
+            relHtml += '<div class="isa isa-sm" style="color:#8B7D9B;font-size:13px;margin-top:8px">' + raadText + '</div>';
           }
         } else {
           relHtml += '<div class="dybde-body-p">Dit ' + elLabel + ' m\u00f8der ' + rel.name + 's ' + relElLabel + '.</div>';
@@ -3153,7 +3153,7 @@ function initTidsDybere() {
     if (!relHtml) {
       relHtml = '<p class="dybde-body-p">Relationer \u00e6ndrer sig, n\u00e5r elementer skifter. Det par der m\u00f8dtes i ild-fasen, er ikke det samme par i jord-fasen. Energien mellem jer forandres \u2014 ikke fordi k\u00e6rligheden g\u00f8r det, men fordi I g\u00f8r det.</p>';
       relHtml += '<p class="dybde-body-p">N\u00e5r du rejser i tid med en anden person, kan du se hvordan jeres elementer m\u00f8dtes dengang \u2014 og hvordan de m\u00f8des nu. Det forklarer m\u00e5ske noget om de \u00e5r der f\u00f8ltes lette, og de \u00e5r der f\u00f8ltes tunge.</p>';
-      relHtml += '<div style="text-align:center;margin-top:14px"><a onclick="Router.navigate(\'indstillinger\')" style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--blaa);opacity:0.7;cursor:pointer">Tilf\u00f8j en relation i indstillinger \u2192</a></div>';
+      relHtml += '<div style="text-align:center;margin-top:14px"><a onclick="Router.navigate(\'indstillinger\')" class="soft-link">Tilf\u00f8j en relation i indstillinger \u2192</a></div>';
     }
     relEl.innerHTML = relHtml;
   }
@@ -3182,7 +3182,7 @@ function initTidsDybere() {
       var border = isCurrent ? '1px solid rgba(107,95,123,0.15)' : '1px solid rgba(107,95,123,0.06)';
       aaHtml += '<div style="padding:12px 14px;margin:8px 0;border-radius:10px;background:' + bg + ';border:' + border + '">';
       aaHtml += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
-      aaHtml += '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">' + s.label + ' og ' + domElLabel + '</div>';
+      aaHtml += '<div class="dybde-tema-title">' + s.label + ' og ' + domElLabel + '</div>';
       if (isCurrent) {
         aaHtml += '<div style="font-size:10px;color:#6B5F7B;font-weight:500;text-transform:uppercase;letter-spacing:1px;background:rgba(107,95,123,0.1);padding:3px 8px;border-radius:6px">Nu</div>';
       }
@@ -3236,7 +3236,7 @@ function initTidsDybere() {
     if (parOevelse) {
       oevHtml = '<p class="dybde-body-p">' + parOevelse + '</p>';
     } else if (detail && detail.oevelse) {
-      oevHtml = '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark);margin-bottom:8px">' + detail.oevelse.title + '</div>';
+      oevHtml = '<div class="dybde-tema-title" style="margin-bottom:8px">' + detail.oevelse.title + '</div>';
       oevHtml += '<p class="dybde-body-p">' + detail.oevelse.desc + '</p>';
     } else {
       oevHtml = '<p class="dybde-body-p">Luk \u00f8jnene. T\u00e6nk p\u00e5 et \u00f8jeblik fra din fortid \u2014 et \u00f8jeblik der \u00e6ndrede noget. M\u00e6rk hvad du f\u00f8lte dengang. M\u00e6rk hvad du f\u00f8ler nu, n\u00e5r du t\u00e6nker p\u00e5 det. Forskellen er din rejse.</p>';
@@ -3307,7 +3307,7 @@ function initMinRejse() {
       var rTekst = (seneste.question ? seneste.question + ' \u2014 ' : '') + (seneste.text || '');
       seneseteEl.innerHTML = formatExpandable(rTekst, 15);
     } else {
-      seneseteEl.innerHTML = '<span style="font-family:var(--font-serif);font-style:italic;color:var(--text-light)">Din journal venter p\u00e5 dig. M\u00e5ske er i dag dagen.</span>';
+      seneseteEl.innerHTML = '<span class="isa isa-sm" style="color:var(--text-light);text-align:left">Din journal venter p\u00e5 dig. M\u00e5ske er i dag dagen.</span>';
     }
   }
 
@@ -3332,7 +3332,7 @@ function initMinRejse() {
     renderPhaseRefleksion('mr-refleksion', phaseNum);
   } else {
     var faseEl2 = document.getElementById('mr-fase-tekst');
-    if (faseEl2) faseEl2.innerHTML = '<span style="font-family:var(--font-serif);font-style:italic;color:var(--text-light)">Tilf\u00f8j din f\u00f8dselsdato i indstillinger for at se din personlige fase-rejse.</span>';
+    if (faseEl2) faseEl2.innerHTML = '<span class="isa isa-sm" style="color:var(--text-light);text-align:left">Tilf\u00f8j din f\u00f8dselsdato i indstillinger for at se din personlige fase-rejse.</span>';
     renderPhaseRefleksion('mr-refleksion');
   }
 
@@ -3485,11 +3485,11 @@ function renderRejseTemaer() {
       var fullText = t.tekst.replace(/\n/g, '<br>');
       return '<div class="tema" style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer">' +
         '<div style="display:flex;justify-content:space-between;align-items:center">' +
-          '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">' + t.titel + '</div>' +
+          '<div class="dybde-tema-title">' + t.titel + '</div>' +
           '<div class="tema-arr" style="font-size:18px;color:rgba(138,150,169,0.4);transition:transform 0.2s">\u203a</div>' +
         '</div>' +
         '<div class="tema-body" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease">' +
-          '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(138,150,169,0.06)">' + fullText + '</div>' +
+          '<div class="isa isa-sm" style="text-align:left;margin-top:10px;padding-top:10px;border-top:1px solid rgba(138,150,169,0.06)">' + fullText + '</div>' +
           (t.link ? '<a onclick="event.stopPropagation();Router.navigate(\'' + t.link.route + '\')" style="display:inline-block;margin-top:10px;font-family:var(--font-serif);font-size:13px;font-style:italic;color:#8a96a9;opacity:0.7;cursor:pointer">' + t.link.label + '</a>' : '') +
         '</div>' +
       '</div>';
@@ -3781,11 +3781,11 @@ function renderVinduerTemaer() {
     var fullText = tema.content.replace(/\n/g, '<br>');
     html += '<div class="tema" style="background:rgba(107,95,123,0.03);border:1px solid rgba(107,95,123,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer">';
     html += '<div style="display:flex;justify-content:space-between;align-items:center">';
-    html += '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">' + tema.title + '</div>';
+    html += '<div class="dybde-tema-title">' + tema.title + '</div>';
     html += '<div class="tema-arr" style="font-size:18px;color:#a89bb3;transition:transform 0.2s">\u203a</div>';
     html += '</div>';
     html += '<div class="tema-body" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease">';
-    html += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(107,95,123,0.06)">' + fullText + '</div>';
+    html += '<div class="isa isa-sm" style="text-align:left;margin-top:10px;padding-top:10px;border-top:1px solid rgba(107,95,123,0.06)">' + fullText + '</div>';
     html += '</div>';
     html += '</div>';
   });
@@ -3827,7 +3827,7 @@ function initVinduer() {
   var user = Storage.getUser();
   if (!user || !user.birthdate) {
     renderPhaseRefleksion('vin-refleksion');
-    setHTML('vin-aktiv-nu', '<div style="padding:16px;background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.08);border-radius:var(--radius);text-align:center"><div style="font-family:var(--font-serif);font-size:15px;color:var(--text-body);font-style:italic">Tilf\u00f8j din f\u00f8dselsdato i indstillinger for at se dine personlige vinduer.</div></div>');
+    setHTML('vin-aktiv-nu', '<div style="padding:16px;background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.08);border-radius:var(--radius);text-align:center"><div class="isa" style="font-size:15px;text-align:left">Tilf\u00f8j din f\u00f8dselsdato i indstillinger for at se dine personlige vinduer.</div></div>');
     renderVinduerTemaer();
     return;
   }
@@ -3863,24 +3863,24 @@ function initVinduer() {
     if (maxCount >= 4) {
       aHtml += '<div style="background:linear-gradient(135deg,rgba(107,95,123,0.12),rgba(107,95,123,0.04));border:2px solid rgba(107,95,123,0.20);border-radius:var(--radius);padding:20px;text-align:center">';
       aHtml += '<div style="font-size:32px;margin-bottom:8px">\u2728</div>';
-      aHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Fuld ' + EL[maxEl] + '-resonans</div>';
-      aHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6">' + (typeof SJAELDNE_VINDUER !== 'undefined' && SJAELDNE_VINDUER.fuld_resonans ? SJAELDNE_VINDUER.fuld_resonans[maxEl] : '') + '</div>';
+      aHtml += '<div class="group-label" style="color:#a89bb3;margin-bottom:8px">Fuld ' + EL[maxEl] + '-resonans</div>';
+      aHtml += '<div class="isa" style="font-size:15px;text-align:left">' + (typeof SJAELDNE_VINDUER !== 'undefined' && SJAELDNE_VINDUER.fuld_resonans ? SJAELDNE_VINDUER.fuld_resonans[maxEl] : '') + '</div>';
       aHtml += '</div>';
     } else if (maxCount >= 3) {
       aHtml += '<div style="background:linear-gradient(135deg,rgba(107,95,123,0.10),rgba(107,95,123,0.03));border:1.5px solid rgba(107,95,123,0.18);border-radius:var(--radius);padding:20px;text-align:center">';
       aHtml += '<div style="font-size:28px;margin-bottom:8px">\u2727</div>';
-      aHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Tredobbelt ' + EL[maxEl] + '-vindue</div>';
-      aHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6">' + (typeof SJAELDNE_VINDUER !== 'undefined' && SJAELDNE_VINDUER.tredobbelt ? SJAELDNE_VINDUER.tredobbelt[maxEl] : '') + '</div>';
+      aHtml += '<div class="group-label" style="color:#a89bb3;margin-bottom:8px">Tredobbelt ' + EL[maxEl] + '-vindue</div>';
+      aHtml += '<div class="isa" style="font-size:15px;text-align:left">' + (typeof SJAELDNE_VINDUER !== 'undefined' && SJAELDNE_VINDUER.tredobbelt ? SJAELDNE_VINDUER.tredobbelt[maxEl] : '') + '</div>';
       aHtml += '</div>';
     } else if (maxCount >= 2) {
       aHtml += '<div style="background:rgba(107,95,123,0.05);border:1px solid rgba(107,95,123,0.12);border-radius:var(--radius);padding:16px;text-align:center">';
       aHtml += '<div style="font-size:22px;margin-bottom:6px">\u2726</div>';
-      aHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Dobbelt ' + EL[maxEl] + '-vindue</div>';
-      aHtml += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6">' + (typeof SJAELDNE_VINDUER !== 'undefined' && SJAELDNE_VINDUER.dobbelt ? SJAELDNE_VINDUER.dobbelt[maxEl] : '') + '</div>';
+      aHtml += '<div class="group-label" style="color:#a89bb3;margin-bottom:8px">Dobbelt ' + EL[maxEl] + '-vindue</div>';
+      aHtml += '<div class="isa isa-sm" style="text-align:left">' + (typeof SJAELDNE_VINDUER !== 'undefined' && SJAELDNE_VINDUER.dobbelt ? SJAELDNE_VINDUER.dobbelt[maxEl] : '') + '</div>';
       aHtml += '</div>';
     } else {
       aHtml += '<div style="padding:16px;background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.08);border-radius:var(--radius);text-align:center">';
-      aHtml += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6">Dine cyklusser hviler i balance lige nu. Intet sj\u00e6ldent vindue er aktivt \u2014 men hold \u00f8je.</div>';
+      aHtml += '<div class="isa isa-sm" style="text-align:left">Dine cyklusser hviler i balance lige nu. Intet sj\u00e6ldent vindue er aktivt \u2014 men hold \u00f8je.</div>';
       aHtml += '</div>';
     }
     aktivEl.innerHTML = aHtml;
@@ -3900,7 +3900,7 @@ function initVinduer() {
     if (organKey && ORGANUR_VINDUER[organKey]) {
       var ov = ORGANUR_VINDUER[organKey];
       organEl.innerHTML = '<div style="padding:12px 14px;background:rgba(107,95,123,0.03);border:1px solid rgba(107,95,123,0.06);border-radius:10px">' +
-        '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Organur \u00b7 kl. ' + organSlots[oi].join('-') + '</div>' +
+        '<div class="group-label" style="color:#a89bb3;margin-bottom:4px">Organur \u00b7 kl. ' + organSlots[oi].join('-') + '</div>' +
         '<div style="font-size:14px;color:#6B5F7B;font-weight:500">' + ov.organ + ' \u00b7 ' + EL[ov.element] + '</div>' +
         '</div>';
     }
@@ -3914,7 +3914,7 @@ function initVinduer() {
     upcoming = upcoming.filter(function(w) { return w.daysFromNow > 0; });
 
     if (upcoming.length === 0) {
-      kommendeEl.innerHTML = '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6">Ingen sj\u00e6ldne vinduer fundet i de n\u00e6ste 90 dage. Dine cyklusser bevarer balancen.</div>';
+      kommendeEl.innerHTML = '<div class="isa isa-sm" style="text-align:left">Ingen sj\u00e6ldne vinduer fundet i de n\u00e6ste 90 dage. Dine cyklusser bevarer balancen.</div>';
     } else {
       var kHtml = '';
       var levelIcons = { fuld_resonans: '\u2728', tredobbelt: '\u2727', dobbelt: '\u2726', relation_match: '\ud83e\udd1d', relation_nourish: '\u2661' };
@@ -3928,10 +3928,10 @@ function initVinduer() {
         var elLabel = w.element ? EL[w.element] : '';
         kHtml += '<div style="padding:12px 14px;background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.08);border-radius:var(--radius);margin-top:8px">';
         kHtml += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">';
-        kHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase">' + icon + ' ' + label + (elLabel ? ' \u00b7 ' + elLabel : '') + '</div>';
-        kHtml += '<div style="font-family:var(--font-sans);font-size:12px;color:#8B7D9B">om ' + w.daysFromNow + ' dage</div>';
+        kHtml += '<div class="group-label" style="color:#a89bb3">' + icon + ' ' + label + (elLabel ? ' \u00b7 ' + elLabel : '') + '</div>';
+        kHtml += '<div class="meta-text" style="color:#8B7D9B">om ' + w.daysFromNow + ' dage</div>';
         kHtml += '</div>';
-        kHtml += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.5">' + w.text + '</div>';
+        kHtml += '<div class="isa isa-sm" style="text-align:left">' + w.text + '</div>';
         kHtml += '</div>';
       });
 
@@ -3943,10 +3943,10 @@ function initVinduer() {
           var elLabel = w.element ? EL[w.element] : '';
           kHtml += '<div style="padding:12px 14px;background:rgba(107,95,123,0.04);border:1px solid rgba(107,95,123,0.08);border-radius:var(--radius);margin-top:8px">';
           kHtml += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">';
-          kHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase">' + icon + ' ' + label + (elLabel ? ' \u00b7 ' + elLabel : '') + '</div>';
-          kHtml += '<div style="font-family:var(--font-sans);font-size:12px;color:#8B7D9B">om ' + w.daysFromNow + ' dage</div>';
+          kHtml += '<div class="group-label" style="color:#a89bb3">' + icon + ' ' + label + (elLabel ? ' \u00b7 ' + elLabel : '') + '</div>';
+          kHtml += '<div class="meta-text" style="color:#8B7D9B">om ' + w.daysFromNow + ' dage</div>';
           kHtml += '</div>';
-          kHtml += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.5">' + w.text + '</div>';
+          kHtml += '<div class="isa isa-sm" style="text-align:left">' + w.text + '</div>';
           kHtml += '</div>';
         });
         kHtml += '</div>';
@@ -3963,8 +3963,8 @@ function initVinduer() {
       var overSpec = OVERGANGSALDER_SPECIFIK.faser[overFase];
       if (overSpec && overSpec.element_raad && overSpec.element_raad[overEl]) {
         var overBox = '<div style="margin-top:12px;padding:14px;background:linear-gradient(135deg,rgba(107,95,123,0.06),rgba(107,95,123,0.02));border:1px solid rgba(107,95,123,0.12);border-radius:var(--radius)">';
-        overBox += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Overgangsalder \u00b7 ' + EL[overEl] + '</div>';
-        overBox += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6">' + overSpec.element_raad[overEl] + '</div>';
+        overBox += '<div class="group-label" style="color:#a89bb3;margin-bottom:6px">Overgangsalder \u00b7 ' + EL[overEl] + '</div>';
+        overBox += '<div class="isa isa-sm" style="text-align:left">' + overSpec.element_raad[overEl] + '</div>';
         overBox += '</div>';
         kommendeEl.innerHTML += overBox;
       }
@@ -4056,12 +4056,12 @@ function initVinduer() {
       var domLabel = EL[dom];
 
       var html = '';
-      html += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">' + formatDanishDate(targetDate) + ' ' + targetDate.getFullYear() + '</div>';
-      html += '<div style="font-family:var(--font-serif);font-size:22px;font-weight:600;color:#6B5F7B;margin:4px 0 2px">Du ' + varEr + ' ' + userCycles.age + ' \u00e5r</div>';
+      html += '<div class="group-label" style="color:#a89bb3;margin-bottom:4px">' + formatDanishDate(targetDate) + ' ' + targetDate.getFullYear() + '</div>';
+      html += '<div class="milestone-phase" style="font-size:22px;font-weight:600;color:#6B5F7B;margin:4px 0 2px">Du ' + varEr + ' ' + userCycles.age + ' \u00e5r</div>';
       html += '<div style="margin:14px 0;padding:14px 16px;background:rgba(107,95,123,0.06);border-radius:14px;border:1px solid rgba(107,95,123,0.10)">';
-      html += '<div style="font-family:var(--font-sans);font-size:11px;color:#a89bb3;letter-spacing:1px;text-transform:uppercase">Fase ' + p.phase + ' \u00b7 ' + elLabel + '</div>';
-      html += '<div style="font-family:var(--font-serif);font-size:19px;font-weight:600;color:#6B5F7B;margin:4px 0">' + p.name + '</div>';
-      if (det) html += '<div style="font-family:var(--font-serif);font-size:14px;color:#6B5F7B;margin-top:8px;line-height:1.6;font-style:italic">' + det.introText.split('.').slice(0, 2).join('.') + '.</div>';
+      html += '<div class="group-label" style="color:#a89bb3">Fase ' + p.phase + ' \u00b7 ' + elLabel + '</div>';
+      html += '<div class="milestone-phase" style="font-size:19px;font-weight:600;color:#6B5F7B;margin:4px 0">' + p.name + '</div>';
+      if (det) html += '<div class="isa isa-sm" style="color:#6B5F7B;margin-top:8px;text-align:left">' + det.introText.split('.').slice(0, 2).join('.') + '.</div>';
       html += '</div>';
 
       // Element alignment bars
@@ -4090,7 +4090,7 @@ function initVinduer() {
           html += '<div style="font-size:14px;color:#6B5F7B;font-weight:500">' + rc.age + ' \u00e5r \u00b7 Fase ' + rc.lifePhase.phase + ': ' + rc.lifePhase.name + ' \u00b7 ' + relElLabel + '</div>';
           var uE = p.element, rE = rc.lifePhase.element;
           var interTxt = uE === rE ? 'Begge i ' + EL[uE] + ' \u2014 dyb resonans.' : nourishing[uE] === rE ? 'Dit ' + EL[uE] + ' n\u00e6rer ' + rel.name + 's ' + EL[rE] + '.' : 'Forskellige energier der kan berige hinanden.';
-          html += '<div style="font-family:var(--font-serif);font-size:13px;color:#8B7D9B;margin-top:6px;font-style:italic">' + interTxt + '</div>';
+          html += '<div class="isa isa-sm" style="color:#8B7D9B;font-size:13px;margin-top:6px">' + interTxt + '</div>';
           html += '</div>';
         });
       }
@@ -4172,12 +4172,12 @@ function initVinDybere() {
 
       aHtml += '<div style="background:linear-gradient(135deg,rgba(107,95,123,0.08),rgba(107,95,123,0.03));border:1px solid rgba(107,95,123,0.15);border-radius:var(--radius);padding:20px;text-align:center;margin-bottom:16px">';
       aHtml += '<div style="font-size:28px;margin-bottom:8px">' + icon + '</div>';
-      aHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#8B7D9B;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">' + lvlLabel + ' · ' + EL[maxEl] + '</div>';
-      aHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.6">' + sjTekst + '</div>';
+      aHtml += '<div class="group-label" style="color:#8B7D9B;margin-bottom:8px">' + lvlLabel + ' · ' + EL[maxEl] + '</div>';
+      aHtml += '<div class="isa" style="text-align:left">' + sjTekst + '</div>';
       aHtml += '</div>';
 
       // Vis de 4 cyklusser
-      aHtml += '<div style="font-family:var(--font-sans);font-size:12px;color:var(--text-light);margin-bottom:8px">Dine fire cyklusser lige nu:</div>';
+      aHtml += '<div class="meta-text" style="color:var(--text-light);margin-bottom:8px">Dine fire cyklusser lige nu:</div>';
       var cycleNames = ['Livsfase', 'Årstid', 'Ugedag', 'Måned'];
       var cycleEls = els;
       for (var ci = 0; ci < 4; ci++) {
@@ -4188,7 +4188,7 @@ function initVinDybere() {
         aHtml += '</div>';
       }
     } else {
-      aHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6">Dine cyklusser hviler i balance lige nu — ingen specielt sjældent vindue er aktivt. Din livsfase er i ' + elLabel + ', årstiden i ' + EL[cycles.season.element] + ', ugedagen i ' + EL[cycles.weekday.element] + '. De synger forskellige toner, og det er helt naturligt.</div>';
+      aHtml += '<div class="isa" style="font-size:15px;text-align:left">Dine cyklusser hviler i balance lige nu — ingen specielt sjældent vindue er aktivt. Din livsfase er i ' + elLabel + ', årstiden i ' + EL[cycles.season.element] + ', ugedagen i ' + EL[cycles.weekday.element] + '. De synger forskellige toner, og det er helt naturligt.</div>';
     }
     aktivEl.innerHTML = aHtml;
   }
@@ -4199,7 +4199,7 @@ function initVinDybere() {
     var allWindows = scanUpcomingWindows(user.birthdate, relations, 90);
     var showWindows = allWindows.filter(function(w) { return w.type === 'alignment' || w.type === 'conflict'; });
     var kHtml = '';
-    kHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6;margin-bottom:16px">I de kommende tre m\u00e5neder \u00e5bner og lukker vinduer sig for dig. Nogle er harmoniske \u2014 dine cyklusser synger sammen. Andre er udfordrende \u2014 elementer der tr\u00e6kker i hver sin retning. Begge er v\u00e6rdifulde.</div>';
+    kHtml += '<div class="isa" style="font-size:15px;text-align:left;margin-bottom:16px">I de kommende tre m\u00e5neder \u00e5bner og lukker vinduer sig for dig. Nogle er harmoniske \u2014 dine cyklusser synger sammen. Andre er udfordrende \u2014 elementer der tr\u00e6kker i hver sin retning. Begge er v\u00e6rdifulde.</div>';
 
     if (showWindows.length > 0) {
       var MAANEDER = ['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
@@ -4220,12 +4220,12 @@ function initVinDybere() {
         h += '<div style="padding:14px 0;border-bottom:1px solid rgba(107,95,123,0.06)">';
         h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
         h += '<span style="font-size:' + (w.type === 'conflict' ? '14px;color:#a89bb3' : '18px') + '">' + wIcon + '</span>';
-        h += '<span style="font-family:var(--font-sans);font-size:13px;font-weight:500;color:' + (w.type === 'conflict' ? '#a89bb3' : '#6B5F7B') + '">' + wLabel + '</span>';
+        h += '<span class="card-desc" style="font-weight:500;font-size:13px;color:' + (w.type === 'conflict' ? '#a89bb3' : '#6B5F7B') + '">' + wLabel + '</span>';
         h += '<span style="margin-left:auto;font-size:12px;color:#a89bb3">' + daysLabel + '</span>';
         h += '</div>';
         h += '<div style="font-size:13px;color:var(--text-mid);margin-bottom:4px">' + dagNavn + ' ' + datoStr + '</div>';
         if (w.text) {
-          h += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.55">' + w.text + '</div>';
+          h += '<div class="isa isa-sm" style="text-align:left">' + w.text + '</div>';
         }
         h += '</div>';
         return h;
@@ -4244,10 +4244,10 @@ function initVinDybere() {
           kHtml += renderWindow(showWindows[wi2]);
         }
         kHtml += '</div>';
-        kHtml += '<div style="text-align:center;margin-top:12px"><a onclick="var f=document.getElementById(\'' + foldId + '\');if(f){f.style.display=f.style.display===\'none\'?\'\':\'none\';this.textContent=f.style.display===\'none\'?\'Se alle ' + showWindows.length + ' vinduer \u2193\':\'Vis f\u00e6rre \u2191\'}" style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:#8B7D9B;cursor:pointer;opacity:0.8">Se alle ' + showWindows.length + ' vinduer \u2193</a></div>';
+        kHtml += '<div style="text-align:center;margin-top:12px"><a onclick="var f=document.getElementById(\'' + foldId + '\');if(f){f.style.display=f.style.display===\'none\'?\'\':\'none\';this.textContent=f.style.display===\'none\'?\'Se alle ' + showWindows.length + ' vinduer \u2193\':\'Vis f\u00e6rre \u2191\'}" class="soft-link" style="color:#8B7D9B;font-size:14px">Se alle ' + showWindows.length + ' vinduer \u2193</a></div>';
       }
     } else {
-      kHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-light);line-height:1.6">Dine cyklusser bev\u00e6ger sig roligt i de kommende m\u00e5neder. Vinduer \u00e5bner sig n\u00e5r tiden er til det.</div>';
+      kHtml += '<div class="isa" style="font-size:15px;color:var(--text-light);text-align:left">Dine cyklusser bev\u00e6ger sig roligt i de kommende m\u00e5neder. Vinduer \u00e5bner sig n\u00e5r tiden er til det.</div>';
     }
     komEl.innerHTML = kHtml;
   }
@@ -4257,7 +4257,7 @@ function initVinDybere() {
   if (relEl) {
     if (relations.length > 0) {
       var rHtml = '';
-      rHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6;margin-bottom:16px">Dine n\u00e6rmeste b\u00e6rer deres egne cyklusser. N\u00e5r jeres elementer m\u00f8des \u2014 eller udfordrer hinanden \u2014 m\u00e6rker I det begge.</div>';
+      rHtml += '<div class="isa" style="font-size:15px;text-align:left;margin-bottom:16px">Dine n\u00e6rmeste b\u00e6rer deres egne cyklusser. N\u00e5r jeres elementer m\u00f8des \u2014 eller udfordrer hinanden \u2014 m\u00e6rker I det begge.</div>';
       for (var ri = 0; ri < relations.length; ri++) {
         var rel = relations[ri];
         if (!rel.birthdate) continue;
@@ -4268,7 +4268,7 @@ function initVinDybere() {
         var pairKey = uEl + '_' + rEl;
 
         rHtml += '<div style="padding:14px 0;border-bottom:1px solid rgba(107,95,123,0.06)">';
-        rHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#8B7D9B;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">' + rel.name + ' \u00b7 Fase ' + theirCycles.lifePhase.phase + ' \u00b7 ' + EL[rEl] + '</div>';
+        rHtml += '<div class="group-label" style="color:#8B7D9B;margin-bottom:6px">' + rel.name + ' \u00b7 Fase ' + theirCycles.lifePhase.phase + ' \u00b7 ' + EL[rEl] + '</div>';
 
         // Brug TIDSREJSE_PAR for autentisk Isabelle-tekst
         var parData = typeof TIDSREJSE_PAR !== 'undefined' ? TIDSREJSE_PAR[pairKey] : null;
@@ -4293,7 +4293,7 @@ function initVinDybere() {
             rHtml += '<div style="margin-top:10px;padding:10px 12px;background:rgba(107,95,123,0.04);border-radius:10px">';
             rHtml += '<div style="font-size:11px;color:#a89bb3;margin-bottom:4px">Kommende vindue:</div>';
             rHtml += '<div style="font-size:13px;color:#6B5F7B">' + rwDate.getDate() + '. ' + MAANEDER2[rwDate.getMonth()] + ' \u00b7 Om ' + rw.daysFromNow + ' dage</div>';
-            rHtml += '<div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--text-body);margin-top:4px">' + rw.text + '</div>';
+            rHtml += '<div class="isa isa-sm" style="font-size:13px;margin-top:4px;text-align:left">' + rw.text + '</div>';
             rHtml += '</div>';
           }
         }
@@ -4301,7 +4301,7 @@ function initVinDybere() {
       }
       relEl.innerHTML = rHtml;
     } else {
-      relEl.innerHTML = '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6">Du har ikke tilf\u00f8jet nogen relationer endnu. N\u00e5r du g\u00f8r det, kan du se hvordan jeres elementer m\u00f8des \u2014 hvorn\u00e5r I n\u00e6rer hinanden, og hvorn\u00e5r I udfordrer.</div>';
+      relEl.innerHTML = '<div class="isa" style="font-size:15px;text-align:left">Du har ikke tilf\u00f8jet nogen relationer endnu. N\u00e5r du g\u00f8r det, kan du se hvordan jeres elementer m\u00f8des \u2014 hvorn\u00e5r I n\u00e6rer hinanden, og hvorn\u00e5r I udfordrer.</div>';
     }
   }
 
@@ -4314,7 +4314,7 @@ function initVinDybere() {
     var oEnds = [5,7,9,11,13,15,17,19,21,23,1,3];
 
     var oHtml = '';
-    oHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6;margin-bottom:16px">Kroppen har sin egen klokke. Hvert organ har to timer hvor det arbejder st\u00e6rkest \u2014 og det vindue der er \u00e5bent lige nu, farver din energi i dette \u00f8jeblik. Det er ikke tilfaeldigt at du f\u00f8ler dig p\u00e5 en bestemt m\u00e5de p\u00e5 bestemte tidspunkter.</div>';
+    oHtml += '<div class="isa" style="font-size:15px;text-align:left;margin-bottom:16px">Kroppen har sin egen klokke. Hvert organ har to timer hvor det arbejder st\u00e6rkest \u2014 og det vindue der er \u00e5bent lige nu, farver din energi i dette \u00f8jeblik. Det er ikke tilfaeldigt at du f\u00f8ler dig p\u00e5 en bestemt m\u00e5de p\u00e5 bestemte tidspunkter.</div>';
 
     // Find og vis det aktive vindue direkte
     var activeHtml = '';
@@ -4334,19 +4334,19 @@ function initVinDybere() {
         card += 'background:linear-gradient(135deg,rgba(107,95,123,0.08),rgba(107,95,123,0.03));border:1px solid rgba(107,95,123,0.15)">';
         card += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
         card += '<div style="width:8px;height:8px;border-radius:50%;background:#6B5F7B"></div>';
-        card += '<span style="font-family:var(--font-sans);font-size:12px;font-weight:500;color:#6B5F7B">Kl. ' + oKeys[oi].replace('-',' \u2013 ') + ' \u00b7 ' + oData.organ + ' \u00b7 ' + EL[oData.element] + '</span>';
+        card += '<span class="meta-text" style="font-weight:500;color:#6B5F7B">Kl. ' + oKeys[oi].replace('-',' \u2013 ') + ' \u00b7 ' + oData.organ + ' \u00b7 ' + EL[oData.element] + '</span>';
         card += '<span style="margin-left:auto;font-size:10px;color:#6B5F7B;font-weight:500;text-transform:uppercase;letter-spacing:1px">Nu</span>';
         card += '</div>';
-        card += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6">' + oData.tekst + '</div>';
+        card += '<div class="isa isa-sm" style="text-align:left">' + oData.tekst + '</div>';
         card += '</div>';
         activeHtml += card;
       } else {
         card += 'background:rgba(107,95,123,0.02);border:1px solid rgba(107,95,123,0.05)">';
         card += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">';
         card += '<div style="width:6px;height:6px;border-radius:50%;background:rgba(107,95,123,0.15)"></div>';
-        card += '<span style="font-family:var(--font-sans);font-size:12px;color:var(--text-light)">Kl. ' + oKeys[oi].replace('-',' \u2013 ') + ' \u00b7 ' + oData.organ + ' \u00b7 ' + EL[oData.element] + '</span>';
+        card += '<span class="meta-text" style="color:var(--text-light)">Kl. ' + oKeys[oi].replace('-',' \u2013 ') + ' \u00b7 ' + oData.organ + ' \u00b7 ' + EL[oData.element] + '</span>';
         card += '</div>';
-        card += '<div style="font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--text-light);line-height:1.55">' + oData.tekst + '</div>';
+        card += '<div class="isa isa-sm" style="color:var(--text-light);font-size:13px;text-align:left">' + oData.tekst + '</div>';
         card += '</div>';
         restHtml += card;
       }
@@ -4356,7 +4356,7 @@ function initVinDybere() {
     if (restHtml) {
       var orgFoldId = 'vdyb-org-fold';
       oHtml += '<div id="' + orgFoldId + '" style="display:none">' + restHtml + '</div>';
-      oHtml += '<div style="text-align:center;margin-top:8px"><a onclick="var f=document.getElementById(\'' + orgFoldId + '\');if(f){f.style.display=f.style.display===\'none\'?\'\':\'none\';this.textContent=f.style.display===\'none\'?\'Se alle 12 vinduer \u2193\':\'Vis f\u00e6rre \u2191\'}" style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:#8B7D9B;cursor:pointer;opacity:0.8">Se alle 12 vinduer \u2193</a></div>';
+      oHtml += '<div style="text-align:center;margin-top:8px"><a onclick="var f=document.getElementById(\'' + orgFoldId + '\');if(f){f.style.display=f.style.display===\'none\'?\'\':\'none\';this.textContent=f.style.display===\'none\'?\'Se alle 12 vinduer \u2193\':\'Vis f\u00e6rre \u2191\'}" class="soft-link" style="color:#8B7D9B;font-size:14px">Se alle 12 vinduer \u2193</a></div>';
     }
     orgEl.innerHTML = oHtml;
   }
@@ -4373,7 +4373,7 @@ function initVinDybere() {
       var ovHtml = '';
 
       // Kort intro (Isabelles stemme)
-      ovHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6;margin-bottom:20px">';
+      ovHtml += '<div class="isa" style="font-size:15px;text-align:left;margin-bottom:20px">';
       ovHtml += 'Overgangen er ikke et forfald \u2014 det er en forvandling. Den energi der f\u00f8r gik til menstruation og fertilitet er stadig din. Den leder efter en ny vej.';
       ovHtml += '</div>';
 
@@ -4386,8 +4386,8 @@ function initVinDybere() {
       // Element-boks (personlig, kort — vises direkte)
       if (ovFase && ovFase.element_raad && ovFase.element_raad[userEl]) {
         ovHtml += '<div style="padding:14px;background:rgba(107,95,123,0.04);border-radius:12px;border:1px solid rgba(107,95,123,0.08);margin-bottom:20px">';
-        ovHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#8B7D9B;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Dit ' + elLabel + '-element i overgangen</div>';
-        ovHtml += '<div style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6">' + ovFase.element_raad[userEl] + '</div>';
+        ovHtml += '<div class="group-label" style="color:#8B7D9B;margin-bottom:6px">Dit ' + elLabel + '-element i overgangen</div>';
+        ovHtml += '<div class="isa" style="font-size:15px;text-align:left">' + ovFase.element_raad[userEl] + '</div>';
         ovHtml += '</div>';
       }
 
@@ -4418,7 +4418,7 @@ function initVinDybere() {
         var tema = ovAllTemaer[ti];
         ovHtml += '<div style="border-bottom:1px solid rgba(107,95,123,0.06);padding:10px 0;cursor:pointer" onclick="var b=this.querySelector(\'.tema-body\');var a=this.querySelector(\'.tema-arr\');if(b.style.maxHeight && b.style.maxHeight!==\'0px\'){b.style.maxHeight=\'0px\';a.style.transform=\'rotate(0deg)\';}else{b.style.maxHeight=b.scrollHeight+\'px\';a.style.transform=\'rotate(90deg)\';}">';
         ovHtml += '<div style="display:flex;justify-content:space-between;align-items:center">';
-        ovHtml += '<div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px;opacity:0.4">' + tema.icon + '</span><span style="font-family:var(--font-serif);font-size:15px;color:var(--text-dark)">' + tema.label + '</span></div>';
+        ovHtml += '<div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px;opacity:0.4">' + tema.icon + '</span><span class="dybde-tema-title" style="font-size:15px">' + tema.label + '</span></div>';
         ovHtml += '<div class="tema-arr" style="font-size:18px;color:rgba(107,95,123,0.3);transition:transform 0.2s">\u203A</div>';
         ovHtml += '</div>';
         ovHtml += '<div class="tema-body" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease">';
@@ -4439,14 +4439,14 @@ function initVinDybere() {
 
     // Dit aktuelle element
     eHtml += '<div style="padding:14px;background:rgba(107,95,123,0.04);border-radius:12px;border:1px solid rgba(107,95,123,0.08);margin-bottom:16px">';
-    eHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#8B7D9B;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Dit element lige nu: ' + elLabel + '</div>';
+    eHtml += '<div class="group-label" style="color:#8B7D9B;margin-bottom:6px">Dit element lige nu: ' + elLabel + '</div>';
     var nourishesLabel = EL[nourishing[userEl]] || '';
     var nourishedByKey = Object.keys(nourishing).find(function(k) { return nourishing[k] === userEl; });
     var nourishedByLabel = nourishedByKey ? EL[nourishedByKey] : '';
     var controlsLabel = EL[controlling[userEl]] || '';
     var controlledByKey = Object.keys(controlling).find(function(k) { return controlling[k] === userEl; });
     var controlledByLabel = controlledByKey ? EL[controlledByKey] : '';
-    eHtml += '<div style="font-family:var(--font-serif);font-size:14px;color:var(--text-body);line-height:1.7">';
+    eHtml += '<div class="isa isa-sm" style="text-align:left;line-height:1.7">';
     eHtml += elLabel + ' nærer ' + nourishesLabel + ' · ' + nourishedByLabel + ' nærer ' + elLabel + '<br>';
     eHtml += elLabel + ' kontrollerer ' + controlsLabel + ' · ' + controlledByLabel + ' kontrollerer ' + elLabel;
     eHtml += '</div>';
@@ -4467,8 +4467,8 @@ function initVinDybere() {
     var skiftKey = userEl + '_' + nextEl;
     if (typeof CYKLUS_SKIFT_TEKST !== 'undefined' && CYKLUS_SKIFT_TEKST[skiftKey]) {
       eHtml += '<div style="margin-top:20px">';
-      eHtml += '<div style="font-family:var(--font-sans);font-size:11px;color:#8B7D9B;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Kommende skift: ' + elLabel + ' → ' + EL[nextEl] + '</div>';
-      eHtml += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6">' + CYKLUS_SKIFT_TEKST[skiftKey] + '</div>';
+      eHtml += '<div class="group-label" style="color:#8B7D9B;margin-bottom:8px">Kommende skift: ' + elLabel + ' → ' + EL[nextEl] + '</div>';
+      eHtml += '<div class="isa isa-sm" style="text-align:left">' + CYKLUS_SKIFT_TEKST[skiftKey] + '</div>';
       eHtml += '</div>';
     }
     elemEl.innerHTML = eHtml;
@@ -5102,16 +5102,16 @@ function renderNiFaserCards(containerId, phases, data) {
     html += '<div style="' + bgStyle + ';border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer" onclick="navigateToFaseDetail(' + num + ')">';
     html += '<div style="display:flex;justify-content:space-between;align-items:flex-start">';
     html += '<div style="flex:1">';
-    html += '<div style="font-family:var(--font-sans);font-size:11px;color:#9cabc3;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
+    html += '<div class="group-label" style="color:#9cabc3;margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
     html += 'Fase ' + num + ' \u00b7 ' + pd.startAge + '\u2013' + pd.endAge + ' \u00e5r \u00b7 ' + elLabel;
     if (isCurrent) {
       html += ' <span style="display:inline-block;padding:3px 8px;border-radius:10px;font-size:10px;letter-spacing:1px;background:rgba(108,130,169,0.12);color:#6c82a9;font-weight:500;text-transform:uppercase">Du er her</span>';
     }
     html += '</div>';
-    html += '<div style="font-family:var(--font-serif);font-size:17px;color:' + (isCurrent ? '#6c82a9' : 'var(--text-dark)') + ';margin-bottom:4px">' + pd.name + '</div>';
+    html += '<div class="card-title" style="margin-bottom:4px;color:' + (isCurrent ? '#6c82a9' : 'var(--text-dark)') + '">' + pd.name + '</div>';
     if (detail && detail.introText) {
       var shortIntro = detail.introText.split('.')[0] + '.';
-      html += '<div style="font-family:var(--font-sans);font-size:13.5px;color:var(--text-body);line-height:1.5;font-weight:300">' + shortIntro + '</div>';
+      html += '<div class="card-desc">' + shortIntro + '</div>';
     }
     html += '</div>';
     html += '<div style="font-size:18px;color:rgba(108,130,169,' + (isCurrent ? '0.6' : '0.4') + ');margin-left:12px;margin-top:14px">\u2192</div>';
@@ -5144,11 +5144,11 @@ function renderNiFaserTemaer() {
   temaer.forEach(function(t) {
     html += '<div class="tema" style="background:rgba(108,130,169,0.03);border:1px solid rgba(108,130,169,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer">';
     html += '<div style="display:flex;justify-content:space-between;align-items:center">';
-    html += '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">' + t.titel + '</div>';
+    html += '<div class="dybde-tema-title">' + t.titel + '</div>';
     html += '<div class="tema-arr" style="font-size:18px;color:rgba(108,130,169,0.5);transition:transform 0.2s">\u203a</div>';
     html += '</div>';
     html += '<div class="tema-body" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease">';
-    html += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(108,130,169,0.06)">' + t.tekst + '</div>';
+    html += '<div class="isa isa-sm" style="text-align:left;margin-top:10px;padding-top:10px;border-top:1px solid rgba(108,130,169,0.06)">' + t.tekst + '</div>';
     html += '</div></div>';
   });
   container.innerHTML = html;
@@ -6325,11 +6325,11 @@ function renderRelationTemaer(rel, userEl, theirEl, userPhaseNum, theirPhaseNum,
       }
       return '<div class="tema" onclick="this.classList.toggle(\'open\')" style="background:rgba(' + tone + ',0.03);border:1px solid rgba(' + tone + ',0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer">' +
         '<div style="display:flex;justify-content:space-between;align-items:center">' +
-          '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">' + t.titel + '</div>' +
+          '<div class="dybde-tema-title">' + t.titel + '</div>' +
           '<div class="tema-arr" style="font-size:18px;color:rgba(' + tone + ',0.4);transition:transform 0.2s">\u203a</div>' +
         '</div>' +
         '<div class="tema-body" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease">' +
-          '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(' + tone + ',0.06)">' + fullText + '</div>' +
+          '<div class="isa isa-sm" style="text-align:left;margin-top:10px;padding-top:10px;border-top:1px solid rgba(' + tone + ',0.06)">' + fullText + '</div>' +
           linkHtml +
         '</div>' +
       '</div>';
@@ -6417,16 +6417,16 @@ function initRelDybere() {
     if (samtale) {
       var sHtml = '';
       sHtml += '<div style="margin-bottom:16px">';
-      sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:var(--text-light);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Sp\u00f8rg</div>';
-      sHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.6">\u00ab\u2009' + samtale.spoerg + '\u2009\u00bb</div>';
+      sHtml += '<div class="group-label" style="font-size:10px;color:var(--text-light);margin-bottom:6px">Sp\u00f8rg</div>';
+      sHtml += '<div class="isa" style="text-align:left">\u00ab\u2009' + samtale.spoerg + '\u2009\u00bb</div>';
       sHtml += '</div>';
       sHtml += '<div style="margin-bottom:16px">';
-      sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:var(--text-light);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Sig</div>';
-      sHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.6">\u00ab\u2009' + samtale.sig + '\u2009\u00bb</div>';
+      sHtml += '<div class="group-label" style="font-size:10px;color:var(--text-light);margin-bottom:6px">Sig</div>';
+      sHtml += '<div class="isa" style="text-align:left">\u00ab\u2009' + samtale.sig + '\u2009\u00bb</div>';
       sHtml += '</div>';
       sHtml += '<div>';
-      sHtml += '<div style="font-family:var(--font-sans);font-size:10px;color:var(--text-light);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Sammen</div>';
-      sHtml += '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.6">\u00ab\u2009' + samtale.sammen + '\u2009\u00bb</div>';
+      sHtml += '<div class="group-label" style="font-size:10px;color:var(--text-light);margin-bottom:6px">Sammen</div>';
+      sHtml += '<div class="isa" style="text-align:left">\u00ab\u2009' + samtale.sammen + '\u2009\u00bb</div>';
       sHtml += '</div>';
       samEl.innerHTML = sHtml;
     }
@@ -6453,11 +6453,11 @@ function initRelDybere() {
   if (foelEl && userDetail && userDetail.centralFoelelse && theirDetail && theirDetail.centralFoelelse) {
     var fHtml = '';
     fHtml += '<div style="margin-bottom:20px">';
-    fHtml += '<div style="font-family:var(--font-serif);font-size:20px;font-style:italic;color:var(--text-dark);margin-bottom:8px">Dig: ' + userDetail.centralFoelelse.title + '</div>';
+    fHtml += '<div class="quick-action-title" style="color:var(--text-dark);margin-bottom:8px">Dig: ' + userDetail.centralFoelelse.title + '</div>';
     fHtml += '<div class="dybde-body">' + formatExpandable(userDetail.centralFoelelse.tekst, 80) + '</div>';
     fHtml += '</div>';
     fHtml += '<div>';
-    fHtml += '<div style="font-family:var(--font-serif);font-size:20px;font-style:italic;color:var(--text-dark);margin-bottom:8px">' + rel.name + ': ' + theirDetail.centralFoelelse.title + '</div>';
+    fHtml += '<div class="quick-action-title" style="color:var(--text-dark);margin-bottom:8px">' + rel.name + ': ' + theirDetail.centralFoelelse.title + '</div>';
     fHtml += '<div class="dybde-body">' + formatExpandable(theirDetail.centralFoelelse.tekst, 80) + '</div>';
     fHtml += '</div>';
     foelEl.innerHTML = fHtml;
@@ -6482,9 +6482,9 @@ function initRelDybere() {
   if (oevEl) {
     var par3 = typeof TIDSREJSE_PAR !== 'undefined' ? TIDSREJSE_PAR[pairKey] : null;
     if (par3 && par3.oevelse) {
-      oevEl.innerHTML = '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.6">' + par3.oevelse.replace(/\{navn\}/g, rel.name) + '</div>';
+      oevEl.innerHTML = '<div class="isa" style="text-align:left">' + par3.oevelse.replace(/\{navn\}/g, rel.name) + '</div>';
     } else if (recs && recs.sammen) {
-      oevEl.innerHTML = '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.6">' + recs.sammen + '</div>';
+      oevEl.innerHTML = '<div class="isa" style="text-align:left">' + recs.sammen + '</div>';
     }
   }
 
@@ -6507,7 +6507,7 @@ function initRelDybere() {
   if (klimaEl) {
     var allElements = [userEl, theirEl, userCycles.season.element, theirCycles.season.element];
     var climate = analyzeClimate(allElements, userDom);
-    klimaEl.innerHTML = '<div style="font-family:var(--font-serif);font-size:16px;font-style:italic;color:var(--text-body);line-height:1.6">' + climate.text + '</div>';
+    klimaEl.innerHTML = '<div class="isa" style="text-align:left">' + climate.text + '</div>';
   }
 }
 
@@ -6606,7 +6606,7 @@ function initRelLigeNu() {
     });
 
     if (useExample) {
-      html += `<div style="font-family:var(--font-sans);font-size:12px;color:#aaa;text-align:center;margin-top:8px;font-style:italic">Eksempel-data — tilføj dine egne relationer i onboarding</div>`;
+      html += `<div class="meta-text" style="margin-top:8px;font-style:italic;color:#aaa">Eksempel-data — tilføj dine egne relationer i onboarding</div>`;
     }
 
     personList.innerHTML = html;
@@ -7004,7 +7004,7 @@ function initRelKonstellation() {
       });
 
       // Dominant + missing text
-      html += `<div style="font-family:var(--font-serif);font-size:14px;color:#7b7a9e;font-style:italic;margin-top:12px;line-height:1.6">`;
+      html += `<div class="isa isa-sm" style="color:#7b7a9e;margin-top:12px;text-align:left">`;
       html += KONST_GROUP_TEXTS[dominantEl];
       if (missing.length > 0) {
         html += ` <span style="color:#88839e">${missing.join(' og ')} mangler i jeres felt — det er det I søger udenfor.</span>`;
@@ -7032,11 +7032,11 @@ function initRelKonstellation() {
 
         html += `<div style="background:${typeColors[pair.type]};border:1px solid rgba(123,122,158,0.08);border-radius:14px;padding:14px 16px;margin-bottom:8px">`;
         html += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">`;
-        html += `<div style="font-family:var(--font-sans);font-size:13px;color:#7b7a9e;font-weight:500">${pair.a.name} <span style="color:#aaa">&amp;</span> ${pair.b.name}</div>`;
-        html += `<div style="font-family:var(--font-sans);font-size:11px;color:#88839e;background:rgba(123,122,158,0.08);border-radius:10px;padding:2px 8px">${typeLabels[pair.type]}</div>`;
+        html += `<div class="card-desc" style="color:#7b7a9e;font-weight:500;font-size:13px">${pair.a.name} <span style="color:#aaa">&amp;</span> ${pair.b.name}</div>`;
+        html += `<div class="group-label" style="color:#88839e;background:rgba(123,122,158,0.08);border-radius:10px;padding:2px 8px">${typeLabels[pair.type]}</div>`;
         html += `</div>`;
-        html += `<div style="font-family:var(--font-sans);font-size:12px;color:#88839e;margin-bottom:4px">${pair.a.elLabel} ${pair.type === 'resonans' ? '=' : pair.type === 'naerer' ? '\u2192' : pair.type === 'naeres' ? '\u2190' : '\u2194'} ${pair.b.elLabel}</div>`;
-        html += `<div style="font-family:var(--font-serif);font-size:13px;color:#7b7a9e;font-style:italic;line-height:1.5">${pair.a.name} og ${pair.b.name} ${pair.poetisk}.</div>`;
+        html += `<div class="meta-text" style="color:#88839e;margin-bottom:4px">${pair.a.elLabel} ${pair.type === 'resonans' ? '=' : pair.type === 'naerer' ? '\u2192' : pair.type === 'naeres' ? '\u2190' : '\u2194'} ${pair.b.elLabel}</div>`;
+        html += `<div class="isa isa-sm" style="color:#7b7a9e;font-size:13px;text-align:left">${pair.a.name} og ${pair.b.name} ${pair.poetisk}.</div>`;
         html += `</div>`;
       });
 
@@ -7077,7 +7077,7 @@ function initRelKonstellation() {
       html += `</div>`;
 
       if (useExample) {
-        html += `<div style="font-family:var(--font-sans);font-size:12px;color:#aaa;text-align:center;margin-top:12px;font-style:italic">Eksempel-data — tilf\u00f8j dine egne relationer i onboarding</div>`;
+        html += `<div class="meta-text" style="margin-top:12px;font-style:italic;color:#aaa">Eksempel-data — tilf\u00f8j dine egne relationer i onboarding</div>`;
       }
 
       // Show result
@@ -7395,8 +7395,8 @@ function initRejDybere() {
       var label = topicLabels[topic] || topic;
       var bodyHTML = '';
       if (entry.dyb) bodyHTML += entry.dyb.split('\n\n').filter(function(p) { return p.trim(); }).map(function(p) { return '<p>' + p.trim() + '</p>'; }).join('');
-      if (entry.oevelse) bodyHTML += '<p style="margin-top:10px"><strong style="font-family:var(--font-sans);font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#8a96a9">\u00d8velse:</strong><br>' + entry.oevelse + '</p>';
-      if (entry.kost_raad) bodyHTML += '<p style="margin-top:8px"><strong style="font-family:var(--font-sans);font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#8a96a9">Kost:</strong><br>' + entry.kost_raad + '</p>';
+      if (entry.oevelse) bodyHTML += '<p style="margin-top:10px"><strong class="group-label" style="color:#8a96a9">\u00d8velse:</strong><br>' + entry.oevelse + '</p>';
+      if (entry.kost_raad) bodyHTML += '<p style="margin-top:8px"><strong class="group-label" style="color:#8a96a9">Kost:</strong><br>' + entry.kost_raad + '</p>';
       hjaelpHTML += '<div class="dybde-tema-card" onclick="toggleDybdeTema(this)">' +
         '<div class="dybde-tema-header">' +
           '<span class="dybde-tema-title">' + label + ' \u00b7 ' + elLabel + '</span>' +
@@ -7686,9 +7686,9 @@ function renderBaggrundKort(containerId, kort) {
   var html = '';
   kort.forEach(function(k) {
     html += '<div style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.07);border-radius:var(--radius);padding:16px;margin-top:10px">';
-    html += '<div style="font-family:var(--font-sans);font-size:12px;color:#8d95a1;letter-spacing:1.5px;font-weight:400;text-transform:uppercase;margin-bottom:6px">' + k.label + '</div>';
-    html += '<div style="font-family:var(--font-serif);font-size:17px;color:#8a96a9;margin-bottom:8px">' + k.titel + '</div>';
-    html += '<div style="font-family:var(--font-sans);font-size:15px;color:var(--text-body);line-height:1.6;font-weight:300">' + k.tekst + '</div>';
+    html += '<div class="group-label" style="font-size:12px;color:#8d95a1;margin-bottom:6px">' + k.label + '</div>';
+    html += '<div class="card-title" style="color:#8a96a9;margin-bottom:8px">' + k.titel + '</div>';
+    html += '<div class="dybde-body-p">' + k.tekst + '</div>';
     html += '</div>';
   });
   container.innerHTML = html;
@@ -7710,11 +7710,11 @@ function renderBaggrundTemaer() {
   temaer.forEach(function(t) {
     html += '<div class="tema" style="background:rgba(138,150,169,0.03);border:1px solid rgba(138,150,169,0.08);border-radius:var(--radius);padding:14px 16px;margin-top:10px;cursor:pointer">';
     html += '<div style="display:flex;justify-content:space-between;align-items:center">';
-    html += '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-dark)">' + t.titel + '</div>';
+    html += '<div class="dybde-tema-title">' + t.titel + '</div>';
     html += '<div class="tema-arr" style="font-size:18px;color:rgba(138,150,169,0.5);transition:transform 0.2s">\u203A</div>';
     html += '</div>';
     html += '<div class="tema-body" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease">';
-    html += '<div style="font-family:var(--font-serif);font-size:14px;font-style:italic;color:var(--text-body);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(138,150,169,0.06)">' + t.tekst + '</div>';
+    html += '<div class="isa isa-sm" style="text-align:left;margin-top:10px;padding-top:10px;border-top:1px solid rgba(138,150,169,0.06)">' + t.tekst + '</div>';
     html += '</div></div>';
   });
   container.innerHTML = html;
@@ -7773,8 +7773,8 @@ function initBaggrundDybere() {
     html += '<div style="display:flex;gap:10px;overflow-x:auto;padding:4px 0 16px;-webkit-overflow-scrolling:touch">';
     kulturer.forEach(function(k) {
       html += '<div style="min-width:140px;background:rgba(138,150,169,0.04);border:1px solid rgba(138,150,169,0.08);border-radius:var(--radius);padding:14px 12px;flex-shrink:0">';
-      html += '<div style="font-family:var(--font-serif);font-size:15px;color:#8a96a9;margin-bottom:6px">' + k.navn + '</div>';
-      html += '<div style="font-family:var(--font-sans);font-size:13px;color:var(--text-body);line-height:1.5;font-weight:300">' + k.tekst + '</div>';
+      html += '<div class="dybde-tema-title" style="font-size:15px;color:#8a96a9;margin-bottom:6px">' + k.navn + '</div>';
+      html += '<div class="card-desc" style="font-size:13px">' + k.tekst + '</div>';
       html += '</div>';
     });
     html += '</div>';
@@ -7823,13 +7823,13 @@ function initBaggrundDybere() {
     var faseTekst = faseVidenMap[phaseNum] || 'Din fase bærer sin egen måde at forstå verden på.';
     dinFaseEl.innerHTML = formatExpandable(faseTekst, 80);
   } else if (dinFaseEl) {
-    dinFaseEl.innerHTML = '<p style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6">Tilføj din fødselsdato under Indstillinger for at se hvordan viden lever i din fase.</p>';
+    dinFaseEl.innerHTML = '<p class="isa" style="font-size:15px;text-align:left">Tilføj din fødselsdato under Indstillinger for at se hvordan viden lever i din fase.</p>';
   }
 
   // 8. ISABELLES INDSIGT
   var isaEl = document.getElementById('bd-isabelle');
   if (isaEl) {
-    isaEl.innerHTML = '<div style="font-family:var(--font-serif);font-size:17px;font-style:italic;color:var(--text-dark);line-height:1.6;margin-bottom:16px;text-align:center">\u00AB\u2009Viden er ikke noget man samler. Det er noget man genkender.\u2009\u00BB</div>' +
+    isaEl.innerHTML = '<div class="isa" style="font-size:17px;color:var(--text-dark);margin-bottom:16px">\u00AB\u2009Viden er ikke noget man samler. Det er noget man genkender.\u2009\u00BB</div>' +
       formatExpandable('Jeg begyndte ikke med bøger. Jeg begyndte med en fornemmelse af at noget manglede \u2014 en forståelse af de skift jeg mærkede i min egen krop og mit eget sind. Overgangsalderen ramte mig som en mur. Ikke fordi den var uventet, men fordi jeg ikke havde sprog for den.\n\nSå begyndte jeg at lede. Kinesisk medicin gav mig elementerne. Vedisk filosofi gav mig livsfaserne. Nordisk tradition gav mig forbundetheden. Og moderne forskning gav mig bekræftelsen på at det hele hænger sammen.\n\nDet der overraskede mig mest var ikke forskellene mellem traditionerne, men ligheden. Kulturer der aldrig har mødtes, har uafhængigt af hinanden set de samme mønstre. Og de mønstre stemte med det jeg mærkede i min egen krop. Det var ikke teori. Det var genkendelse.\n\nDenne app er mit forsøg på at samle de tråde \u2014 ikke som et system du skal lære, men som et spejl du kan kigge i. Og måske genkende noget du allerede vidste.', 80);
   }
 
