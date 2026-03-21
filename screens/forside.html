@@ -1,38 +1,38 @@
 <!-- LIGE NU — Primaer skaerm 1 -->
 
 <!-- HERO: Element + figur -->
-<div class="s" style="padding-bottom:0">
+<div class="s s--no-pb">
   <div class="eyebrow" id="lige-nu-dato">I dag</div>
-  <div style="text-align:center;margin:22px 0 10px">
+  <div class="forside-hero-wrap">
     <div id="lige-nu-tegn" class="hero-symbol">&#27700;</div>
     <div id="lige-nu-element" class="hero-name">Vand</div>
     <div id="lige-nu-kvaliteter" class="hero-qualities">stilhed &middot; dybde &middot; intuition</div>
   </div>
-  <div class="fig" style="padding:0 20px">
-    <img src="assets/images/Gemini_Generated_Image_4llrmp4llrmp4llr.png" alt="Dine fem cyklusser" style="max-width:340px">
+  <div class="fig fig--inset">
+    <img src="assets/images/Gemini_Generated_Image_4llrmp4llrmp4llr.png" alt="Dine fem cyklusser">
   </div>
 </div>
 
 <!-- STREAK (kun synlig ved 2+ dage) -->
-<div id="forside-streak" class="meta-line" style="display:none;padding:10px 0 0"></div>
+<div id="forside-streak" class="meta-line meta-line--pad" style="display:none"></div>
 
 <!-- KLIMA-INDIKATOR — portr&aelig;ttets ene linje -->
-<div id="forside-klima" class="meta-line meta-line--sm" style="display:none;padding:10px 0 0"></div>
+<div id="forside-klima" class="meta-line meta-line--sm meta-line--pad" style="display:none"></div>
 
 <!-- KLIMA-TEKST — Isabelles stemme om dit &oslash;jeblik -->
-<div class="s" style="padding-top:8px;padding-bottom:0;display:none" id="forside-klima-tekst-wrap">
+<div class="s s--pt-sm s--no-pb" style="display:none" id="forside-klima-tekst-wrap">
   <div class="isa" id="forside-klima-tekst"></div>
 </div>
 
 <!-- MORGEN/AFTEN-TEKST -->
-<div class="s" style="padding-top:6px">
-  <div class="isa isa-sm" id="lige-nu-tidstekst" style="opacity:0.8">
+<div class="s s--pt-xs">
+  <div class="isa isa-sm isa--muted" id="lige-nu-tidstekst">
     Dine fem cyklusser samler sig i dag. M&aelig;rk efter &mdash; din krop ved allerede, hvad den har brug for.
   </div>
 </div>
 
 <!-- DIN DAGLIGE L&AElig;SNING — kort tekst + link til dyb skaerm -->
-<div class="s" id="lige-nu-daglig-wrap" style="display:none;cursor:pointer" onclick="setNavContext('daglig');Router.navigate('cir-dit-liv')">
+<div class="s s--clickable" id="lige-nu-daglig-wrap" style="display:none" onclick="setNavContext('daglig');Router.navigate('cir-dit-liv')">
   <div class="isa isa-sm" id="lige-nu-daglig"></div>
   <div class="link-center">
     <span class="isa-link">Udforsk dit dybe billede &rarr;</span>
@@ -44,7 +44,7 @@
   <div class="eyebrow">Dit organur lige nu</div>
   <div id="lige-nu-organur" class="forside-tema" onclick="setNavContext('organur');Router.navigate('din-praksis')">
     <div id="organur-tid" class="sub-label"></div>
-    <div id="organur-tekst" class="isa-desc" style="text-align:left;margin:0;max-width:none"></div>
+    <div id="organur-tekst" class="isa-desc isa-desc--left"></div>
     <div class="card-arrow-right">&rarr;</div>
   </div>
 </div>
@@ -52,15 +52,15 @@
 <!-- AARSTID x ELEMENT + LIVSFASE-SAMSPIL -->
 <div class="s">
   <div class="isa isa-sm" id="lige-nu-aarstid"></div>
-  <div class="isa isa-sm" id="lige-nu-livs-aarstid" style="display:none;margin-top:12px;opacity:0.85"></div>
+  <div class="isa isa-sm isa--spaced" id="lige-nu-livs-aarstid" style="display:none"></div>
 </div>
 
 <!-- KOMMENDE SKIFT -->
-<div class="s" id="lige-nu-skift-wrap" style="display:none;cursor:pointer">
-  <div id="lige-nu-skift" style="text-align:center">
-    <div id="skift-label" class="sub-label" style="opacity:0.6;text-align:center"></div>
-    <div id="skift-tekst" class="isa isa-sm" style="margin:0"></div>
-    <div class="link-center" style="margin-top:10px">
+<div class="s s--clickable" id="lige-nu-skift-wrap" style="display:none">
+  <div id="lige-nu-skift" class="forside-skift">
+    <div id="skift-label" class="sub-label sub-label--dim"></div>
+    <div id="skift-tekst" class="isa isa-sm isa--flush"></div>
+    <div class="link-center link-center--tight">
       <span class="isa-link">Se dine cyklusser der &rarr;</span>
     </div>
   </div>
@@ -70,11 +70,11 @@
 <div class="s">
   <div class="eyebrow">Din handling lige nu</div>
   <div class="fig">
-    <img src="assets/images/stroemmenes_v3.png" alt="Str&oslash;mmene" style="max-width:240px">
+    <img src="assets/images/stroemmenes_v3.png" alt="Str&oslash;mmene" class="img--sm">
   </div>
-  <div id="lige-nu-handling" style="text-align:center;margin-top:14px">
-    <div id="handling-type" class="sub-label" style="text-align:center"></div>
-    <div id="handling-titel" class="text-featured" style="text-align:center"></div>
+  <div id="lige-nu-handling" class="forside-handling">
+    <div id="handling-type" class="sub-label sub-label--center"></div>
+    <div id="handling-titel" class="text-featured text-featured--center"></div>
     <div id="handling-tekst" class="isa-desc"></div>
     <div class="link-center">
       <a onclick="Router.navigate('pra-yin-yoga')" class="isa-link">Se flere &oslash;velser &rarr;</a>
@@ -114,7 +114,7 @@
 <div class="s">
   <div class="eyebrow">Refleksion</div>
   <div class="isa-refl" id="lige-nu-refleksion"></div>
-  <div class="link-center" style="margin-top:0">
+  <div class="link-center link-center--flush">
     <a onclick="Router.navigate('rej-journal')" class="isa-link">Skriv i din journal &rarr;</a>
   </div>
 </div>
@@ -123,18 +123,18 @@
 <div class="s forside-chips" id="forside-tidsrejse-chips"></div>
 
 <!-- DEL DIT ELEMENT -->
-<div class="s" style="text-align:center;padding-top:8px;padding-bottom:0">
-  <a id="forside-del" onclick="shareElement()" class="isa-link" style="opacity:0.6">Del dit element &rarr;</a>
+<div class="s s--center s--pt-sm s--no-pb">
+  <a id="forside-del" onclick="shareElement()" class="isa-link isa-link--dim">Del dit element &rarr;</a>
 </div>
 
 <!-- DYK DYBERE -->
-<div class="s" style="padding-bottom:32px">
+<div class="s s--pb-lg">
   <div class="eyebrow">Dyk dybere</div>
   <div class="explore-pills">
-    <a onclick="setNavContext('daglig');Router.navigate('cir-dit-liv')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">Dit Dybe Billede</a>
-    <a onclick="setNavContext('faser_generel');Router.navigate('cyk-ni-faser')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">De Ni Faser</a>
-    <a onclick="setNavContext('praksis_generel');Router.navigate('din-praksis')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">Din Dybere Praksis</a>
-    <a onclick="setNavContext('rejse_generel');Router.navigate('min-rejse')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">Min Rejse</a>
+    <a onclick="setNavContext('daglig');Router.navigate('cir-dit-liv')" class="explore-link explore-link--blaa">Dit Dybe Billede</a>
+    <a onclick="setNavContext('faser_generel');Router.navigate('cyk-ni-faser')" class="explore-link explore-link--blaa">De Ni Faser</a>
+    <a onclick="setNavContext('praksis_generel');Router.navigate('din-praksis')" class="explore-link explore-link--blaa">Din Dybere Praksis</a>
+    <a onclick="setNavContext('rejse_generel');Router.navigate('min-rejse')" class="explore-link explore-link--blaa">Min Rejse</a>
   </div>
 </div>
 

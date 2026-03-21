@@ -128,6 +128,15 @@
 /* Sektion-wrapper */
 .s { padding: 28px var(--pad-screen) 8px; }
 
+/* Sektion-modifikatorer — konsekvent spacing-skala */
+.s--no-pb { padding-bottom: 0; }
+.s--no-pt { padding-top: 0; }
+.s--pt-sm { padding-top: 8px; }
+.s--pt-xs { padding-top: 6px; }
+.s--pb-lg { padding-bottom: 32px; }
+.s--center { text-align: center; }
+.s--clickable { cursor: pointer; }
+
 /* Eyebrow — sektionslabel (12px sans, caps) */
 .eyebrow {
   font-family: var(--font-sans); font-size: 12px;
@@ -234,6 +243,62 @@
 .card-arrow-right {
   text-align: right; margin-top: 6px;
   font-size: 12px; color: var(--blaa); opacity: 0.5;
+}
+
+/* === FORSIDE — Lige Nu skærm === */
+
+/* Hero element-wrapper (tegn + navn + kvaliteter) */
+.forside-hero-wrap {
+  text-align: center;
+  margin: 24px 0 12px;
+}
+
+/* Figure med indre padding */
+.fig--inset { padding: 0 20px; }
+.fig--inset img { max-width: 340px; }
+
+/* Meta-line med topluft (streak / klima) */
+.meta-line--pad { padding-top: 10px; }
+
+/* Isa-stemme modifikatorer */
+.isa--muted { opacity: 0.8; }
+.isa--flush { margin: 0; }
+.isa--spaced { margin-top: 12px; opacity: 0.85; }
+
+/* Isa-desc som venstre-justeret (organur) */
+.isa-desc--left { text-align: left; margin: 0; max-width: none; }
+
+/* Sub-label modifikatorer */
+.sub-label--center { text-align: center; }
+.sub-label--dim { opacity: 0.6; text-align: center; }
+
+/* Text-featured centreret */
+.text-featured--center { text-align: center; }
+
+/* Link-center modifikatorer */
+.link-center--flush { margin-top: 0; }
+.link-center--tight { margin-top: 10px; }
+
+/* Handling-wrapper */
+.forside-handling {
+  text-align: center;
+  margin-top: 16px;
+}
+
+/* Skift-wrapper */
+.forside-skift { text-align: center; }
+
+/* Figure med begrænset bredde */
+.fig img.img--sm { max-width: 240px; }
+
+/* Isa-link dæmpet */
+.isa-link--dim { opacity: 0.6; }
+
+/* Explore-link toned til forside (blå) */
+.explore-link--blaa {
+  color: var(--blaa);
+  border-color: rgba(108,130,169,0.15);
+  cursor: pointer;
 }
 
 /* Forside tema-kort */
