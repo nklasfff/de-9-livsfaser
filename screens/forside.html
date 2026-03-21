@@ -4,27 +4,27 @@
 <div class="s" style="padding-bottom:0">
   <div class="eyebrow" id="lige-nu-dato">I dag</div>
   <div style="text-align:center;margin:22px 0 10px">
-    <div id="lige-nu-tegn" style="font-size:64px;line-height:1;color:var(--blaa);opacity:0.18">&#27700;</div>
-    <div id="lige-nu-element" style="font-family:var(--font-serif);font-size:30px;color:var(--text-dark);margin-top:6px">Vand</div>
-    <div id="lige-nu-kvaliteter" style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:var(--text-light);margin-top:8px;letter-spacing:0.5px">stilhed &middot; dybde &middot; intuition</div>
+    <div id="lige-nu-tegn" class="hero-symbol">&#27700;</div>
+    <div id="lige-nu-element" class="hero-name">Vand</div>
+    <div id="lige-nu-kvaliteter" class="hero-qualities">stilhed &middot; dybde &middot; intuition</div>
   </div>
   <div class="fig" style="padding:0 20px">
-    <img src="assets/images/Gemini_Generated_Image_4llrmp4llrmp4llr.png" alt="Dine fem cyklusser" style="max-width:340px;margin:0 auto">
+    <img src="assets/images/Gemini_Generated_Image_4llrmp4llrmp4llr.png" alt="Dine fem cyklusser" style="max-width:340px">
   </div>
 </div>
 
 <!-- STREAK (kun synlig ved 2+ dage) -->
-<div id="forside-streak" style="display:none;text-align:center;padding:10px 0 0;font-family:var(--font-sans);font-size:12px;font-weight:400;letter-spacing:0.5px;color:var(--text-light)"></div>
+<div id="forside-streak" class="meta-line" style="display:none;padding:10px 0 0"></div>
 
 <!-- KLIMA-INDIKATOR — portr&aelig;ttets ene linje -->
-<div id="forside-klima" style="display:none;text-align:center;padding:10px 0 0;font-family:var(--font-sans);font-size:11px;font-weight:400;letter-spacing:0.8px;color:var(--text-light)"></div>
+<div id="forside-klima" class="meta-line meta-line--sm" style="display:none;padding:10px 0 0"></div>
 
-<!-- KLIMA-TEKST — Isabelles stemme om dit &oslash;jeblik (portr&aelig;ttets hjerte) -->
+<!-- KLIMA-TEKST — Isabelles stemme om dit &oslash;jeblik -->
 <div class="s" style="padding-top:8px;padding-bottom:0;display:none" id="forside-klima-tekst-wrap">
   <div class="isa" id="forside-klima-tekst"></div>
 </div>
 
-<!-- MORGEN/AFTEN-TEKST (hoerer visuelt til hero, derfor tæt padding) -->
+<!-- MORGEN/AFTEN-TEKST -->
 <div class="s" style="padding-top:6px">
   <div class="isa isa-sm" id="lige-nu-tidstekst" style="opacity:0.8">
     Dine fem cyklusser samler sig i dag. M&aelig;rk efter &mdash; din krop ved allerede, hvad den har brug for.
@@ -34,18 +34,18 @@
 <!-- DIN DAGLIGE L&AElig;SNING — kort tekst + link til dyb skaerm -->
 <div class="s" id="lige-nu-daglig-wrap" style="display:none;cursor:pointer" onclick="setNavContext('daglig');Router.navigate('cir-dit-liv')">
   <div class="isa isa-sm" id="lige-nu-daglig"></div>
-  <div style="text-align:center;margin-top:10px">
+  <div class="link-center">
     <span class="isa-link">Udforsk dit dybe billede &rarr;</span>
   </div>
 </div>
 
-<!-- ORGANUR LIGE NU — tappable til din praksis -->
+<!-- ORGANUR LIGE NU — tappable boks -->
 <div class="s">
   <div class="eyebrow">Dit organur lige nu</div>
-  <div id="lige-nu-organur" class="forside-tema" style="margin-top:10px" onclick="setNavContext('organur');Router.navigate('din-praksis')">
-    <div id="organur-tid" style="font-family:var(--font-sans);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:var(--blaa);margin-bottom:6px"></div>
-    <div id="organur-tekst" style="font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--text-body);line-height:1.6"></div>
-    <div style="text-align:right;margin-top:6px"><span style="font-size:12px;color:var(--blaa);opacity:0.5">&rarr;</span></div>
+  <div id="lige-nu-organur" class="forside-tema" onclick="setNavContext('organur');Router.navigate('din-praksis')">
+    <div id="organur-tid" class="sub-label"></div>
+    <div id="organur-tekst" class="isa-desc" style="text-align:left;margin:0;max-width:none"></div>
+    <div class="card-arrow-right">&rarr;</div>
   </div>
 </div>
 
@@ -55,12 +55,14 @@
   <div class="isa isa-sm" id="lige-nu-livs-aarstid" style="display:none;margin-top:12px;opacity:0.85"></div>
 </div>
 
-<!-- KOMMENDE SKIFT — tappable, navigerer til vinduer med skift-dato -->
+<!-- KOMMENDE SKIFT -->
 <div class="s" id="lige-nu-skift-wrap" style="display:none;cursor:pointer">
   <div id="lige-nu-skift" style="text-align:center">
-    <div id="skift-label" style="font-family:var(--font-sans);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:var(--blaa);opacity:0.6;margin-bottom:6px"></div>
+    <div id="skift-label" class="sub-label" style="opacity:0.6;text-align:center"></div>
     <div id="skift-tekst" class="isa isa-sm" style="margin:0"></div>
-    <div style="margin-top:10px"><span class="isa-link">Se dine cyklusser der &rarr;</span></div>
+    <div class="link-center" style="margin-top:10px">
+      <span class="isa-link">Se dine cyklusser der &rarr;</span>
+    </div>
   </div>
 </div>
 
@@ -68,13 +70,15 @@
 <div class="s">
   <div class="eyebrow">Din handling lige nu</div>
   <div class="fig">
-    <img src="assets/images/stroemmenes_v3.png" alt="Str&oslash;mmene" style="max-width:240px;margin:0 auto">
+    <img src="assets/images/stroemmenes_v3.png" alt="Str&oslash;mmene" style="max-width:240px">
   </div>
   <div id="lige-nu-handling" style="text-align:center;margin-top:14px">
-    <div id="handling-type" style="font-family:var(--font-sans);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:var(--blaa);margin-bottom:6px"></div>
-    <div id="handling-titel" style="font-family:var(--font-serif);font-size:19px;color:var(--text-dark);margin-bottom:10px"></div>
-    <div id="handling-tekst" style="font-family:var(--font-serif);font-size:14.5px;font-style:italic;color:var(--text-body);line-height:1.65;max-width:320px;margin:0 auto"></div>
-    <div style="margin-top:14px"><a onclick="Router.navigate('pra-yin-yoga')" class="isa-link">Se flere &oslash;velser &rarr;</a></div>
+    <div id="handling-type" class="sub-label" style="text-align:center"></div>
+    <div id="handling-titel" class="text-featured" style="text-align:center"></div>
+    <div id="handling-tekst" class="isa-desc"></div>
+    <div class="link-center">
+      <a onclick="Router.navigate('pra-yin-yoga')" class="isa-link">Se flere &oslash;velser &rarr;</a>
+    </div>
   </div>
 </div>
 
@@ -109,24 +113,24 @@
 <!-- REFLEKSION -->
 <div class="s">
   <div class="eyebrow">Refleksion</div>
-  <div class="isa" id="lige-nu-refleksion" style="font-size:17px;margin-bottom:14px"></div>
-  <div style="text-align:center">
+  <div class="isa-refl" id="lige-nu-refleksion"></div>
+  <div class="link-center" style="margin-top:0">
     <a onclick="Router.navigate('rej-journal')" class="isa-link">Skriv i din journal &rarr;</a>
   </div>
 </div>
 
 <!-- TIDSREJSE CHIPS -->
-<div class="s" id="forside-tidsrejse-chips" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center"></div>
+<div class="s forside-chips" id="forside-tidsrejse-chips"></div>
 
 <!-- DEL DIT ELEMENT -->
 <div class="s" style="text-align:center;padding-top:8px;padding-bottom:0">
   <a id="forside-del" onclick="shareElement()" class="isa-link" style="opacity:0.6">Del dit element &rarr;</a>
 </div>
 
-<!-- DYK DYBERE — alle links til unikke skaerme -->
+<!-- DYK DYBERE -->
 <div class="s" style="padding-bottom:32px">
   <div class="eyebrow">Dyk dybere</div>
-  <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px">
+  <div class="explore-pills">
     <a onclick="setNavContext('daglig');Router.navigate('cir-dit-liv')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">Dit Dybe Billede</a>
     <a onclick="setNavContext('faser_generel');Router.navigate('cyk-ni-faser')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">De Ni Faser</a>
     <a onclick="setNavContext('praksis_generel');Router.navigate('din-praksis')" class="explore-link" style="color:var(--blaa);border-color:rgba(108,130,169,0.15);cursor:pointer">Din Dybere Praksis</a>
